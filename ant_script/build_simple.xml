@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+   배포 패키지 작성하는 Ant script
+   author  : 전여철
+   since   : 2015.05.29
+   version : 1.0
+
+   개정이력(Modification Information)
+
+    수정일      수정자          수정내용
+    ===================================================
+    2015.05.29  전여철         ant script 추가
+ -->
+
+<project basedir=".." default="build" name="01.템플릿_배포">
+
+    <!-- 버전관리 -->
+    <property name="ver"            value="3.10.0" />
+
+    <!-- 경로관리 -->
+    <property name="path.java"          value="src/main/java/egovframework/" />
+    <property name="path.sqlmap.config" value="src/main/resources/egovframework/mapper/config" />
+    <property name="path.sqlmap"        value="src/main/resources/egovframework/mapper/let" />
+    <property name="path.validator"     value="src/main/resources/egovframework/validator/let" />
+    <property name="path.jsp"           value="src/main/webapp/WEB-INF/jsp/egovframework/" />
+	<!-- error page -->
+    <property name="path.common"           value="src/main/webapp/common" />
+	<!-- css -->
+	<property name="path.css"           value="src/main/webapp/css" />
+	<!-- images -->
+	<property name="path.images"           value="src/main/webapp/images" />
+	<!-- js-->
+	<property name="path.js"           value="src/main/webapp/js" />
+	<!-- META-INF-->
+	<property name="path.meta-inf"           value="src/main/webapp/META-INF" />
+
+
+    <!-- 파일명 -->
+    <property name="zipfilename"        value="egovframework.com.${pkgname}.${ver}.zip" />
+
+    <!-- 기본 target -->
+    <target name="00.init" description="디렉토리 생성" >
+        <mkdir dir="ant_script/package_distribution" />
+    </target>
+
+    <target name="01.clean" description="디렉토리 내용삭제" >
+        <delete>
+            <fileset dir="ant_script/package_distribution" />
+        </delete>
+    </target>
+
+    <target name="build" depends="00.init, 01.clean" description="모든 배포패키지(파일명) 생성" >
+        <antcall target="example-template-simple"><param name="where" value="ant_script/package_distribution/example-template-simple.zip"/></antcall>
+    </target>
+
+    <target name="example-template-simple" description="example-template-simple" >
+        <!-- cmm 파일관리  -->
+        <zip destfile="${where}" update="true">
+            <fileset dir=".">
+
+                <!-- pom.xml -->
+                <include name="pom.xml"/>
+
+                <!-- java -->
+                <include name="${path.java}/**/*.java"/>
+
+                <!-- sql map config -->
+                <include name="${path.sqlmap.config}/**/*.xml"/>
+
+                <!-- sql map -->
+                <include name="${path.sqlmap}/**/*.xml"/>
+
+                <!-- jsp -->
+                <include name="${path.jsp}/**/*.jsp"/>
+
+                <!-- CSS/HTML/IMAGES/JS -->
+                <include name="${path.common}/*.*"/>
+				<include name="${path.css}/*.*"/>
+				<include name="${path.images}/*.*"/>
+				<include name="${path.images}/**/*.*"/>
+				<include name="${path.meta-inf}/**/*.*"/>
+				<include name="${path.js}/*.*"/>
+
+                <!-- messages -->
+                <include name="src/main/resources/egovframework/message/**/*.properties"/>
+
+                <!-- validator 처리 -->
+                <include name="src/main/resources/egovframework/validator/*.xml"/>
+                <include name="src/main/resources/egovframework/validator/**/*.*"/>
+
+                <!-- log4j 처리 -->
+                <include name="src/main/resources/log4j2.xml"/>
+
+                <!-- context-*.xml -->
+                <include name="src/main/resources/egovframework/spring/com/**/*.xml"/>
+
+                <!-- db -->
+                <include name="src/main/resources/db/*.*"/>
+
+                <!-- properties -->
+                <include name="src/main/resources/egovframework/egovProps/**/*.*"/>
+
+                <!-- IMAGES -->
+                <include name="src/main/webapp/images/**/*.*"/>
+
+                <!-- webapp -->
+                <include name="src/main/webapp/WEB-INF/**/*.*"/>
+                <include name="src/main/webapp/*.jsp"/>
+                <include name="src/main/webapp/resource/**/*.*"/>
+
+                <!-- DB 생성 스크립트 -->
+                <include name="DATABASE/*.sql"/>
+
+            </fileset>
+        </zip>
+    </target>
+
+</project>

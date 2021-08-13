@@ -1,0 +1,114 @@
+/* by 검증 디자이너 */
+
+img    {border:0;}
+table	{margin:0; padding:0;}
+
+.t_strong	{font-weight:bold;}
+
+.TopMenuBg	{  
+	background-image:url('/images/egovframework/com/cmm/uss/umt/menu_bg.jpg'); 
+	background-repeat:no-repeat;
+	}
+
+/* by 이삼섭  */
+/* Black 텍스트 Hyperlink Style */
+A:link { font-size:9pt; font-family:"돋움";color:#000000; text-decoration:none; }
+A:visited { font-size:9pt; font-family:"돋움";color:#000000; text-decoration:none; }
+A:active { font-size:9pt; font-family:"돋움";color:red; text-decoration:none; }
+A:hover { font-size:9pt; font-family:"돋움";color:red;text-decoration:none;}
+
+
+/* Gray 텍스트 Hyperlink Style */
+A.gr:link { font-size:9pt; font-family:"돋움";color:#58595B; text-decoration:none; }
+A.gr:visited { font-size:9pt; font-family:"돋움";color:#58595B; text-decoration:none; }
+A.gr:active { font-size:9pt; font-family:"돋움";color:red; text-decoration:none; }
+A.gr:hover { font-size:9pt; font-family:"돋움";color:red ;text-decoration:none;}
+
+
+/* Black 텍스트 Hyperlink Style_언더라인 */
+A.underline:link { font-size:9pt; font-family:"돋움";color:#000000; text-decoration:underline; }
+A.underline:visited { font-size:9pt; font-family:"돋움";color:#000000; text-decoration:underline; }
+A.underline:active { font-size:9pt; font-family:"돋움";color:red; text-decoration:underline; }
+A.underline:hover { font-size:9pt; font-family:"돋움";color:red;text-decoration:underline;}
+
+
+/* 스크롤 & margin */
+body { 
+margin-left:0px; margin-right:0px; margin-top:0px; margin-bottom:0px;}
+
+td {font-family: "돋움"; font-size: 9pt; color:#595959; font-weight:normal;}
+th {font-family: "돋움"; font-size: 9pt; color:#000000; font-weight:normal;}
+
+
+/*  흰색배경 inputbox  */
+ textarea, input, select
+  {padding-left:2px; color:#555555; border:1px solid #9BBED2; 
+ font-family: "돋움"; font-size: 9pt; color:#595959;}
+ 
+ 
+ 
+/*list_text*/
+.lt_text { font-size:9pt; color:#000000; font-family:"돋움, Arial"; height:24px; text-align:left; vertical-align:middle; padding-left:10px; padding-right:10px;}
+.lt_text2 { font-size:9pt; color:#444444; font-family:"돋움, Arial"; height:30px; text-align:left; vertical-align:middle; padding-left:10px; padding-right:10px; font-weight: bold;}
+.lt_text3 { font-size:9pt; color:#000000; font-family:"돋움, Arial"; height:24px; text-align:center; vertical-align:middle;}
+.lt_text4 { font-size:9pt; color:#000000; font-family:"돋움, Arial"; text-align:center; vertical-align:middle;}
+.lt_text5 { font-size:9pt; color:#000000; font-family:"돋움, Arial"; height:24px; text-align:left; vertical-align:top; padding-left:10px; padding-right:10px; padding-top:10px; padding-bottom:10px;}
+ 
+ 
+ .button { 
+     border-style:none; 
+     background-color:transparent;
+     font-size:12px;
+ }
+ 
+
+
+
+
+/****************************************** 텍스트   ************************************************************/
+
+/* 로케이션_텍스트 */
+.location{ font-family:"돋움"; font-size:8pt; color:#6d6d6d ;padding-top:1px; padding-left:3px; 
+           vertical-align: middle}
+
+/* 타이틀_볼드 */
+.title{ font-family:"돋움"; font-size:9pt; color:#000000 ; 
+        font-weight: bold ; vertical-align: middle}
+
+/* 타이틀_볼드_좌측정렬 */
+.title_left{ font-family:"돋움"; font-size:9pt; color:#000000 ; 
+        font-weight: bold ; vertical-align: middle; text-align:left }        
+        
+/* 팝업_타이틀_볼드 */
+.title_wh{ font-family:"돋움"; font-size:9pt; color:#ffffff ; 
+           font-weight: bold ; vertical-align: middle}
+
+/* 버튼메뉴_타이틀_화이트_볼드 */
+.title_wh_b{ font-family:"돋움"; font-size:9pt; color:#ffffff ; 
+           font-weight: bold ; vertical-align: middle}
+
+
+.text1{color:#FF8903; }
+.text2{color:#A2A2A2; }
+/****************************************** 테이블 & 텍스트   ************************************************************/
+/* 리스트 테이블 */
+.table-line{BORDER-TOP: #1A90D8 2px solid; BORDER-bottom: #BABABA 1px solid;border-collapse: collapse;}
+  .table-line th{BORDER-bottom: #A3A3A3 1px solid; padding-left:2px;padding-right:2px;background-color: #E4EAF8; height:20px;}
+  .table-line td{BORDER-bottom: #E0E0E0 1px solid; padding-left:2px;padding-right:2px;background-color: #F7F7F7; height:20px;}
+
+
+/* 등록 테이블 */
+.table-register{BORDER-TOP: #D2D4D1 1px solid;BORDER-bottom: #D2D4D1 1px solid;BORDER-left: #D2D4D1 1px solid;BORDER-right: #D2D4D1 1px solid; border-collapse: collapse;}
+  .table-register th{ padding-left:2px;padding-right:5px;background-color: #E4EAF8; Text-align: right ;}
+  .table-register td{ padding-left:2px;padding-right:5px;background-color: #F7F7F7;}
+
+
+/* 조회 테이블
+.table-search{BORDER-TOP: #D2D4D1 1px solid;BORDER-bottom: #D2D4D1 1px solid;BORDER-left: #D2D4D1 1px solid;BORDER-right: #D2D4D1 1px solid; border-collapse: collapse;}
+  .table-search th{ padding-left:2;padding-right:2;background-color: #E4EAF8; Text-align: center ;}
+  .table-search td{ padding-left:2;padding-right:2;background-color: #F7F7F7;} */
+
+/* 투명 테이블 */  
+.table-trans  {BORDER-LEFT: 0px solid;BORDER-RIGHT:0px solid; BORDER-BOTTOM:0px solid; BORDER-TOP:0px solid; border-collapse:collapse;}
+  .table-trans td{border:0px solid;padding-top:0;padding-bottom:0;padding-left:0;padding-right:0;border:0px solid;border-collapse: collapse;}
+  

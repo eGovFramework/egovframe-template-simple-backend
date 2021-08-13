@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="BBSAttributeManageDAO">
+
+
+	<resultMap id="boardMasterList" type="egovframework.let.cop.bbs.service.BoardMasterVO">
+		<result property="bbsId" column="BBS_ID"/>
+		<result property="bbsTyCode" column="BBS_TY_CODE"/>
+		<result property="bbsTyCodeNm" column="BBS_TY_CODE_NM"/>
+		<result property="bbsAttrbCode" column="BBS_ATTRB_CODE"/>
+		<result property="bbsAttrbCodeNm" column="BBS_ATTRB_CODE_NM"/>
+		<result property="bbsNm" column="BBS_NM"/>
+		<result property="tmplatId" column="TMPLAT_ID"/>
+		<result property="useAt" column="USE_AT"/>
+		<result property="frstRegisterPnttm" column="FRST_REGIST_PNTTM"/>
+	</resultMap>
+
+	<resultMap id="boardMasterDetail" type="egovframework.let.cop.bbs.service.BoardMasterVO">
+		<result property="bbsId" column="BBS_ID"/>
+		<result property="bbsTyCode" column="BBS_TY_CODE"/>
+		<result property="bbsAttrbCode" column="BBS_ATTRB_CODE"/>
+		<result property="bbsNm" column="BBS_NM"/>
+		<result property="bbsIntrcn" column="BBS_INTRCN"/>
+		<result property="replyPosblAt" column="REPLY_POSBL_AT"/>
+		<result property="fileAtchPosblAt" column="FILE_ATCH_POSBL_AT"/>
+		<result property="posblAtchFileNumber" column="ATCH_POSBL_FILE_NUMBER"/>
+		<result property="posblAtchFileSize" column="ATCH_POSBL_FILE_SIZE"/>
+		<result property="tmplatId" column="TMPLAT_ID"/>
+		<result property="frstRegisterId" column="FRST_REGISTER_ID"/>
+		<result property="frstRegisterNm" column="FRST_REGISTER_NM"/>
+		<result property="frstRegisterPnttm" column="FRST_REGIST_PNTTM"/>
+		<result property="bbsTyCodeNm" column="BBS_TY_CODE_NM"/>
+		<result property="bbsAttrbCodeNm" column="BBS_ATTRB_CODE_NM"/>
+ 	    <result property="tmplatNm" column="TMPLAT_NM"/>
+		<result property="authFlag" column="AUTH_FLAG"/>
+		<result property="tmplatCours" column="TMPLAT_COURS"/>
+	</resultMap>
+
+	<resultMap id="boardMasterAll" type="egovframework.let.cop.bbs.service.BoardMasterVO">
+		<result property="bbsId" column="BBS_ID"/>
+		<result property="bbsTyCode" column="BBS_TY_CODE"/>
+		<result property="bbsAttrbCode" column="BBS_ATTRB_CODE"/>
+		<result property="bbsNm" column="BBS_NM"/>
+		<result property="tmplatId" column="TMPLAT_ID"/>
+	</resultMap>
+
+	<insert id="insertBBSMasterInf" parameterType="egovframework.let.cop.bbs.service.BoardMaster">
+		
+			INSERT INTO LETTNBBSMASTER
+			(BBS_ID, BBS_TY_CODE, BBS_ATTRB_CODE, BBS_NM, BBS_INTRCN, 
+			 REPLY_POSBL_AT, FILE_ATCH_POSBL_AT, ATCH_POSBL_FILE_NUMBER,
+			 ATCH_POSBL_FILE_SIZE, TMPLAT_ID, USE_AT,
+			 FRST_REGISTER_ID, FRST_REGIST_PNTTM )
+			VALUES
+			( #{bbsId}, #{bbsTyCode}, #{bbsAttrbCode}, #{bbsNm}, #{bbsIntrcn}, 
+			  #{replyPosblAt}, #{fileAtchPosblAt}, #{posblAtchFileNumber}, 
+			  #{posblAtchFileSize}, #{tmplatId}, #{useAt}, #{frstRegisterId}, SYSDATETIME  
+			 )			
+		
+	</insert>
+	
+	<select id="selectBBSMasterInfs" parameterType="egovframework.let.cop.bbs.service.BoardMasterVO" resultMap="boardMasterList">
+		
+		SELECT * FROM ( SELECT rownum rn, TB.* FROM (
+			SELECT 
+				a.BBS_ID, a.BBS_TY_CODE, b.CODE_NM as BBS_TY_CODE_NM,
+				a.BBS_ATTRB_CODE, c.CODE_NM as BBS_ATTRB_CODE_NM, a.BBS_NM, 
+				a.TMPLAT_ID, a.USE_AT, 
+				TO_CHAR(a.FRST_REGIST_PNTTM, 'YYYY-MM-DD') as FRST_REGIST_PNTTM
+			FROM
+				LETTNBBSMASTER a
+			LEFT OUTER JOIN 
+				(SELECT CODE_ID, CODE, CODE_NM FROM 
+					LETTCCMMNDETAILCODE WHERE CODE_ID = 'COM004' AND USE_AT='Y') b
+				ON a.BBS_TY_CODE = b.CODE
+			LEFT OUTER JOIN 
+				(SELECT CODE_ID, CODE, CODE_NM FROM 
+					LETTCCMMNDETAILCODE WHERE CODE_ID = 'COM009' AND USE_AT='Y') c
+				ON a.BBS_ATTRB_CODE = c.CODE
+			WHERE 1=1	
+		
+			<if test="useAt != null and useAt != ''">
+				AND a.USE_AT = #{useAt}
+			</if>
+			<if test="searchCnd == 0">AND
+					a.BBS_NM LIKE '%' || #{searchWrd} || '%' 		
+			</if>
+			<if test="searchCnd == 1">AND
+					b.CODE_NM LIKE '%' || #{searchWrd} || '%'		
+			</if>	
+					
+			ORDER BY a.FRST_REGIST_PNTTM DESC 
+			) TB ) Z WHERE rn BETWEEN #{firstIndex} + 1 AND #{firstIndex} + #{recordCountPerPage}
+						
+	</select>	
+	
+	<select id="selectBBSMasterInfsCnt" parameterType="egovframework.let.cop.bbs.service.BoardMasterVO" resultType="java.lang.Integer">
+		
+			SELECT 
+				COUNT(a.BBS_ID)
+			FROM
+				LETTNBBSMASTER a
+			LEFT OUTER JOIN 
+				(SELECT CODE_ID, CODE, CODE_NM FROM 
+					LETTCCMMNDETAILCODE WHERE CODE_ID = 'COM004' AND USE_AT='Y') b
+				ON a.BBS_TY_CODE = b.CODE
+			LEFT OUTER JOIN 
+				(SELECT CODE_ID, CODE, CODE_NM FROM 
+					LETTCCMMNDETAILCODE WHERE CODE_ID = 'COM009' AND USE_AT='Y') c
+				ON a.BBS_ATTRB_CODE = c.CODE
+			WHERE 1=1 
+		
+			<if test="useAt != null and useAt != ''">
+				AND a.USE_AT = #{useAt}
+			</if>
+			<if test="searchCnd == 0">AND
+					a.BBS_NM LIKE '%' || #{searchWrd} || '%' 		
+			</if>
+			<if test="searchCnd == 1">AND
+					b.CODE_NM LIKE '%' || #{searchWrd} || '%' 		
+			</if>	
+	</select>	
+ 
+	<select id="selectBBSMasterInf" parameterType="egovframework.let.cop.bbs.service.BoardMaster" resultMap="boardMasterDetail">
+		
+			SELECT 
+				a.BBS_ID, a.BBS_TY_CODE, b.CODE_NM as BBS_TY_CODE_NM, a.BBS_INTRCN, 
+				a.BBS_ATTRB_CODE, c.CODE_NM as BBS_ATTRB_CODE_NM, a.BBS_NM, 
+				a.TMPLAT_ID, d.TMPLAT_NM, d.TMPLAT_COURS, a.FILE_ATCH_POSBL_AT, a.ATCH_POSBL_FILE_NUMBER,
+				a.ATCH_POSBL_FILE_SIZE, a.REPLY_POSBL_AT, a.FRST_REGISTER_ID, e.USER_NM as FRST_REGISTER_NM,
+				a.USE_AT, TO_CHAR(a.FRST_REGIST_PNTTM, 'YYYY-MM-DD') as FRST_REGIST_PNTTM				
+				,(SELECT NVL(USE_AT,'N') FROM LETTNBBSUSE 
+					WHERE BBS_ID = #{bbsId} 
+					AND TRGET_ID IN (#{uniqId}, 'SYSTEM_DEFAULT_BOARD')
+				) as AUTH_FLAG
+			FROM
+				LETTNBBSMASTER a
+			LEFT OUTER JOIN 
+				(SELECT CODE_ID, CODE, CODE_NM FROM LETTCCMMNDETAILCODE WHERE CODE_ID = 'COM004' AND USE_AT='Y') b
+				ON a.BBS_TY_CODE = b.CODE
+			LEFT OUTER JOIN 
+				(SELECT CODE_ID, CODE, CODE_NM FROM LETTCCMMNDETAILCODE WHERE CODE_ID = 'COM009' AND USE_AT='Y') c
+				ON a.BBS_ATTRB_CODE = c.CODE
+			LEFT OUTER JOIN LETTNTMPLATINFO d
+				ON a.TMPLAT_ID = d.TMPLAT_ID				
+			LEFT OUTER JOIN COMVNUSERMASTER e
+				ON a.FRST_REGISTER_ID = e.ESNTL_ID		
+			WHERE a.BBS_ID = #{bbsId}
+						
+	</select> 
+ 
+ 	<update id="updateBBSMasterInf" parameterType="egovframework.let.cop.bbs.service.BoardMaster">
+ 		
+			UPDATE LETTNBBSMASTER SET 
+				BBS_NM = #{bbsNm},
+				BBS_INTRCN = #{bbsIntrcn}, 
+				FILE_ATCH_POSBL_AT = #{fileAtchPosblAt},
+				ATCH_POSBL_FILE_NUMBER = #{posblAtchFileNumber},
+				ATCH_POSBL_FILE_SIZE = #{posblAtchFileSize},
+				TMPLAT_ID = #{tmplatId},		
+				LAST_UPDUSR_ID = #{lastUpdusrId},
+				LAST_UPDT_PNTTM = SYSDATETIME
+			WHERE BBS_ID = #{bbsId}
+ 		
+ 	</update>
+
+ 	<update id="deleteBBSMasterInf" parameterType="egovframework.let.cop.bbs.service.BoardMaster">
+ 		
+			UPDATE LETTNBBSMASTER SET 
+				USE_AT = 'N',
+				LAST_UPDUSR_ID = #{lastUpdusrId},
+				LAST_UPDT_PNTTM = SYSDATETIME
+			WHERE BBS_ID = #{bbsId}
+ 		
+ 	</update>
+
+	<select id="selectAllBBSMaster" parameterType="egovframework.let.cop.bbs.service.BoardMasterVO" resultMap="boardMasterAll">
+		
+			SELECT 
+				BBS_ID, BBS_TY_CODE, BBS_ATTRB_CODE, BBS_NM, TMPLAT_ID
+			FROM
+				LETTNBBSMASTER 
+			WHERE USE_AT = 'Y'			
+ 						
+	</select>
+	
+	<select id="selectAllBdMstrByTrget" parameterType="egovframework.let.cop.bbs.service.BoardMasterVO" resultMap="boardMasterAll">
+		
+			SELECT 
+				a.BBS_ID, a.BBS_TY_CODE, a.BBS_ATTRB_CODE, a.BBS_NM, a.TMPLAT_ID
+			FROM
+				LETTNBBSMASTER a, LETTNBBSUSE b
+			WHERE 
+				a.BBS_ID = b.BBS_ID
+			AND
+				b.TRGET_ID = #{trgetId}
+			AND
+				 a.USE_AT = 'Y'	 AND b.USE_AT = 'Y'		
+			 ORDER BY a.BBS_ID  
+ 						
+	</select>	
+
+	<select id="selectBdMstrListByTrget" parameterType="egovframework.let.cop.bbs.service.BoardMasterVO" resultMap="boardMasterList">
+		
+		SELECT * FROM ( SELECT rownum rn, TB.* FROM (
+			SELECT 
+				a.BBS_ID, a.BBS_TY_CODE, b.CODE_NM as BBS_TY_CODE_NM,
+				a.BBS_ATTRB_CODE, c.CODE_NM as BBS_ATTRB_CODE_NM, a.BBS_NM, 
+				a.TMPLAT_ID, a.USE_AT, 
+				TO_CHAR(a.FRST_REGIST_PNTTM, 'YYYY-MM-DD') as FRST_REGIST_PNTTM
+			FROM
+				LETTNBBSMASTER a
+			LEFT OUTER JOIN 
+				(SELECT CODE_ID, CODE, CODE_NM FROM 
+					LETTCCMMNDETAILCODE WHERE CODE_ID = 'COM004' AND USE_AT='Y') b
+				ON a.BBS_TY_CODE = b.CODE
+			LEFT OUTER JOIN 
+				(SELECT CODE_ID, CODE, CODE_NM FROM 
+					LETTCCMMNDETAILCODE WHERE CODE_ID = 'COM009' AND USE_AT='Y') c
+				ON a.BBS_ATTRB_CODE = c.CODE,
+			LETTNBBSUSE d
+			WHERE 
+				a.BBS_ID = d.BBS_ID
+			AND
+				d.TRGET_ID = #{trgetId}
+		
+			<if test="searchCnd == 0">AND
+					a.BBS_NM LIKE '%' || #{searchWrd} || '%' 		
+			</if>
+			<if test="searchCnd == 1">AND
+					b.CODE_NM LIKE '%' || #{searchWrd} || '%' 		
+			</if>	
+					
+			ORDER BY a.FRST_REGIST_PNTTM DESC 
+			) TB ) Z WHERE rn BETWEEN #{firstIndex} + 1 AND #{firstIndex} + #{recordCountPerPage}
+					
+	</select>
+
+	<select id="selectBdMstrListCntByTrget" parameterType="egovframework.let.cop.bbs.service.BoardMasterVO" resultType="java.lang.Integer">
+		
+			SELECT 
+				COUNT(a.BBS_ID)
+			FROM
+				LETTNBBSMASTER a
+			LEFT OUTER JOIN 
+				(SELECT CODE_ID, CODE, CODE_NM FROM 
+					LETTCCMMNDETAILCODE WHERE CODE_ID = 'COM004' AND USE_AT='Y') b
+				ON a.BBS_TY_CODE = b.CODE
+			LEFT OUTER JOIN 
+				(SELECT CODE_ID, CODE, CODE_NM FROM 
+					LETTCCMMNDETAILCODE WHERE CODE_ID = 'COM009' AND USE_AT='Y') c
+				ON a.BBS_ATTRB_CODE = c.CODE,
+			LETTNBBSUSE d
+			WHERE 
+				a.BBS_ID = d.BBS_ID
+			AND
+				d.TRGET_ID = #{trgetId}
+		
+			<if test="searchCnd == 0">AND
+					a.BBS_NM LIKE '%' || #{searchWrd} || '%' 		
+			</if>
+			<if test="searchCnd == 1">AND
+					b.CODE_NM LIKE '%' || #{searchWrd} || '%' 		
+			</if>	
+	</select>
+
+	<select id="selectNotUsedBdMstrList" parameterType="egovframework.let.cop.bbs.service.BoardMasterVO" resultMap="boardMasterList">
+		
+		SELECT * FROM ( SELECT rownum rn, TB.* FROM (
+			SELECT 
+				a.BBS_ID, a.BBS_TY_CODE, b.CODE_NM as BBS_TY_CODE_NM,
+				a.BBS_ATTRB_CODE, c.CODE_NM as BBS_ATTRB_CODE_NM, a.BBS_NM, 
+				a.TMPLAT_ID, a.USE_AT, 
+				TO_CHAR(a.FRST_REGIST_PNTTM, 'YYYY-MM-DD') as FRST_REGIST_PNTTM
+			FROM
+				LETTNBBSMASTER a
+			LEFT OUTER JOIN 
+				(SELECT CODE_ID, CODE, CODE_NM FROM 
+					LETTCCMMNDETAILCODE WHERE CODE_ID = 'COM004' AND USE_AT='Y') b
+				ON a.BBS_TY_CODE = b.CODE
+			LEFT OUTER JOIN 
+				(SELECT CODE_ID, CODE, CODE_NM FROM 
+					LETTCCMMNDETAILCODE WHERE CODE_ID = 'COM009' AND USE_AT='Y') c
+				ON a.BBS_ATTRB_CODE = c.CODE
+			WHERE a.USE_AT = 'Y'
+				AND a.BBS_ID NOT IN (SELECT BBS_ID FROM LETTNBBSUSE WHERE USE_AT = 'Y')
+		
+			<if test="searchCnd == 0">AND
+					a.BBS_NM LIKE '%' || #{searchWrd} || '%' 		
+			</if>
+			<if test="searchCnd == 1">AND
+					b.CODE_NM LIKE '%' || #{searchWrd} || '%' 		
+			</if>	
+					
+			ORDER BY a.FRST_REGIST_PNTTM DESC 
+			) TB ) Z WHERE rn BETWEEN #{firstIndex} + 1 AND #{firstIndex} + #{recordCountPerPage}
+						
+	</select>	
+	
+	<select id="selectNotUsedBdMstrListCnt" parameterType="egovframework.let.cop.bbs.service.BoardMasterVO" resultType="java.lang.Integer">
+		
+			SELECT 
+				COUNT(a.BBS_ID)
+			FROM
+				LETTNBBSMASTER a
+			LEFT OUTER JOIN 
+				(SELECT CODE_ID, CODE, CODE_NM FROM 
+					LETTCCMMNDETAILCODE WHERE CODE_ID = 'COM004' AND USE_AT='Y') b
+				ON a.BBS_TY_CODE = b.CODE
+			LEFT OUTER JOIN 
+				(SELECT CODE_ID, CODE, CODE_NM FROM 
+					LETTCCMMNDETAILCODE WHERE CODE_ID = 'COM009' AND USE_AT='Y') c
+				ON a.BBS_ATTRB_CODE = c.CODE
+			WHERE a.USE_AT = 'Y'
+				AND a.BBS_ID NOT IN (SELECT BBS_ID FROM LETTNBBSUSE WHERE USE_AT = 'Y') 
+		
+			<if test="searchCnd == 0">AND
+					a.BBS_NM LIKE '%' || #{searchWrd} || '%' 		
+			</if>
+			<if test="searchCnd == 1">AND
+					b.CODE_NM LIKE '%' || #{searchWrd} || '%' 		
+			</if>	
+	</select>	
+
+
+</mapper>

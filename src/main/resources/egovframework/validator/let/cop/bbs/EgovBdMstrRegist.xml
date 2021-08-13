@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE form-validation PUBLIC 
+    "-//Apache Software Foundation//DTD Commons Validator Rules Configuration 1.1//EN" 
+    "http://jakarta.apache.org/commons/dtds/validator_1_1.dtd">
+
+<form-validation>
+
+    <formset>
+		<form name="boardMaster">
+			<field property="bbsNm" depends="required, maxlength">
+        		<arg0 key="cop.bbsNm" />
+        		<arg1 key="120" resource="false"/>
+				<var>
+					<var-name>maxlength</var-name>
+					<var-value>120</var-value>
+				</var>
+			</field>
+			
+			<field property="bbsIntrcn" depends="required, maxlength">
+        		<arg0 key="cop.bbsIntrcn" />
+        		<arg1 key="2000" resource="false"/>
+				<var>
+					<var-name>maxlength</var-name>
+					<var-value>2000</var-value>
+				</var>
+			</field> 
+			<field property="bbsTyCode" depends="required">
+        		<arg0 key="cop.bbsTyCode" />
+			</field>			
+			<field property="bbsAttrbCode" depends="required">
+        		<arg0 key="cop.bbsAttrbCode" />
+			</field>
+			<field property="replyPosblAt" depends="required">
+        		<arg0 key="cop.replyPosblAt" />
+			</field>	
+			<field property="fileAtchPosblAt" depends="required">
+        		<arg0 key="cop.fileAtchPosblAt" />
+			</field>
+			<field property="posblAtchFileNumber" depends="required">
+        		<arg0 key="cop.posblAtchFileNumber" />
+			</field>
+			<field property="tmplatNm" depends="required">
+        		<arg0 key="cop.tmplatId" />
+			</field>			
+					
+		</form>
+    </formset>
+
+</form-validation>

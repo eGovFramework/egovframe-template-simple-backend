@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="EgovUserInfManageDAO">
+
+
+	<resultMap id="UserInfs" type="egovframework.let.cop.com.service.UserInfVO">
+		<result property="uniqId" column="ESNTL_ID"/>
+		<result property="userId" column="USER_ID"/>
+		<result property="userNm" column="USER_NM"/>
+		<result property="userZip" column="USER_ZIP"/>
+		<result property="userAdres" column="USER_ADRES"/>
+		<result property="userEmail" column="USER_EMAIL"/>
+	</resultMap>
+	
+	<resultMap id="UserInfList" type="egovframework.let.cop.com.service.UserInfVO">
+		<result property="uniqId" column="ESNTL_ID"/>
+		<result property="userId" column="USER_ID"/>
+		<result property="userNm" column="USER_NM"/>
+		<result property="userZip" column="USER_ZIP"/>
+		<result property="userAdres" column="USER_ADRES"/>
+		<result property="userEmail" column="USER_EMAIL"/>
+		<result property="useAt" column="USE_AT"/>
+		<result property="deletedAt" column="DELETED_AT"/>
+	</resultMap>
+	
+	<resultMap id="AllUserInfList" type="egovframework.let.cop.com.service.UserInfVO">
+		<result property="uniqId" column="ESNTL_ID"/>
+		<result property="trgetId" column="TRGET_ID"/>
+	</resultMap>	
+
+ 	<select id="selectUserList" parameterType="egovframework.let.cop.com.service.UserInfVO" resultMap="UserInfs">
+ 		
+ 		SELECT * FROM ( SELECT rownum rn, TB.* FROM (
+			SELECT 
+				ESNTL_ID, USER_ID, USER_NM, USER_ZIP, USER_ADRES, USER_EMAIL
+			FROM 
+				COMVNUSERMASTER
+			WHERE 1=1 
+ 		
+			<if test="searchCnd == 0">AND
+					USER_NM LIKE '%' || #{searchWrd} || '%' 		
+			</if>
+					
+			ORDER BY USER_NM 
+			) TB ) WHERE rn BETWEEN #{firstIndex} + 1 AND #{firstIndex} + #{recordCountPerPage}
+							
+ 	</select>
+ 	
+	<select id="selectUserListCnt" parameterType="egovframework.let.cop.com.service.UserInfVO" resultType="java.lang.Integer">
+		
+			SELECT 
+				COUNT(ESNTL_ID) as cnt
+			FROM 
+				COMVNUSERMASTER
+			WHERE 1=1 
+		
+			<if test="searchCnd == 0">AND
+					USER_NM LIKE '%' || #{searchWrd} || '%' 		
+			</if>		
+	</select>	
+ 
+	<select id="selectCmmntyUserList" parameterType="egovframework.let.cop.com.service.UserInfVO" resultMap="UserInfList">
+ 		
+ 		SELECT * FROM ( SELECT rownum rn, TB.* FROM (
+			SELECT 
+				a.ESNTL_ID, a.USER_ID, a.USER_NM, a.USER_ZIP, a.USER_ADRES, a.USER_EMAIL, b.USE_AT,
+				(SELECT USE_AT from LETTNCMMNTY WHERE CMMNTY_ID = #{trgetId}) AS DELETED_AT
+			FROM 
+				COMVNUSERMASTER a, LETTNCMMNTYUSER b
+			WHERE 
+				a.ESNTL_ID = b.EMPLYR_ID 
+			AND
+				b.CMMNTY_ID = #{trgetId}
+ 		
+			<if test="searchCnd == 0">AND
+					a.USER_NM LIKE '%' || #{searchWrd} || '%' 		
+			</if>
+					
+			ORDER BY a.USER_NM 
+			) TB ) WHERE rn BETWEEN #{firstIndex} + 1 AND #{firstIndex} + #{recordCountPerPage}
+						
+ 	</select>
+ 	
+	<select id="selectCmmntyUserListCnt" parameterType="egovframework.let.cop.com.service.UserInfVO" resultType="java.lang.Integer">
+		
+			SELECT 
+				COUNT(a.ESNTL_ID) as cnt
+			FROM 
+				COMVNUSERMASTER a, LETTNCMMNTYUSER b
+			WHERE 
+				a.ESNTL_ID = b.EMPLYR_ID
+			AND
+				b.CMMNTY_ID = #{trgetId}
+		
+			<if test="searchCnd == 0">AND
+					a.USER_NM LIKE '%' || #{searchWrd} || '%' 		
+			</if>		
+	</select>
+ 
+
+	<select id="selectCmmntyMngrList" parameterType="egovframework.let.cop.com.service.UserInfVO" resultMap="UserInfList">
+ 		
+ 		SELECT * FROM ( SELECT rownum rn, TB.* FROM (
+			SELECT 
+				a.ESNTL_ID, a.USER_ID, a.USER_NM, a.USER_ZIP, a.USER_ADRES, a.USER_EMAIL, b.USE_AT, 
+				(SELECT USE_AT from LETTNCMMNTY WHERE CMMNTY_ID = #{trgetId}) AS DELETED_AT
+			FROM 
+				COMVNUSERMASTER a, LETTNCMMNTYUSER b
+			WHERE 
+				a.ESNTL_ID = b.EMPLYR_ID 
+			AND
+				b.MNGR_AT = 'Y'
+			AND
+				b.CMMNTY_ID = #{trgetId}				
+ 		
+			<if test="searchCnd == 0">AND
+					a.USER_NM LIKE '%' || #{searchWrd} || '%' 		
+			</if>
+					
+			ORDER BY a.USER_NM 
+			) TB ) WHERE rn BETWEEN #{firstIndex} + 1 AND #{firstIndex} + #{recordCountPerPage}
+						
+ 	</select>
+ 	
+	<select id="selectCmmntyMngrListCnt" parameterType="egovframework.let.cop.com.service.UserInfVO" resultType="java.lang.Integer">
+		
+			SELECT 
+				COUNT(a.ESNTL_ID) as cnt
+			FROM 
+				COMVNUSERMASTER a, LETTNCMMNTYUSER b
+			WHERE 
+				a.ESNTL_ID = b.EMPLYR_ID 
+			AND
+				b.MNGR_AT = 'Y'
+			AND
+				b.CMMNTY_ID = #{trgetId}				
+		
+			<if test="searchCnd == 0">AND
+					a.USER_NM LIKE '%' || #{searchWrd} || '%' 		
+			</if>		
+	</select>
+	
+
+	<select id="selectClubUserList" parameterType="egovframework.let.cop.com.service.UserInfVO" resultMap="UserInfList">
+ 		
+ 		SELECT * FROM ( SELECT rownum rn, TB.* FROM (
+			SELECT 
+				a.ESNTL_ID, a.USER_ID, a.USER_NM, a.USER_ZIP, a.USER_ADRES, a.USER_EMAIL, b.USE_AT,
+				(SELECT USE_AT from LETTNCLUB WHERE CLB_ID = #{trgetId}) AS DELETED_AT
+			FROM 
+				COMVNUSERMASTER a, LETTNCLUBUSER b
+			WHERE 
+				a.ESNTL_ID = b.EMPLYR_ID 
+			AND
+				b.CLB_ID = #{trgetId}				
+ 		
+			<if test="searchCnd == 0">AND
+					a.USER_NM LIKE '%' || #{searchWrd} || '%' 		
+			</if>
+					
+			ORDER BY a.USER_NM 
+			) TB ) WHERE rn BETWEEN #{firstIndex} + 1 AND #{firstIndex} + #{recordCountPerPage}
+						
+ 	</select>
+ 	
+	<select id="selectClubUserListCnt" parameterType="egovframework.let.cop.com.service.UserInfVO" resultType="java.lang.Integer">
+		
+			SELECT 
+				COUNT(a.ESNTL_ID) as cnt
+			FROM 
+				COMVNUSERMASTER a, LETTNCLUBUSER b
+			WHERE 
+				a.ESNTL_ID = b.EMPLYR_ID 
+			AND
+				b.CLB_ID = #{trgetId}						
+		
+			<if test="searchCnd == 0">AND
+					a.USER_NM LIKE '%' || #{searchWrd} || '%' 		
+			</if>		
+	</select>
+
+	<select id="selectClubOprtrList" parameterType="egovframework.let.cop.com.service.UserInfVO" resultMap="UserInfList">
+ 		
+ 		SELECT * FROM ( SELECT rownum rn, TB.* FROM (
+			SELECT 
+				a.ESNTL_ID, a.USER_ID, a.USER_NM, a.USER_ZIP, a.USER_ADRES, a.USER_EMAIL, b.USE_AT,
+				(SELECT USE_AT from LETTNCLUB WHERE CLB_ID = #{trgetId}) AS DELETED_AT
+			FROM 
+				COMVNUSERMASTER a, LETTNCLUBUSER b
+			WHERE 
+				a.ESNTL_ID = b.EMPLYR_ID 
+			AND
+				b.OPRTR_AT = 'Y'
+			AND
+				b.CLB_ID = #{trgetId}						
+ 		
+			<if test="searchCnd == 0">AND
+					a.USER_NM LIKE '%' || #{searchWrd} || '%' 		
+			</if>
+					
+			ORDER BY a.USER_NM 
+			) TB ) WHERE rn BETWEEN #{firstIndex} + 1 AND #{firstIndex} + #{recordCountPerPage}
+						
+ 	</select>
+ 	
+	<select id="selectClubOprtrListCnt" parameterType="egovframework.let.cop.com.service.UserInfVO" resultType="java.lang.Integer">
+		
+			SELECT 
+				COUNT(a.ESNTL_ID) as cnt
+			FROM 
+				COMVNUSERMASTER a, LETTNCLUBUSER b
+			WHERE 
+				a.ESNTL_ID = b.EMPLYR_ID 
+			AND
+				b.OPRTR_AT = 'Y'
+			AND
+				b.CLB_ID = #{trgetId}						
+		
+			<if test="searchCnd == 0">AND
+					a.USER_NM LIKE '%' || #{searchWrd} || '%' 		
+			</if>		
+	</select>
+
+	<select id="selectAllClubUser" parameterType="egovframework.let.cop.com.service.UserInfVO" resultMap="AllUserInfList">
+		
+			SELECT EMPLYR_ID as ESNTL_ID, CLB_ID as TRGET_ID 
+			FROM LETTNCLUBUSER WHERE USE_AT = 'Y'
+			AND CLB_ID = #{trgetId}			
+		
+	</select>
+	
+	<select id="selectAllCmmntyUser" parameterType="egovframework.let.cop.com.service.UserInfVO" resultMap="AllUserInfList">
+		
+			SELECT EMPLYR_ID as ESNTL_ID, CMMNTY_ID as TRGET_ID 
+			FROM LETTNCMMNTYUSER WHERE USE_AT = 'Y'
+			AND CMMNTY_ID =  #{trgetId}	
+		
+	</select>	
+
+</mapper>

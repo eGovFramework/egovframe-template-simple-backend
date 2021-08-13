@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE form-validation PUBLIC 
+    "-//Apache Software Foundation//DTD Commons Validator Rules Configuration 1.1//EN" 
+    "http://jakarta.apache.org/commons/dtds/validator_1_1.dtd">
+
+<form-validation>
+
+    <formset>
+		<form name="board">
+			<field property="nttSj" depends="required, maxlength">
+        		<arg0 key="cop.nttSj" />
+        		<arg1 key="1200" resource="false"/>
+				<var>
+					<var-name>maxlength</var-name>
+					<var-value>1200</var-value>
+				</var>
+			</field>			
+			<field property="nttCn" depends="required">
+        		<arg0 key="cop.nttCn" />
+			</field> 
+			<field property="ntceBgnde" depends="required">
+        		<arg0 key="cop.ntceBgnde" />
+			</field>
+			<field property="ntceEndde" depends="required">
+        		<arg0 key="cop.ntceEndde" />
+			</field>
+			<field property="ntcrNm" depends="required">
+        		<arg0 key="cop.ntcrNm" />
+			</field>
+			<field property="password" depends="required">
+        		<arg0 key="cop.password" />
+			</field>
+		</form>
+    </formset>
+
+</form-validation>

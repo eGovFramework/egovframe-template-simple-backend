@@ -1,0 +1,60 @@
+@charset "utf-8";
+*{margin:0; padding:0;margin:0; padding:0;}
+img, fieldset, button{border:none;}
+li{list-style-type:none;}
+hr, button img{display:none;}
+a{text-decoration:none;}
+a:hover, a:active, a:focus{text-decoration:underline;}
+textarea{overflow:auto;}
+legend {position:absolute; top:0; left:0; width:0; height:0; overflow:hidden; visibility:hidden; font-size:0; line-height:0;} /* For Screen Reader */
+caption{display:none;}
+img{border:0}
+html, body{margin:0; padding:0; font-family:"돋움", Gulim, AppleGothic, Sans-serif;font-size:12px;}
+
+#popup_wrap{border:5px solid #D4C5EE;padding:5px; float:left;margin-right:1px; width:94%;}
+.popup {margin-left:10px;margin-right:10px;}
+.popup table{clear:both; width:100%; border: 1px solid #dddddd;line-height: 28px;overflow: hidden; white-space: nowrap; margin-top: 10px;margin-bottom:10px;border-collapse: collapse;}
+.popup table th {background-color:#f2f2f2;border:1px solid #dddddd; color:#0f438a; height: 26px; font-size:90%;
+    text-align:left;padding-left:10px;width:130px;}
+.popup table td{background-color:#ffffff;border:1px solid #dddddd;
+    color:#0f438a;
+    height: 26px;padding-left:10px;}
+
+.h_title{font-size:120%;font-weight:bold; color:#666666; padding-left:20px;padding-top:10px; margin-left:8px; background: url("../images/bl/bl_idx.gif") no-repeat scroll 0px 11px transparent;}
+
+/* BUTTONS */
+.buttons a, .buttons button{margin: 0 auto; 
+    display:block;
+    float:left;
+    margin:0 7px 0 0;
+    background-color:#f5f5f5;
+    border:1px solid #dedede;
+    border-top:1px solid #eee;
+    border-left:1px solid #eee;
+    font-size:100%;
+    line-height:130%;
+    text-decoration:none;
+    font-weight:bold;
+    color:#565656;
+    cursor:pointer;
+    padding:5px 10px 6px 7px; /* Links */
+}
+.buttons button{
+    width:auto;
+    overflow:visible;
+    padding:4px 10px 3px 7px; /* IE6 */
+}
+.buttons button[type]{
+    padding:5px 10px 5px 7px; /* Firefox */
+    line-height:17px; /* Safari */
+}
+*:first-child+html button[type]{
+    padding:4px 10px 3px 7px; /* IE7 */
+}
+.buttons button img, .buttons a img{
+    margin:0 3px -3px 0 !important;
+    padding:0;
+    border:none;
+    width:16px;
+    height:16px;
+}

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE form-validation PUBLIC 
+    "-//Apache Software Foundation//DTD Commons Validator Rules Configuration 1.1//EN" 
+    "http://jakarta.apache.org/commons/dtds/validator_1_1.dtd">
+
+<form-validation>
+
+    <formset>
+		<form name="indvdlSchdulManageVO">
+			<field property="schdulSe" depends="required">
+        		<arg0 key="일정구분" resource="false"/>
+			</field>
+			
+			<field property="schdulIpcrCode" depends="required">
+        		<arg0 key="중요도" resource="false"/>
+			</field>
+			
+			<field property="schdulDeptName" depends="required">
+        		<arg0 key="부서" resource="false"/>
+			</field>
+			
+			<field property="schdulNm" depends="required, maxlength">
+        		<arg0 key="일정명" resource="false"/>
+				<var>
+				<var-name>maxlength</var-name>
+				<var-value>255</var-value>
+				</var>
+			</field>
+			
+			<field property="schdulCn" depends="required, maxlength">
+        		<arg0 key="일정내용" resource="false"/>
+        		<arg1 key="2500" resource="false"/>
+				<var>
+				<var-name>maxlength</var-name>
+				<var-value>2500</var-value>
+				</var>
+			</field> 
+
+			<field property="schdulBgndeYYYMMDD" depends="required">
+        		<arg0 key="일정시작일자" resource="false"/>
+			</field>
+			
+			<field property="schdulEnddeYYYMMDD" depends="required">
+        		<arg0 key="일정종료일자" resource="false"/>
+			</field>
+			
+			<field property="schdulBgndeHH" depends="required">
+        		<arg0 key="일정시작(시)" resource="false"/>
+			</field>
+			<field property="schdulBgndeMM" depends="required">
+        		<arg0 key="일정시작(분)" resource="false"/>
+			</field>
+			
+			<field property="schdulEnddeHH" depends="required">
+        		<arg0 key="일정종료(시)" resource="false"/>
+			</field>
+			<field property="schdulEnddeMM" depends="required">
+        		<arg0 key="일정종료(분)" resource="false"/>
+			</field>
+			
+			<field property="schdulChargerName" depends="required">
+        		<arg0 key="담당자" resource="false"/>
+			</field>
+			
+		</form>
+    </formset>
+
+</form-validation>

@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="TemplateManageDAO">
+
+
+	<resultMap id="tmplatList" type="egovframework.let.cop.com.service.TemplateInfVO">
+		<result property="tmplatId" column="TMPLAT_ID"/>
+		<result property="tmplatNm" column="TMPLAT_NM"/>
+		<result property="tmplatSeCode" column="TMPLAT_SE_CODE"/>
+		<result property="tmplatSeCodeNm" column="TMPLAT_SE_CODE_NM"/>
+		<result property="tmplatCours" column="TMPLAT_COURS"/>
+		<result property="useAt" column="USE_AT"/>
+		<result property="frstRegisterPnttm" column="FRST_REGIST_PNTTM"/>
+	</resultMap>
+
+	<resultMap id="tmplatDetail" type="egovframework.let.cop.com.service.TemplateInfVO">
+		<result property="tmplatId" column="TMPLAT_ID"/>
+		<result property="tmplatNm" column="TMPLAT_NM"/>
+		<result property="tmplatSeCode" column="TMPLAT_SE_CODE"/>
+		<result property="tmplatSeCodeNm" column="TMPLAT_SE_CODE_NM"/>
+		<result property="tmplatCours" column="TMPLAT_COURS"/>
+		<result property="useAt" column="USE_AT"/>
+		<result property="frstRegisterId" column="FRST_REGISTER_ID"/>
+		<result property="frstRegisterNm" column="FRST_REGISTER_NM"/>
+		<result property="frstRegisterPnttm" column="FRST_REGIST_PNTTM"/>
+		<result property="lastUpdusrId" column="LAST_UPDUSR_ID"/>
+		<result property="lastUpdusrNm" column="LAST_UPDUSR_NM"/>
+		<result property="lastUpdusrPnttm" column="LAST_UPDT_PNTTM"/>
+	</resultMap>
+
+
+
+	<insert id="insertTemplateInf" parameterType="egovframework.let.cop.com.service.TemplateInf">
+		
+			INSERT INTO LETTNTMPLATINFO
+			(TMPLAT_ID, TMPLAT_NM, TMPLAT_SE_CODE, TMPLAT_COURS, 
+			 USE_AT, FRST_REGISTER_ID, FRST_REGIST_PNTTM )
+			VALUES
+			( #{tmplatId}, #{tmplatNm}, #{tmplatSeCode}, #{tmplatCours}, 
+			  #{useAt}, #{frstRegisterId}, SYSDATE()  
+			 )			
+		
+	</insert>
+	
+	<select id="selectTemplateInfs" parameterType="egovframework.let.cop.com.service.TemplateInfVO" resultMap="tmplatList">
+		
+			SELECT 
+                a.TMPLAT_ID, a.TMPLAT_NM, a.TMPLAT_SE_CODE, a.TMPLAT_COURS, a.USE_AT,
+                a.FRST_REGISTER_ID, a.FRST_REGIST_PNTTM,
+                b.USER_NM AS FRST_REGISTER_NM, c.CODE_NM AS TMPLAT_SE_CODE_NM
+            FROM
+                LETTNTMPLATINFO a
+            LEFT OUTER JOIN COMVNUSERMASTER b
+                ON a.FRST_REGISTER_ID = b.ESNTL_ID
+            LEFT OUTER JOIN LETTCCMMNDETAILCODE c
+                ON a.TMPLAT_SE_CODE = c.CODE
+            WHERE 
+                c.CODE_ID = 'COM005'
+		
+			<if test="typeFlag != null and typeFlag != ''">
+				AND a.TMPLAT_SE_CODE = #{tmplatSeCode}
+			</if>			
+			<if test="searchCnd == 0">AND
+					a.TMPLAT_NM LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>
+			<if test="searchCnd == 1">AND
+					c.CODE_NM LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>	
+					
+			ORDER BY a.FRST_REGIST_PNTTM DESC 
+			LIMIT #{recordCountPerPage} OFFSET #{firstIndex}
+		
+	</select>	
+	
+	<select id="selectTemplateInfsCnt" parameterType="egovframework.let.cop.com.service.TemplateInfVO" resultType="java.lang.Integer">
+		
+			SELECT 
+				COUNT(a.TMPLAT_ID)
+			FROM
+				LETTNTMPLATINFO a
+			LEFT OUTER JOIN COMVNUSERMASTER b
+				ON a.FRST_REGISTER_ID = b.ESNTL_ID
+			LEFT OUTER JOIN LETTCCMMNDETAILCODE c
+				ON a.TMPLAT_SE_CODE = c.CODE
+			WHERE 
+				c.CODE_ID = 'COM005'
+		
+			<if test="typeFlag != null and typeFlag != ''">
+				AND a.TMPLAT_SE_CODE = #{tmplatSeCode}
+			</if>		
+			<if test="searchCnd == 0">AND
+					a.TMPLAT_NM LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>
+			<if test="searchCnd == 1">AND
+					c.CODE_NM LIKE CONCAT ('%', #{searchWrd},'%') 		
+			</if>		
+	</select>	
+ 
+	<select id="selectTemplateInf" parameterType="egovframework.let.cop.com.service.TemplateInfVO" resultMap="tmplatDetail">
+		
+			SELECT 
+                a.TMPLAT_ID, a.TMPLAT_NM, a.TMPLAT_SE_CODE, a.TMPLAT_COURS, a.USE_AT,
+                a.FRST_REGISTER_ID, a.FRST_REGIST_PNTTM,
+                b.USER_NM AS FRST_REGISTER_NM, c.CODE_NM AS TMPLAT_SE_CODE_NM,
+                a.LAST_UPDUSR_ID,
+                d.USER_NM AS LAST_UPDUSR_NM, a.LAST_UPDT_PNTTM
+            FROM
+                LETTNTMPLATINFO a
+            LEFT OUTER JOIN COMVNUSERMASTER b
+                ON a.FRST_REGISTER_ID = b.ESNTL_ID
+            LEFT OUTER JOIN LETTCCMMNDETAILCODE c
+                ON a.TMPLAT_SE_CODE = c.CODE
+            LEFT OUTER JOIN LETTNEMPLYRINFO d
+                ON a.LAST_UPDUSR_ID = d.EMPLYR_ID
+            WHERE 
+                c.CODE_ID = 'COM005'
+            AND
+				a.TMPLAT_ID = #{tmplatId}
+						
+	</select> 
+ 
+ 	<update id="updateTemplateInf" parameterType="egovframework.let.cop.com.service.TemplateInf">
+ 		
+			UPDATE LETTNTMPLATINFO SET 
+				TMPLAT_SE_CODE = #{tmplatSeCode},
+				TMPLAT_COURS = #{tmplatCours}, 
+				USE_AT = #{useAt},
+				LAST_UPDUSR_ID = #{lastUpdusrId},
+				LAST_UPDT_PNTTM = SYSDATE()
+			WHERE TMPLAT_ID = #{tmplatId}
+ 		
+ 	</update>
+			 
+ 	<update id="deleteTemplateInf" parameterType="egovframework.let.cop.com.service.TemplateInf">
+ 		
+			UPDATE LETTNBBSMASTER SET 
+				USE_AT = 'N',
+				LAST_UPDUSR_ID = #{lastUpdusrId},
+				LAST_UPDT_PNTTM = SYSDATE()
+			WHERE TMPLAT_ID = #{tmplatId}
+ 		
+ 	</update>
+
+	<select id="selectTemplateInfsByCode" parameterType="egovframework.let.cop.com.service.TemplateInfVO" resultMap="tmplatList">
+		
+			SELECT 
+				a.TMPLAT_ID, a.TMPLAT_NM, a.TMPLAT_SE_CODE, a.TMPLAT_COURS, a.USE_AT,
+				a.FRST_REGISTER_ID, a.FRST_REGIST_PNTTM,
+				b.USER_NM AS FRST_REGISTER_NM, c.CODE_NM AS TMPLAT_SE_CODE_NM
+			FROM
+				LETTNTMPLATINFO a
+			LEFT OUTER JOIN COMVNUSERMASTER b
+				ON a.FRST_REGISTER_ID = b.ESNTL_ID
+			LEFT OUTER JOIN LETTCCMMNDETAILCODE c
+				ON a.TMPLAT_SE_CODE = c.CODE
+			WHERE 
+				c.CODE_ID = 'COM005'
+			AND
+			    a.TMPLAT_SE_CODE = #{tmplatSeCode}
+			ORDER BY a.FRST_REGIST_PNTTM DESC 
+						
+	</select>	
+
+</mapper>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jeus-web-dd xmlns="http://www.tmaxsoft.com/xml/ns/jeus">
+        <context-path>/sht</context-path>
+        <auto-reload>
+            <enable-reload>true</enable-reload>
+            <check-on-demand>true</check-on-demand>
+        </auto-reload>
+</jeus-web-dd>

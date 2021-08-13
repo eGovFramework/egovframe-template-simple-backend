@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="BBSManageDAO">
+
+
+	<resultMap id="boardList" type="egovframework.let.cop.bbs.service.BoardVO">
+		<result property="bbsId" column="BBS_ID"/>
+		<result property="nttId" column="NTT_ID"/>
+		<result property="nttSj" column="NTT_SJ"/>
+		<result property="frstRegisterId" column="FRST_REGISTER_ID"/>
+		<result property="frstRegisterNm" column="FRST_REGISTER_NM"/>
+		<result property="frstRegisterPnttm" column="FRST_REGIST_PNTTM"/>
+		<result property="inqireCo" column="RDCNT"/>
+		<result property="parnts" column="PARNTSCTT_NO"/>
+		<result property="replyAt" column="ANSWER_AT"/>		
+		<result property="replyLc" column="ANSWER_LC"/>
+		<result property="useAt" column="USE_AT"/>
+		<result property="atchFileId" column="ATCH_FILE_ID"/>
+		<result property="ntceBgnde" column="NTCE_BGNDE"/>
+		<result property="ntceEndde" column="NTCE_ENDDE"/>
+	</resultMap>
+
+	<resultMap id="boardDetail" type="egovframework.let.cop.bbs.service.BoardVO">
+		<result property="bbsId" column="BBS_ID"/>
+		<result property="nttId" column="NTT_ID"/>
+		<result property="nttSj" column="NTT_SJ"/>	
+		<result property="ntcrId" column="NTCR_ID"/>
+		<result property="ntcrNm" column="NTCR_NM"/>
+		<result property="nttNo" column="NTT_NO"/>
+		<result property="nttCn" column="NTT_CN" jdbcType="CLOB" typeHandler="egovframework.com.cmm.AltibaseClobStringTypeHandler"/>
+		<result property="password" column="PASSWORD"/>
+		<result property="frstRegisterId" column="FRST_REGISTER_ID"/>
+		<result property="frstRegisterNm" column="FRST_REGISTER_NM"/>
+		<result property="frstRegisterPnttm" column="FRST_REGIST_PNTTM"/>
+		<result property="ntceBgnde" column="NTCE_BGNDE"/>
+		<result property="ntceEndde" column="NTCE_ENDDE"/>
+		<result property="inqireCo" column="RDCNT"/>
+		<result property="useAt" column="USE_AT"/>
+		<result property="atchFileId" column="ATCH_FILE_ID"/>
+		<result property="parnts" column="PARNTSCTT_NO"/>
+		<result property="replyAt" column="ANSWER_AT"/>		
+		<result property="replyLc" column="ANSWER_LC"/>
+		<result property="sortOrdr" column="SORT_ORDR"/>
+		<result property="bbsTyCode" column="BBS_TY_CODE"/>
+		<result property="bbsAttrbCode" column="BBS_ATTRB_CODE"/>
+		<result property="replyPosblAt" column="REPLY_POSBL_AT"/>
+		<result property="fileAtchPosblAt" column="FILE_ATCH_POSBL_AT"/>
+		<result property="posblAtchFileNumber" column="ATCH_POSBL_FILE_NUMBER"/>
+		<result property="bbsNm" column="BBS_NM"/>
+	</resultMap>
+
+	<resultMap id="sortList" type="egovframework.let.cop.bbs.service.BoardVO">
+		<result property="bbsId" column="BBS_ID"/>
+		<result property="nttId" column="NTT_ID"/>
+		<result property="sortOrdr" column="SORT_ORDR"/>
+		<result property="parnts" column="PARNTSCTT_NO"/>
+		<result property="nttNo" column="NTT_NO"/>		
+		<result property="replyLc" column="ANSWER_LC"/>
+	</resultMap>
+
+	<resultMap id="guestList" type="egovframework.let.cop.bbs.service.BoardVO">
+		<result property="bbsId" column="BBS_ID"/>
+		<result property="nttId" column="NTT_ID"/>
+		<result property="nttSj" column="NTT_SJ"/>
+		<result property="ntcrNm" column="NTCR_NM"/>
+		<result property="password" column="PASSWORD"/>
+		<result property="frstRegisterPnttm" column="FRST_REGIST_PNTTM"/>
+		<result property="nttCn" column="NTT_CN" jdbcType="CLOB" typeHandler="egovframework.com.cmm.AltibaseClobStringTypeHandler"/>
+		<result property="useAt" column="USE_AT"/>
+		<result property="frstRegisterNm" column="FRST_REGISTER_NM"/>
+		<result property="frstRegisterId" column="FRST_REGISTER_ID"/>
+	</resultMap>
+
+ 	<select id="selectMaxNttId" resultType="java.lang.Long">
+ 		
+			SELECT NVL(MAX(NTT_ID),0)+1 AS NTT_ID  FROM LETTNBBS
+ 		
+ 	</select>
+ 	
+	<insert id="insertBoardArticle" parameterType="egovframework.let.cop.bbs.service.Board">
+		<selectKey keyProperty="nttNo" resultType="java.lang.Long">
+			SELECT NVL(MAX(SORT_ORDR),0)+1 AS NTT_NO  FROM LETTNBBS
+			WHERE BBS_ID = #{bbsId}
+		</selectKey>
+		
+			INSERT INTO LETTNBBS
+			(NTT_ID, BBS_ID, NTT_SJ, NTT_CN, SORT_ORDR, 
+			 NTCR_ID, NTCR_NM, PASSWORD, RDCNT, 
+			 NTCE_BGNDE, NTCE_ENDDE, ANSWER_AT,  			   
+			 PARNTSCTT_NO, NTT_NO, ANSWER_LC, ATCH_FILE_ID,
+			 FRST_REGISTER_ID, FRST_REGIST_PNTTM, USE_AT
+			 )
+			VALUES
+			( #{nttId}, #{bbsId}, #{nttSj}, #nttCn:CLOB#, #{nttNo}, 
+			  #{ntcrId}, #{ntcrNm}, #{password}, #{inqireCo}, 
+			  #{ntceBgnde}, #{ntceEndde}, #{replyAt}, 
+			  #{parnts}, 1, #{replyLc}, #{atchFileId},
+			  #{frstRegisterId}, SYSDATE, 'Y'
+			 )			
+		
+	</insert>
+	
+	<insert id="replyBoardArticle" parameterType="egovframework.let.cop.bbs.service.Board">
+		<selectKey keyProperty="nttNo" resultType="java.lang.Long">
+			SELECT NVL(MAX(NTT_NO),0)+1 AS NTT_NO  FROM LETTNBBS
+			WHERE BBS_ID = #{bbsId} AND SORT_ORDR = #{sortOrdr}
+		</selectKey>			
+		
+			INSERT INTO LETTNBBS
+			(NTT_ID, BBS_ID, NTT_SJ, NTT_CN, SORT_ORDR, 
+			 NTCR_ID, NTCR_NM, PASSWORD, RDCNT, 
+			 NTCE_BGNDE, NTCE_ENDDE, ANSWER_AT,  			   
+			 PARNTSCTT_NO, NTT_NO, ANSWER_LC, ATCH_FILE_ID,
+			 FRST_REGISTER_ID, FRST_REGIST_PNTTM, USE_AT
+			 )
+			VALUES
+			( #{nttId}, #{bbsId}, #{nttSj}, #nttCn:CLOB#, #{sortOrdr}, 
+			  #{ntcrId}, #{ntcrNm}, #{password}, #{inqireCo}, 
+			  #{ntceBgnde}, #{ntceEndde}, #{replyAt}, 
+			  #{parnts}, 1, #{replyLc}, #{atchFileId},
+			  #{frstRegisterId}, SYSDATE, 'Y'
+			 )			
+		
+	</insert>	
+	
+	<select id="selectNoticeListForSort" parameterType="egovframework.let.cop.bbs.service.Board" resultMap="sortList">
+					
+			SELECT
+				a.BBS_ID, a.NTT_ID, a.SORT_ORDR, a.PARNTSCTT_NO, a.NTT_NO, a.ANSWER_LC
+			FROM
+				LETTNBBS a	
+			WHERE
+				a.BBS_ID = #{bbsId}
+			AND
+				a.SORT_ORDR = #{sortOrdr}
+			ORDER BY  a.SORT_ORDR DESC, a.NTT_NO ASC	
+								
+	</select>
+
+			
+	<select id="selectBoardArticleList" parameterType="egovframework.let.cop.bbs.service.BoardVO" resultMap="boardList">
+		
+		SELECT * FROM ( SELECT rownum rn, TB.* FROM (
+			SELECT
+				a.NTT_ID, a.NTT_SJ, a.FRST_REGISTER_ID, NVL(b.USER_NM, a.NTCR_NM) as FRST_REGISTER_NM,
+				TO_CHAR(a.FRST_REGIST_PNTTM, 'YYYY-MM-DD') as FRST_REGIST_PNTTM,
+				a.RDCNT, a.PARNTSCTT_NO, a.ANSWER_AT, a.ANSWER_LC, a.USE_AT, a.ATCH_FILE_ID,
+				a.BBS_ID, a.NTCE_BGNDE, a.NTCE_ENDDE
+			FROM
+				LETTNBBS a
+			LEFT OUTER JOIN 
+				COMVNUSERMASTER b
+			ON a.FRST_REGISTER_ID = b.ESNTL_ID 
+			WHERE
+				a.BBS_ID = #{bbsId}
+		
+			<if test="searchCnd == 0">AND
+					a.NTT_SJ LIKE '%' || #{searchWrd} || '%' 		
+			</if>
+			<if test="searchCnd == 1">AND
+					a.NTT_CN LIKE '%' || #{searchWrd} || '%' 		
+			</if>	
+			<if test="searchCnd == 2">AND
+					b.USER_NM LIKE '%' || #{searchWrd} || '%' 		
+			</if>				
+					
+			ORDER BY a.SORT_ORDR DESC, NTT_NO ASC
+			) TB ) WHERE rn BETWEEN #{firstIndex} + 1 AND #{firstIndex} + #{recordCountPerPage}
+						
+	</select>	
+	
+	<select id="selectBoardArticleListCnt" parameterType="egovframework.let.cop.bbs.service.BoardVO" resultType="java.lang.Integer">
+		
+			SELECT
+				COUNT(a.NTT_ID) as cnt
+			FROM
+				LETTNBBS a
+			LEFT OUTER JOIN 
+				COMVNUSERMASTER b
+			ON a.FRST_REGISTER_ID = b.ESNTL_ID 
+			WHERE
+				a.BBS_ID = #{bbsId}
+		
+			<if test="searchCnd == 0">AND
+					a.NTT_SJ LIKE '%' || #{searchWrd} || '%' 		
+			</if>
+			<if test="searchCnd == 1">AND
+					a.NTT_CN LIKE '%' || #{searchWrd} || '%' 		
+			</if>	
+			<if test="searchCnd == 2">AND
+					b.USER_NM LIKE '%' || #{searchWrd} || '%' 		
+			</if>			
+	</select>	
+ 
+	<select id="selectBoardArticle" parameterType="egovframework.let.cop.bbs.service.BoardVO" resultMap="boardDetail">
+		
+			SELECT
+				a.NTT_SJ, a.NTCR_ID, a.NTCR_NM, a.NTT_NO, a.NTT_CN,
+				a.PASSWORD, a.FRST_REGISTER_ID, b.USER_NM as FRST_REGISTER_NM,
+				TO_CHAR(a.FRST_REGIST_PNTTM, 'YYYY-MM-DD') as FRST_REGIST_PNTTM,
+				a.NTCE_BGNDE, a.NTCE_ENDDE, a.RDCNT, 
+				a.USE_AT, a.ATCH_FILE_ID, a.BBS_ID, a.NTT_ID,
+				a.PARNTSCTT_NO, a.ANSWER_AT, a.ANSWER_LC, a.SORT_ORDR,
+				c.BBS_TY_CODE, c.BBS_ATTRB_CODE, c.REPLY_POSBL_AT, 
+				c.FILE_ATCH_POSBL_AT, c.ATCH_POSBL_FILE_NUMBER, c.BBS_NM
+			FROM
+				LETTNBBS a
+			LEFT OUTER JOIN 
+				COMVNUSERMASTER b
+			ON a.FRST_REGISTER_ID = b.ESNTL_ID 
+			LEFT OUTER JOIN 
+				LETTNBBSMASTER c
+			ON a.BBS_ID = c.BBS_ID			
+			WHERE
+				a.BBS_ID = #{bbsId}	
+			AND
+				a.NTT_ID = #{nttId}	
+						
+	</select> 
+ 
+ 	<update id="updateBoardArticle" parameterType="egovframework.let.cop.bbs.service.Board">
+ 		
+			UPDATE LETTNBBS SET 
+				NTT_SJ = #{nttSj},
+				NTT_CN = #nttCn:CLOB#, 
+				NTCR_ID = #{ntcrId},
+				NTCR_NM = #{ntcrNm},
+				PASSWORD = #{password},
+				NTCE_BGNDE = #{ntceBgnde},		
+				NTCE_ENDDE = #{ntceEndde},
+				LAST_UPDUSR_ID = #{lastUpdusrId},
+				ATCH_FILE_ID = #{atchFileId},
+				LAST_UPDT_PNTTM = SYSDATE
+			WHERE BBS_ID = #{bbsId}
+			AND NTT_ID = #{nttId}
+ 		
+ 	</update>
+
+ 	<update id="deleteBoardArticle" parameterType="egovframework.let.cop.bbs.service.Board">
+ 		
+			UPDATE LETTNBBS SET 
+				NTT_SJ = #{nttSj},
+				USE_AT = 'N',
+				LAST_UPDUSR_ID = #{lastUpdusrId},
+				LAST_UPDT_PNTTM = SYSDATE
+			WHERE BBS_ID = #{bbsId}
+			AND NTT_ID = #{nttId}
+ 		
+ 	</update>
+
+ 	<select id="selectMaxInqireCo" parameterType="egovframework.let.cop.bbs.service.BoardVO" resultType="java.lang.Integer">
+ 		
+			SELECT NVL(MAX(RDCNT),0)+1 AS RDCNT FROM LETTNBBS
+			WHERE BBS_ID = #{bbsId}
+			AND NTT_ID = #{nttId}
+ 		
+ 	</select>
+ 	
+ 	<select id="selectNoticeItemForSort" parameterType="egovframework.let.cop.bbs.service.Board" resultType="java.lang.Long">
+ 		
+			SELECT
+				NVL(MAX(NTT_NO),0)+1 AS NTT_NO
+			FROM
+				LETTNBBS	
+			WHERE
+				BBS_ID = #{bbsId}
+			AND
+				SORT_ORDR = #{sortOrdr}
+			AND 
+				NTT_ID = #{nttId}	
+ 		
+ 	</select> 	
+
+ 	<update id="updateInqireCo" parameterType="egovframework.let.cop.bbs.service.BoardVO">
+ 		
+			UPDATE LETTNBBS SET 
+				RDCNT = #{inqireCo},
+				LAST_UPDUSR_ID = #{lastUpdusrId},
+				LAST_UPDT_PNTTM = SYSDATE
+			WHERE BBS_ID = #{bbsId}
+			AND NTT_ID = #{nttId}
+ 		
+ 	</update>
+
+	<update id="updateSortOrder" parameterType="egovframework.let.cop.bbs.service.BoardVO">
+ 		
+			UPDATE LETTNBBS SET 
+				NTT_NO = #{nttNo}
+			WHERE NTT_ID = #{nttId}
+ 			
+	</update>
+
+	<select id="selectGuestList" parameterType="egovframework.let.cop.bbs.service.BoardVO" resultMap="guestList">
+		
+		SELECT * FROM ( SELECT rownum rn, TB.* FROM (
+			SELECT
+				a.NTT_ID, a.NTT_SJ, a.NTCR_NM, a.PASSWORD, 
+				TO_CHAR(a.FRST_REGIST_PNTTM, 'YYYY-MM-DD HH:MI:SS')
+				as FRST_REGIST_PNTTM,
+				a.NTT_CN, a.USE_AT, a.BBS_ID, b.USER_NM as FRST_REGISTER_NM, a.FRST_REGISTER_ID
+			FROM
+				LETTNBBS a, COMVNUSERMASTER b
+			WHERE
+				a.BBS_ID = #{bbsId}
+			AND 
+				a.FRST_REGISTER_ID = b.ESNTL_ID
+			AND
+				a.USE_AT = 'Y'
+			ORDER BY a.SORT_ORDR DESC, a.NTT_NO ASC
+			) TB ) WHERE rn BETWEEN #{firstIndex} + 1 AND #{firstIndex} + #{recordCountPerPage}
+						
+	</select>	
+	
+	<select id="selectGuestListCnt" parameterType="egovframework.let.cop.bbs.service.BoardVO" resultType="java.lang.Integer">
+		
+			SELECT
+				COUNT(NTT_ID) as cnt
+			FROM
+				LETTNBBS 
+			WHERE
+				BBS_ID = #{bbsId}	
+			AND
+				USE_AT = 'Y'
+					
+	</select>	
+
+	<update id="deleteGuestList" parameterType="egovframework.let.cop.bbs.service.BoardVO">
+		
+			UPDATE LETTNBBS
+			SET USE_AT = 'N'
+			WHERE BBS_ID = #{bbsId}
+			AND NTT_ID = #{nttId}
+					
+	</update>	
+	
+	<select id="getPasswordInf" parameterType="egovframework.let.cop.bbs.service.Board" resultType="java.lang.String">
+		
+			SELECT
+				PASSWORD
+			FROM
+				LETTNBBS	
+			WHERE BBS_ID = #{bbsId}
+			AND NTT_ID = #{nttId}				
+		
+	</select>
+
+	<select id="getParentNttNo" parameterType="egovframework.let.cop.bbs.service.Board" resultType="java.lang.Long">
+		
+			SELECT NTT_NO FROM LETTNBBS
+			WHERE BBS_ID = #{bbsId} AND NTT_ID = #{parnts}			
+		
+	</select>
+	
+ 	<update id="updateOtherNttNo" parameterType="egovframework.let.cop.bbs.service.Board">
+ 		
+			UPDATE LETTNBBS SET 
+				NTT_NO = NTT_NO + 1
+			WHERE BBS_ID = #{bbsId} AND SORT_ORDR = #{sortOrdr}
+			AND NTT_NO &gt; #{nttNo}
+ 		
+ 	</update>
+ 	
+ 	 	<update id="updateNttNo" parameterType="egovframework.let.cop.bbs.service.Board">
+ 		
+			UPDATE LETTNBBS SET 
+				NTT_NO = #{nttNo}
+			WHERE BBS_ID = #{bbsId} 
+			AND NTT_ID = #{nttId}
+ 		
+ 	</update>
+</mapper>

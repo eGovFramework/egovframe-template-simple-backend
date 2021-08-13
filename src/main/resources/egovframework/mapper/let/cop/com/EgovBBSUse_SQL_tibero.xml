@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="BBSUseInfoManageDAO">
+
+
+	<resultMap id="BoardUseList" type="egovframework.let.cop.com.service.BoardUseInfVO">
+		<result property="bbsId" column="BBS_ID"/>
+		<result property="bbsNm" column="BBS_NM"/>
+		<result property="trgetId" column="TRGET_ID"/>
+		<result property="registSeCode" column="REGIST_SE_CODE"/>
+		<result property="registSeCodeNm" column="REGIST_SE_CODE_NM"/>
+		<result property="useAt" column="USE_AT"/>
+		<result property="frstRegisterId" column="FRST_REGISTER_ID"/>
+		<result property="frstRegisterPnttm" column="FRST_REGIST_PNTTM"/>
+		<result property="cmmntyId" column="CMMNTY_ID"/>
+		<result property="cmmntyNm" column="CMMNTY_NM"/>
+		<result property="clbId" column="CLB_ID"/>
+		<result property="clbNm" column="CLB_NM"/>
+		<result property="bbsTyCode" column="BBS_TY_CODE"/>
+	</resultMap>
+	
+	<resultMap id="BoardUseListByTrget" type="egovframework.let.cop.com.service.BoardUseInfVO">
+		<result property="bbsId" column="BBS_ID"/>
+		<result property="bbsNm" column="BBS_NM"/>
+		<result property="trgetId" column="TRGET_ID"/>
+		<result property="userNm" column="USER_NM"/>
+		<result property="registSeCode" column="REGIST_SE_CODE"/>
+		<result property="registSeCodeNm" column="REGIST_SE_CODE_NM"/>
+		<result property="useAt" column="USE_AT"/>
+		<result property="frstRegisterId" column="FRST_REGISTER_ID"/>
+		<result property="frstRegisterPnttm" column="FRST_REGIST_PNTTM"/>
+	</resultMap>	
+	
+	<resultMap id="selectBBSUse" type="egovframework.let.cop.com.service.BoardUseInfVO">
+		<result property="bbsId" column="BBS_ID"/>
+	</resultMap>
+
+	<update id="deleteBBSUseInf" parameterType="egovframework.let.cop.com.service.BoardUseInf">
+		
+			UPDATE LETTNBBSUSE SET 
+				USE_AT = 'N',
+				LAST_UPDUSR_ID = #{lastUpdusrId},
+				LAST_UPDT_PNTTM = SYSDATE
+			WHERE BBS_ID = #{bbsId}
+			AND TRGET_ID = #{trgetId}	
+		
+	</update>
+
+	<select id="selectBBSUseInfByCmmnty" parameterType="egovframework.let.cop.com.service.BoardUseInfVO" resultMap="selectBBSUse">
+		
+			SELECT BBS_ID FROM LETTNBBSUSE
+					WHERE TRGET_ID = #{cmmntyId} 
+		
+	</select>
+
+	<select id="selectBBSUseInfByClub" parameterType="egovframework.let.cop.com.service.BoardUseInfVO" resultMap="selectBBSUse">
+		
+			SELECT BBS_ID FROM LETTNBBSUSE
+					WHERE TRGET_ID = #{clbId} 
+		
+	</select>
+
+	<update id="deleteAllBBSUseInfByCmmnty" parameterType="egovframework.let.cop.com.service.BoardUseInfVO">
+		<!-- [CDATA[
+			UPDATE LETTNBBSUSE SET 
+				USE_AT = 'N',
+				LAST_UPDUSR_ID = #{lastUpdusrId},
+				LAST_UPDT_PNTTM = SYSDATE
+			WHERE BBS_ID IN 
+				(SELECT BBS_ID FROM LETTNBBSUSE
+					WHERE TRGET_ID = #{cmmntyId} )
+		]]-->
+		
+			UPDATE LETTNBBSUSE SET 
+				USE_AT = 'N',
+				LAST_UPDUSR_ID = #{lastUpdusrId},
+				LAST_UPDT_PNTTM = SYSDATE
+			WHERE TRGET_ID = #{cmmntyId}
+		
+	</update>
+
+	<update id="deleteAllBBSUseInfByClub" parameterType="egovframework.let.cop.com.service.BoardUseInfVO">
+		<!-- [CDATA[
+			UPDATE LETTNBBSUSE SET 
+				USE_AT = 'N',
+				LAST_UPDUSR_ID = #{lastUpdusrId},
+				LAST_UPDT_PNTTM = SYSDATE
+			WHERE BBS_ID IN 
+				(SELECT BBS_ID FROM LETTNBBSUSE
+					WHERE TRGET_ID = #{clbId} )
+		]]-->
+		
+			UPDATE LETTNBBSUSE SET 
+				USE_AT = 'N',
+				LAST_UPDUSR_ID = #{lastUpdusrId},
+				LAST_UPDT_PNTTM = SYSDATE
+			WHERE TRGET_ID = #{clbId}
+		
+	</update>
+	
+	<insert id="insertBBSUseInf" parameterType="egovframework.let.cop.com.service.BoardUseInf">
+		
+			INSERT INTO LETTNBBSUSE 
+			(BBS_ID, TRGET_ID, REGIST_SE_CODE, USE_AT, 
+			 FRST_REGISTER_ID, FRST_REGIST_PNTTM )
+			VALUES
+			(#{bbsId}, #{trgetId}, #{registSeCode}, #{useAt}, #{frstRegisterId}, SYSDATE)
+		
+	</insert>
+	
+	<select id="selectBBSUseInfs" parameterType="egovframework.let.cop.com.service.BoardUseInfVO" resultMap="BoardUseList">
+		
+		SELECT * FROM ( SELECT rownum rn, TB.* FROM (
+			SELECT
+				a.BBS_ID, e.BBS_NM, a.TRGET_ID, a.REGIST_SE_CODE, b.CODE_NM as REGIST_SE_CODE_NM,
+			    a.USE_AT, a.FRST_REGISTER_ID, a.FRST_REGIST_PNTTM,
+				c.CMMNTY_ID, c.CMMNTY_NM,
+				d.CLB_ID, d.CLB_NM, e.BBS_TY_CODE
+			FROM
+				LETTNBBSUSE a
+			LEFT OUTER JOIN LETTNBBSMASTER e
+				ON a.BBS_ID = e.BBS_ID
+			LEFT OUTER JOIN LETTCCMMNDETAILCODE b
+				ON b.CODE = a.REGIST_SE_CODE
+			WHERE
+				b.CODE_ID = 'COM001'
+			AND a.REGIST_SE_CODE != 'REGC07'
+		
+			<if test="searchCnd == 0">AND
+					e.BBS_NM LIKE '%' || #{searchWrd} || '%' 		
+			</if>
+					
+			ORDER BY a.FRST_REGIST_PNTTM DESC 
+			) TB ) WHERE rn BETWEEN #{firstIndex} + 1 AND #{firstIndex} + #{recordCountPerPage}
+						
+	</select>	
+	
+	<select id="selectBBSUseInfsCnt" parameterType="egovframework.let.cop.com.service.BoardUseInfVO" resultType="java.lang.Integer">
+		
+			SELECT
+				COUNT(a.BBS_ID)
+			FROM
+				LETTNBBSUSE a
+			LEFT OUTER JOIN LETTNBBSMASTER e
+				ON a.BBS_ID = e.BBS_ID
+			LEFT OUTER JOIN LETTCCMMNDETAILCODE b
+				ON b.CODE = a.REGIST_SE_CODE
+			WHERE
+				b.CODE_ID = 'COM001'
+			AND a.REGIST_SE_CODE != 'REGC07'
+		
+			<if test="searchCnd == 0">AND
+					e.BBS_NM LIKE '%' || #{searchWrd} || '%' 		
+			</if>
+	</select>	
+ 
+ 	<select id="selectBBSUseInf" parameterType="egovframework.let.cop.com.service.BoardUseInfVO" resultMap="BoardUseList">
+ 		
+ 			SELECT
+				a.BBS_ID, e.BBS_NM, a.TRGET_ID, a.REGIST_SE_CODE, b.CODE_NM as REGIST_SE_CODE_NM,
+			    a.USE_AT, a.FRST_REGISTER_ID, a.FRST_REGIST_PNTTM,
+				'시스템 활용' CMMNTY_ID, '시스템 활용' CMMNTY_NM,
+                '시스템 활용' CLB_ID, '시스템 활용' CLB_NM, '시스템 활용' BBS_TY_CODE
+			FROM
+				LETTNBBSUSE a
+			LEFT OUTER JOIN LETTNBBSMASTER e
+				ON a.BBS_ID = e.BBS_ID
+			LEFT OUTER JOIN LETTCCMMNDETAILCODE b
+				ON b.CODE = a.REGIST_SE_CODE
+			WHERE
+				b.CODE_ID = 'COM001'
+			AND 
+				a.BBS_ID = #{bbsId}
+			AND
+				a.TRGET_ID = #{trgetId}
+ 		
+ 	</select>
+ 
+ 	<update id="updateBBSUseInf" parameterType="egovframework.let.cop.com.service.BoardUseInf">
+ 		
+			UPDATE LETTNBBSUSE SET 
+				USE_AT = #{useAt},
+				LAST_UPDUSR_ID = #{lastUpdusrId},
+				LAST_UPDT_PNTTM = SYSDATE
+			WHERE BBS_ID = #{bbsId}
+ 		
+ 	</update>
+
+	<update id="deleteBBSUseInfByBoardId" parameterType="egovframework.let.cop.com.service.BoardUseInf">
+		
+			UPDATE LETTNBBSUSE SET 
+				USE_AT = 'N',
+				LAST_UPDUSR_ID = #{lastUpdusrId},
+				LAST_UPDT_PNTTM = SYSDATE
+			WHERE BBS_ID = #{bbsId}
+		
+	</update>
+
+
+	<select id="selectBBSUseInfsByTrget" parameterType="egovframework.let.cop.com.service.BoardUseInfVO" resultMap="BoardUseListByTrget">
+		
+		SELECT * FROM ( SELECT rownum rn, TB.* FROM (
+		SELECT * FROM (
+			SELECT 
+					a.BBS_ID, b.BBS_NM, a.TRGET_ID, d.USER_NM, a.REGIST_SE_CODE, c.CODE_NM as REGIST_SE_CODE_NM,
+				    a.USE_AT, a.FRST_REGISTER_ID, a.FRST_REGIST_PNTTM
+			FROM 
+				LETTNBBSUSE a
+			LEFT OUTER JOIN LETTNBBSMASTER b
+				ON a.BBS_ID = b.BBS_ID
+			LEFT OUTER JOIN LETTCCMMNDETAILCODE c
+				ON c.CODE = a.REGIST_SE_CODE
+			LEFT OUTER JOIN COMVNUSERMASTER d
+				ON a.TRGET_ID = d.ESNTL_ID
+			WHERE
+				a.BBS_ID IN 
+			( SELECT BBS_ID FROM LETTNBBSUSE 
+				WHERE TRGET_ID = #{trgetId} AND USE_AT ='Y' )
+			AND a.REGIST_SE_CODE = 'REGC07'
+		UNION ALL
+			SELECT
+					a.BBS_ID, b.BBS_NM, a.TRGET_ID, '[전체]' USER_NM, a.REGIST_SE_CODE, c.CODE_NM as REGIST_SE_CODE_NM,
+				    a.USE_AT, a.FRST_REGISTER_ID, a.FRST_REGIST_PNTTM
+			FROM
+				LETTNBBSUSE a
+			LEFT OUTER JOIN LETTNBBSMASTER b
+				ON a.BBS_ID = b.BBS_ID
+			LEFT OUTER JOIN LETTCCMMNDETAILCODE c
+				ON c.CODE = a.REGIST_SE_CODE
+			WHERE
+				a.BBS_ID IN
+			( SELECT BBS_ID FROM LETTNBBSUSE
+				WHERE TRGET_ID = #{trgetId} )
+			AND a.REGIST_SE_CODE in ('REGC05', 'REGC06')
+		UNION ALL
+			SELECT
+					a.BBS_ID, b.BBS_NM,
+					case WHEN e.EMPLYR_ID is null THEN f.EMPLYR_ID ELSE e.EMPLYR_ID END as TRGET_ID, 
+					case WHEN g.USER_NM is null THEN h.USER_NM ELSE g.USER_NM END as USER_NM, 
+					'REGC07' as REGIST_SE_CODE, '게시판사용자등록' as REGIST_SE_CODE_NM,
+				    '' as USE_AT, '' as FRST_REGISTER_ID, SYSDATE as FRST_REGIST_PNTTM
+			FROM
+				LETTNBBSUSE a
+			LEFT OUTER JOIN LETTNBBSMASTER b
+				ON a.BBS_ID = b.BBS_ID
+			LEFT OUTER JOIN LETTCCMMNDETAILCODE c
+				ON c.CODE = a.REGIST_SE_CODE
+			LEFT OUTER JOIN LETTNCMMNTYUSER e
+		        ON e.CMMNTY_ID = #{trgetId}
+			LEFT OUTER JOIN LETTNCLUBUSER f
+		        ON f.CLB_ID = #{trgetId}
+			LEFT OUTER JOIN COMVNUSERMASTER g
+		        ON e.EMPLYR_ID = g.ESNTL_ID
+			LEFT OUTER JOIN COMVNUSERMASTER h
+		        ON f.EMPLYR_ID = h.ESNTL_ID
+			WHERE
+				a.BBS_ID IN
+			( SELECT BBS_ID FROM LETTNBBSUSE 
+				WHERE TRGET_ID = #{trgetId} AND USE_AT ='Y' )
+			AND a.REGIST_SE_CODE in ('REGC05', 'REGC06')
+			AND (
+		        (a.BBS_ID, e.EMPLYR_ID) not in (SELECT BBS_ID, TRGET_ID FROM LETTNBBSUSE)
+		        OR
+		        (a.BBS_ID, f.EMPLYR_ID) not in (SELECT BBS_ID, TRGET_ID FROM LETTNBBSUSE)
+		      )
+		) tt
+		
+			<if test="searchCnd == 0">WHERE
+				 	tt.USER_NM LIKE '%' || #{searchWrd} || '%' 		
+			</if>
+					
+			ORDER BY tt.USER_NM DESC 
+			) TB ) WHERE rn BETWEEN #{firstIndex} + 1 AND #{firstIndex} + #{recordCountPerPage}
+						
+	</select>	
+	
+	<select id="selectBBSUseInfsCntByTrget" parameterType="egovframework.let.cop.com.service.BoardUseInfVO" resultType="java.lang.Integer">
+		
+		SELECT COUNT(tt.BBS_ID) FROM (
+			SELECT 
+					a.BBS_ID, d.USER_NM
+			FROM 
+				LETTNBBSUSE a
+			LEFT OUTER JOIN LETTNBBSMASTER b
+				ON a.BBS_ID = b.BBS_ID
+			LEFT OUTER JOIN LETTCCMMNDETAILCODE c
+				ON c.CODE = a.REGIST_SE_CODE
+			LEFT OUTER JOIN COMVNUSERMASTER d
+				ON a.TRGET_ID = d.ESNTL_ID
+			WHERE
+				a.BBS_ID IN 
+			( SELECT BBS_ID FROM LETTNBBSUSE 
+				WHERE TRGET_ID = #{trgetId} AND USE_AT ='Y' )
+			AND a.REGIST_SE_CODE = 'REGC07'
+		UNION ALL
+			SELECT
+					a.BBS_ID, '[전체]' USER_NM
+			FROM
+				LETTNBBSUSE a
+			LEFT OUTER JOIN LETTNBBSMASTER b
+				ON a.BBS_ID = b.BBS_ID
+			LEFT OUTER JOIN LETTCCMMNDETAILCODE c
+				ON c.CODE = a.REGIST_SE_CODE
+			WHERE
+				a.BBS_ID IN
+			( SELECT BBS_ID FROM LETTNBBSUSE
+				WHERE TRGET_ID = #{trgetId} )
+			AND a.REGIST_SE_CODE in ('REGC05', 'REGC06')
+		UNION ALL
+			SELECT
+					a.BBS_ID, '' as USER_NM
+			FROM
+				LETTNBBSUSE a
+			LEFT OUTER JOIN LETTNBBSMASTER b
+				ON a.BBS_ID = b.BBS_ID
+			LEFT OUTER JOIN LETTCCMMNDETAILCODE c
+				ON c.CODE = a.REGIST_SE_CODE
+			LEFT OUTER JOIN LETTNCMMNTYUSER e
+		        ON e.CMMNTY_ID = #{trgetId}
+			LEFT OUTER JOIN LETTNCLUBUSER f
+		        ON f.CLB_ID = #{trgetId}
+			LEFT OUTER JOIN COMVNUSERMASTER g
+		        ON e.EMPLYR_ID = g.ESNTL_ID
+			LEFT OUTER JOIN COMVNUSERMASTER h
+		        ON f.EMPLYR_ID = h.ESNTL_ID
+			WHERE
+				a.BBS_ID IN
+			( SELECT BBS_ID FROM LETTNBBSUSE 
+				WHERE TRGET_ID = #{trgetId} AND USE_AT ='Y' )
+			AND a.REGIST_SE_CODE in ('REGC05', 'REGC06')
+			AND (
+		        (a.BBS_ID, e.EMPLYR_ID) not in (SELECT BBS_ID, TRGET_ID FROM LETTNBBSUSE)
+		        OR
+		        (a.BBS_ID, f.EMPLYR_ID) not in (SELECT BBS_ID, TRGET_ID FROM LETTNBBSUSE)
+		      )
+		) tt
+		
+			<if test="searchCnd == 0">WHERE
+				 tt.USER_NM LIKE '%' || #{searchWrd} || '%' 		
+			</if>	
+	</select>	
+
+	<update id="updateBBSUseInfByTrget" parameterType="egovframework.let.cop.com.service.BoardUseInf">
+		
+			UPDATE LETTNBBSUSE SET 
+				USE_AT = #{useAt},
+				LAST_UPDUSR_ID = #{lastUpdusrId},
+				LAST_UPDT_PNTTM = SYSDATE
+			WHERE BBS_ID = #{bbsId}
+			AND TRGET_ID = #{trgetId}	
+		
+	</update>
+	
+</mapper>
