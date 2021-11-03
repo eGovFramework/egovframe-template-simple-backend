@@ -36,7 +36,7 @@
 				</var>
 			</field> 
 
-			<field property="schdulBgndeYYYMMDD" depends="required">
+			<!-- <field property="schdulBgndeYYYMMDD" depends="required">
         		<arg0 key="일정시작일자" resource="false"/>
 			</field>
 			
@@ -57,7 +57,7 @@
 			<field property="schdulEnddeMM" depends="required">
         		<arg0 key="일정종료(분)" resource="false"/>
 			</field>
-			
+			 -->
 			<field property="schdulChargerName" depends="required">
         		<arg0 key="담당자" resource="false"/>
 			</field>

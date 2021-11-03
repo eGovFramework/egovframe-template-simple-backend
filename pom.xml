@@ -180,13 +180,13 @@
 		</dependency> 
 
 		<!-- mysql driver -->
-		<!--
+		
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 			<version>5.1.31</version>
 		</dependency>
-		-->
+		
 
 		<!-- oracle 10g driver -->
 		<!--
@@ -256,6 +256,11 @@
 			<version>53.1</version>
 		</dependency>
 		
+		<!-- <dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt</artifactId>
+			<version>0.9.1</version>
+		</dependency> -->
 	</dependencies>
 
 	<build>

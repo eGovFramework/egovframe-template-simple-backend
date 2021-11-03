@@ -6,10 +6,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.util.Map;
 
-import egovframework.com.cmm.SessionVO;
-import egovframework.com.cmm.service.EgovFileMngService;
-import egovframework.com.cmm.service.FileVO;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletResponse;
@@ -20,6 +16,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import egovframework.com.cmm.SessionVO;
+import egovframework.com.cmm.service.EgovFileMngService;
+import egovframework.com.cmm.service.FileVO;
 
 
 /**
@@ -80,7 +80,7 @@ public class EgovImageProcessController extends HttpServlet {
 		//String fileLoaction = fvo.getFileStreCours() + fvo.getStreFileNm();
 
 		File file = new File(fvo.getFileStreCours(), fvo.getStreFileNm());
-		FileInputStream fis = null; new FileInputStream(file);
+		FileInputStream fis = null;
 
 		BufferedInputStream in = null;
 		ByteArrayOutputStream bStream = null;

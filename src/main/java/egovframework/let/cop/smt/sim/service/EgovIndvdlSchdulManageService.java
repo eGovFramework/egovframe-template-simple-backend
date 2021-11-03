@@ -45,7 +45,7 @@ public interface EgovIndvdlSchdulManageService {
 	 * @param indvdlSchdulManageVO    - 일정 정보 담김 VO
 	 * @exception Exception Exception
 	 */
-	public List<?> selectIndvdlSchdulManageDetail(IndvdlSchdulManageVO indvdlSchdulManageVO) throws Exception;
+	public IndvdlSchdulManageVO selectIndvdlSchdulManageDetail(IndvdlSchdulManageVO indvdlSchdulManageVO) throws Exception;
 
 	/**
 	 * 일정 목록을 VO(model)형식으로 조회한다.

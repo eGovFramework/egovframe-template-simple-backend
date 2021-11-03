@@ -1,8 +1,6 @@
 package egovframework.com.cmm.filter;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -36,7 +34,7 @@ import org.slf4j.LoggerFactory;
 public class SimpleCORSFilter implements Filter {
 
 	private final Logger log = LoggerFactory.getLogger(SimpleCORSFilter.class);
-	private final List<String> allowedOrigins = Arrays.asList("http://localhost:9700");
+	//private final List<String> allowedOrigins = Arrays.asList("http://localhost:9700");
 
 	public SimpleCORSFilter() {
 		log.info("SimpleCORSFilter init");

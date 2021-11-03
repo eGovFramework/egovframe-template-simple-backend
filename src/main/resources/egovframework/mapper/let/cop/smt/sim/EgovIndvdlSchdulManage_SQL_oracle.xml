@@ -25,7 +25,7 @@
 		<result property="frstRegisterPnttm" column="FRST_REGIST_PNTTM"/>
 		<result property="frstRegisterId" column="FRST_REGISTER_ID"/>
 		<result property="lastUpdusrPnttm" column="LAST_UPDT_PNTTM"/>
-		<result property="lastUpdusrId" column="LAST_UPDUSR_ID"/>				
+		<result property="lastUpdusrId" column="LAST_UPDUSR_ID"/>
 	</resultMap>
 	
 	<!-- 메인페이지/일정관리조회 -->  
@@ -90,7 +90,8 @@
 			A.FRST_REGISTER_ID,
 			A.LAST_UPDT_PNTTM,
 			A.LAST_UPDUSR_ID,
-			A.REPTIT_SE_CODE 
+			A.REPTIT_SE_CODE,
+			(SELECT USER_NM FROM LETTNEMPLYRINFO WHERE ESNTL_ID = A.SCHDUL_CHARGER_ID) USER_NM  
 		FROM LETTNSCHDULINFO A
 		WHERE 1=1 
 		AND A.SCHDUL_KND_CODE = '2' 
@@ -122,11 +123,10 @@
 	 </if>
 
 	 <if test="searchKeyword != null and searchKeyword != ''">
-	 	
-	 		
 	 		AND SCHDUL_SE LIKE CONCAT(CONCAT('%', #{searchKeyword}), '%')
-	 		
-	 	
+	 </if>
+	 <if test="schdulSe != null and schdulSe != ''">
+	 		AND SCHDUL_SE = #{schdulSe}
 	 </if>
 
 	</select>

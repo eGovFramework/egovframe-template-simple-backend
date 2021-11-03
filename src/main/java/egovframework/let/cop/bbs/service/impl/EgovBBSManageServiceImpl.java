@@ -6,6 +6,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
 import egovframework.com.cmm.service.EgovFileMngService;
 import egovframework.com.cmm.service.FileVO;
 import egovframework.let.cop.bbs.service.Board;
@@ -15,10 +19,6 @@ import egovframework.let.utl.fcc.service.EgovDateUtil;
 
 import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import org.egovframe.rte.fdl.property.EgovPropertyService;
-
-import javax.annotation.Resource;
-
-import org.springframework.stereotype.Service;
 
 /**
  * 게시물 관리를 위한 서비스 구현 클래스
@@ -40,160 +40,168 @@ import org.springframework.stereotype.Service;
 @Service("EgovBBSManageService")
 public class EgovBBSManageServiceImpl extends EgovAbstractServiceImpl implements EgovBBSManageService {
 
-    @Resource(name = "BBSManageDAO")
-    private BBSManageDAO bbsMngDAO;
+	@Resource(name = "BBSManageDAO")
+	private BBSManageDAO bbsMngDAO;
 
-    @Resource(name = "EgovFileMngService")
-    private EgovFileMngService fileService;
+	@Resource(name = "EgovFileMngService")
+	private EgovFileMngService fileService;
 
-    @Resource(name = "propertiesService")
-    protected EgovPropertyService propertyService;
-
-    /**
-     * 게시물 한 건을 삭제 한다.
-     *
-     * @see egovframework.let.cop.bbs.brd.service.EgovBBSManageService#deleteBoardArticle(egovframework.let.cop.bbs.brd.service.Board)
-     */
-    public void deleteBoardArticle(Board board) throws Exception {
-	FileVO fvo = new FileVO();
-
-	fvo.setAtchFileId(board.getAtchFileId());
-
-	board.setNttSj("이 글은 작성자에 의해서 삭제되었습니다.");
-
-	bbsMngDAO.deleteBoardArticle(board);
-
-	if (!"".equals(fvo.getAtchFileId()) || fvo.getAtchFileId() != null) {
-	    fileService.deleteAllFileInf(fvo);
-	}
-    }
-
-    /**
-     * 게시판에 게시물 또는 답변 게시물을 등록 한다.
-     *
-     * @see egovframework.let.cop.bbs.brd.service.EgovBBSManageService#insertBoardArticle(egovframework.let.cop.bbs.brd.service.Board)
-     */
-    public void insertBoardArticle(Board board) throws Exception {
-	// SORT_ORDR는 부모글의 소트 오더와 같게, NTT_NO는 순서대로 부여
-
-	if ("Y".equals(board.getReplyAt())) {
-	    // 답글인 경우 1. Parnts를 세팅, 2.Parnts의 sortOrdr을 현재글의 sortOrdr로 가져오도록, 3.nttNo는 현재 게시판의 순서대로
-	    // replyLc는 부모글의 ReplyLc + 1
-
-	    @SuppressWarnings("unused")
-	    long tmpNttId = 0L; // 답글 게시물 ID
-
-	    tmpNttId = bbsMngDAO.replyBoardArticle(board);
-
-	} else {
-	    // 답글이 아닌경우 Parnts = 0, replyLc는 = 0, sortOrdr = nttNo(Query에서 처리)
-	    board.setParnts("0");
-	    board.setReplyLc("0");
-	    board.setReplyAt("N");
-
-	    bbsMngDAO.insertBoardArticle(board);
-	}
-    }
+	@Resource(name = "propertiesService")
+	protected EgovPropertyService propertyService;
 
 	/**
-     * 게시물 대하여 상세 내용을 조회 한다.
-     *
-     * @see egovframework.let.cop.bbs.brd.service.EgovBBSManageService#selectBoardArticle(egovframework.let.cop.bbs.brd.service.BoardVO)
-     */
-    public BoardVO selectBoardArticle(BoardVO boardVO) throws Exception {
-	if (boardVO.isPlusCount()) {
-	    int iniqireCo = bbsMngDAO.selectMaxInqireCo(boardVO);
+	 * 게시물 한 건을 삭제 한다.
+	 *
+	 * @see egovframework.let.cop.bbs.brd.service.EgovBBSManageService#deleteBoardArticle(egovframework.let.cop.bbs.brd.service.Board)
+	 */
+	@Override
+	public void deleteBoardArticle(Board board) throws Exception {
+		FileVO fvo = new FileVO();
 
-	    boardVO.setInqireCo(iniqireCo);
-	    bbsMngDAO.updateInqireCo(boardVO);
-	}
+		fvo.setAtchFileId(board.getAtchFileId());
 
-	return bbsMngDAO.selectBoardArticle(boardVO);
-    }
+		board.setNttSj("이 글은 작성자에 의해서 삭제되었습니다.");
 
-	/**
-     * 조건에 맞는 게시물 목록을 조회 한다.
-     *
-     * @see egovframework.let.cop.bbs.brd.service.EgovBBSManageService#selectBoardArticles(egovframework.let.cop.bbs.brd.service.BoardVO)
-     */
-    public Map<String, Object> selectBoardArticles(BoardVO boardVO, String attrbFlag) throws Exception {
-	List<BoardVO> list = bbsMngDAO.selectBoardArticleList(boardVO);
-	List<BoardVO> result = new ArrayList<BoardVO>();
+		bbsMngDAO.deleteBoardArticle(board);
 
-	if ("BBSA01".equals(attrbFlag)) {
-	    // 유효게시판 임
-	    String today = EgovDateUtil.getToday();
-
-	    BoardVO vo;
-	    Iterator<BoardVO> iter = list.iterator();
-	    while (iter.hasNext()) {
-		vo = (BoardVO)iter.next();
-
-		if (!"".equals(vo.getNtceBgnde()) || !"".equals(vo.getNtceEndde())) {
-		    if (EgovDateUtil.getDaysDiff(today, vo.getNtceBgnde()) > 0 || EgovDateUtil.getDaysDiff(today, vo.getNtceEndde()) < 0) {
-			// 시작일이 오늘날짜보다 크거나, 종료일이 오늘 날짜보다 작은 경우
-			vo.setIsExpired("Y");
-		    }
+		if (!"".equals(fvo.getAtchFileId()) || fvo.getAtchFileId() != null) {
+			fileService.deleteAllFileInf(fvo);
 		}
-		result.add(vo);
-	    }
-	} else {
-	    result = list;
 	}
 
-	int cnt = bbsMngDAO.selectBoardArticleListCnt(boardVO);
+	/**
+	 * 게시판에 게시물 또는 답변 게시물을 등록 한다.
+	 *
+	 * @see egovframework.let.cop.bbs.brd.service.EgovBBSManageService#insertBoardArticle(egovframework.let.cop.bbs.brd.service.Board)
+	 */
+	@Override
+	public void insertBoardArticle(Board board) throws Exception {
+		// SORT_ORDR는 부모글의 소트 오더와 같게, NTT_NO는 순서대로 부여
 
-	Map<String, Object> map = new HashMap<String, Object>();
+		if ("Y".equals(board.getReplyAt())) {
+			// 답글인 경우 1. Parnts를 세팅, 2.Parnts의 sortOrdr을 현재글의 sortOrdr로 가져오도록, 3.nttNo는 현재 게시판의 순서대로
+			// replyLc는 부모글의 ReplyLc + 1
 
-	map.put("resultList", result);
-	map.put("resultCnt", Integer.toString(cnt));
+			@SuppressWarnings("unused") long tmpNttId = 0L; // 답글 게시물 ID
 
-	return map;
-    }
+			tmpNttId = bbsMngDAO.replyBoardArticle(board);
 
-    /**
-     * 게시물 한 건의 내용을 수정 한다.
-     *
-     * @see egovframework.let.cop.bbs.brd.service.EgovBBSManageService#updateBoardArticle(egovframework.let.cop.bbs.brd.service.Board)
-     */
-    public void updateBoardArticle(Board board) throws Exception {
-	bbsMngDAO.updateBoardArticle(board);
-    }
+		} else {
+			// 답글이 아닌경우 Parnts = 0, replyLc는 = 0, sortOrdr = nttNo(Query에서 처리)
+			board.setParnts("0");
+			board.setReplyLc("0");
+			board.setReplyAt("N");
 
-    /**
-     * 방명록 내용을 삭제 한다.
-     *
-     * @see egovframework.let.cop.bbs.brd.service.EgovBBSManageService#deleteGuestList(egovframework.let.cop.bbs.brd.service.BoardVO)
-     */
-    public void deleteGuestList(BoardVO boardVO) throws Exception {
-	bbsMngDAO.deleteGuestList(boardVO);
-    }
+			bbsMngDAO.insertBoardArticle(board);
+		}
+	}
 
-    /**
-     * 방명록에 대한 목록을 조회 한다.
-     *
-     * @see egovframework.let.cop.bbs.brd.service.EgovBBSManageService#selectGuestList(egovframework.let.cop.bbs.brd.service.BoardVO)
-     */
-    public Map<String, Object> selectGuestList(BoardVO boardVO) throws Exception {
-	List<BoardVO> result = bbsMngDAO.selectGuestList(boardVO);
-	int cnt = bbsMngDAO.selectGuestListCnt(boardVO);
+	/**
+	 * 게시물 대하여 상세 내용을 조회 한다.
+	 *
+	 * @see egovframework.let.cop.bbs.brd.service.EgovBBSManageService#selectBoardArticle(egovframework.let.cop.bbs.brd.service.BoardVO)
+	 */
+	@Override
+	public BoardVO selectBoardArticle(BoardVO boardVO) throws Exception {
+		if (boardVO.isPlusCount()) {
+			int iniqireCo = bbsMngDAO.selectMaxInqireCo(boardVO);
 
-	Map<String, Object> map = new HashMap<String, Object>();
+			boardVO.setInqireCo(iniqireCo);
+			bbsMngDAO.updateInqireCo(boardVO);
+		}
 
-	map.put("resultList", result);
-	map.put("resultCnt", Integer.toString(cnt));
+		return bbsMngDAO.selectBoardArticle(boardVO);
+	}
 
-	return map;
-    }
+	/**
+	 * 조건에 맞는 게시물 목록을 조회 한다.
+	 *
+	 * @see egovframework.let.cop.bbs.brd.service.EgovBBSManageService#selectBoardArticles(egovframework.let.cop.bbs.brd.service.BoardVO)
+	 */
+	@Override
+	public Map<String, Object> selectBoardArticles(BoardVO boardVO, String attrbFlag) throws Exception {
+		List<BoardVO> list = bbsMngDAO.selectBoardArticleList(boardVO);
+		List<BoardVO> result = new ArrayList<BoardVO>();
 
-    /**
-     * 방명록에 대한 패스워드를 조회 한다.
-     *
-     * @param board
-     * @return
-     * @throws Exception
-     */
-    public String getPasswordInf(Board board) throws Exception {
-	return bbsMngDAO.getPasswordInf(board);
-    }
+		if ("BBSA01".equals(attrbFlag)) {
+			// 유효게시판 임
+			String today = EgovDateUtil.getToday();
+
+			BoardVO vo;
+			Iterator<BoardVO> iter = list.iterator();
+			while (iter.hasNext()) {
+				vo = iter.next();
+
+				if (!"".equals(vo.getNtceBgnde()) || !"".equals(vo.getNtceEndde())) {
+					if (EgovDateUtil.getDaysDiff(today, vo.getNtceBgnde()) > 0
+						|| EgovDateUtil.getDaysDiff(today, vo.getNtceEndde()) < 0) {
+						// 시작일이 오늘날짜보다 크거나, 종료일이 오늘 날짜보다 작은 경우
+						vo.setIsExpired("Y");
+					}
+				}
+				result.add(vo);
+			}
+		} else {
+			result = list;
+		}
+
+		int cnt = bbsMngDAO.selectBoardArticleListCnt(boardVO);
+
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("resultList", result);
+		map.put("resultCnt", Integer.toString(cnt));
+
+		return map;
+	}
+
+	/**
+	 * 게시물 한 건의 내용을 수정 한다.
+	 *
+	 * @see egovframework.let.cop.bbs.brd.service.EgovBBSManageService#updateBoardArticle(egovframework.let.cop.bbs.brd.service.Board)
+	 */
+	@Override
+	public void updateBoardArticle(Board board) throws Exception {
+		bbsMngDAO.updateBoardArticle(board);
+	}
+
+	/**
+	 * 방명록 내용을 삭제 한다.
+	 *
+	 * @see egovframework.let.cop.bbs.brd.service.EgovBBSManageService#deleteGuestList(egovframework.let.cop.bbs.brd.service.BoardVO)
+	 */
+	@Override
+	public void deleteGuestList(BoardVO boardVO) throws Exception {
+		bbsMngDAO.deleteGuestList(boardVO);
+	}
+
+	/**
+	 * 방명록에 대한 목록을 조회 한다.
+	 *
+	 * @see egovframework.let.cop.bbs.brd.service.EgovBBSManageService#selectGuestList(egovframework.let.cop.bbs.brd.service.BoardVO)
+	 */
+	@Override
+	public Map<String, Object> selectGuestList(BoardVO boardVO) throws Exception {
+		List<BoardVO> result = bbsMngDAO.selectGuestList(boardVO);
+		int cnt = bbsMngDAO.selectGuestListCnt(boardVO);
+
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("resultList", result);
+		map.put("resultCnt", Integer.toString(cnt));
+
+		return map;
+	}
+
+	/**
+	 * 방명록에 대한 패스워드를 조회 한다.
+	 *
+	 * @param board
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public String getPasswordInf(Board board) throws Exception {
+		return bbsMngDAO.getPasswordInf(board);
+	}
 }

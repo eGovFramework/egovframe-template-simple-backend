@@ -4,14 +4,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
 import egovframework.com.cmm.service.EgovFileMngService;
 import egovframework.com.cmm.service.FileVO;
 
 import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
-
-import javax.annotation.Resource;
-
-import org.springframework.stereotype.Service;
 
 /**
  * @Class Name : EgovFileMngServiceImpl.java
@@ -70,7 +70,7 @@ public class EgovFileMngServiceImpl extends EgovAbstractServiceImpl implements E
 	if (fvoList.size() != 0) {
 	    atchFileId = fileMngDAO.insertFileInfs(fvoList);
 	}
-	if(atchFileId == ""){
+	if("".equals(atchFileId)){
 		atchFileId = null;
 	}
 	return atchFileId;

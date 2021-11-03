@@ -140,7 +140,8 @@ public class EgovFileDownloadController {
 			long fSize = uFile.length();
 
 			if (fSize > 0) {
-				String mimetype = "application/x-msdownload";
+				//String mimetype = "application/x-msdownload";
+				String mimetype = "application/x-stuff";
 
 				//response.setBufferSize(fSize);	// OutOfMemeory 발생
 				response.setContentType(mimetype);

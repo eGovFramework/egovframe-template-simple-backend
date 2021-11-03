@@ -79,7 +79,7 @@
  	</select>
  	
 	<insert id="insertBoardArticle" parameterType="egovframework.let.cop.bbs.service.Board">
-		<selectKey keyProperty="nttNo" resultType="java.lang.Long">
+		<selectKey keyProperty="nttNo" resultType="java.lang.Long" order="BEFORE">
 			SELECT IFNULL(MAX(SORT_ORDR),0)+1 AS NTT_NO  FROM LETTNBBS
 			WHERE BBS_ID = #{bbsId}
 		</selectKey>
@@ -102,7 +102,7 @@
 	</insert>
 	
 	<insert id="replyBoardArticle" parameterType="egovframework.let.cop.bbs.service.Board">
-		<selectKey keyProperty="nttNo" resultType="java.lang.Long">
+		<selectKey keyProperty="nttNo" resultType="java.lang.Long" order="BEFORE">
 			SELECT IFNULL(MAX(NTT_NO),0)+1 AS NTT_NO  FROM LETTNBBS
 			WHERE BBS_ID = #{bbsId} AND SORT_ORDR = #{sortOrdr}
 		</selectKey>			
@@ -152,6 +152,8 @@
 				LETTNEMPLYRINFO b
 			ON a.FRST_REGISTER_ID = b.ESNTL_ID 
 			WHERE
+				a.USE_AT = 'Y'
+			AND
 				a.BBS_ID = #{bbsId}
 		
 			<if test="searchCnd == 0">AND
@@ -179,6 +181,8 @@
 				LETTNEMPLYRINFO b
 			ON a.FRST_REGISTER_ID = b.ESNTL_ID 
 			WHERE
+				a.USE_AT = 'Y'
+			AND			
 				a.BBS_ID = #{bbsId}
 		
 			<if test="searchCnd == 0">AND
@@ -212,6 +216,8 @@
 				LETTNBBSMASTER c
 			ON a.BBS_ID = c.BBS_ID			
 			WHERE
+				a.USE_AT = 'Y'
+			AND
 				a.BBS_ID = #{bbsId}	
 			AND
 				a.NTT_ID = #{nttId}	

@@ -16,6 +16,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.LoginVO;
+import egovframework.com.cmm.ResponseCode;
 import egovframework.com.cmm.service.ResultVO;
 import egovframework.let.uat.uia.service.EgovLoginService;
 
@@ -76,7 +77,7 @@ public class EgovLoginAPIController {
 	 * @return result - 로그인결과(세션정보)
 	 * @exception Exception
 	 */
-	@RequestMapping(value = "/uat/uia/actionLoginAPI.do", consumes = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/uat/uia/actionLoginAPI.do", consumes = {MediaType.APPLICATION_JSON_VALUE , MediaType.TEXT_HTML_VALUE})
 //	@Consumes({"text/html;charset=UTF-8","application/json;charset=UTF-8"})
 	public @ResponseBody HashMap<String, Object> actionLogin(@RequestBody LoginVO loginVO, HttpServletRequest request) throws Exception {
 		HashMap<String,Object> resultMap = new HashMap<String,Object>();
@@ -131,10 +132,13 @@ public class EgovLoginAPIController {
 	 */
 	@RequestMapping(value = "/uat/uia/actionLogoutAPI.do")
 	public @ResponseBody ResultVO actionLogoutJSON(HttpServletRequest request) throws Exception {
-		ResultVO result = new ResultVO();
+		ResultVO resultVO = new ResultVO();
 
 		RequestContextHolder.getRequestAttributes().removeAttribute("LoginVO", RequestAttributes.SCOPE_SESSION);
 
-		return result;
+		resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
+		resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());
+
+		return resultVO;
 	}
 }

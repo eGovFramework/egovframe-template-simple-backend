@@ -18,6 +18,7 @@ import org.springframework.web.servlet.view.JstlView;
 import org.springframework.web.servlet.view.UrlBasedViewResolver;
 
 import egovframework.com.cmm.interceptor.AuthenticInterceptor;
+import egovframework.com.cmm.interceptor.CustomAuthenticInterceptor;
 
 /**
  * @ClassName : EgovConfigWebDispatcherServlet.java
@@ -62,8 +63,8 @@ public class EgovConfigWebDispatcherServlet implements WebMvcConfigurer {
 	public void addInterceptors(InterceptorRegistry registry) {
 		registry.addInterceptor(new AuthenticInterceptor())
 			.addPathPatterns(
-				"/cop/com/*.do",
-				"/cop/bbs/*Master*.do",
+//				"/cop/com/*.do",
+//				"/cop/bbs/*Master*.do",
 				"/uat/uia/*.do")
 			.excludePathPatterns(
 				"/uat/uia/actionLogin.do",
@@ -72,6 +73,11 @@ public class EgovConfigWebDispatcherServlet implements WebMvcConfigurer {
 				"/uat/uia/egovLoginUsrAPI.do",
 				"/uat/uia/actionLogoutAPI.do"
 				);
+		registry.addInterceptor(new CustomAuthenticInterceptor())
+			.addPathPatterns(
+				"/**/*.do")
+			.excludePathPatterns(
+				"/uat/uia/**");
 	}
 
 	// -------------------------------------------------------------
@@ -101,7 +107,7 @@ public class EgovConfigWebDispatcherServlet implements WebMvcConfigurer {
 
 		simpleMappingExceptionResolver.setExceptionMappings(mappings);
 
-		exceptionResolvers.add(simpleMappingExceptionResolver);
+//		exceptionResolvers.add(simpleMappingExceptionResolver);
 	}
 
 	// -------------------------------------------------------------
