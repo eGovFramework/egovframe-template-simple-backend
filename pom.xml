@@ -4,12 +4,18 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.egovframe.template</groupId>
 	<artifactId>simpleHomePage</artifactId> 
-<!-- 	<groupId>###GROUP_ID###</groupId>
-	<artifactId>###ARTIFACT_ID###</artifactId>  -->
 	<packaging>war</packaging>
+	<version>1.0.0</version>
+	<name>egovframework</name>
+	<url>example.egovframework.com</url>
+<!-- 	
+	<groupId>###GROUP_ID###</groupId>
+	<artifactId>###ARTIFACT_ID###</artifactId>
 	<version>###VERSION###</version>
 	<name>###NAME###</name>
-	<url>###URL###</url>
+	<url>###URL###</url> 
+
+-->
 
 	<licenses>
 		<license>
@@ -35,18 +41,8 @@
 			</snapshots>
 		</repository>
 		<repository>
-			<id>egovframe</id>
-			<url>http://maven.egovframe.kr:8080/maven/</url>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-		<repository>
 			<id>egovframe2</id>
-			<url>http://www.egovframe.go.kr/maven/</url>
+			<url>https://www.egovframe.go.kr/maven/</url>
 			<releases>
 				<enabled>true</enabled>
 			</releases>
