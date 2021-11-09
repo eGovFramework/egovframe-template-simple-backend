@@ -95,7 +95,6 @@ public class EgovBBSUseInfoManageControllerAPI {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 
 		if (!EgovUserDetailsHelper.isAuthenticated()) {
-			//return "cmm/uat/uia/EgovLoginUsr"; // server-side 권한 확인
 			return handleAuthError(resultVO); // server-side 권한 확인
 		}
 
@@ -125,7 +124,6 @@ public class EgovBBSUseInfoManageControllerAPI {
 		resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
 		resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());
 
-		//		return "cop/com/EgovBoardUseInfList";
 		return resultVO;
 	}
 
@@ -177,10 +175,7 @@ public class EgovBBSUseInfoManageControllerAPI {
 		// 시스템 사용 게시판의 경우 URL 표시
 		if ("SYSTEM_DEFAULT_BOARD".equals(vo.getTrgetId())) {
 			if (vo.getBbsTyCode().equals("BBST02")) { // 익명게시판
-				//				vo.setProvdUrl("/cop/bbs/anonymous/selectBoardListAPI.do?bbsId=" + vo.getBbsId());//제외
-				//				vo.setProvdUrl("/cop/bbs/anonymous/selectBoardListAPI.do");//제외
 			} else {
-				//				vo.setProvdUrl("/cop/bbs/selectBoardListAPI.do?bbsId=" + vo.getBbsId());
 				vo.setProvdUrl("/cop/bbs/selectBoardListAPI.do");//bbsId 값을 따로 넘겨줘야 함
 			}
 		}
@@ -194,7 +189,6 @@ public class EgovBBSUseInfoManageControllerAPI {
 		resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
 		resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());
 
-		//return "cop/com/EgovBoardUseInfInqire";
 		return resultVO;
 	}
 
@@ -213,7 +207,6 @@ public class EgovBBSUseInfoManageControllerAPI {
 	@ResponseBody
 	public ResultVO insertBBSUseInf(
 		BoardUseInfVO bdUseVO,
-		//		@ModelAttribute("boardUseInf") BoardUseInf boardUseInf,
 		BindingResult bindingResult
 
 	) throws Exception {
@@ -236,7 +229,6 @@ public class EgovBBSUseInfoManageControllerAPI {
 			return resultVO;
 		}
 
-		// CMMNTY 06/CLUB 05/SYSTEM(REGC01)
 		if ("CMMNTY".equals(bdUseVO.getTrgetType())) {
 			bdUseVO.setRegistSeCode("REGC06");
 		} else if ("CLUB".equals(bdUseVO.getTrgetType())) {
@@ -278,7 +270,6 @@ public class EgovBBSUseInfoManageControllerAPI {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 
 		if (!EgovUserDetailsHelper.isAuthenticated()) {
-			//			return "cmm/uat/uia/EgovLoginUsr"; // server-side 권한 확인
 			return handleAuthError(resultVO); // server-side 권한 확인
 		}
 
@@ -291,7 +282,6 @@ public class EgovBBSUseInfoManageControllerAPI {
 			resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());
 		}
 
-		//		return "forward:/cop/com/selectBBSUseInfsAPI.do";
 		return resultVO;
 	}
 

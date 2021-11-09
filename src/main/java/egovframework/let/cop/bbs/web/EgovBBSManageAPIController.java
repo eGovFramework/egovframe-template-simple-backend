@@ -175,9 +175,6 @@ public class EgovBBSManageAPIController {
 		boardVO.setLastUpdusrId(user.getUniqId());
 		BoardVO vo = bbsMngService.selectBoardArticle(boardVO);
 
-		//model.addAttribute("result", vo);
-		//model.addAttribute("sessionUniqId", user.getUniqId());
-
 		//----------------------------
 		// template 처리 (기본 BBS template 지정  포함)
 		//----------------------------
@@ -227,9 +224,6 @@ public class EgovBBSManageAPIController {
 	 * @throws Exception
 	 */
 	@RequestMapping("/cop/bbs/updateBoardArticleAPI.do")
-	//	public @ResponseBody ResultVO updateBoardArticle(final MultipartHttpServletRequest multiRequest,
-	//		@ModelAttribute("searchVO") BoardVO boardVO, @ModelAttribute("bdMstr") BoardMaster bdMstr,
-	//		@ModelAttribute("board") Board board, BindingResult bindingResult, ModelMap model, SessionStatus status)
 	@ResponseBody
 	public ResultVO updateBoardArticle(final MultipartHttpServletRequest multiRequest,
 		BoardVO boardVO,
@@ -238,14 +232,6 @@ public class EgovBBSManageAPIController {
 		ResultVO resultVO = new ResultVO();
 
 		// 사용자권한 처리
-		/*
-		if (!EgovUserDetailsHelper.isAuthenticated()) {
-			model.addAttribute("message", egovMessageSource.getMessage("fail.common.login"));
-			return "cmm/uat/uia/EgovLoginUsr";
-		}*/
-
-		//LoginVO user = (LoginVO) EgovUserDetailsHelper.getAuthenticatedUser();
-		//Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
 		LoginVO user = new LoginVO();
 		user.setUniqId("USRCNFRM_00000000000");
 		Boolean isAuthenticated = true;
@@ -255,25 +241,6 @@ public class EgovBBSManageAPIController {
 		beanValidator.validate(boardVO, bindingResult);
 		if (bindingResult.hasErrors()) {
 
-			/*
-			boardVO.setFrstRegisterId(user.getUniqId());
-
-			BoardMaster master = new BoardMaster();
-			BoardMasterVO bmvo = new BoardMasterVO();
-			BoardVO bdvo = new BoardVO();
-
-			master.setBbsId(boardVO.getBbsId());
-			master.setUniqId(user.getUniqId());
-
-			bmvo = bbsAttrbService.selectBBSMasterInf(master);
-			bdvo = bbsMngService.selectBoardArticle(boardVO);
-
-			model.addAttribute("result", bdvo);
-			model.addAttribute("bdMstr", bmvo);
-
-			resultVO.setResultCode(900);
-			resultVO.setResultMessage(resultMessage);
-			*/
 			resultVO.setResultCode(ResponseCode.INPUT_CHECK_ERROR.getCode());
 			resultVO.setResultMessage(ResponseCode.INPUT_CHECK_ERROR.getMessage());
 
@@ -322,9 +289,6 @@ public class EgovBBSManageAPIController {
 	 * @throws Exception
 	 */
 	@RequestMapping("/cop/bbs/insertBoardArticleAPI.do")
-	//	public @ResponseBody ResultVO insertBoardArticle(final MultipartHttpServletRequest multiRequest,
-	//		@ModelAttribute("searchVO") BoardVO boardVO, @ModelAttribute("bdMstr") BoardMaster bdMstr,
-	//		@ModelAttribute("board") Board board, BindingResult bindingResult, SessionStatus status, ModelMap model)
 	@ResponseBody
 	public ResultVO insertBoardArticle(final MultipartHttpServletRequest multiRequest,
 		BoardVO boardVO,
@@ -332,45 +296,12 @@ public class EgovBBSManageAPIController {
 		throws Exception {
 		ResultVO resultVO = new ResultVO();
 
-		// 사용자권한 처리
-		/*
-		if (!EgovUserDetailsHelper.isAuthenticated()) {
-			model.addAttribute("message", egovMessageSource.getMessage("fail.common.login"));
-			return "cmm/uat/uia/EgovLoginUsr";
-		}
-		*/
-
-		//LoginVO user = (LoginVO) EgovUserDetailsHelper.getAuthenticatedUser();
-		//Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
 		LoginVO user = new LoginVO();
 		user.setUniqId("USRCNFRM_00000000000");
 		Boolean isAuthenticated = true;
 
 		beanValidator.validate(boardVO, bindingResult);
 		if (bindingResult.hasErrors()) {
-			/*
-			BoardMasterVO master = new BoardMasterVO();
-			BoardMasterVO vo = new BoardMasterVO();
-
-			vo.setBbsId(boardVO.getBbsId());
-			vo.setUniqId(user.getUniqId());
-
-			master = bbsAttrbService.selectBBSMasterInf(vo);
-
-			model.addAttribute("bdMstr", master);
-
-			// ----------------------------
-			// 기본 BBS template 지정
-			// ----------------------------
-			if (master.getTmplatCours() == null || master.getTmplatCours().equals("")) {
-				master.setTmplatCours("/css/egovframework/cop/bbs/egovBaseTemplate.css");
-			}
-
-			model.addAttribute("brdMstrVO", master);
-			//// -----------------------------
-
-			return "cop/bbs/EgovNoticeRegist";
-			*/
 			resultVO.setResultCode(ResponseCode.INPUT_CHECK_ERROR.getCode());
 			resultVO.setResultMessage(ResponseCode.INPUT_CHECK_ERROR.getMessage());
 
@@ -396,8 +327,6 @@ public class EgovBBSManageAPIController {
 
 			bbsMngService.insertBoardArticle(boardVO);
 		}
-		// status.setComplete();
-		//return "forward:/cop/bbs/selectBoardList.do";
 
 		resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
 		resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());
@@ -415,9 +344,6 @@ public class EgovBBSManageAPIController {
 	 * @throws Exception
 	 */
 	@RequestMapping("/cop/bbs/replyBoardArticleAPI.do")
-	//	public @ResponseBody ResultVO replyBoardArticle(final MultipartHttpServletRequest multiRequest,
-	//		@ModelAttribute("searchVO") BoardVO boardVO, @ModelAttribute("bdMstr") BoardMaster bdMstr,
-	//		@ModelAttribute("board") Board board, BindingResult bindingResult, ModelMap model, SessionStatus status)
 	@ResponseBody
 	public ResultVO replyBoardArticle(final MultipartHttpServletRequest multiRequest,
 		BoardVO boardVO,
@@ -425,46 +351,12 @@ public class EgovBBSManageAPIController {
 		throws Exception {
 		ResultVO resultVO = new ResultVO();
 
-		// 사용자권한 처리
-		/*
-		if (!EgovUserDetailsHelper.isAuthenticated()) {
-			model.addAttribute("message", egovMessageSource.getMessage("fail.common.login"));
-			return "cmm/uat/uia/EgovLoginUsr";
-		}
-		*/
-
-		//LoginVO user = (LoginVO) EgovUserDetailsHelper.getAuthenticatedUser();
-		//Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
 		LoginVO user = new LoginVO();
 		user.setUniqId("USRCNFRM_00000000000");
 		Boolean isAuthenticated = true;
 
 		beanValidator.validate(boardVO, bindingResult);
 		if (bindingResult.hasErrors()) {
-			/*
-			BoardMasterVO master = new BoardMasterVO();
-			BoardMasterVO vo = new BoardMasterVO();
-
-			vo.setBbsId(boardVO.getBbsId());
-			vo.setUniqId(user.getUniqId());
-
-			master = bbsAttrbService.selectBBSMasterInf(vo);
-
-			model.addAttribute("bdMstr", master);
-			model.addAttribute("result", boardVO);
-
-			// ----------------------------
-			// 기본 BBS template 지정
-			// ----------------------------
-			if (master.getTmplatCours() == null || master.getTmplatCours().equals("")) {
-				master.setTmplatCours("/css/egovframework/cop/bbs/egovBaseTemplate.css");
-			}
-
-			model.addAttribute("brdMstrVO", master);
-			//// -----------------------------
-
-			return "cop/bbs/EgovNoticeReply";
-			*/
 			resultVO.setResultCode(ResponseCode.INPUT_CHECK_ERROR.getCode());
 			resultVO.setResultMessage(ResponseCode.INPUT_CHECK_ERROR.getMessage());
 
@@ -513,8 +405,6 @@ public class EgovBBSManageAPIController {
 	 * @throws Exception
 	 */
 	@RequestMapping("/cop/bbs/deleteBoardArticleAPI.do")
-	//	public @ResponseBody ResultVO deleteBoardArticle(@ModelAttribute("searchVO") BoardVO boardVO, @ModelAttribute("board") Board board,
-	//		@ModelAttribute("bdMstr") BoardMaster bdMstr, ModelMap model)
 	@ResponseBody
 	public ResultVO deleteBoardArticle(@RequestBody BoardVO boardVO)
 
@@ -523,7 +413,6 @@ public class EgovBBSManageAPIController {
 
 		// 사용자권한 처리
 		if (!EgovUserDetailsHelper.isAuthenticated()) {
-			//model.addAttribute("message", egovMessageSource.getMessage("fail.common.login"));
 
 			resultVO.setResultCode(ResponseCode.AUTH_ERROR.getCode());
 			resultVO.setResultMessage(ResponseCode.AUTH_ERROR.getMessage());

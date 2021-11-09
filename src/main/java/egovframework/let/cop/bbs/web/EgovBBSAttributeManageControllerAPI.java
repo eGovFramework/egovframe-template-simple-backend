@@ -120,7 +120,6 @@ public class EgovBBSAttributeManageControllerAPI {
 		resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
 		resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());
 
-		// return "cop/bbs/EgovBoardMstrList";
 		return resultVO;
 	}
 
@@ -216,7 +215,6 @@ public class EgovBBSAttributeManageControllerAPI {
 			resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());
 		}
 
-		// return "forward:/cop/bbs/SelectBBSMasterInfsAPI.do";
 		return resultVO;
 	}
 
@@ -300,7 +298,6 @@ public class EgovBBSAttributeManageControllerAPI {
 			resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());
 		}
 
-		// return "forward:/cop/bbs/SelectBBSMasterInfsAPI.do";
 		return resultVO;
 	}
 
@@ -326,9 +323,6 @@ public class EgovBBSAttributeManageControllerAPI {
 			return handleAuthError(resultVO); // server-side 권한 확인
 		}
 
-
-		//BoardMaster boardMaster = new BoardMaster();
-
 		ComDefaultCodeVO vo = new ComDefaultCodeVO();
 
 		vo.setCodeId("COM004");
@@ -348,7 +342,6 @@ public class EgovBBSAttributeManageControllerAPI {
 		resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());
 		resultVO.setResult(resultMap);
 
-		// return "cop/bbs/EgovBoardMstrRegist";
 		return resultVO;
 	}
 
@@ -394,7 +387,6 @@ public class EgovBBSAttributeManageControllerAPI {
 		model.addAttribute("resultCnt", map.get("resultCnt"));
 		model.addAttribute("paginationInfo", paginationInfo);
 
-		// return "cop/bbs/EgovBoardMstrListPop";
 		return resultVO;
 	}
 
@@ -435,7 +427,6 @@ public class EgovBBSAttributeManageControllerAPI {
 			codeResult = cmmUseService.selectCmmCodeDetail(vo);
 			model.addAttribute("attrbList", codeResult);
 
-			// return "cop/bbs/EgovBdMstrRegistByTrget";
 			return resultVO;
 		}
 
@@ -455,7 +446,6 @@ public class EgovBBSAttributeManageControllerAPI {
 			model.addAttribute("S_FLAG", "S");
 		}
 
-		// return "forward:/cop/bbs/selectBdMstrListByTrgetAPI.do";
 		return resultVO;
 	}
 
@@ -499,7 +489,6 @@ public class EgovBBSAttributeManageControllerAPI {
 		model.addAttribute("paginationInfo", paginationInfo);
 		model.addAttribute("trgetId", boardMasterVO.getTrgetId());
 
-		// return "cop/bbs/EgovBBSListByTrget";
 		return resultVO;
 	}
 
@@ -525,7 +514,6 @@ public class EgovBBSAttributeManageControllerAPI {
 		vo.setTrgetId(boardMasterVO.getTrgetId());
 		model.addAttribute("result", vo);
 
-		// return "cop/bbs/EgovBdMstrUpdtByTrget";
 		return resultVO;
 	}
 
@@ -558,7 +546,6 @@ public class EgovBBSAttributeManageControllerAPI {
 			vo = bbsAttrbService.selectBBSMasterInf(boardMasterVO);
 			model.addAttribute("result", vo);
 
-			// return "cop/bbs/EgovBoardMstrUpdt";
 			return resultVO;
 		}
 
@@ -569,7 +556,6 @@ public class EgovBBSAttributeManageControllerAPI {
 			bbsAttrbService.updateBBSMasterInf(boardMaster);
 		}
 
-		// return "forward:/cop/bbs/selectBdMstrListByTrgetAPI.do";
 		return resultVO;
 	}
 
@@ -605,7 +591,6 @@ public class EgovBBSAttributeManageControllerAPI {
 		BoardMaster boardMaster = new BoardMaster();
 		model.addAttribute("boardMaster", boardMaster);
 
-		// return "cop/bbs/EgovBdMstrRegistByTrget";
 		return resultVO;
 	}
 
@@ -638,7 +623,6 @@ public class EgovBBSAttributeManageControllerAPI {
 			bbsAttrbService.deleteBBSMasterInf(boardMaster);
 		}
 
-		// return "forward:/cop/bbs/selectBdMstrListByTrgetAPI.do";
 		return resultVO;
 	}
 
@@ -668,7 +652,6 @@ public class EgovBBSAttributeManageControllerAPI {
 		List<BoardMasterVO> result = bbsAttrbService.selectAllBdMstrByTrget(vo);
 		model.addAttribute("resultList", result);
 
-		// return "cop/bbs/EgovBdListPortlet";
 		return resultVO;
 	}
 

@@ -59,17 +59,6 @@ public class EgovLoginAPIController {
 	@Resource(name = "leaveaTrace")
 	LeaveaTrace leaveaTrace;
 
-//	/**
-//	 * 로그인 화면으로 들어간다
-//	 * @param vo - 로그인후 이동할 URL이 담긴 LoginVO
-//	 * @return 로그인 페이지
-//	 * @exception Exception
-//	 */
-//	@RequestMapping(value = "/uat/uia/egovLoginUsr.do")
-//	public String loginUsrView(@ModelAttribute("loginVO") LoginVO loginVO, HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
-//		return "cmm/uat/uia/EgovLoginUsr";
-//	}
-
 	/**
 	 * 일반 로그인을 처리한다
 	 * @param vo - 아이디, 비밀번호가 담긴 LoginVO

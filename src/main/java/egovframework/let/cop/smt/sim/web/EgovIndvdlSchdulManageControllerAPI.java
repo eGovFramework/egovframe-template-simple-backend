@@ -143,8 +143,8 @@ public class EgovIndvdlSchdulManageControllerAPI {
 		resultVO.setResult(resultMap);
 		resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
 		resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());
+
 		return resultVO;
-		//		return "/cop/smt/sim/EgovIndvdlSchdulManageMonthList";
 	}
 
 	/**
@@ -194,7 +194,6 @@ public class EgovIndvdlSchdulManageControllerAPI {
 		//일정정료일자(분)
 		resultMap.put("schdulEnddeMM", getTimeMM());
 
-		//		IndvdlSchdulManageVO indvdlSchdulManageVO = new IndvdlSchdulManageVO();
 		//팝업정보창 사용하여 셋팅하지 않고 고정하여 설정함(템플릿에서 기능 축소)
 		indvdlSchdulManageVO.setSchdulDeptName("관리자부서");
 		indvdlSchdulManageVO.setSchdulDeptId("ORGNZT_0000000000000");
@@ -288,9 +287,6 @@ public class EgovIndvdlSchdulManageControllerAPI {
 	@RequestMapping(value = "/cop/smt/sim/egovIndvdlSchdulManageDetailAPI.do")
 	@ResponseBody
 	public ResultVO EgovIndvdlSchdulManageDetail(
-		//		@ModelAttribute("searchVO") ComDefaultVO searchVO,
-		//		IndvdlSchdulManageVO indvdlSchdulManageVO,
-		//		@RequestParam Map<String, Object> commandMap,
 		@RequestBody Map<String, Object> commandMap)
 		throws Exception {
 
@@ -409,17 +405,17 @@ public class EgovIndvdlSchdulManageControllerAPI {
 		//공통코드  중요도 조회
 		ComDefaultCodeVO voComCode = new ComDefaultCodeVO();
 		voComCode.setCodeId("COM019");
-		//List listComCode = cmmUseService.selectCmmCodeDetail(voComCode);
+
 		resultMap.put("schdulIpcrCode", cmmUseService.selectCmmCodeDetail(voComCode));
 		//공통코드  일정구분 조회
 		voComCode = new ComDefaultCodeVO();
 		voComCode.setCodeId("COM030");
-		//listComCode = cmmUseService.selectCmmCodeDetail(voComCode);
+
 		resultMap.put("schdulSe", cmmUseService.selectCmmCodeDetail(voComCode));
 		//공통코드  반복구분 조회
 		voComCode = new ComDefaultCodeVO();
 		voComCode.setCodeId("COM031");
-		//listComCode = cmmUseService.selectCmmCodeDetail(voComCode);
+
 		resultMap.put("reptitSeCode", cmmUseService.selectCmmCodeDetail(voComCode));
 
 		//일정시작일자(시)
@@ -475,7 +471,6 @@ public class EgovIndvdlSchdulManageControllerAPI {
 	@ResponseBody
 	public ResultVO IndvdlSchdulManageModifyActor(
 		final MultipartHttpServletRequest multiRequest,
-//		@RequestBody Map<String, Object> commandMap,
 		IndvdlSchdulManageVO indvdlSchdulManageVO,
 		BindingResult bindingResult)
 		throws Exception {
