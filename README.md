@@ -2,6 +2,7 @@
 
 ## 환경 설정
 java : 1.8
+maven : 3.8.1
 
 ## BackEnd 구동
 
