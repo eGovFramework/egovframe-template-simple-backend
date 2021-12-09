@@ -8,14 +8,6 @@
 	<version>1.0.0</version>
 	<name>egovframework</name>
 	<url>example.egovframework.com</url>
-<!-- 	
-	<groupId>###GROUP_ID###</groupId>
-	<artifactId>###ARTIFACT_ID###</artifactId>
-	<version>###VERSION###</version>
-	<name>###NAME###</name>
-	<url>###URL###</url> 
-
--->
 
 	<licenses>
 		<license>
@@ -151,24 +143,6 @@
 			<version>1.19</version>
 		</dependency>
 
-		<!-- jsonLibrary -->
-		<!-- <dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-core</artifactId>
-			<version>2.9.10</version>
-		</dependency>
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-annotations</artifactId>
-			<version>2.9.10</version>
-		</dependency>
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-databind</artifactId>
-			<version>2.9.10.5</version>
-		</dependency> -->
-		
-
 		<dependency>
 			<groupId>org.hsqldb</groupId>
 			<artifactId>hsqldb</artifactId>
@@ -219,6 +193,13 @@
 			<version>8.4</version>
 		</dependency>
 		-->
+
+		<!-- validator -->
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<version>5.2.4.Final</version>
+		</dependency>
 
 		<!-- log4jdbc driver -->
 		<dependency>
