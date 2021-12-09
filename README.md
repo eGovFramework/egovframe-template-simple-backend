@@ -20,7 +20,7 @@ maven : 3.8.1
 
 ## 변경 사항
 
-###  1. [Java Config 변환](./Docs/JavaConfig변환.md)
+###  1. [Java Config 변환](./Docs/JavaConfig_Convert.md)
 
 #### 1) Web.xml -> WebApplicationInitializer 구현체로 변환 
 
