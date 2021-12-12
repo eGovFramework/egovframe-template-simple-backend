@@ -19,6 +19,7 @@
 	<properties>
 		<spring.maven.artifact.version>5.3.6</spring.maven.artifact.version>
 		<org.egovframe.rte.version>4.0.0</org.egovframe.rte.version>
+		<log4j2.version>2.15.0</log4j2.version>
 	</properties>
 
 	<repositories>
@@ -212,6 +213,11 @@
 					<groupId>org.slf4j</groupId>
 				</exclusion>
 			</exclusions>
+		</dependency>
+		
+		<dependency>
+		    <groupId>org.apache.logging.log4j</groupId>
+		    <artifactId>log4j-core</artifactId>
 		</dependency>
 
 		<dependency>
