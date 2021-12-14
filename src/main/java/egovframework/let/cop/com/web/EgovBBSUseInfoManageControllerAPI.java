@@ -180,10 +180,10 @@ public class EgovBBSUseInfoManageControllerAPI {
 			}
 		}
 
-		resultMap.put("bdUseVO", vo);
-
 		BoardMasterVO boardMasterVO = new BoardMasterVO();
 		resultMap = bbsAttrbService.selectNotUsedBdMstrList(boardMasterVO);
+
+		resultMap.put("bdUseVO", vo);
 
 		resultVO.setResult(resultMap);
 		resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
