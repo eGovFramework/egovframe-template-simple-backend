@@ -19,7 +19,7 @@
 	<properties>
 		<spring.maven.artifact.version>5.3.6</spring.maven.artifact.version>
 		<org.egovframe.rte.version>4.0.0</org.egovframe.rte.version>
-		<log4j2.version>2.15.0</log4j2.version>
+		<log4j2.version>2.16.0</log4j2.version>
 	</properties>
 
 	<repositories>
@@ -105,19 +105,16 @@
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>jstl</artifactId>
-			<version>1.2</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-dbcp2</artifactId>
-			<version>2.4.0</version>
 		</dependency>
 
 		<dependency>
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>
-			<version>1.14</version>
 		</dependency>
 
 		<dependency>
@@ -147,7 +144,6 @@
 		<dependency>
 			<groupId>org.hsqldb</groupId>
 			<artifactId>hsqldb</artifactId>
-			<version>2.5.0</version>
 		</dependency> 
 
 		<!-- mysql driver -->
@@ -155,7 +151,6 @@
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
-			<version>5.1.31</version>
 		</dependency>
 		
 
@@ -238,12 +233,7 @@
 			<artifactId>icu4j</artifactId>
 			<version>53.1</version>
 		</dependency>
-		
-		<!-- <dependency>
-			<groupId>io.jsonwebtoken</groupId>
-			<artifactId>jjwt</artifactId>
-			<version>0.9.1</version>
-		</dependency> -->
+
 	</dependencies>
 
 	<build>
