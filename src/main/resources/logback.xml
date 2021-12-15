@@ -10,6 +10,7 @@
 
 	<logger name="java.sql" level="DEBUG" />
 	<logger name="egovframework" level="DEBUG" />
+	<logger name="org.egovframe" level="DEBUG" />
 	<logger name="jdbc.sqltiming" level="DEBUG" />
 	<logger name="org.springframework" level="DEBUG" />
 
@@ -18,4 +19,5 @@
 	</root>
 
 	<!-- <typeAliases></typeAliases> -->
+<typeAliases></typeAliases>
 </configuration>
