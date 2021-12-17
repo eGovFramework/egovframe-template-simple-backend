@@ -139,11 +139,11 @@
 		취약점 점검 조치중 2021.12.17
 		- commons-compress가 사용되고 있는지 확인중
 		 -->
-<!-- 		<dependency>
+		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-compress</artifactId>
-			<version>1.19</version>
-		</dependency> -->
+			<version>1.21</version>
+		</dependency>
 
 		<dependency>
 			<groupId>org.hsqldb</groupId>
@@ -215,8 +215,8 @@
 		</dependency>
 		
 		<dependency>
-		    <groupId>org.apache.logging.log4j</groupId>
-		    <artifactId>log4j-core</artifactId>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
 		</dependency>
 
 <!-- 
