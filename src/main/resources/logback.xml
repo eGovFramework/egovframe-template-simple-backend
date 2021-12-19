@@ -18,6 +18,4 @@
 		<appender-ref ref="STDOUT" />
 	</root>
 
-	<!-- <typeAliases></typeAliases> -->
-<typeAliases></typeAliases>
 </configuration>
