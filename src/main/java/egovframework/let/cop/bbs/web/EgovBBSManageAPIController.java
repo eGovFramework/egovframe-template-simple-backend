@@ -198,9 +198,7 @@ public class EgovBBSManageAPIController {
 
 		// 2021-06-01 신용호 추가
 		// 첨부파일 확인
-		if (vo == null || vo.getAtchFileId() == null || vo.getAtchFileId().isEmpty()) {
-
-		} else {
+		if (vo != null && vo.getAtchFileId() != null && !vo.getAtchFileId().isEmpty()) {
 			FileVO fileVO = new FileVO();
 			fileVO.setAtchFileId(vo.getAtchFileId());
 			List<FileVO> resultFiles = fileService.selectFileInfs(fileVO);
