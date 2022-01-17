@@ -4,14 +4,11 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URLEncoder;
 import java.util.Map;
-
-import egovframework.com.cmm.service.EgovFileMngService;
-import egovframework.com.cmm.service.FileVO;
-import egovframework.com.cmm.util.EgovUserDetailsHelper;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -23,6 +20,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import egovframework.com.cmm.service.EgovFileMngService;
+import egovframework.com.cmm.service.FileVO;
+import egovframework.com.cmm.util.EgovUserDetailsHelper;
 
 /**
  * 파일 다운로드를 위한 컨트롤러 클래스
@@ -164,7 +165,7 @@ public class EgovFileDownloadController {
 
 					FileCopyUtils.copy(in, out);
 					out.flush();
-				} catch (Exception ex) {
+				} catch (FileNotFoundException ex) {
 					// 다음 Exception 무시 처리
 					// Connection reset by peer: socket write error
 					LOGGER.debug("IGNORED: {}", ex.getMessage());
@@ -172,14 +173,14 @@ public class EgovFileDownloadController {
 					if (in != null) {
 						try {
 							in.close();
-						} catch (Exception ignore) {
+						} catch (IOException ignore) {
 							LOGGER.debug("IGNORED: {}", ignore.getMessage());
 						}
 					}
 					if (out != null) {
 						try {
 							out.close();
-						} catch (Exception ignore) {
+						} catch (IOException ignore) {
 							LOGGER.debug("IGNORED: {}", ignore.getMessage());
 						}
 					}

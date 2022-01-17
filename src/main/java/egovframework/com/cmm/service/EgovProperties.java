@@ -12,6 +12,7 @@ import java.util.Properties;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 //import java.io.FileNotFoundException;
 //import java.io.IOException;
 //import java.util.Properties;
@@ -34,33 +35,31 @@ import org.slf4j.LoggerFactory;
  *
  */
 
-public class EgovProperties{
+public class EgovProperties {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(EgovProperties.class);
 
 	//프로퍼티값 로드시 에러발생하면 반환되는 에러문자열
-	public static final String ERR_CODE =" EXCEPTION OCCURRED";
-	public static final String ERR_CODE_FNFE =" EXCEPTION(FNFE) OCCURRED";
-	public static final String ERR_CODE_IOE =" EXCEPTION(IOE) OCCURRED";
+	public static final String ERR_CODE = " EXCEPTION OCCURRED";
+	public static final String ERR_CODE_FNFE = " EXCEPTION(FNFE) OCCURRED";
+	public static final String ERR_CODE_IOE = " EXCEPTION(IOE) OCCURRED";
 
 	//파일구분자
-    static final char FILE_SEPARATOR     = File.separatorChar;
+	static final char FILE_SEPARATOR = File.separatorChar;
 
 	//프로퍼티 파일의 물리적 위치
-    /*public static final String GLOBALS_PROPERTIES_FILE
-    = System.getProperty("user.home") + System.getProperty("file.separator") + "egovProps"
-    + System.getProperty("file.separator") + "globals.properties";*/
+	/*public static final String GLOBALS_PROPERTIES_FILE
+	= System.getProperty("user.home") + System.getProperty("file.separator") + "egovProps"
+	+ System.getProperty("file.separator") + "globals.properties";*/
 
-    public static final String RELATIVE_PATH_PREFIX = EgovProperties.class.getResource("").getPath()
-    + System.getProperty("file.separator") + ".." + System.getProperty("file.separator")
-    + ".." + System.getProperty("file.separator") + ".." + System.getProperty("file.separator");
+	public static final String RELATIVE_PATH_PREFIX = EgovProperties.class.getResource("").getPath()
+		+ System.getProperty("file.separator") + ".." + System.getProperty("file.separator")
+		+ ".." + System.getProperty("file.separator") + ".." + System.getProperty("file.separator");
 
-    public static final String GLOBALS_PROPERTIES_FILE
-    = RELATIVE_PATH_PREFIX + "egovProps" + System.getProperty("file.separator") + "globals.properties";
+	public static final String GLOBALS_PROPERTIES_FILE = RELATIVE_PATH_PREFIX + "egovProps"
+		+ System.getProperty("file.separator") + "globals.properties";
 
-
-
-    /**
+	/**
 	 * 인자로 주어진 문자열을 Key값으로 하는 상대경로 프로퍼티 값을 절대경로로 반환한다(Globals.java 전용)
 	 * @param keyName String
 	 * @return String
@@ -92,36 +91,34 @@ public class EgovProperties{
 		}
 		return value;
 	}
-*/
+	*/
 
 	/**
 	 * 인자로 주어진 문자열을 Key값으로 하는 프로퍼티 값을 반환한다(Globals.java 전용)
 	 * @param keyName String
 	 * @return String
 	*/
-	public static String getProperty(String keyName){
+	public static String getProperty(String keyName) {
 		String value = ERR_CODE;
-		value="99";
+		value = "99";
 		debug(GLOBALS_PROPERTIES_FILE + " : " + keyName);
 		FileInputStream fis = null;
-		try{
+		try {
 			Properties props = new Properties();
-			fis  = new FileInputStream(GLOBALS_PROPERTIES_FILE);
+			fis = new FileInputStream(GLOBALS_PROPERTIES_FILE);
 			props.load(new java.io.BufferedInputStream(fis));
 			value = props.getProperty(keyName).trim();
-		}catch(FileNotFoundException fne){
+		} catch (FileNotFoundException fne) {
 			debug(fne);
-		}catch(IOException ioe){
+		} catch (IOException ioe) {
 			debug(ioe);
-		}catch(Exception e){
-			debug(e);
-		}finally{
+		} finally {
 			try {
 				if (fis != null) {
 					fis.close();
 				}
-			} catch (Exception ex) {
-				ex.printStackTrace();
+			} catch (IOException ioe) {
+				debug(ioe);
 			}
 
 		}
@@ -194,21 +191,20 @@ public class EgovProperties{
 	 * @return ArrayList
 	 */
 	@SuppressWarnings("unused")
-	public static ArrayList<Map<String, String>> loadPropertyFile(String property){
+	public static ArrayList<Map<String, String>> loadPropertyFile(String property) {
 
 		// key - value 형태로 된 배열 결과
 		ArrayList<Map<String, String>> keyList = new ArrayList<Map<String, String>>();
 
 		String src = property.replace('\\', FILE_SEPARATOR).replace('/', FILE_SEPARATOR);
 		FileInputStream fis = null;
-		try
-		{
+		try {
 
 			File srcFile = new File(src);
 			if (srcFile.exists()) {
 
 				java.util.Properties props = new java.util.Properties();
-				fis  = new FileInputStream(src);
+				fis = new FileInputStream(src);
 				props.load(new java.io.BufferedInputStream(fis));
 				fis.close();
 
@@ -223,15 +219,17 @@ public class EgovProperties{
 					}
 				}
 			}
-		} catch (Exception ex){
-			debug("EX:"+ex);
+		} catch (FileNotFoundException ex) {
+			debug("FileNotFoundException:" + ex);
+		} catch (IOException ex) {
+			debug("IOException:" + ex);
 		} finally {
 			try {
 				if (fis != null) {
 					fis.close();
 				}
-			} catch (Exception ex) {
-				debug("EX:"+ex);
+			} catch (IOException ioe) {
+				debug(ioe);
 			}
 		}
 
@@ -248,4 +246,3 @@ public class EgovProperties{
 		}
 	}
 }
-
