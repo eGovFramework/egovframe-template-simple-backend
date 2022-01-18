@@ -63,7 +63,7 @@ public class EgovConfigAppValidator {
 				.getResource("classpath:/egovframework/validator/validator-rules-let.xml")
 		};
 
-		Resource[] validationFormSetLocations = null;
+		Resource[] validationFormSetLocations = new Resource[] {};
 		try {
 			validationFormSetLocations = pathMatchingResourcePatternResolver
 				.getResources("classpath:/egovframework/validator/let/**/*.xml");
