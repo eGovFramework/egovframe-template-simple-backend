@@ -6,7 +6,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.URLEncoder;
 import java.util.Map;
 
@@ -24,6 +23,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import egovframework.com.cmm.service.EgovFileMngService;
 import egovframework.com.cmm.service.FileVO;
 import egovframework.com.cmm.util.EgovUserDetailsHelper;
+
+import org.egovframe.rte.fdl.cmmn.exception.EgovBizException;
 
 /**
  * 파일 다운로드를 위한 컨트롤러 클래스
@@ -187,16 +188,7 @@ public class EgovFileDownloadController {
 				}
 
 			} else {
-				response.setContentType("application/x-msdownload");
-
-				PrintWriter printwriter = response.getWriter();
-				printwriter.println("<html>");
-				printwriter.println("<br><br><br><h2>Could not get file name:<br>" + fvo.getOrignlFileNm() + "</h2>");
-				printwriter.println("<br><br><br><center><h3><a href='javascript: history.go(-1)'>Back</a></h3></center>");
-				printwriter.println("<br><br><br>&copy; webAccess");
-				printwriter.println("</html>");
-				printwriter.flush();
-				printwriter.close();
+				throw new EgovBizException();
 			}
 		}
 	}
