@@ -107,7 +107,7 @@ public class EgovConfigWebDispatcherServlet implements WebMvcConfigurer {
 
 		simpleMappingExceptionResolver.setExceptionMappings(mappings);
 
-//		exceptionResolvers.add(simpleMappingExceptionResolver);
+		exceptionResolvers.add(simpleMappingExceptionResolver);
 	}
 
 	// -------------------------------------------------------------
