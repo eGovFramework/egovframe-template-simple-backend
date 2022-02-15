@@ -1,4 +1,4 @@
-# Conext-aspect 변환
+# conext-aspect 설정 변환
 
 > AOP 관련 설정을 하는 곳이다.
 >
@@ -70,7 +70,7 @@ public DefaultExceptionHandleManager defaultExceptionHandleManager(ExceptionHand
 
 
 
-
+템플릿 내에서 Exception 발생시 실제 처리를 위한 클래스 설정
 
 <conext-aspect.xml>
 

@@ -63,8 +63,6 @@ Servlet Container는 보안 관련된 기능을 지원한다. 따라서 서블�
 
 
 
-
-
 기존 
 
 1. 기존 방식
@@ -75,14 +73,6 @@ Servlet Container는 보안 관련된 기능을 지원한다. 따라서 서블�
   1) Spring Boot Application 이 Java Application으로 먼저 뜨고, 
   2) 그 안에 tomcat이 내장 서버로 뜬다. 
   3) Servlet(ex, DispatcherServlet)을 내장 톰켓 안에다가 코드로 등록한다.
-
- 
-
-
-
-
-
-
 
 
 

@@ -66,12 +66,6 @@ DispatcherServlet을 통해 Servlet WebApplicationContext를 생성하는데,
 
 위의 두 context 모두  `param-name`이 `contextConfigLocation` 이라는 것을 볼 수 있다.
 
-이 부분이 Context 간 계층 관계를 연결해주는 부분이다.(?????????)
-
-
-
-
-
 
 
 참조

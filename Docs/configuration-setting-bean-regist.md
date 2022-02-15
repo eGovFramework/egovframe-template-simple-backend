@@ -4,10 +4,13 @@
 
 >1. 환경설정 역할을 하는 클래스에 `@Configuration`을 붙여준다.
 >2. @Bean 을 붙여서 등록하고자 하는 Spring Bean을 정의한다.
->  * 메소드 정의시 @Bean 을 붙인다.
+>
+> * 메소드 정의시 @Bean 을 붙인다.
+>
 >3. XML Bean 설정 방법을 따른다.
->  * 메소드의 Return 타입은 Bean의 Class Type 이다.
->  * 메소드의 이름이 Bean의 이름(XML 설정 당시 id 속성)이다.
+>
+> * 메소드의 Return 타입은 Bean의 Class Type 이다.
+> * 메소드의 이름이 Bean의 이름(XML 설정 당시 id 속성)이다.
 >
 >4. 특정 Bean을 Injection 받아서 Bean을 생성해야 할땐 특정 Bean을 생성하는 메소드를 직접 호출, 메소드의 파라미터, 또는 클래스레벨의 @Autowired로 특정 Bean을 Injection 받을 수 있다
 
@@ -160,18 +163,13 @@ public DefaultExceptionHandleManager defaultExceptionHandleManager(AntPathMatche
 위의 예제에서 `antPathMatcher`와  `otherHandler`은 다른곳에서 등록된 Bean을 **메소드의 파라미터** 로 주입받고 있다. 이는 **@Autowired** 를 통해서 주입받는 형태로 바꿀 수도 있다.
 
 ```java
-@Autowired
-AntPathMatcher antPathMatcher;
-...
-
-@Bean
-public DefaultExceptionHandleManager defaultExceptionHandleManager(ExceptionHandler egovHandler) {
-    DefaultExceptionHandleManager defaultExceptionHandleManager = new DefaultExceptionHandleManager();
-    defaultExceptionHandleManager.setReqExpMatcher(antPathMatcher);
-    defaultExceptionHandleManager.setPatterns(new String[] {"**service.impl.*"} );
-    defaultExceptionHandleManager.setHandlers(new ExceptionHandler[] {egovHandler});
-    return defaultExceptionHandleManager;
-}
+@AutowiredAntPathMatcher antPathMatcher;...
+@Beanpublic DefaultExceptionHandleManager defaultExceptionHandleManager(ExceptionHandler egovHandler){
+	DefaultExceptionHandleManager defaultExceptionHandleManager = new DefaultExceptionHandleManager();
+	defaultExceptionHandleManager.setReqExpMatcher(antPathMatcher);
+	defaultExceptionHandleManager.setPatterns(new String[] {"**service.impl.*"} );
+	defaultExceptionHandleManager.setHandlers(new ExceptionHandler[] {egovHandler});
+	return defaultExceptionHandleManager;}
 ```
 
 이는 Bean을 주입 받는 방법이 다양하므로 다양한 형태의 코드로 구현이 가능함을 기억해 두면 좋을 것이다.
@@ -179,14 +177,12 @@ public DefaultExceptionHandleManager defaultExceptionHandleManager(ExceptionHand
 앞선 `defaultExceptionHandleManager`가 메소드의 파라미터 형태로 `egovHandler` 을 주입 받았다면 `otherExceptionHandleManager`은 **Bean을 생성하는 메소드를 직접 호출**하여 `otherHandler`을 주입 받을 수 있는 것을 확인 할 수 있을 것이다.
 
 ```java
-@Bean
-public DefaultExceptionHandleManager otherExceptionHandleManager() {
-    DefaultExceptionHandleManager defaultExceptionHandleManager = new DefaultExceptionHandleManager();
-    defaultExceptionHandleManager.setReqExpMatcher(antPathMatcher);
-    defaultExceptionHandleManager.setPatterns(new String[] {"**service.impl.*"} );
-    defaultExceptionHandleManager.setHandlers(new ExceptionHandler[] {otherHandler()});
-    return defaultExceptionHandleManager;
-}
+@Beanpublic DefaultExceptionHandleManager otherExceptionHandleManager() {
+	DefaultExceptionHandleManager defaultExceptionHandleManager = new DefaultExceptionHandleManager();
+	defaultExceptionHandleManager.setReqExpMatcher(antPathMatcher);
+	defaultExceptionHandleManager.setPatterns(new String[] {"**service.impl.*"} );
+	defaultExceptionHandleManager.setHandlers(new ExceptionHandler[] {otherHandler()});
+	return 	defaultExceptionHandleManager;}
 ```
 
 참조
