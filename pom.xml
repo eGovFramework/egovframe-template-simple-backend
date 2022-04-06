@@ -305,6 +305,25 @@
 					<artifactId>maven-pmd-plugin</artifactId>
 					<version>3.12.0</version>
 				</plugin>
+
+				<!--Checkstyle 플러그인 설정-->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-checkstyle-plugin</artifactId>
+					<version>3.1.1</version>
+					<configuration>
+						<configLocation>egov-checkstyle-rules.xml</configLocation>
+						<sourceDirectories>${project.build.sourceDirectories}</sourceDirectories>
+						<propertyExpansion>suppressionFile=./naver-checkstyle-suppressions.xml</propertyExpansion>
+					</configuration>
+					<dependencies>
+						<dependency>
+							<groupId>com.puppycrawl.tools</groupId>
+							<artifactId>checkstyle</artifactId>
+							<version>8.24</version>
+						</dependency>
+					</dependencies>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 		<plugins>
@@ -335,6 +354,11 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<!-- <version>3.1.1</version> -->
+			</plugin>
+			<!--checkstyle-plugin-->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
 			</plugin>
 		</plugins>
 	</build>
