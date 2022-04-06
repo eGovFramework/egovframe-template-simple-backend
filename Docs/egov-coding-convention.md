@@ -21,6 +21,28 @@ Windows 형식인 CRLF가 섞이지 않도록 편집기와 GIT 설정 등을 확
 Checkstyle에서는 검사대상에서 제외할 파일을 별도의 설정파일에서 지정할 수 있다.
 
 
+## 4. IDE Formatter 적용
+이 가이드의 규칙을 지키는데 도움이 되는 코드 편집기와 뷰어 자동 설정 방법을 정리한다.
+
+### 1) eclipse 에서 적용
+#### - Formatter 메뉴로 이동
+- Workspace 전역설정은 `Window > Preference > Java > Code style > Formatter`에서 이동한다.
+- 프로젝트별 설정은 `Project > Properties > Java Code style > Formatter`로 이동한다.
+
+#### - Formatter 항목 설정
+- 프로젝트별 설정의 경우 `Enable project specific settings`를 선택한다.
+- `[Import]` 버튼을 누른 후, 다운로드 한 egov-eclipse-formatter.xml 파일을 선택한다.
+- `[OK]`버튼을 누른다.
+
+### 2) intellij 에서 적용
+
+#### - Scheme 적용
+- `File > Settings` 메뉴로 이동한다. (단축키 `Alt + Shift + S` )
+- `Editor > Code Style > Java` 항목으로 이동한다.
+- Scheme 항목의 오른쪽에 있는 톱니바퀴 아이콘을 클릭한다.
+- `Import Scheme > IntelliJ IDEA Code Style XML` 을 선택한다.
+- `egov-intellij-formatter.xml` 파일을 선택한후 `[OK]` 버튼을 누른다.
+- Settings 레이어의 `[OK]` 버튼을 누른다.
 
 ---
 참고.
