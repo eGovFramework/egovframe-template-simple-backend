@@ -48,11 +48,3 @@ mvn spring-boot:run
 ※ API를 사용한 Controller들은 ~ControllerAPI.java에서 확인 가능합니다.
 
 
-### Coding Convention 적용
-캠퍼스 핵데이 Java 코딩 컨벤션 참고.
-
----
-참고.
-1. [캠퍼스 핵데이 Java 코딩 컨벤션](https://naver.github.io/hackday-conventions-java/) 
-2. [https://editorconfig](https://editorconfig.org/)
-
