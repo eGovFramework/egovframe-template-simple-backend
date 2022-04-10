@@ -54,6 +54,13 @@
 	</parent>
 
 	<dependencies>
+
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
 		<!-- spring boot dependency start -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
