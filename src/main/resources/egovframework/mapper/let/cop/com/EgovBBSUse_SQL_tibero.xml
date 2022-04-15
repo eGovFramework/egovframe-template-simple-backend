@@ -114,9 +114,9 @@
 		SELECT * FROM ( SELECT rownum rn, TB.* FROM (
 			SELECT
 				a.BBS_ID, e.BBS_NM, a.TRGET_ID, a.REGIST_SE_CODE, b.CODE_NM as REGIST_SE_CODE_NM,
-			    a.USE_AT, a.FRST_REGISTER_ID, a.FRST_REGIST_PNTTM,
-				c.CMMNTY_ID, c.CMMNTY_NM,
-				d.CLB_ID, d.CLB_NM, e.BBS_TY_CODE
+				a.USE_AT, a.FRST_REGISTER_ID, a.FRST_REGIST_PNTTM,
+				'시스템 활용' CMMNTY_ID, '시스템 활용' CMMNTY_NM,
+				'시스템 활용' CLB_ID, '시스템 활용' CLB_NM, e.BBS_TY_CODE
 			FROM
 				LETTNBBSUSE a
 			LEFT OUTER JOIN LETTNBBSMASTER e
@@ -128,7 +128,7 @@
 			AND a.REGIST_SE_CODE != 'REGC07'
 		
 			<if test="searchCnd == 0">AND
-					e.BBS_NM LIKE '%' || #{searchWrd} || '%' 		
+				e.BBS_NM LIKE '%' || #{searchWrd} || '%' 		
 			</if>
 					
 			ORDER BY a.FRST_REGIST_PNTTM DESC 
