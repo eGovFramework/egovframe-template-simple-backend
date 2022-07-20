@@ -190,7 +190,7 @@ public class EgovBBSManageAPIController {
 		}
 		//model.addAttribute("brdMstrVO", masterVo);
 
-		Map<String, Object> resultMap = new HashMap<String, Object>();
+		Map<String, Object> resultMap = new HashMap<>();
 		resultMap.put("boardVO", vo);
 		resultMap.put("sessionUniqId", user.getUniqId());
 		resultMap.put("brdMstrVO", masterVo);

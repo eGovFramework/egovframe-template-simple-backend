@@ -32,7 +32,7 @@ public class EgovConfigAppProperties {
 	public EgovPropertyServiceImpl propertiesService() {
 		EgovPropertyServiceImpl egovPropertyServiceImpl = new EgovPropertyServiceImpl();
 
-		Map<String, String> properties = new HashMap<String, String>();
+		Map<String, String> properties = new HashMap<>();
 		properties.put("pageUnit", "10");
 		properties.put("pageSize", "10");
 		properties.put("posblAtchFileSize", "5242880");

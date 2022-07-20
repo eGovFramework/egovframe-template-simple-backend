@@ -66,7 +66,7 @@ public class EgovBBSUseInfoManageServiceImpl extends EgovAbstractServiceImpl imp
 	List<BoardUseInfVO> result = bbsUseDAO.selectBBSUseInfs(bdUseVO);
 	int cnt = bbsUseDAO.selectBBSUseInfsCnt(bdUseVO);
 	
-	Map<String, Object> map = new HashMap<String, Object>();
+	Map<String, Object> map = new HashMap<>();
 	
 	map.put("resultList", result);
 	map.put("resultCnt", Integer.toString(cnt));
@@ -171,7 +171,7 @@ public class EgovBBSUseInfoManageServiceImpl extends EgovAbstractServiceImpl imp
 	List<BoardUseInfVO> result = bbsUseDAO.selectBBSUseInfsByTrget(bdUseVO);
 	int cnt = bbsUseDAO.selectBBSUseInfsCntByTrget(bdUseVO);
 	
-	Map<String, Object> map = new HashMap<String, Object>();
+	Map<String, Object> map = new HashMap<>();
 	
 	map.put("resultList", result);
 	map.put("resultCnt", Integer.toString(cnt));

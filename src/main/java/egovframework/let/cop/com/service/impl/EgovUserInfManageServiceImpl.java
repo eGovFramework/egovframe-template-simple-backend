@@ -46,7 +46,7 @@ public class EgovUserInfManageServiceImpl extends EgovAbstractServiceImpl implem
 	List<UserInfVO> result = userInfDAO.selectClubOprtrList(userVO);
 	int cnt = userInfDAO.selectClubOprtrListCnt(userVO);
 	
-	Map<String, Object> map = new HashMap<String, Object>();
+	Map<String, Object> map = new HashMap<>();
 	
 	map.put("resultList", result);
 	map.put("resultCnt", Integer.toString(cnt));
@@ -63,7 +63,7 @@ public class EgovUserInfManageServiceImpl extends EgovAbstractServiceImpl implem
 	List<UserInfVO> result = userInfDAO.selectClubUserList(userVO);
 	int cnt = userInfDAO.selectClubUserListCnt(userVO);
 	
-	Map<String, Object> map = new HashMap<String, Object>();
+	Map<String, Object> map = new HashMap<>();
 	
 	map.put("resultList", result);
 	map.put("resultCnt", Integer.toString(cnt));
@@ -80,7 +80,7 @@ public class EgovUserInfManageServiceImpl extends EgovAbstractServiceImpl implem
 	List<UserInfVO> result = userInfDAO.selectCmmntyMngrList(userVO);
 	int cnt = userInfDAO.selectCmmntyMngrListCnt(userVO);
 	
-	Map<String, Object> map = new HashMap<String, Object>();
+	Map<String, Object> map = new HashMap<>();
 	
 	map.put("resultList", result);
 	map.put("resultCnt", Integer.toString(cnt));
@@ -97,7 +97,7 @@ public class EgovUserInfManageServiceImpl extends EgovAbstractServiceImpl implem
 	List<UserInfVO> result = userInfDAO.selectCmmntyUserList(userVO);
 	int cnt = userInfDAO.selectCmmntyUserListCnt(userVO);
 	
-	Map<String, Object> map = new HashMap<String, Object>();
+	Map<String, Object> map = new HashMap<>();
 	
 	map.put("resultList", result);
 	map.put("resultCnt", Integer.toString(cnt));
@@ -114,7 +114,7 @@ public class EgovUserInfManageServiceImpl extends EgovAbstractServiceImpl implem
 	List<UserInfVO> result = userInfDAO.selectUserList(userVO);
 	int cnt = userInfDAO.selectUserListCnt(userVO);
 	
-	Map<String, Object> map = new HashMap<String, Object>();
+	Map<String, Object> map = new HashMap<>();
 	
 	map.put("resultList", result);
 	map.put("resultCnt", Integer.toString(cnt));

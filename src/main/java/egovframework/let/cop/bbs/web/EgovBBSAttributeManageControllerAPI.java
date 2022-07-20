@@ -137,7 +137,7 @@ public class EgovBBSAttributeManageControllerAPI {
 		@RequestBody BoardMasterVO searchVO)
 		throws Exception {
 		ResultVO resultVO = new ResultVO();
-		Map<String, Object> resultMap = new HashMap<String, Object>();
+		Map<String, Object> resultMap = new HashMap<>();
 
 		if (!EgovUserDetailsHelper.isAuthenticated()) {
 			return handleAuthError(resultVO); // server-side 권한 확인
@@ -169,7 +169,7 @@ public class EgovBBSAttributeManageControllerAPI {
 		BindingResult bindingResult)
 		throws Exception {
 		ResultVO resultVO = new ResultVO();
-		Map<String, Object> resultMap = new HashMap<String, Object>();
+		Map<String, Object> resultMap = new HashMap<>();
 
 		if (!EgovUserDetailsHelper.isAuthenticated()) {
 			return handleAuthError(resultVO); // server-side 권한 확인
@@ -233,7 +233,7 @@ public class EgovBBSAttributeManageControllerAPI {
 		BoardMasterVO boardMasterVO,
 		BindingResult bindingResult) throws Exception {
 		ResultVO resultVO = new ResultVO();
-		Map<String, Object> resultMap = new HashMap<String, Object>();
+		Map<String, Object> resultMap = new HashMap<>();
 
 		if (!EgovUserDetailsHelper.isAuthenticated()) {
 			return handleAuthError(resultVO); // server-side 권한 확인
@@ -317,7 +317,7 @@ public class EgovBBSAttributeManageControllerAPI {
 		@ModelAttribute("searchVO") BoardMasterVO boardMasterVO)
 		throws Exception {
 		ResultVO resultVO = new ResultVO();
-		Map<String, Object> resultMap = new HashMap<String, Object>();
+		Map<String, Object> resultMap = new HashMap<>();
 
 		if (!EgovUserDetailsHelper.isAuthenticated()) {
 			return handleAuthError(resultVO); // server-side 권한 확인

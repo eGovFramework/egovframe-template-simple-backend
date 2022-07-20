@@ -92,7 +92,7 @@ public class EgovBBSUseInfoManageControllerAPI {
 		@RequestBody BoardUseInfVO bdUseVO) throws Exception {
 
 		ResultVO resultVO = new ResultVO();
-		Map<String, Object> resultMap = new HashMap<String, Object>();
+		Map<String, Object> resultMap = new HashMap<>();
 
 		if (!EgovUserDetailsHelper.isAuthenticated()) {
 			return handleAuthError(resultVO); // server-side 권한 확인
@@ -164,7 +164,7 @@ public class EgovBBSUseInfoManageControllerAPI {
 		@RequestBody BoardUseInfVO bdUseVO) throws Exception {
 
 		ResultVO resultVO = new ResultVO();
-		Map<String, Object> resultMap = new HashMap<String, Object>();
+		Map<String, Object> resultMap = new HashMap<>();
 
 		BoardUseInfVO vo = bbsUseService.selectBBSUseInf(bdUseVO);// bbsItrgetId
 
@@ -212,7 +212,7 @@ public class EgovBBSUseInfoManageControllerAPI {
 	) throws Exception {
 
 		ResultVO resultVO = new ResultVO();
-		Map<String, Object> resultMap = new HashMap<String, Object>();
+		Map<String, Object> resultMap = new HashMap<>();
 
 		if (!EgovUserDetailsHelper.isAuthenticated()) {
 			return handleAuthError(resultVO); // server-side 권한 확인
@@ -267,7 +267,7 @@ public class EgovBBSUseInfoManageControllerAPI {
 		BoardUseInfVO bdUseVO) throws Exception {
 
 		ResultVO resultVO = new ResultVO();
-		Map<String, Object> resultMap = new HashMap<String, Object>();
+		Map<String, Object> resultMap = new HashMap<>();
 
 		if (!EgovUserDetailsHelper.isAuthenticated()) {
 			return handleAuthError(resultVO); // server-side 권한 확인

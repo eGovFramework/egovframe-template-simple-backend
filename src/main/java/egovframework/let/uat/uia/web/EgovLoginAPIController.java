@@ -69,7 +69,7 @@ public class EgovLoginAPIController {
 	@RequestMapping(value = "/uat/uia/actionLoginAPI.do", consumes = {MediaType.APPLICATION_JSON_VALUE , MediaType.TEXT_HTML_VALUE})
 //	@Consumes({"text/html;charset=UTF-8","application/json;charset=UTF-8"})
 	public @ResponseBody HashMap<String, Object> actionLogin(@RequestBody LoginVO loginVO, HttpServletRequest request) throws Exception {
-		HashMap<String,Object> resultMap = new HashMap<String,Object>();
+		HashMap<String,Object> resultMap = new HashMap<>();
 
 		// 1. 일반 로그인 처리
 		LoginVO loginResultVO = loginService.actionLogin(loginVO);
@@ -98,7 +98,7 @@ public class EgovLoginAPIController {
 		LoginVO resultVO = loginService.actionLogin(loginVO);
 
 		boolean loginPolicyYn = true;
-		HashMap<String,Object> resultMap = new HashMap<String,Object>();
+		HashMap<String,Object> resultMap = new HashMap<>();
 
 		if (resultVO != null && resultVO.getId() != null && !resultVO.getId().equals("") && loginPolicyYn) {
 

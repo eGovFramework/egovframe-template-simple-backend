@@ -86,7 +86,7 @@ public class EgovTemplateManageServiceImpl extends EgovAbstractServiceImpl imple
 		List<TemplateInfVO> result = tmplatDAO.selectTemplateInfs(tmplatInfVO);
 		int cnt = tmplatDAO.selectTemplateInfsCnt(tmplatInfVO);
 
-		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> map = new HashMap<>();
 
 		map.put("resultList", result);
 		map.put("resultCnt", Integer.toString(cnt));

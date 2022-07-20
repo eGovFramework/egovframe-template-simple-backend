@@ -8,6 +8,7 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import egovframework.com.cmm.ComDefaultVO;
@@ -34,7 +35,7 @@ import org.egovframe.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
  *
  * </pre>
  */
-@Controller
+@RestController
 @SessionAttributes(types = ComDefaultVO.class)
 public class EgovMainControllerAPI {
 
@@ -53,12 +54,11 @@ public class EgovMainControllerAPI {
 	 * @exception Exception Exception
 	 */
 	@RequestMapping(value = "/cmm/main/mainPageAPI.do")
-	@ResponseBody
 	public ResultVO getMgtMainPage()
 	  throws Exception{
 
 		ResultVO resultVO = new ResultVO();
-		Map<String, Object> resultMap = new HashMap<String, Object>();
+		Map<String, Object> resultMap = new HashMap<>();
 
 		// 공지사항 메인 컨텐츠 조회 시작 ---------------------------------
 		BoardVO boardVO = new BoardVO();

@@ -71,8 +71,8 @@ public class EgovMultipartResolver extends CommonsMultipartResolver {
 
 		//스프링 3.0변경으로 수정한 부분
 		MultiValueMap<String, MultipartFile> multipartFiles = new LinkedMultiValueMap<String, MultipartFile>();
-		Map<String, String[]> multipartParameters = new HashMap<String, String[]>();
-		Map<String, String> mpParamContentTypes = new HashMap<String, String>();
+		Map<String, String[]> multipartParameters = new HashMap<>();
+		Map<String, String> mpParamContentTypes = new HashMap<>();
 
 		// Extract multipart files and multipart parameters.
 		for (Iterator<?> it = fileItems.iterator(); it.hasNext();) {
