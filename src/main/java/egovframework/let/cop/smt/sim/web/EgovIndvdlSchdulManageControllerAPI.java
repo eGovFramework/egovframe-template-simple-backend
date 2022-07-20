@@ -93,7 +93,7 @@ public class EgovIndvdlSchdulManageControllerAPI {
 		@RequestBody Map<String, Object> commandMap) throws Exception {
 
 		ResultVO resultVO = new ResultVO();
-		Map<String, Object> resultMap = new HashMap<String, Object>();
+		Map<String, Object> resultMap = new HashMap<>();
 
 		if (!EgovUserDetailsHelper.isAuthenticated()) {
 			return handleAuthError(resultVO); // server-side 권한 확인
@@ -164,7 +164,7 @@ public class EgovIndvdlSchdulManageControllerAPI {
 		throws Exception {
 
 		ResultVO resultVO = new ResultVO();
-		Map<String, Object> resultMap = new HashMap<String, Object>();
+		Map<String, Object> resultMap = new HashMap<>();
 
 		if (!EgovUserDetailsHelper.isAuthenticated()) {
 			return handleAuthError(resultVO); // server-side 권한 확인
@@ -291,7 +291,7 @@ public class EgovIndvdlSchdulManageControllerAPI {
 		throws Exception {
 
 		ResultVO resultVO = new ResultVO();
-		Map<String, Object> resultMap = new HashMap<String, Object>();
+		Map<String, Object> resultMap = new HashMap<>();
 
 		LoginVO user = new LoginVO();
 		if (EgovUserDetailsHelper.isAuthenticated()) {
@@ -360,7 +360,7 @@ public class EgovIndvdlSchdulManageControllerAPI {
 		throws Exception {
 
 		ResultVO resultVO = new ResultVO();
-		Map<String, Object> resultMap = new HashMap<String, Object>();
+		Map<String, Object> resultMap = new HashMap<>();
 
 		IndvdlSchdulManageVO indvdlSchdulManageVO = new IndvdlSchdulManageVO();
 		indvdlSchdulManageVO.setSchdulId((String)commandMap.get("schdulId"));
@@ -396,7 +396,7 @@ public class EgovIndvdlSchdulManageControllerAPI {
 		BindingResult bindingResult) throws Exception {
 
 		ResultVO resultVO = new ResultVO();
-		Map<String, Object> resultMap = new HashMap<String, Object>();
+		Map<String, Object> resultMap = new HashMap<>();
 
 		if (!EgovUserDetailsHelper.isAuthenticated()) {
 			return handleAuthError(resultVO); // server-side 권한 확인
@@ -476,7 +476,7 @@ public class EgovIndvdlSchdulManageControllerAPI {
 		throws Exception {
 
 		ResultVO resultVO = new ResultVO();
-		Map<String, Object> resultMap = new HashMap<String, Object>();
+		Map<String, Object> resultMap = new HashMap<>();
 
 		if (!EgovUserDetailsHelper.isAuthenticated()) {
 			return handleAuthError(resultVO); // server-side 권한 확인
@@ -555,7 +555,7 @@ public class EgovIndvdlSchdulManageControllerAPI {
 		throws Exception {
 
 		ResultVO resultVO = new ResultVO();
-		Map<String, Object> resultMap = new HashMap<String, Object>();
+		Map<String, Object> resultMap = new HashMap<>();
 
 		//일정구분 검색 유지
 		resultMap.put("searchKeyword",
@@ -624,7 +624,7 @@ public class EgovIndvdlSchdulManageControllerAPI {
 		throws Exception {
 
 		ResultVO resultVO = new ResultVO();
-		Map<String, Object> resultMap = new HashMap<String, Object>();
+		Map<String, Object> resultMap = new HashMap<>();
 
 		//일정구분 검색 유지
 		resultMap.put("searchKeyword",

@@ -58,7 +58,7 @@ public class EgovMainControllerAPI {
 	  throws Exception{
 
 		ResultVO resultVO = new ResultVO();
-		Map<String, Object> resultMap = new HashMap<String, Object>();
+		Map<String, Object> resultMap = new HashMap<>();
 
 		// 공지사항 메인 컨텐츠 조회 시작 ---------------------------------
 		BoardVO boardVO = new BoardVO();

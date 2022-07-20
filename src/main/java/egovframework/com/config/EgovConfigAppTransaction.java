@@ -68,7 +68,7 @@ public class EgovConfigAppTransaction {
 	}
 
 	private HashMap<String, TransactionAttribute> getRuleBasedTxAttributeMap() {
-		HashMap<String, TransactionAttribute> txMethods = new HashMap<String, TransactionAttribute>();
+		HashMap<String, TransactionAttribute> txMethods = new HashMap<>();
 
 		RuleBasedTransactionAttribute txAttribute = new RuleBasedTransactionAttribute();
 		txAttribute.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);

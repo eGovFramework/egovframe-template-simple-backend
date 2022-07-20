@@ -7,7 +7,7 @@ public class ResultVO {
 
 	private int resultCode = 0;
 	private String resultMessage = "OK";
-	private Map<String, Object> result = new HashMap<String, Object>();
+	private Map<String, Object> result = new HashMap<>();
 
 	public int getResultCode() {
 		return resultCode;

@@ -146,7 +146,7 @@ public class EgovTemplateManageControllerAPI {
 
 		TemplateInfVO vo = tmplatService.selectTemplateInf(tmplatInfVO);
 
-		Map<String, Object> resultMap = new HashMap<String, Object>();
+		Map<String, Object> resultMap = new HashMap<>();
 
 		resultMap.put("templateInfVO", vo);
 		resultMap.put("resultList", result);

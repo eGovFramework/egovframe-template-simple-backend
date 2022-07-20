@@ -212,7 +212,7 @@ public class EgovProperties {
 				Enumeration<?> plist = props.propertyNames();
 				if (plist != null) {
 					while (plist.hasMoreElements()) {
-						Map<String, String> map = new HashMap<String, String>();
+						Map<String, String> map = new HashMap<>();
 						String key = (String)plist.nextElement();
 						map.put(key, props.getProperty(key));
 						keyList.add(map);

@@ -58,7 +58,7 @@ public class EgovCmmUseServiceImpl extends EgovAbstractServiceImpl implements Eg
 	@Override
 	public Map<String, List<CmmnDetailCode>> selectCmmCodeDetails(List<?> voList) throws Exception {
 		ComDefaultCodeVO vo;
-		Map<String, List<CmmnDetailCode>> map = new HashMap<String, List<CmmnDetailCode>>();
+		Map<String, List<CmmnDetailCode>> map = new HashMap<>();
 
 		Iterator<?> iter = voList.iterator();
 		while (iter.hasNext()) {

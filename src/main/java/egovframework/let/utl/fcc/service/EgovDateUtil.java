@@ -529,7 +529,7 @@ public class EgovDateUtil {
 	public static Map<String, String> toLunar(String sDate) {
 		String dateStr = validChkDate(sDate);
 
-		Map<String, String> hm = new HashMap<String, String>();
+		Map<String, String> hm = new HashMap<>();
 		hm.put("day", "");
 		hm.put("leap", "0");
 

@@ -147,7 +147,7 @@ public class EgovFileMngServiceImpl extends EgovAbstractServiceImpl implements E
 	List<FileVO>  result = fileMngDAO.selectFileListByFileNm(fvo);
 	int cnt = fileMngDAO.selectFileListCntByFileNm(fvo);
 
-	Map<String, Object> map = new HashMap<String, Object>();
+	Map<String, Object> map = new HashMap<>();
 
 	map.put("resultList", result);
 	map.put("resultCnt", Integer.toString(cnt));

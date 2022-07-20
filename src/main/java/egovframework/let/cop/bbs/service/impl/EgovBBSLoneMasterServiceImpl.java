@@ -99,7 +99,7 @@ public class EgovBBSLoneMasterServiceImpl extends EgovAbstractServiceImpl implem
 	List<BoardMasterVO> result = masterDAO.selectMasterList(searchVO);
 	int cnt = masterDAO.selectMasterListCnt(searchVO);
 	
-	Map<String, Object> map = new HashMap<String, Object>();
+	Map<String, Object> map = new HashMap<>();
 	
 	map.put("resultList", result);
 	map.put("resultCnt", Integer.toString(cnt));

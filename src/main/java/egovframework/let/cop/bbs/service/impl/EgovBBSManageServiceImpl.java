@@ -147,7 +147,7 @@ public class EgovBBSManageServiceImpl extends EgovAbstractServiceImpl implements
 
 		int cnt = bbsMngDAO.selectBoardArticleListCnt(boardVO);
 
-		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> map = new HashMap<>();
 
 		map.put("resultList", result);
 		map.put("resultCnt", Integer.toString(cnt));
@@ -185,7 +185,7 @@ public class EgovBBSManageServiceImpl extends EgovAbstractServiceImpl implements
 		List<BoardVO> result = bbsMngDAO.selectGuestList(boardVO);
 		int cnt = bbsMngDAO.selectGuestListCnt(boardVO);
 
-		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> map = new HashMap<>();
 
 		map.put("resultList", result);
 		map.put("resultCnt", Integer.toString(cnt));

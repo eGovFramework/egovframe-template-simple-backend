@@ -206,7 +206,7 @@ public class EgovBBSAttributeManageServiceImpl extends EgovAbstractServiceImpl i
 	List<BoardMasterVO> result = attrbMngDAO.selectBBSMasterInfs(searchVO);
 	int cnt = attrbMngDAO.selectBBSMasterInfsCnt(searchVO);
 
-	Map<String, Object> map = new HashMap<String, Object>();
+	Map<String, Object> map = new HashMap<>();
 
 	map.put("resultList", result);
 	map.put("resultCnt", Integer.toString(cnt));
@@ -260,7 +260,7 @@ public class EgovBBSAttributeManageServiceImpl extends EgovAbstractServiceImpl i
 	List<BoardMasterVO> result = attrbMngDAO.selectBdMstrListByTrget(vo);
 	int cnt = attrbMngDAO.selectBdMstrListCntByTrget(vo);
 
-	Map<String, Object> map = new HashMap<String, Object>();
+	Map<String, Object> map = new HashMap<>();
 
 	map.put("resultList", result);
 	map.put("resultCnt", Integer.toString(cnt));
@@ -282,7 +282,7 @@ public class EgovBBSAttributeManageServiceImpl extends EgovAbstractServiceImpl i
 	List<BoardMasterVO> result = attrbMngDAO.selectNotUsedBdMstrList(searchVO);
 	int cnt = attrbMngDAO.selectNotUsedBdMstrListCnt(searchVO);
 
-	Map<String, Object> map = new HashMap<String, Object>();
+	Map<String, Object> map = new HashMap<>();
 
 	map.put("resultList", result);
 	map.put("resultCnt", Integer.toString(cnt));
