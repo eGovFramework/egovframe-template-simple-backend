@@ -119,6 +119,18 @@
 		</dependency>
 
 		<dependency>
+			<groupId>commons-validator</groupId>
+			<artifactId>commons-validator</artifactId>
+			<version>1.7</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springmodules</groupId>
+			<artifactId>spring-modules-validation</artifactId>
+			<version>0.8</version>
+		</dependency>
+
+		<dependency>
 			<groupId>taglibs</groupId>
 			<artifactId>standard</artifactId>
 			<version>1.1.2</version>
