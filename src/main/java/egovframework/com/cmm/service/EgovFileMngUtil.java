@@ -71,8 +71,8 @@ public class EgovFileMngUtil {
 		String atchFileId, String storePath) throws Exception {
 		int fileKey = fileKeyParam;
 
-		String storePathString = "";
-		String atchFileIdString = "";
+		String storePathString;
+		String atchFileIdString;
 
 		if (storePath == null || "".equals(storePath)) {
 			storePathString = propertyService.getString("Globals.fileStorePath");
@@ -94,7 +94,7 @@ public class EgovFileMngUtil {
 
 		Iterator<Entry<String, MultipartFile>> itr = files.entrySet().iterator();
 		MultipartFile file;
-		String filePath = "";
+		String filePath;
 		List<FileVO> result = new ArrayList<FileVO>();
 		FileVO fvo;
 
