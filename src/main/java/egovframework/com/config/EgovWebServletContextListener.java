@@ -18,24 +18,24 @@ public class EgovWebServletContextListener implements ServletContextListener {
 
 	@Override
 	public void contextInitialized(ServletContextEvent event) {
-		if (System.getProperty("spring.profiles.active") == null) {
+		if (System.getProperty("egov.profiles.active") == null) {
 			setEgovProfileSetting();
 		}
 	}
 
 	@Override
 	public void contextDestroyed(ServletContextEvent event) {
-		if (System.getProperty("spring.profiles.active") != null) {
-			System.clearProperty("spring.profiles.active");
+		if (System.getProperty("egov.profiles.active") != null) {
+			System.clearProperty("egov.profiles.active");
 		}
 	}
 
 	public void setEgovProfileSetting() {
 		try {
 			LOGGER.debug("===========================Start EgovServletContextLoad START ===========");
-			System.setProperty("spring.profiles.active",
+			System.setProperty("egov.profiles.active",
 					EgovProperties.getProperty("Globals.DbType") + "," + EgovProperties.getProperty("Globals.Auth"));
-			LOGGER.debug("Setting spring.profiles.active>" + System.getProperty("spring.profiles.active"));
+			LOGGER.debug("Setting egov.profiles.active>" + System.getProperty("egov.profiles.active"));
 			LOGGER.debug("===========================END   EgovServletContextLoad END ===========");
 		} catch (IllegalArgumentException e) {
 			LOGGER.error("[IllegalArgumentException] Try/Catch...usingParameters Runing : " + e.getMessage());
