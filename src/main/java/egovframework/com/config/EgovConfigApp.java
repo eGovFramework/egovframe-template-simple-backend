@@ -65,7 +65,6 @@ public class EgovConfigApp {
 	@Bean
 	public ReloadableResourceBundleMessageSource messageSource() {
 		ReloadableResourceBundleMessageSource reloadableResourceBundleMessageSource = new ReloadableResourceBundleMessageSource();
-		String classpath = System.getProperty("java.class.path");
 		reloadableResourceBundleMessageSource.setBasenames(
 			"classpath:/egovframework/message/com/message-common",
 			"classpath:/org/egovframe/rte/fdl/idgnr/messages/idgnr",
