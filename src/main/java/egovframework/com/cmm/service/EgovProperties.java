@@ -41,8 +41,6 @@ public class EgovProperties {
 
 	//프로퍼티값 로드시 에러발생하면 반환되는 에러문자열
 	public static final String ERR_CODE = " EXCEPTION OCCURRED";
-	public static final String ERR_CODE_FNFE = " EXCEPTION(FNFE) OCCURRED";
-	public static final String ERR_CODE_IOE = " EXCEPTION(IOE) OCCURRED";
 
 	//파일구분자
 	static final String FILE_SEPARATOR = System.getProperty("file.separator");
@@ -54,40 +52,6 @@ public class EgovProperties {
 
 	public static final String GLOBALS_PROPERTIES_FILE = RELATIVE_PATH_PREFIX + "egovProps"
 		+ FILE_SEPARATOR + "globals.properties";
-
-	/**
-	 * 인자로 주어진 문자열을 Key값으로 하는 상대경로 프로퍼티 값을 절대경로로 반환한다(Globals.java 전용)
-	 * @param keyName String
-	 * @return String
-
-	public static String getPathProperty(String keyName){
-		String value = ERR_CODE;
-		value="99";
-		debug(GLOBALS_PROPERTIES_FILE + " : " + keyName);
-		FileInputStream fis = null;
-		try{
-			Properties props = new Properties();
-			fis  = new FileInputStream(GLOBALS_PROPERTIES_FILE);
-			props.load(new java.io.BufferedInputStream(fis));
-			value = props.getProperty(keyName).trim();
-			value = RELATIVE_PATH_PREFIX + "egovProps" + System.getProperty("file.separator") + value;
-		}catch(FileNotFoundException fne){
-			debug(fne);
-		}catch(IOException ioe){
-			debug(ioe);
-		}catch(Exception e){
-			debug(e);
-		}finally{
-			try {
-				if (fis != null) fis.close();
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
-
-		}
-		return value;
-	}
-	*/
 
 	/**
 	 * 인자로 주어진 문자열을 Key값으로 하는 프로퍼티 값을 반환한다(Globals.java 전용)
@@ -121,66 +85,6 @@ public class EgovProperties {
 		return value;
 	}
 
-	/**
-	 * 주어진 파일에서 인자로 주어진 문자열을 Key값으로 하는 프로퍼티 상대 경로값을 절대 경로값으로 반환한다
-	 * @param fileName String
-	 * @param key String
-	 * @return String
-
-	public static String getPathProperty(String fileName, String key){
-		FileInputStream fis = null;
-		try{
-			java.util.Properties props = new java.util.Properties();
-			fis  = new FileInputStream(fileName);
-			props.load(new java.io.BufferedInputStream(fis));
-			fis.close();
-
-			String value = props.getProperty(key);
-			value = RELATIVE_PATH_PREFIX + "egovProps" + System.getProperty("file.separator") + value;
-			return value;
-		}catch(java.io.FileNotFoundException fne){
-			return ERR_CODE_FNFE;
-		}catch(java.io.IOException ioe){
-			return ERR_CODE_IOE;
-		}finally{
-			try {
-				if (fis != null) fis.close();
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
-		}
-	}
-	*/
-
-	/**
-	 * 주어진 파일에서 인자로 주어진 문자열을 Key값으로 하는 프로퍼티 값을 반환한다
-	 * @param fileName String
-	 * @param key String
-	 * @return String
-
-	public static String getProperty(String fileName, String key){
-		FileInputStream fis = null;
-		try{
-			java.util.Properties props = new java.util.Properties();
-			fis  = new FileInputStream(fileName);
-			props.load(new java.io.BufferedInputStream(fis));
-			fis.close();
-
-			String value = props.getProperty(key);
-			return value;
-		}catch(java.io.FileNotFoundException fne){
-			return ERR_CODE_FNFE;
-		}catch(java.io.IOException ioe){
-			return ERR_CODE_IOE;
-		}finally{
-			try {
-				if (fis != null) fis.close();
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
-		}
-	}
-	*/
 	/**
 	 * 주어진 프로파일의 내용을 파싱하여 (key-value) 형태의 구조체 배열을 반환한다.
 	 * @param property String
