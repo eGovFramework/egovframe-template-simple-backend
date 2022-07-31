@@ -45,19 +45,15 @@ public class EgovProperties {
 	public static final String ERR_CODE_IOE = " EXCEPTION(IOE) OCCURRED";
 
 	//파일구분자
-	static final char FILE_SEPARATOR = File.separatorChar;
+	static final String FILE_SEPARATOR = System.getProperty("file.separator");
 
 	//프로퍼티 파일의 물리적 위치
-	/*public static final String GLOBALS_PROPERTIES_FILE
-	= System.getProperty("user.home") + System.getProperty("file.separator") + "egovProps"
-	+ System.getProperty("file.separator") + "globals.properties";*/
-
 	public static final String RELATIVE_PATH_PREFIX = EgovProperties.class.getResource("").getPath()
-		+ System.getProperty("file.separator") + ".." + System.getProperty("file.separator")
-		+ ".." + System.getProperty("file.separator") + ".." + System.getProperty("file.separator");
+		+ FILE_SEPARATOR + ".." + FILE_SEPARATOR
+		+ ".." + FILE_SEPARATOR + ".." + FILE_SEPARATOR;
 
 	public static final String GLOBALS_PROPERTIES_FILE = RELATIVE_PATH_PREFIX + "egovProps"
-		+ System.getProperty("file.separator") + "globals.properties";
+		+ FILE_SEPARATOR + "globals.properties";
 
 	/**
 	 * 인자로 주어진 문자열을 Key값으로 하는 상대경로 프로퍼티 값을 절대경로로 반환한다(Globals.java 전용)
@@ -196,7 +192,7 @@ public class EgovProperties {
 		// key - value 형태로 된 배열 결과
 		ArrayList<Map<String, String>> keyList = new ArrayList<Map<String, String>>();
 
-		String src = property.replace('\\', FILE_SEPARATOR).replace('/', FILE_SEPARATOR);
+		String src = property.replace("\\", FILE_SEPARATOR).replace("/", FILE_SEPARATOR);
 		FileInputStream fis = null;
 		try {
 
