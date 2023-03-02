@@ -45,5 +45,5 @@ mvn spring-boot:run
 
 ### 2. API 변환
 직접 View와 연결하던 방법에서 API 형식으로 변환 -> 다양한 프론트에서 적용 가능 하도록 예제 제공\
-※ API를 사용한 Controller들은 ~ControllerAPI.java에서 확인 가능합니다.
+※ API를 사용한 Controller들은 ~ApiController.java에서 확인 가능합니다.
 

@@ -19,6 +19,8 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.egovframe.rte.fdl.idgnr.EgovIdGnrService;
+import org.egovframe.rte.fdl.property.EgovPropertyService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -26,10 +28,8 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 //import java.util.HashMap;
 
+import egovframework.com.cmm.EgovWebUtil;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
-
-import org.egovframe.rte.fdl.idgnr.EgovIdGnrService;
-import org.egovframe.rte.fdl.property.EgovPropertyService;
 
 /**
  * @Class Name  : EgovFileMngUtil.java
@@ -78,6 +78,8 @@ public class EgovFileMngUtil {
 	} else {
 	    storePathString = propertyService.getString(storePath);
 	}
+	
+	atchFileId = atchFileId.replaceAll("\\s", "");
 
 	if ("".equals(atchFileId) || atchFileId == null) {
 	    atchFileIdString = idgenService.getNextStringId();
@@ -85,7 +87,7 @@ public class EgovFileMngUtil {
 	    atchFileIdString = atchFileId;
 	}
 
-	File saveFolder = new File(storePathString);
+	File saveFolder = new File(EgovWebUtil.filePathBlackList(storePathString));
 
 	if (!saveFolder.exists() || saveFolder.isFile()) {
 	    saveFolder.mkdirs();
@@ -102,6 +104,14 @@ public class EgovFileMngUtil {
 
 	    file = entry.getValue();
 	    String orginFileName = file.getOriginalFilename();
+	    
+	    //--------------------------------------
+	    // 원 파일명이 null인 경우 처리
+	    //--------------------------------------
+	    if (orginFileName == null) {
+	    	orginFileName = "";
+	    }
+	    ////------------------------------------
 
 	    //--------------------------------------
 	    // 원 파일명이 없는 경우 처리
@@ -111,8 +121,8 @@ public class EgovFileMngUtil {
 		continue;
 	    }
 	    ////------------------------------------
-
-	    int index = orginFileName.lastIndexOf(".");
+	    
+		int index = orginFileName.lastIndexOf(".");
 	    //String fileName = orginFileName.substring(0, index);
 	    String fileExt = orginFileName.substring(index + 1);
 	    String newName = KeyStr + EgovStringUtil.getTimeStamp() + fileKey;
@@ -120,7 +130,7 @@ public class EgovFileMngUtil {
 
 	    if (!"".equals(orginFileName)) {
 		filePath = storePathString + File.separator + newName;
-		file.transferTo(new File(filePath));
+		file.transferTo(new File(EgovWebUtil.filePathBlackList(filePath)));
 	    }
 	    fvo = new FileVO();
 	    fvo.setFileExtsn(fileExt);
@@ -151,7 +161,8 @@ public class EgovFileMngUtil {
     protected void writeUploadedFile(MultipartFile file, String newName, String stordFilePath) throws Exception {
 	InputStream stream = null;
 	OutputStream bos = null;
-	String stordFilePathReal = (stordFilePath==null?"":stordFilePath).replaceAll("..","");
+	String stordFilePathReal = EgovWebUtil.filePathBlackList(stordFilePath);
+	newName = EgovWebUtil.filePathBlackList(newName);
 	try {
 	    stream = file.getInputStream();
 	    File cFile = new File(stordFilePathReal);
@@ -175,8 +186,6 @@ public class EgovFileMngUtil {
 		LOGGER.debug("fnfe: {}", fnfe);
 	} catch (IOException ioe) {
 		LOGGER.debug("ioe: {}", ioe);
-	} catch (Exception e) {
-		LOGGER.debug("e: {}", e);
 	} finally {
 	    if (bos != null) {
 		try {
@@ -204,8 +213,8 @@ public class EgovFileMngUtil {
      */
     public static void downFile(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-    String downFileName = EgovStringUtil.isNullToString(request.getAttribute("downFile")).replaceAll("..","");
-    String orgFileName = EgovStringUtil.isNullToString(request.getAttribute("orgFileName")).replaceAll("..","");
+    String downFileName = EgovWebUtil.filePathBlackList(EgovStringUtil.isNullToString(request.getAttribute("downFile")));
+    String orgFileName = EgovWebUtil.filePathBlackList(EgovStringUtil.isNullToString(request.getAttribute("orgFileName")));
 
 	/*if ((String)request.getAttribute("downFile") == null) {
 	    downFileName = "";
@@ -310,8 +319,8 @@ public class EgovFileMngUtil {
     protected static void writeFile(MultipartFile file, String newName, String stordFilePath) throws Exception {
 	InputStream stream = null;
 	OutputStream bos = null;
-	newName = EgovStringUtil.isNullToString(newName).replaceAll("..", "");
-	stordFilePath = EgovStringUtil.isNullToString(stordFilePath).replaceAll("..", "");
+	newName = EgovWebUtil.filePathBlackList(EgovStringUtil.isNullToString(newName));
+	stordFilePath = EgovWebUtil.filePathBlackList(EgovStringUtil.isNullToString(stordFilePath));
 	try {
 	    stream = file.getInputStream();
 	    File cFile = new File(stordFilePath);
@@ -332,8 +341,6 @@ public class EgovFileMngUtil {
 		LOGGER.debug("fnfe: {}", fnfe);
 	} catch (IOException ioe) {
 		LOGGER.debug("ioe: {}", ioe);
-	} catch (Exception e) {
-		LOGGER.debug("e: {}", e);
 	} finally {
 	    if (bos != null) {
 		try {
@@ -364,8 +371,8 @@ public class EgovFileMngUtil {
     public void downFile(HttpServletResponse response, String streFileNm, String orignFileNm) throws Exception {
     //	String downFileName = EgovStringUtil.isNullToString(request.getAttribute("downFile")).replaceAll("..","");
     //	String orgFileName = EgovStringUtil.isNullToString(request.getAttribute("orgFileName")).replaceAll("..","");
-    String downFileName = EgovStringUtil.isNullToString(streFileNm).replaceAll("..","");
-	String orgFileName = EgovStringUtil.isNullToString(orignFileNm).replaceAll("..","");
+    String downFileName = EgovWebUtil.filePathBlackList(EgovStringUtil.isNullToString(streFileNm));
+    String orgFileName = EgovWebUtil.filePathBlackList(EgovStringUtil.isNullToString(orignFileNm));
 
 	File file = new File(downFileName);
 	//log.debug(this.getClass().getName()+" downFile downFileName "+downFileName);

@@ -78,7 +78,7 @@ public class EgovWebUtil {
 		}
 
 		returnValue = returnValue.replaceAll("/", "");
-		returnValue = returnValue.replaceAll("\\", "");
+		returnValue = returnValue.replaceAll("\\\\", ""); // \
 		returnValue = returnValue.replaceAll("\\.\\.", ""); // ..
 		returnValue = returnValue.replaceAll("&", "");
 
@@ -119,7 +119,7 @@ public class EgovWebUtil {
 	}
 
 	public static String removeOSCmdRisk(String parameter) {
-		return parameter.replaceAll("\\p{Space}", "").replaceAll("\\*", "").replaceAll("|", "").replaceAll(";", "");
+		return parameter.replaceAll("\\p{Space}", "").replaceAll("\\*", "").replaceAll("\\|", "").replaceAll(";", "");
 	}
 
 }

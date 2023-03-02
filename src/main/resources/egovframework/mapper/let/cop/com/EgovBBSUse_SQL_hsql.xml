@@ -113,7 +113,8 @@
         
             SELECT
                 a.BBS_ID, e.BBS_NM, a.TRGET_ID, a.REGIST_SE_CODE, b.CODE_NM as REGIST_SE_CODE_NM,
-                a.USE_AT, a.FRST_REGISTER_ID, a.FRST_REGIST_PNTTM,
+                a.USE_AT, a.FRST_REGISTER_ID, 
+                TO_CHAR(a.FRST_REGIST_PNTTM, 'YYYY-MM-DD HH24:MI:SS') as FRST_REGIST_PNTTM,
                 '시스템 활용' CMMNTY_ID, '시스템 활용' CMMNTY_NM,
                 '시스템 활용' CLB_ID, '시스템 활용' CLB_NM, '시스템 활용' BBS_TY_CODE
             FROM
@@ -158,7 +159,9 @@
  		
  			SELECT
                 a.BBS_ID, e.BBS_NM, a.TRGET_ID, a.REGIST_SE_CODE, b.CODE_NM as REGIST_SE_CODE_NM,
-                a.USE_AT, a.FRST_REGISTER_ID, a.FRST_REGIST_PNTTM,
+                a.USE_AT, a.FRST_REGISTER_ID, 
+                <!-- a.FRST_REGIST_PNTTM, -->
+                TO_CHAR(a.FRST_REGIST_PNTTM, 'YYYY-MM-DD HH24:MI:SS') as FRST_REGIST_PNTTM,
                 '시스템 활용' CMMNTY_ID, '시스템 활용' CMMNTY_NM,
                 '시스템 활용' CLB_ID, '시스템 활용' CLB_NM, '시스템 활용' BBS_TY_CODE
             FROM

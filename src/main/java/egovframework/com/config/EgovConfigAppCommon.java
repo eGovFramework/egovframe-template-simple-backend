@@ -23,6 +23,8 @@ import org.egovframe.rte.fdl.cmmn.trace.LeaveaTrace;
 import org.egovframe.rte.fdl.cmmn.trace.handler.TraceHandler;
 import org.egovframe.rte.fdl.cmmn.trace.manager.DefaultTraceHandleManager;
 import org.egovframe.rte.fdl.cmmn.trace.manager.TraceHandlerService;
+import org.egovframe.rte.fdl.cryptography.EgovPasswordEncoder;
+import org.egovframe.rte.fdl.cryptography.impl.EgovARIACryptoServiceImpl;
 import org.egovframe.rte.ptl.mvc.tags.ui.pagination.DefaultPaginationManager;
 import org.egovframe.rte.ptl.mvc.tags.ui.pagination.PaginationRenderer;
 
@@ -67,7 +69,7 @@ public class EgovConfigAppCommon {
 	@Bean
 	public ReloadableResourceBundleMessageSource messageSource() {
 		ReloadableResourceBundleMessageSource reloadableResourceBundleMessageSource = new ReloadableResourceBundleMessageSource();
-		String classpath = System.getProperty("java.class.path");
+		
 		reloadableResourceBundleMessageSource.setBasenames(
 			"classpath:/egovframework/message/com/message-common",
 			"classpath:/org/egovframe/rte/fdl/idgnr/messages/idgnr",
@@ -150,6 +152,7 @@ public class EgovConfigAppCommon {
 	}
 
 	/**
+	 * 확장자 제한 : globals.properties > Globals.fileUpload.Extensions로 설정
 	 * @return [MultipartResolver 설정] EgovMultipartResolver 등록
 	 */
 	@Bean
@@ -159,9 +162,33 @@ public class EgovConfigAppCommon {
 		egovMultipartResolver.setMaxInMemorySize(100000000);
 		return egovMultipartResolver;
 	}
-
+	
 	@Bean
 	public CommonsMultipartResolver multipartResolver() {
 		return localMultiCommonsMultipartResolver();
+	}
+	
+	/**
+	 * 암복호화
+	 * @return [EgovPasswordEncoder 설정] EgovPasswordEncoder 등록
+	 */
+	@Bean
+	public EgovPasswordEncoder egovPasswordEncoder() {
+		EgovPasswordEncoder egovPasswordEncoder = new EgovPasswordEncoder();
+		egovPasswordEncoder.setAlgorithm("SHA-256");
+		egovPasswordEncoder.setHashedPassword("gdyYs/IZqY86VcWhT8emCYfqY1ahw2vtLG+/FzNqtrQ=");
+		return egovPasswordEncoder;
+	}
+	
+	/**
+	 * 암복호화
+	 * @return [EgovARIACryptoServiceImpl 설정] EgovARIACryptoServiceImpl 등록
+	 */
+	@Bean
+	public EgovARIACryptoServiceImpl egovARIACryptoService() {
+		EgovARIACryptoServiceImpl egovARIACryptoServiceImpl = new EgovARIACryptoServiceImpl();
+		egovARIACryptoServiceImpl.setPasswordEncoder(egovPasswordEncoder());
+		egovARIACryptoServiceImpl.setBlockSize(1024);
+		return egovARIACryptoServiceImpl;
 	}
 }

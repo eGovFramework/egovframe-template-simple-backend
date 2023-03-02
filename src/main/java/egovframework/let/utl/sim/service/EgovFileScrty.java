@@ -14,6 +14,8 @@ import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import egovframework.com.cmm.EgovWebUtil;
+
 /**
  * Base64인코딩/디코딩 방식을 이용한 데이터를 암호화/복호화하는 Business Interface class
  * @author 공통서비스개발팀 박지욱
@@ -33,7 +35,7 @@ import org.slf4j.LoggerFactory;
  */
 public class EgovFileScrty {
 	// 파일구분자
-	static final char FILE_SEPARATOR = File.separatorChar;
+	static final String FILE_SEPARATOR = System.getProperty("file.separator");
 	// 버퍼사이즈
 	static final int BUFFER_SIZE = 1024;
 
@@ -42,8 +44,8 @@ public class EgovFileScrty {
 	/**
 	 * 파일을 암호화하는 기능
 	 *
-	 * @param String source 암호화할 파일
-	 * @param String target 암호화된 파일
+	 * @param source 암호화할 파일
+	 * @param target 암호화된 파일
 	 * @return boolean result 암호화여부 True/False
 	 * @exception Exception
 	 */
@@ -52,8 +54,8 @@ public class EgovFileScrty {
 		// 암호화 여부
 		boolean result = false;
 
-		String sourceFile = source.replace('\\', FILE_SEPARATOR).replace('/', FILE_SEPARATOR);
-		String targetFile = target.replace('\\', FILE_SEPARATOR).replace('/', FILE_SEPARATOR);
+		String sourceFile = EgovWebUtil.filePathBlackList(source.replace("\\", FILE_SEPARATOR).replace("/", FILE_SEPARATOR));
+		String targetFile = EgovWebUtil.filePathBlackList(target.replace("\\", FILE_SEPARATOR).replace("/", FILE_SEPARATOR));
 		File srcFile = new File(sourceFile);
 
 		BufferedInputStream input = null;
@@ -82,14 +84,14 @@ public class EgovFileScrty {
 				try {
 					input.close();
 				} catch (IOException ignore) {
-					LOGGER.debug("IGNORE: {}" + ignore);
+					LOGGER.debug("IGNORE: {}", ignore);
 				}
 			}
 			if (output != null) {
 				try {
 					output.close();
 				} catch (IOException ignore) {
-					LOGGER.debug("IGNORE: {}" + ignore);
+					LOGGER.debug("IGNORE: {}", ignore);
 				}
 			}
 		}
@@ -99,8 +101,8 @@ public class EgovFileScrty {
 	/**
 	 * 파일을 복호화하는 기능
 	 *
-	 * @param String source 복호화할 파일
-	 * @param String target 복호화된 파일
+	 * @param source 복호화할 파일
+	 * @param target 복호화된 파일
 	 * @return boolean result 복호화여부 True/False
 	 * @exception Exception
 	 */
@@ -109,8 +111,8 @@ public class EgovFileScrty {
 		// 복호화 여부
 		boolean result = false;
 
-		String sourceFile = source.replace('\\', FILE_SEPARATOR).replace('/', FILE_SEPARATOR);
-		String targetFile = target.replace('\\', FILE_SEPARATOR).replace('/', FILE_SEPARATOR);
+		String sourceFile = source.replace("\\", FILE_SEPARATOR).replace("/", FILE_SEPARATOR);
+		String targetFile = target.replace("\\", FILE_SEPARATOR).replace("/", FILE_SEPARATOR);
 		File srcFile = new File(sourceFile);
 
 		BufferedReader input = null;
@@ -137,14 +139,14 @@ public class EgovFileScrty {
 				try {
 					input.close();
 				} catch (IOException ignore) {
-					LOGGER.debug("IGNORE: {}" + ignore);
+					LOGGER.debug("IGNORE: {}", ignore);
 				}
 			}
 			if (output != null) {
 				try {
 					output.close();
 				} catch (IOException ignore) {
-					LOGGER.debug("IGNORE: {}" + ignore);
+					LOGGER.debug("IGNORE: {}", ignore);
 				}
 			}
 		}
@@ -154,7 +156,7 @@ public class EgovFileScrty {
 	/**
 	 * 데이터를 암호화하는 기능
 	 *
-	 * @param byte[] data 암호화할 데이터
+	 * @param data 암호화할 데이터
 	 * @return String result 암호화된 데이터
 	 * @exception Exception
 	 */
@@ -169,7 +171,7 @@ public class EgovFileScrty {
 	/**
 	 * 데이터를 암호화하는 기능
 	 *
-	 * @param String data 암호화할 데이터
+	 * @param data 암호화할 데이터
 	 * @return String result 암호화된 데이터
 	 * @exception Exception
 	 */
@@ -180,7 +182,7 @@ public class EgovFileScrty {
 	/**
 	 * 데이터를 복호화하는 기능
 	 *
-	 * @param String data 복호화할 데이터
+	 * @param data 복호화할 데이터
 	 * @return String result 복호화된 데이터
 	 * @exception Exception
 	 */
@@ -204,7 +206,7 @@ public class EgovFileScrty {
      *
      * deprecated : 보안 강화를 위하여 salt로 ID를 지정하는 encryptPassword(password, id) 사용
      *
-     * @param String data 암호화할 비밀번호
+     * @param data 암호화할 비밀번호
      * @return String result 암호화된 비밀번호
      * @exception Exception
      */

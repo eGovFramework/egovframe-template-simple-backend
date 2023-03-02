@@ -76,17 +76,12 @@ public class BoardMasterVO extends BoardMaster implements Serializable {
 	/** 게시판속성 코드명 */
 	private String bbsAttrbCodeNm = "";
 
-	/** 템플릿 명 */
-	private String tmplatNm = "";
-
 	/** 최종 수정자명 */
 	private String lastUpdusrNm = "";
 
 	/** 권한지정 여부 */
 	private String authFlag = "";
 
-	/** 템플릿경로 */
-	private String tmplatCours = "";
 
 	/**
 	 * searchBgnDe attribute를 리턴한다.
@@ -393,27 +388,6 @@ public class BoardMasterVO extends BoardMaster implements Serializable {
 	}
 
 	/**
-	 * tmplatNm attribute를 리턴한다.
-	 *
-	 * @return the tmplatNm
-	 */
-	@Override
-	public String getTmplatNm() {
-		return tmplatNm;
-	}
-
-	/**
-	 * tmplatNm attribute 값을 설정한다.
-	 *
-	 * @param tmplatNm
-	 *            the tmplatNm to set
-	 */
-	@Override
-	public void setTmplatNm(String tmplatNm) {
-		this.tmplatNm = tmplatNm;
-	}
-
-	/**
 	 * lastUpdusrNm attribute를 리턴한다.
 	 *
 	 * @return the lastUpdusrNm
@@ -449,25 +423,6 @@ public class BoardMasterVO extends BoardMaster implements Serializable {
 	 */
 	public void setAuthFlag(String authFlag) {
 		this.authFlag = authFlag;
-	}
-
-	/**
-	 * tmplatCours attribute를 리턴한다.
-	 *
-	 * @return the tmplatCours
-	 */
-	public String getTmplatCours() {
-		return tmplatCours;
-	}
-
-	/**
-	 * tmplatCours attribute 값을 설정한다.
-	 *
-	 * @param tmplatCours
-	 *            the tmplatCours to set
-	 */
-	public void setTmplatCours(String tmplatCours) {
-		this.tmplatCours = tmplatCours;
 	}
 
 	/**

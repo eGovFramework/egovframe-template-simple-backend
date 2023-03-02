@@ -39,8 +39,6 @@ public class EgovWebServletContextListener implements ServletContextListener {
 			LOGGER.debug("===========================END   EgovServletContextLoad END ===========");
 		} catch (IllegalArgumentException e) {
 			LOGGER.error("[IllegalArgumentException] Try/Catch...usingParameters Runing : " + e.getMessage());
-		} catch (Exception e) {
-			LOGGER.error("[" + e.getClass() + "] search fail : " + e.getMessage());
 		}
 	}
 }

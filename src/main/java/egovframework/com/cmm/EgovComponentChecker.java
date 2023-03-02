@@ -7,6 +7,7 @@ import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 
 /**
@@ -49,7 +50,8 @@ public class EgovComponentChecker extends EgovAbstractServiceImpl implements App
 		try{
 			Object component = context.getBean(componentName);
 
-			if(component == null){
+			// Fix: Null pointers should not be dereferenced 이슈 수정
+			if(ObjectUtils.isEmpty(component)){
 				return false;
 			}else{
 				return true;

@@ -37,6 +37,7 @@ import com.ibm.icu.util.ChineseCalendar;
 public class EgovDateUtil {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(EgovDateUtil.class);
+	private static SecureRandom r = new SecureRandom();
 
 	/**
 	 * <p>yyyyMMdd 혹은 yyyy-MM-dd 형식의 날짜 문자열을 입력 받아 년, 월, 일을
@@ -280,7 +281,7 @@ public class EgovDateUtil {
 		} catch (ParseException exception) {
 			LOGGER.debug("{}", exception);
 		}
-		if (simpledateformat != null && simpledateformat.format(date) != null) {
+		if (simpledateformat.format(date) != null) {
 			return simpledateformat.format(date);
 		} else {
 			return "";
@@ -506,8 +507,6 @@ public class EgovDateUtil {
 		if (endDate.getTimeInMillis() < beginDate.getTimeInMillis()) {
 			throw new IllegalArgumentException("Invalid input date : " + sDate1 + "~" + sDate2);
 		}
-
-		SecureRandom r = new SecureRandom();
 
 		long rand = ((r.nextLong() >>> 1) % (endDate.getTimeInMillis() - beginDate.getTimeInMillis() + 1)) + beginDate.getTimeInMillis();
 

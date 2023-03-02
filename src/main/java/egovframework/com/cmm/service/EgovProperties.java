@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -12,6 +13,11 @@ import java.util.Properties;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.DefaultResourceLoader;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.ResourcePatternUtils;
+
+import egovframework.com.cmm.EgovWebUtil;
 
 //import java.io.FileNotFoundException;
 //import java.io.IOException;
@@ -45,19 +51,23 @@ public class EgovProperties {
 	public static final String ERR_CODE_IOE = " EXCEPTION(IOE) OCCURRED";
 
 	//파일구분자
-	static final char FILE_SEPARATOR = File.separatorChar;
+	static final String FILE_SEPARATOR = System.getProperty("file.separator");
 
 	//프로퍼티 파일의 물리적 위치
 	/*public static final String GLOBALS_PROPERTIES_FILE
 	= System.getProperty("user.home") + System.getProperty("file.separator") + "egovProps"
 	+ System.getProperty("file.separator") + "globals.properties";*/
 
-	public static final String RELATIVE_PATH_PREFIX = EgovProperties.class.getResource("").getPath()
-		+ System.getProperty("file.separator") + ".." + System.getProperty("file.separator")
-		+ ".." + System.getProperty("file.separator") + ".." + System.getProperty("file.separator");
+	// 프로퍼티 파일의 위치 prefix
+	// /target/classes/egovframework
+	//public static final String RELATIVE_PATH_PREFIX = "classpath:" + FILE_SEPARATOR + "egovframework";
 
-	public static final String GLOBALS_PROPERTIES_FILE = RELATIVE_PATH_PREFIX + "egovProps"
-		+ System.getProperty("file.separator") + "globals.properties";
+	// 프로퍼티 파일의 위치 
+	// /target/classes/egovframework/egovProps/globals.properties
+	//public static final String GLOBALS_PROPERTIES_FILE = RELATIVE_PATH_PREFIX + FILE_SEPARATOR +"egovProps"+ FILE_SEPARATOR + "globals.properties";
+		
+	// /target/classes/application.properties
+	public static final String GLOBALS_PROPERTIES_FILE = "classpath:" + FILE_SEPARATOR + "application.properties";
 
 	/**
 	 * 인자로 주어진 문자열을 Key값으로 하는 상대경로 프로퍼티 값을 절대경로로 반환한다(Globals.java 전용)
@@ -101,30 +111,24 @@ public class EgovProperties {
 	public static String getProperty(String keyName) {
 		String value = ERR_CODE;
 		value = "99";
-		debug(GLOBALS_PROPERTIES_FILE + " : " + keyName);
-		FileInputStream fis = null;
-		try {
-			Properties props = new Properties();
-			fis = new FileInputStream(GLOBALS_PROPERTIES_FILE);
-			props.load(new java.io.BufferedInputStream(fis));
+		
+        Resource resources = ResourcePatternUtils.getResourcePatternResolver(new DefaultResourceLoader())
+			    .getResource(GLOBALS_PROPERTIES_FILE);
+		
+        debug(GLOBALS_PROPERTIES_FILE + " : " + keyName);
+		
+		try (InputStream in = resources.getInputStream()) {
+			Properties props = new Properties(); 
+			props.load(new java.io.BufferedInputStream(in));
 			value = props.getProperty(keyName).trim();
 		} catch (FileNotFoundException fne) {
 			debug(fne);
 		} catch (IOException ioe) {
 			debug(ioe);
-		} finally {
-			try {
-				if (fis != null) {
-					fis.close();
-				}
-			} catch (IOException ioe) {
-				debug(ioe);
-			}
-
 		}
 		return value;
 	}
-
+	
 	/**
 	 * 주어진 파일에서 인자로 주어진 문자열을 Key값으로 하는 프로퍼티 상대 경로값을 절대 경로값으로 반환한다
 	 * @param fileName String
@@ -196,17 +200,14 @@ public class EgovProperties {
 		// key - value 형태로 된 배열 결과
 		ArrayList<Map<String, String>> keyList = new ArrayList<Map<String, String>>();
 
-		String src = property.replace('\\', FILE_SEPARATOR).replace('/', FILE_SEPARATOR);
-		FileInputStream fis = null;
-		try {
+		String src = EgovWebUtil.filePathBlackList(property.replace("\\", FILE_SEPARATOR).replace("/", FILE_SEPARATOR));
+		try (FileInputStream fis = new FileInputStream(src)) {
 
 			File srcFile = new File(src);
 			if (srcFile.exists()) {
 
 				java.util.Properties props = new java.util.Properties();
-				fis = new FileInputStream(src);
 				props.load(new java.io.BufferedInputStream(fis));
-				fis.close();
 
 				int i = 0;
 				Enumeration<?> plist = props.propertyNames();
@@ -223,16 +224,7 @@ public class EgovProperties {
 			debug("FileNotFoundException:" + ex);
 		} catch (IOException ex) {
 			debug("IOException:" + ex);
-		} finally {
-			try {
-				if (fis != null) {
-					fis.close();
-				}
-			} catch (IOException ioe) {
-				debug(ioe);
-			}
 		}
-
 		return keyList;
 	}
 

@@ -7,24 +7,27 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.util.Base64;
 import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.egovframe.rte.fdl.cmmn.exception.EgovBizException;
+import org.egovframe.rte.fdl.cryptography.EgovCryptoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.FileCopyUtils;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import egovframework.com.cmm.EgovWebUtil;
 import egovframework.com.cmm.service.EgovFileMngService;
+import egovframework.com.cmm.service.EgovProperties;
 import egovframework.com.cmm.service.FileVO;
 import egovframework.com.cmm.util.EgovUserDetailsHelper;
-
-import org.egovframe.rte.fdl.cmmn.exception.EgovBizException;
 
 /**
  * 파일 다운로드를 위한 컨트롤러 클래스
@@ -48,8 +51,14 @@ public class EgovFileDownloadController {
 
 	@Resource(name = "EgovFileMngService")
 	private EgovFileMngService fileService;
+	
+	/** 암호화서비스 */
+    @Resource(name="egovARIACryptoService")
+    EgovCryptoService cryptoService;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(EgovFileDownloadController.class);
+	
+	public static final String ALGORITM_KEY = EgovProperties.getProperty("Globals.crypto.algoritm");
 
 	/**
 	 * 브라우저 구분 얻기.
@@ -79,7 +88,8 @@ public class EgovFileDownloadController {
 	 * @param response
 	 * @throws Exception
 	 */
-	private void setDisposition(String filename, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	private void setDisposition(String filename, HttpServletRequest request, HttpServletResponse response)
+		throws Exception {
 		String browser = getBrowser(request);
 
 		String dispositionPrefix = "attachment; filename=";
@@ -123,22 +133,29 @@ public class EgovFileDownloadController {
 	 * @param response
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/cmm/fms/FileDown.do")
+	@GetMapping(value = "/cmm/fms/FileDown.do")
 	public void cvplFileDownload(@RequestParam Map<String, Object> commandMap, HttpServletRequest request, HttpServletResponse response) throws Exception {
-
-		String atchFileId = (String) commandMap.get("atchFileId");
-		String fileSn = (String) commandMap.get("fileSn");
 
 		Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
 
 		if (isAuthenticated) {
 
+			// 암호화된 atchFileId 를 복호화 (2022.12.06 추가) - 파일아이디가 유추 불가능하도록 조치
+			String param_atchFileId = (String) commandMap.get("atchFileId");
+			param_atchFileId = param_atchFileId.replaceAll(" ", "+");
+			byte[] decodedBytes = Base64.getDecoder().decode(param_atchFileId);
+			String decodedFileId = new String(cryptoService.decrypt(decodedBytes,ALGORITM_KEY));
+			String fileSn = (String) commandMap.get("fileSn");
+			
 			FileVO fileVO = new FileVO();
-			fileVO.setAtchFileId(atchFileId);
+			fileVO.setAtchFileId(decodedFileId);
 			fileVO.setFileSn(fileSn);
 			FileVO fvo = fileService.selectFileInf(fileVO);
 
-			File uFile = new File(fvo.getFileStreCours(), fvo.getStreFileNm());
+			String fileStreCours = EgovWebUtil.filePathBlackList(fvo.getFileStreCours());
+			String streFileNm = EgovWebUtil.filePathBlackList(fvo.getStreFileNm());
+
+			File uFile = new File(fileStreCours, streFileNm);
 			long fSize = uFile.length();
 
 			if (fSize > 0) {

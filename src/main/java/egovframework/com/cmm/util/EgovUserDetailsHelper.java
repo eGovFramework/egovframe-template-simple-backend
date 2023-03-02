@@ -36,8 +36,8 @@ public class EgovUserDetailsHelper {
 		 * @return Object - 사용자 ValueObject
 		 */
 		public static Object getAuthenticatedUser() {
-			return (LoginVO)RequestContextHolder.getRequestAttributes().getAttribute("LoginVO", RequestAttributes.SCOPE_SESSION)==null ?
-					new LoginVO() : (LoginVO) RequestContextHolder.getRequestAttributes().getAttribute("LoginVO", RequestAttributes.SCOPE_SESSION);
+			return (LoginVO)RequestContextHolder.currentRequestAttributes().getAttribute("LoginVO", RequestAttributes.SCOPE_SESSION)==null ?
+					new LoginVO() : (LoginVO) RequestContextHolder.currentRequestAttributes().getAttribute("LoginVO", RequestAttributes.SCOPE_SESSION);
 
 		}
 
@@ -49,7 +49,7 @@ public class EgovUserDetailsHelper {
 		public static List<String> getAuthorities() {
 			List<String> listAuth = new ArrayList<String>();
 
-			if (EgovObjectUtil.isNull(RequestContextHolder.getRequestAttributes().getAttribute("LoginVO", RequestAttributes.SCOPE_SESSION))) {
+			if (EgovObjectUtil.isNull(RequestContextHolder.currentRequestAttributes().getAttribute("LoginVO", RequestAttributes.SCOPE_SESSION))) {
 				// log.debug("## authentication object is null!!");
 				return null;
 			}
@@ -62,7 +62,7 @@ public class EgovUserDetailsHelper {
 		 * @return Boolean - 인증된 사용자 여부(TRUE / FALSE)
 		 */
 		public static Boolean isAuthenticated() {
-			if (EgovObjectUtil.isNull(RequestContextHolder.getRequestAttributes().getAttribute("LoginVO", RequestAttributes.SCOPE_SESSION))) {
+			if (EgovObjectUtil.isNull(RequestContextHolder.currentRequestAttributes().getAttribute("LoginVO", RequestAttributes.SCOPE_SESSION))) {
 				// log.debug("## authentication object is null!!");
 				return Boolean.FALSE;
 			}

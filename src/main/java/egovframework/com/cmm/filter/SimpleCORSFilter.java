@@ -9,11 +9,12 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import egovframework.com.cmm.service.EgovProperties;
 
 /**
  * SimpleCORSFilter.java 클래스
@@ -46,19 +47,22 @@ public class SimpleCORSFilter implements Filter {
 		throws IOException, ServletException {
 
 		log.debug("===>>> SimpleCORSFilter > doFilter()");
-		HttpServletRequest request = (HttpServletRequest)req;
+		//HttpServletRequest request = (HttpServletRequest)req;
 		HttpServletResponse response = (HttpServletResponse)res;
 
 		// Access-Control-Allow-Origin
-		String origin = request.getHeader("Origin");
+		//String origin = request.getHeader("Origin");
+		
+		//HTTP parameter directly written to HTTP header 
+		String originHeader = EgovProperties.getProperty("Globals.Allow.Origin");
 
-		log.debug("===>>> origin = " + origin);
+		log.debug("===>>> origin = " + originHeader);
 
-		if (origin != null && !origin.equals("")) {
-			origin = origin.replace("\r", "").replace("\n", "");// Security - Potential HTTP Response Splitting 분할응답 조치
+		if (originHeader != null && !originHeader.equals("")) {
+			originHeader = originHeader.replace("\r", "").replace("\n", "");// Security - Potential HTTP Response Splitting 분할응답 조치
 		}
 
-		response.setHeader("Access-Control-Allow-Origin", origin);
+		response.setHeader("Access-Control-Allow-Origin", originHeader);
 
 		// Access-Control-Max-Age
 		response.setHeader("Access-Control-Max-Age", "3600");
@@ -67,11 +71,11 @@ public class SimpleCORSFilter implements Filter {
 		response.setHeader("Access-Control-Allow-Credentials", "true");
 
 		// Access-Control-Allow-Methods
-		response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
+		response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE");
 
 		// Access-Control-Allow-Headers
 		response.setHeader("Access-Control-Allow-Headers",
-			"Origin, X-Requested-With, Content-Type, Accept, " + "X-CSRF-TOKEN");
+			"Origin, X-Requested-With, Content-Type, Accept, Authorization, " + "X-CSRF-TOKEN");
 
 		chain.doFilter(req, res);
 	}

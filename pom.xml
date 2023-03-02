@@ -17,10 +17,9 @@
 	</licenses>
 
 	<properties>
-		<spring.maven.artifact.version>5.3.6</spring.maven.artifact.version>
-		<org.egovframe.rte.version>4.0.0</org.egovframe.rte.version>
-		<log4j2.version>2.17.0</log4j2.version>
-		<logback.version>1.2.9</logback.version>
+		<spring.maven.artifact.version>5.3.20</spring.maven.artifact.version>
+        <org.egovframe.rte.version>4.1.0</org.egovframe.rte.version>
+		<logback.version>1.2.11</logback.version>
 	</properties>
 
 	<repositories>
@@ -36,7 +35,7 @@
 		</repository>
 		<repository>
 			<id>egovframe2</id>
-			<url>https://www.egovframe.go.kr/maven/</url>
+			<url>https://maven.egovframe.go.kr/maven/</url>
 			<releases>
 				<enabled>true</enabled>
 			</releases>
@@ -50,7 +49,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.4.5</version>
+		<version>2.7.0</version>
 	</parent>
 
 	<dependencies>
@@ -64,11 +63,20 @@
 			<artifactId>spring-boot-devtools</artifactId>
 			<optional>true</optional>
 		</dependency>
+		<!-- war 배포 시 해당 주석 제거
 		<dependency>
 			<groupId>org.apache.tomcat.embed</groupId>
 			<artifactId>tomcat-embed-jasper</artifactId>
 		</dependency>
+		-->
 		<!-- spring boot dependency end -->
+		
+		<!-- swagger -->
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-boot-starter</artifactId>
+			<version>3.0.0</version>
+		</dependency>
 		
 		<dependency>
 			<groupId>org.egovframe.rte</groupId>
@@ -95,27 +103,46 @@
 			<artifactId>org.egovframe.rte.fdl.string</artifactId>
 			<version>${org.egovframe.rte.version}</version>
 		</dependency>
+		<dependency>
+    		<groupId>org.egovframe.rte</groupId>
+    		<artifactId>org.egovframe.rte.fdl.crypto</artifactId>
+    		<version>${org.egovframe.rte.version}</version>
+		</dependency>
 		
 		<dependency>
 			<groupId>javax.servlet</groupId>
-			<artifactId>servlet-api</artifactId>
-			<version>2.5</version>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>3.1.0</version>
 			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>jstl</artifactId>
-		</dependency>
+            <groupId>javax.servlet.jsp.jstl</groupId>
+            <artifactId>jstl-api</artifactId>
+            <version>1.2</version>
+        </dependency>
+
 
 		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-dbcp2</artifactId>
+		    <groupId>org.apache.commons</groupId>
+		    <artifactId>commons-dbcp2</artifactId>
 		</dependency>
 
 		<dependency>
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>commons-validator</groupId>
+			<artifactId>commons-validator</artifactId>
+			<version>1.7</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springmodules</groupId>
+			<artifactId>spring-modules-validation</artifactId>
+			<version>0.8</version>
 		</dependency>
 
 		<dependency>
@@ -136,10 +163,6 @@
 			<version>3.5</version>
 		</dependency>
 
-		<!-- 
-		취약점 점검 조치중 2021.12.17
-		- commons-compress가 사용되고 있는지 확인중
-		 -->
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-compress</artifactId>
@@ -149,14 +172,16 @@
 		<dependency>
 			<groupId>org.hsqldb</groupId>
 			<artifactId>hsqldb</artifactId>
+			<version>2.5.2</version>
 		</dependency> 
 
 		<!-- mysql driver -->
 		
 		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-		</dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.29</version>
+        </dependency>
 		
 
 		<!-- oracle 10g driver -->
@@ -199,7 +224,7 @@
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-validator</artifactId>
-			<version>5.2.4.Final</version>
+			<version>7.0.4.Final</version>
 		</dependency>
 
 		<!-- log4jdbc driver -->
@@ -218,6 +243,14 @@
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-core</artifactId>
+			<version>2.17.2</version>
+		</dependency>
+		
+		<!-- JWT 2022.07.27 -->
+		<dependency>
+    		<groupId>io.jsonwebtoken</groupId>
+    		<artifactId>jjwt</artifactId>
+    		<version>0.9.1</version>
 		</dependency>
 
 <!-- 
@@ -239,7 +272,7 @@
 		<dependency>
 			<groupId>com.ibm.icu</groupId>
 			<artifactId>icu4j</artifactId>
-			<version>53.1</version>
+			<version>71.1</version>
 		</dependency>
 
 	</dependencies>
@@ -265,7 +298,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
-					<version>3.1</version>
+					 <version>3.10.1</version>
 					<configuration>
 						<source>1.8</source>
 						<target>1.8</target>
@@ -303,7 +336,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-pmd-plugin</artifactId>
-					<version>3.12.0</version>
+					<version>3.17.0</version>
 				</plugin>
 			</plugins>
 		</pluginManagement>
@@ -312,6 +345,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.22.2</version>
 				<configuration>
 					<skipTests>true</skipTests>
 					<forkMode>once</forkMode>
@@ -334,8 +368,16 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<!-- <version>3.1.1</version> -->
+				<version>3.4.0</version>
 			</plugin>
+			<!-- spring-boot-maven-plugin -->
+			<plugin>
+      			<groupId>org.springframework.boot</groupId>
+            	<artifactId>spring-boot-maven-plugin</artifactId>
+            	<configuration>
+                	<executable>true</executable>
+            	</configuration>
+    		</plugin>
 		</plugins>
 	</build>
 	
@@ -345,7 +387,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-project-info-reports-plugin</artifactId>
-				<version>3.0.0</version>
+				<version>3.3.0</version>
 				<reportSets>
 					<reportSet>
 						<id>sunlink</id>
@@ -355,7 +397,7 @@
 						<inherited>true</inherited>
 						<configuration>
 							<links>
-								<link>http://docs.oracle.com/javase/6/docs/api/</link>
+								<link>https://docs.oracle.com/javase/8/docs/api/</link>
 							</links>
 						</configuration>
 					</reportSet>

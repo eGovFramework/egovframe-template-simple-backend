@@ -18,7 +18,7 @@ import org.springframework.context.annotation.PropertySources;
 	EgovConfigAppWhitelist.class
 })
 @PropertySources({
-	@PropertySource("classpath:/egovframework/egovProps/globals.properties")
+	@PropertySource("classpath:/application.properties")
 }) //CAUTION: min JDK 8
 public class EgovConfigApp {
 

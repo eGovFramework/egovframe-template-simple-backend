@@ -114,7 +114,7 @@ public class EgovComCrossSiteHndlr extends BodyTagSupport {
 				//System.out.println("EgovComCrossSiteFilter def> ="+def);
 
 				// if we do have 'default', print it
-				if (def != null) {
+				else {
 					// good 'default'
 					out(pageContext, escapeXml, def);
 				//System.out.println("EgovComCrossSiteFilter> ="+def);

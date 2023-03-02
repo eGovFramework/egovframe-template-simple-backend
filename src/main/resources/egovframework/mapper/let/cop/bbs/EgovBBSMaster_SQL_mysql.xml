@@ -32,9 +32,7 @@
 		<result property="frstRegisterPnttm" column="FRST_REGIST_PNTTM"/>
 		<result property="bbsTyCodeNm" column="BBS_TY_CODE_NM"/>
 		<result property="bbsAttrbCodeNm" column="BBS_ATTRB_CODE_NM"/>
- 	    <result property="tmplatNm" column="TMPLAT_NM"/>
 		<result property="authFlag" column="AUTH_FLAG"/>
-		<result property="tmplatCours" column="TMPLAT_COURS"/>
 	</resultMap>
 
 	<resultMap id="boardMasterAll" type="egovframework.let.cop.bbs.service.BoardMasterVO">
@@ -126,9 +124,9 @@
 			SELECT 
 				a.BBS_ID, a.BBS_TY_CODE, b.CODE_NM as BBS_TY_CODE_NM, a.BBS_INTRCN, 
 				a.BBS_ATTRB_CODE, c.CODE_NM as BBS_ATTRB_CODE_NM, a.BBS_NM, 
-				a.TMPLAT_ID, d.TMPLAT_NM, d.TMPLAT_COURS, a.FILE_ATCH_POSBL_AT, a.ATCH_POSBL_FILE_NUMBER,
+				a.TMPLAT_ID, a.FILE_ATCH_POSBL_AT, a.ATCH_POSBL_FILE_NUMBER,
 				a.ATCH_POSBL_FILE_SIZE, a.REPLY_POSBL_AT, a.FRST_REGISTER_ID, e.USER_NM as FRST_REGISTER_NM,
-				a.USE_AT, DATE_FORMAT(a.FRST_REGIST_PNTTM, '%Y-%m-%d') as FRST_REGIST_PNTTM				
+				a.USE_AT, f.USE_AT as BBS_USE_FLAG, DATE_FORMAT(a.FRST_REGIST_PNTTM, '%Y-%m-%d') as FRST_REGIST_PNTTM				
 				,(SELECT IFNULL(USE_AT,'N') FROM LETTNBBSUSE 
 					WHERE BBS_ID = #{bbsId} 
 					AND TRGET_ID IN (#{uniqId}, 'SYSTEM_DEFAULT_BOARD')
@@ -140,11 +138,11 @@
 				ON a.BBS_TY_CODE = b.CODE
 			LEFT OUTER JOIN 
 				(SELECT CODE_ID, CODE, CODE_NM FROM LETTCCMMNDETAILCODE WHERE CODE_ID = 'COM009' AND USE_AT='Y') c
-				ON a.BBS_ATTRB_CODE = c.CODE
-			LEFT OUTER JOIN LETTNTMPLATINFO d
-				ON a.TMPLAT_ID = d.TMPLAT_ID				
+				ON a.BBS_ATTRB_CODE = c.CODE				
 			LEFT OUTER JOIN COMVNUSERMASTER e
-				ON a.FRST_REGISTER_ID = e.ESNTL_ID		
+				ON a.FRST_REGISTER_ID = e.ESNTL_ID
+			LEFT OUTER JOIN LETTNBBSUSE f
+				ON a.BBS_ID = f.BBS_ID		
 			WHERE a.BBS_ID = #{bbsId}
 						
 	</select> 

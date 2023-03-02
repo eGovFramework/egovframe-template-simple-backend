@@ -50,6 +50,11 @@ public class EgovStringUtil {
 	 * 빈 문자열 <code>""</code>.
 	 */
 	public static final String EMPTY = "";
+	
+	/**
+	 * 랜덤 객체
+	 */
+	public static SecureRandom rnd = new SecureRandom();
 
 	/**
 	 * <p>Padding을 할 수 있는 최대 수치</p>
@@ -314,11 +319,7 @@ public class EgovStringUtil {
 			return returnStr;
 		}
 
-		if (sourceStr == null && compareStr != null) {
-			return defaultStr;
-		}
-
-		if (sourceStr.trim().equals(compareStr)) {
+		else if (sourceStr != null && sourceStr.trim().equals(compareStr)) {
 			return returnStr;
 		}
 
@@ -740,9 +741,6 @@ public class EgovStringUtil {
 		if (startInt > endInt) {
 			throw new IllegalArgumentException("Start String: " + startChr + " End String: " + endChr);
 		}
-
-		// 랜덤 객체 생성
-		SecureRandom rnd = new SecureRandom();
 
 		do {
 			// 시작문자 및 종료문자 중에서 랜덤 숫자를 발생시킨다.

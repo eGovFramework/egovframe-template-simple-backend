@@ -76,16 +76,17 @@ public class EgovWebApplicationInitializer implements WebApplicationInitializer 
 	 * @param servletContext
 	 * Servlet Context를 등록한다.
 	 */
+
 	private void addWebServletContext(ServletContext servletContext) {
-		AnnotationConfigWebApplicationContext webApplicationContext = new AnnotationConfigWebApplicationContext();
-		webApplicationContext.register(EgovConfigWebDispatcherServlet.class);
-
-		ServletRegistration.Dynamic dispatcher = servletContext.addServlet("action",
-			new DispatcherServlet(webApplicationContext));
-		dispatcher.setLoadOnStartup(1);
-
-		dispatcher.addMapping("*.do");
-	}
+	AnnotationConfigWebApplicationContext webApplicationContext = new
+	AnnotationConfigWebApplicationContext();
+	webApplicationContext.register(EgovConfigWebDispatcherServlet.class);
+	
+	ServletRegistration.Dynamic dispatcher = servletContext.addServlet("action",
+	new DispatcherServlet(webApplicationContext));
+	dispatcher.setLoadOnStartup(1);
+	
+	dispatcher.addMapping("*.do"); }
 
 	/**
 	 * @param servletContext
