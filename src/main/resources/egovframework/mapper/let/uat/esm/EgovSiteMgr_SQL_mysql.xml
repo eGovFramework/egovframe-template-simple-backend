@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="siteManagerDAO">
+
+	<!-- 사이트관리자용 변경된 비밀번호를 저장하는 쿼리 -->
+	<update id="updateAdminPassword" parameterType="java.util.Map">
+		UPDATE LETTNEMPLYRINFO
+			SET password = #{new_password}
+		WHERE emplyr_id = #{login_id} AND password = #{old_password}
+	</update>
+
+</mapper>
