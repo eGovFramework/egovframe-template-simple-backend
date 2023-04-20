@@ -32,6 +32,7 @@ import egovframework.let.utl.sim.service.EgovFileScrty;
  *  수정일      수정자      수정내용
  *  -------            --------        ---------------------------
  *  2023.04.15  김일국     최초 생성
+ *  2023.04.20  김일국     리액트에서 사용할 공통인증메서드 추가
  *
  *  </pre>
  */
@@ -47,6 +48,25 @@ public class EgovSiteManagerApiController {
 	private ResultVO handleAuthError(ResultVO resultVO) {
 		resultVO.setResultCode(ResponseCode.AUTH_ERROR.getCode());
 		resultVO.setResultMessage(ResponseCode.AUTH_ERROR.getMessage());
+		return resultVO;
+	}
+	/**
+	 * 리액트에서 사이트관리자에 접근하는 토큰값 위변조 방지용으로 서버에서 비교한다.
+	 * @param map데이터: String old_password, new_password
+	 * @param request - 토큰값으로 인증된 사용자를 확인하기 위한 HttpServletRequest
+	 * @return result - JWT 토큰값 비교결과 코드와 메세지
+	 * @exception Exception
+	 */
+	@PostMapping(value = "/uat/esm/jwtAuthAPI.do")
+	public ResultVO jwtAuthentication(HttpServletRequest request) throws Exception {
+		ResultVO resultVO = new ResultVO();
+		// Headers에서 Authorization 속성값에 발급한 토큰값이 정상인지 확인
+		if (!jwtVerification.isVerification(request)) {
+			resultVO = handleAuthError(resultVO); // 토큰 확인
+		}else{
+			resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
+			resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());
+		}
 		return resultVO;
 	}
 	/**
