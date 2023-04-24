@@ -39,6 +39,7 @@ public class SwaggerConfig {
     private ApiKey apiKey() {
         return new ApiKey("Authorization", "Authorization", "header");
     }
+    
     // 스웨그에서 컨텐츠 url 접근 시 인증처리를 위한 보안 규칙 추가(아래)
     private SecurityContext securityContext() {
         return springfox
@@ -47,8 +48,9 @@ public class SwaggerConfig {
                 .contexts
                 .SecurityContext
                 .builder()
-                .securityReferences(defaultAuth()).forPaths(PathSelectors.any()).build();
+                .securityReferences(defaultAuth()).operationSelector(operationContext -> true).build();
     }
+    
     // 토큰 인증영역 배열리스트을 반환하는 매서드
     List<SecurityReference> defaultAuth() {
         AuthorizationScope authorizationScope = new AuthorizationScope("global", "accessEverything"); // 인증영역 객체 생성
