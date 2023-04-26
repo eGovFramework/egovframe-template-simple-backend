@@ -5,12 +5,12 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRegistration;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @ClassName : EgovWebApplicationInitializer.java
@@ -29,14 +29,13 @@ import org.springframework.web.servlet.DispatcherServlet;
  * </pre>
  *
  */
+@Slf4j
 public class EgovWebApplicationInitializer implements WebApplicationInitializer {
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(EgovWebApplicationInitializer.class);
 
 	@Override
 	public void onStartup(ServletContext servletContext) throws ServletException {
 
-		LOGGER.debug("EgovWebApplicationInitializer START-============================================");
+		log.debug("EgovWebApplicationInitializer START-============================================");
 
 		// -------------------------------------------------------------
 		// Spring Root Context 설정
@@ -58,7 +57,7 @@ public class EgovWebApplicationInitializer implements WebApplicationInitializer 
 		// -------------------------------------------------------------
 		addFilters(servletContext);
 
-		LOGGER.debug("EgovWebApplicationInitializer END-============================================");
+		log.debug("EgovWebApplicationInitializer END-============================================");
 	}
 
 	/**

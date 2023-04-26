@@ -13,8 +13,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletResponse;
 
 import org.egovframe.rte.fdl.cryptography.EgovCryptoService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +22,7 @@ import egovframework.com.cmm.EgovWebUtil;
 import egovframework.com.cmm.SessionVO;
 import egovframework.com.cmm.service.EgovFileMngService;
 import egovframework.com.cmm.service.FileVO;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @Class Name : EgovImageProcessController.java
@@ -41,6 +40,7 @@ import egovframework.com.cmm.service.FileVO;
  * @see
  *
  */
+@Slf4j
 @Controller
 public class EgovImageProcessController extends HttpServlet {
 
@@ -51,8 +51,6 @@ public class EgovImageProcessController extends HttpServlet {
 
 	@Resource(name = "EgovFileMngService")
 	private EgovFileMngService fileService;
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(EgovImageProcessController.class);
 	
 	/** 암호화서비스 */
     @Resource(name="egovARIACryptoService")
@@ -116,7 +114,7 @@ public class EgovImageProcessController extends HttpServlet {
 				type = "image/" + fvo.getFileExtsn().toLowerCase();
 
 			} else {
-				LOGGER.debug("Image fileType is null.");
+				log.debug("Image fileType is null.");
 			}
 
 			response.setHeader("Content-Type", type);
@@ -128,27 +126,27 @@ public class EgovImageProcessController extends HttpServlet {
 			response.getOutputStream().close();
 
 		} catch (IOException e) {
-			LOGGER.debug("{}", e);
+			log.debug("{}", e);
 		} finally {
 			if (bStream != null) {
 				try {
 					bStream.close();
 				} catch (IOException est) {
-					LOGGER.debug("IGNORED: {}", est.getMessage());
+					log.debug("IGNORED: {}", est.getMessage());
 				}
 			}
 			if (in != null) {
 				try {
 					in.close();
 				} catch (IOException ei) {
-					LOGGER.debug("IGNORED: {}", ei.getMessage());
+					log.debug("IGNORED: {}", ei.getMessage());
 				}
 			}
 			if (fis != null) {
 				try {
 					fis.close();
 				} catch (IOException efis) {
-					LOGGER.debug("IGNORED: {}", efis.getMessage());
+					log.debug("IGNORED: {}", efis.getMessage());
 				}
 			}
 		}

@@ -10,6 +10,9 @@ import javax.servlet.jsp.tagext.BodyTagSupport;
 
 import org.apache.taglibs.standard.tag.common.core.Util;
 
+import egovframework.com.cmm.filter.SimpleCORSFilter;
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * Cross-Site Scripting 체크하여 값을 되돌려 받는 핸들러 JSP TLD, 자바에서 사용가능
  *
@@ -25,6 +28,7 @@ import org.apache.taglibs.standard.tag.common.core.Util;
  *
  * </pre>
  */
+@Slf4j
 public class EgovComCrossSiteHndlr extends BodyTagSupport {
 
 	/*
@@ -95,13 +99,13 @@ public class EgovComCrossSiteHndlr extends BodyTagSupport {
 									// pooling tag handlers)
 
 		JspWriter out = pageContext.getOut();
-		//System.out.println("EgovComCrossSiteFilter> ============================");
+		//log.debug("EgovComCrossSiteFilter> ============================");
 		try {
 			// print value if available; otherwise, try 'default'
 			if (value != null) {
-				//System.out.println("EgovComCrossSiteFilter> =value");
+				//log.debug("EgovComCrossSiteFilter> =value");
 				String sWriteEscapedXml = getWriteEscapedXml();
-				//System.out.println("EgovComCrossSiteFilter sWriteEscapedXml>" + sWriteEscapedXml);
+				//log.debug("EgovComCrossSiteFilter sWriteEscapedXml>" + sWriteEscapedXml);
 				out.print(sWriteEscapedXml);
 				return SKIP_BODY;
 			} else {
@@ -111,13 +115,13 @@ public class EgovComCrossSiteHndlr extends BodyTagSupport {
 					return EVAL_BODY_BUFFERED;
 				}
 
-				//System.out.println("EgovComCrossSiteFilter def> ="+def);
+				//log.debug("EgovComCrossSiteFilter def> ="+def);
 
 				// if we do have 'default', print it
 				else {
 					// good 'default'
 					out(pageContext, escapeXml, def);
-				//System.out.println("EgovComCrossSiteFilter> ="+def);
+				//log.debug("EgovComCrossSiteFilter> ="+def);
 				}
 				return SKIP_BODY;
 			}
@@ -130,7 +134,7 @@ public class EgovComCrossSiteHndlr extends BodyTagSupport {
 	@Override
 	public int doEndTag() throws JspException {
 		try {
-			//System.out.println("EgovComCrossSiteFilter ==== doEndTag");
+			//log.debug("EgovComCrossSiteFilter ==== doEndTag");
 			if (!needBody){
 				return EVAL_PAGE; // nothing more to do
 			}
@@ -139,8 +143,8 @@ public class EgovComCrossSiteHndlr extends BodyTagSupport {
 			if (bodyContent != null && bodyContent.getString() != null){
 				//String sWriteEscapedXml = getWriteEscapedXml();
 				//out2(pageContext, escapeXml, sWriteEscapedXml.toString());
-				//System.out.println("EgovComCrossSiteFilter> end");
-				//System.out.println("EgovComCrossSiteFilter sWriteEscapedXml > sWriteEscapedXml");
+				//log.debug("EgovComCrossSiteFilter> end");
+				//log.debug("EgovComCrossSiteFilter sWriteEscapedXml > sWriteEscapedXml");
 				out(pageContext, escapeXml, bodyContent.getString().trim());
 
 			}
@@ -279,9 +283,9 @@ public class EgovComCrossSiteHndlr extends BodyTagSupport {
 					//}
 					// add escaped xml
 					//sRtn = sRtn + escaped;
-					//System.out.println(buffer[i]+" :: " + escaped);
+					//log.debug(buffer[i]+" :: " + escaped);
 					for (int j = 0; j < escaped.length; j++) {
-						//System.out.println(buffer[i]+" :>: " + escaped[j]);
+						//log.debug(buffer[i]+" :>: " + escaped[j]);
 						sRtn = sRtn + escaped[j];
 					}
 					//sRtn = sRtn+ escaped.toString();
@@ -345,9 +349,9 @@ public class EgovComCrossSiteHndlr extends BodyTagSupport {
 					//}
 					// add escaped xml
 					//sRtn = sRtn + escaped;
-					//System.out.println(buffer[i]+" :: " + escaped);
+					//log.debug(buffer[i]+" :: " + escaped);
 					for (int j = 0; j < escaped.length; j++) {
-						//System.out.println(buffer[i]+" :>: " + escaped[j]);
+						//log.debug(buffer[i]+" :>: " + escaped[j]);
 						sRtn = sRtn + escaped[j];
 					}
 					//sRtn = sRtn+ escaped.toString();
@@ -387,17 +391,17 @@ public class EgovComCrossSiteHndlr extends BodyTagSupport {
     	egovComCrossSiteHndlr.value = "TRNSMIT";
 
     	String sCrossSiteHndlr = egovComCrossSiteHndlr.getWriteEscapedXml();
-    	//System.out.println("writeEscapedXml " + egovComCrossSiteHndlr.getWriteEscapedXml());
+    	//log.debug("writeEscapedXml " + egovComCrossSiteHndlr.getWriteEscapedXml());
 
-    	System.out.println("sCrossSiteHndlr|"+ sCrossSiteHndlr + "|");
+    	log.debug("sCrossSiteHndlr|"+ sCrossSiteHndlr + "|");
 
     	try{
-    		System.out.println("TRY TEST 1");
+    		log.debug("TRY TEST 1");
     		throw new Exception();
     	}catch(Exception e){
-    		System.out.println("TRY TEST 2");
+    		log.debug("TRY TEST 2");
     	}finally{
-    		System.out.println("TRY TEST 3");
+    		log.debug("TRY TEST 3");
 
     	}
 

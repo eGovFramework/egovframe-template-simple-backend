@@ -18,6 +18,7 @@ import egovframework.com.cmm.util.EgovUserDetailsHelper;
 import egovframework.com.jwt.config.JwtVerification;
 import egovframework.let.uat.esm.service.EgovSiteManagerService;
 import egovframework.let.utl.sim.service.EgovFileScrty;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 사이트관리자의 로그인 비밀번호를 변경 처리하는 컨트롤러 클래스
@@ -36,6 +37,7 @@ import egovframework.let.utl.sim.service.EgovFileScrty;
  *
  *  </pre>
  */
+@Slf4j
 @RestController
 public class EgovSiteManagerApiController {
 	/** EgovSiteManagerService */
@@ -91,9 +93,9 @@ public class EgovSiteManagerApiController {
 		resultMap.put("old_password", EgovFileScrty.encryptPassword(old_password, login_id));
 		resultMap.put("new_password", EgovFileScrty.encryptPassword(new_password, login_id));
 		resultMap.put("login_id", login_id);
-		System.out.println("===>>> loginVO.getId() = "+login_id);
+		log.debug("===>>> loginVO.getId() = "+login_id);
 		Integer result = siteManagerService.updateAdminPassword(resultMap); //저장성공 시 1, 실패 시 0 반환
-		System.out.println("===>>> result = "+result);
+		log.debug("===>>> result = "+result);
 		if(result > 0) {
 			resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
 			resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());

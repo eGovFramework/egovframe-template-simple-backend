@@ -16,8 +16,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.egovframe.rte.fdl.cmmn.exception.EgovBizException;
 import org.egovframe.rte.fdl.cryptography.EgovCryptoService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,6 +26,7 @@ import egovframework.com.cmm.service.EgovFileMngService;
 import egovframework.com.cmm.service.EgovProperties;
 import egovframework.com.cmm.service.FileVO;
 import egovframework.com.cmm.util.EgovUserDetailsHelper;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 파일 다운로드를 위한 컨트롤러 클래스
@@ -46,6 +45,7 @@ import egovframework.com.cmm.util.EgovUserDetailsHelper;
  * Copyright (C) 2009 by MOPAS  All right reserved.
  * </pre>
  */
+@Slf4j
 @Controller
 public class EgovFileDownloadController {
 
@@ -55,8 +55,6 @@ public class EgovFileDownloadController {
 	/** 암호화서비스 */
     @Resource(name="egovARIACryptoService")
     EgovCryptoService cryptoService;
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(EgovFileDownloadController.class);
 	
 	public static final String ALGORITM_KEY = EgovProperties.getProperty("Globals.crypto.algoritm");
 
@@ -186,20 +184,20 @@ public class EgovFileDownloadController {
 				} catch (FileNotFoundException ex) {
 					// 다음 Exception 무시 처리
 					// Connection reset by peer: socket write error
-					LOGGER.debug("IGNORED: {}", ex.getMessage());
+					log.debug("IGNORED: {}", ex.getMessage());
 				} finally {
 					if (in != null) {
 						try {
 							in.close();
 						} catch (IOException ignore) {
-							LOGGER.debug("IGNORED: {}", ignore.getMessage());
+							log.debug("IGNORED: {}", ignore.getMessage());
 						}
 					}
 					if (out != null) {
 						try {
 							out.close();
 						} catch (IOException ignore) {
-							LOGGER.debug("IGNORED: {}", ignore.getMessage());
+							log.debug("IGNORED: {}", ignore.getMessage());
 						}
 					}
 				}

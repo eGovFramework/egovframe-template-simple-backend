@@ -4,6 +4,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
+
+import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
+import org.egovframe.rte.fdl.idgnr.EgovIdGnrService;
+import org.egovframe.rte.fdl.property.EgovPropertyService;
+import org.springframework.stereotype.Service;
+
 import egovframework.let.cop.bbs.service.BoardMaster;
 import egovframework.let.cop.bbs.service.BoardMasterVO;
 import egovframework.let.cop.bbs.service.EgovBBSAttributeManageService;
@@ -11,16 +18,7 @@ import egovframework.let.cop.com.service.BoardUseInf;
 import egovframework.let.cop.com.service.EgovUserInfManageService;
 import egovframework.let.cop.com.service.UserInfVO;
 import egovframework.let.cop.com.service.impl.BBSUseInfoManageDAO;
-
-import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
-import org.egovframe.rte.fdl.idgnr.EgovIdGnrService;
-import org.egovframe.rte.fdl.property.EgovPropertyService;
-
-import javax.annotation.Resource;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 게시판 속성관리를 위한 서비스 구현 클래스
@@ -40,10 +38,9 @@ import org.springframework.stereotype.Service;
  *
  *  </pre>
  */
+@Slf4j
 @Service("EgovBBSAttributeManageService")
 public class EgovBBSAttributeManageServiceImpl extends EgovAbstractServiceImpl implements EgovBBSAttributeManageService {
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(EgovBBSAttributeManageServiceImpl.class);
 
     @Resource(name = "BBSAttributeManageDAO")
     private BBSAttributeManageDAO attrbMngDAO;
@@ -238,7 +235,7 @@ public class EgovBBSAttributeManageServiceImpl extends EgovAbstractServiceImpl i
 	    } else {
 		//수정 기능 제외 (새롭게 선택사항을 지정한 insert만 처리함)
 		//addedOptionsDAO.updateAddedOptionsInf(boardMaster);
-		LOGGER.debug("BBS Master update ignored...");
+		log.debug("BBS Master update ignored...");
 	    }
 	}
 	////-------------------------------
@@ -250,7 +247,7 @@ public class EgovBBSAttributeManageServiceImpl extends EgovAbstractServiceImpl i
      * @see egovframework.let.cop.bbs.brd.service.EgovBBSAttributeManageService#validateTemplate(egovframework.let.cop.bbs.brd.service.BoardMasterVO)
      */
     public void validateTemplate(BoardMasterVO searchVO) throws Exception {
-    	LOGGER.debug("validateTemplate method ignored...");
+    	log.debug("validateTemplate method ignored...");
     }
 
     /**

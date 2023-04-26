@@ -11,10 +11,9 @@ import java.io.InputStreamReader;
 import java.security.MessageDigest;
 
 import org.apache.commons.codec.binary.Base64;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import egovframework.com.cmm.EgovWebUtil;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Base64인코딩/디코딩 방식을 이용한 데이터를 암호화/복호화하는 Business Interface class
@@ -33,13 +32,12 @@ import egovframework.com.cmm.EgovWebUtil;
  *
  * </pre>
  */
+@Slf4j
 public class EgovFileScrty {
 	// 파일구분자
 	static final String FILE_SEPARATOR = System.getProperty("file.separator");
 	// 버퍼사이즈
 	static final int BUFFER_SIZE = 1024;
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(EgovFileScrty.class);
 
 	/**
 	 * 파일을 암호화하는 기능
@@ -84,14 +82,14 @@ public class EgovFileScrty {
 				try {
 					input.close();
 				} catch (IOException ignore) {
-					LOGGER.debug("IGNORE: {}", ignore);
+					log.debug("IGNORE: {}", ignore);
 				}
 			}
 			if (output != null) {
 				try {
 					output.close();
 				} catch (IOException ignore) {
-					LOGGER.debug("IGNORE: {}", ignore);
+					log.debug("IGNORE: {}", ignore);
 				}
 			}
 		}
@@ -139,14 +137,14 @@ public class EgovFileScrty {
 				try {
 					input.close();
 				} catch (IOException ignore) {
-					LOGGER.debug("IGNORE: {}", ignore);
+					log.debug("IGNORE: {}", ignore);
 				}
 			}
 			if (output != null) {
 				try {
 					output.close();
 				} catch (IOException ignore) {
-					LOGGER.debug("IGNORE: {}", ignore);
+					log.debug("IGNORE: {}", ignore);
 				}
 			}
 		}

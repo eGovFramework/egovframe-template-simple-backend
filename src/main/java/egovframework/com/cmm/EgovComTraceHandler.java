@@ -2,8 +2,7 @@ package egovframework.com.cmm;
 
 import org.egovframe.rte.fdl.cmmn.trace.handler.TraceHandler;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @Class Name : EgovComTraceHandler.java
@@ -18,17 +17,16 @@ import org.slf4j.LoggerFactory;
  * @since 2011. 9. 30.
  *
  */
+@Slf4j
 public class EgovComTraceHandler implements TraceHandler {
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(EgovComTraceHandler.class);
 
     /**
      * 발생된 메시지를 출력한다.
      */
     public void todo(Class<?> clazz, String message) {
-    	//System.out.println("log ==> DefaultTraceHandler run...............");
-    	LOGGER.debug("[TRACE]CLASS::: {}", clazz.getName());
-    	LOGGER.debug("[TRACE]MESSAGE::: {}", message);
+    	//log.debug("log ==> DefaultTraceHandler run...............");
+    	log.debug("[TRACE]CLASS::: {}", clazz.getName());
+    	log.debug("[TRACE]MESSAGE::: {}", message);
     	//이곳에서 후속처리로 필요한 액션을 취할 수 있다.
     }
 }

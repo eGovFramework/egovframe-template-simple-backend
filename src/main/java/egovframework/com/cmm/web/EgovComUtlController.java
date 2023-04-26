@@ -5,16 +5,14 @@ import java.util.List;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.egovframe.rte.fdl.property.EgovPropertyService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import egovframework.com.cmm.EgovWebUtil;
-
-import org.egovframe.rte.fdl.property.EgovPropertyService;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 공통유틸리티성 작업을 위한 Controller 클래스
@@ -34,10 +32,9 @@ import org.egovframe.rte.fdl.property.EgovPropertyService;
  *
  *  </pre>
  */
+@Slf4j
 @Controller
 public class EgovComUtlController {
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(EgovComUtlController.class);
 
 	/** EgovPropertyService */
 	@Resource(name = "propertiesService")
@@ -75,7 +72,7 @@ public class EgovComUtlController {
 		// 화이트 리스트 처리
 		// whitelist목록에 있는 경우 결과가 true, 결과가 false인경우 FAIL처리
 		if (egovWhitelist.contains(link) == false) {
-			LOGGER.debug("Page Link WhiteList Error! Please check whitelist!" + link);
+			log.debug("Page Link WhiteList Error! Please check whitelist!" + link);
 			link = "cmm/error/egovError";
 		}
 		// 안전한 경로 문자열로 조치

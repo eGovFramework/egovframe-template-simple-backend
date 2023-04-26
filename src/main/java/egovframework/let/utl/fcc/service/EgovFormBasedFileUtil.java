@@ -15,11 +15,9 @@ import java.util.Locale;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import egovframework.com.cmm.EgovWebUtil;
 import egovframework.com.cmm.util.EgovResourceCloseHelper;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @Class Name  : EgovFormBasedFileUtil.java
@@ -37,13 +35,12 @@ import egovframework.com.cmm.util.EgovResourceCloseHelper;
  * @version 1.0
  * @see
  */
+@Slf4j
 public class EgovFormBasedFileUtil {
 	/** Buffer size */
 	public static final int BUFFER_SIZE = 8192;
 
 	public static final String SEPERATOR = File.separator;
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(EgovFormBasedFileUtil.class);
 
 	/**
 	 * 오늘 날짜 문자열 취득.
@@ -84,7 +81,7 @@ public class EgovFormBasedFileUtil {
 	public static long saveFile(InputStream is, File file) throws IOException {
 		//KISA 보안약점 조치 (2018-10-29, 윤창원)
 		if (file.getParentFile() == null) {
-			LOGGER.debug("file.getParentFile() is null");
+			log.debug("file.getParentFile() is null");
 			throw new RuntimeException("file.getParentFile() is null");
 		}
 		
@@ -92,9 +89,9 @@ public class EgovFormBasedFileUtil {
 		if (!file.getParentFile().exists()) {
 			//2017.03.03 	조성원 	시큐어코딩(ES)-부적절한 예외 처리[CWE-253, CWE-440, CWE-754]
 			if(file.getParentFile().mkdirs()){
-				LOGGER.debug("[file.mkdirs] file : Directory Creation Success");
+				log.debug("[file.mkdirs] file : Directory Creation Success");
 			}else{				
-				LOGGER.error("[file.mkdirs] file : Directory Creation Fail");
+				log.error("[file.mkdirs] file : Directory Creation Fail");
 			}
 		}
 

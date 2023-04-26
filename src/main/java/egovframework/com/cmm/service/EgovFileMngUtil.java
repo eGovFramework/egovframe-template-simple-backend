@@ -21,8 +21,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.egovframe.rte.fdl.idgnr.EgovIdGnrService;
 import org.egovframe.rte.fdl.property.EgovPropertyService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,6 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import egovframework.com.cmm.EgovWebUtil;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @Class Name  : EgovFileMngUtil.java
@@ -47,6 +46,7 @@ import egovframework.let.utl.fcc.service.EgovStringUtil;
  * @see
  *
  */
+@Slf4j
 @Component("EgovFileMngUtil")
 public class EgovFileMngUtil {
 
@@ -57,8 +57,6 @@ public class EgovFileMngUtil {
 
     @Resource(name = "egovFileIdGnrService")
     private EgovIdGnrService idgenService;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(EgovFileMngUtil.class);
 
     /**
      * 첨부파일에 대한 목록 정보를 취득한다.
@@ -183,22 +181,22 @@ public class EgovFileMngUtil {
 		bos.write(buffer, 0, bytesRead);
 	    }
 	} catch (FileNotFoundException fnfe) {
-		LOGGER.debug("fnfe: {}", fnfe);
+		log.debug("fnfe: {}", fnfe);
 	} catch (IOException ioe) {
-		LOGGER.debug("ioe: {}", ioe);
+		log.debug("ioe: {}", ioe);
 	} finally {
 	    if (bos != null) {
 		try {
 		    bos.close();
 		} catch (IOException ignore) {
-			LOGGER.debug("IGNORED: {}", ignore.getMessage());
+			log.debug("IGNORED: {}", ignore.getMessage());
 		}
 	    }
 	    if (stream != null) {
 		try {
 		    stream.close();
 		} catch (IOException ignore) {
-			LOGGER.debug("IGNORED: {}", ignore.getMessage());
+			log.debug("IGNORED: {}", ignore.getMessage());
 		}
 	    }
 	}
@@ -262,14 +260,14 @@ public class EgovFileMngUtil {
 			try {
 			    outs.close();
 			} catch (IOException ignore) {
-				LOGGER.debug("IGNORED: {}", ignore.getMessage());
+				log.debug("IGNORED: {}", ignore.getMessage());
 			}
 		    }
 		    if (fin != null) {
 			try {
 			    fin.close();
 			} catch (IOException ignore) {
-				LOGGER.debug("IGNORED: {}", ignore.getMessage());
+				log.debug("IGNORED: {}", ignore.getMessage());
 			}
 		    }
 		}
@@ -338,22 +336,22 @@ public class EgovFileMngUtil {
 		bos.write(buffer, 0, bytesRead);
 	    }
 	} catch (FileNotFoundException fnfe) {
-		LOGGER.debug("fnfe: {}", fnfe);
+		log.debug("fnfe: {}", fnfe);
 	} catch (IOException ioe) {
-		LOGGER.debug("ioe: {}", ioe);
+		log.debug("ioe: {}", ioe);
 	} finally {
 	    if (bos != null) {
 		try {
 		    bos.close();
 		} catch (IOException ignore) {
-			LOGGER.debug("IGNORED: {}", ignore.getMessage());
+			log.debug("IGNORED: {}", ignore.getMessage());
 		}
 	    }
 	    if (stream != null) {
 		try {
 		    stream.close();
 		} catch (IOException ignore) {
-			LOGGER.debug("IGNORED: {}", ignore.getMessage());
+			log.debug("IGNORED: {}", ignore.getMessage());
 		}
 	    }
 	}
@@ -409,7 +407,7 @@ public class EgovFileMngUtil {
 		    try {
 			in.close();
 		    } catch (IOException ignore) {
-		    	LOGGER.debug("IGNORED: {}", ignore.getMessage());
+		    	log.debug("IGNORED: {}", ignore.getMessage());
 		    }
 		}
 	    }

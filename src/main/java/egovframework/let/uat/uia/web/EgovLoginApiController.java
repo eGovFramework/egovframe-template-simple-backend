@@ -23,6 +23,7 @@ import egovframework.com.cmm.ResponseCode;
 import egovframework.com.cmm.service.ResultVO;
 import egovframework.com.jwt.config.EgovJwtTokenUtil;
 import egovframework.let.uat.uia.service.EgovLoginService;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 일반 로그인을 처리하는 컨트롤러 클래스
@@ -41,6 +42,7 @@ import egovframework.let.uat.uia.service.EgovLoginService;
  *
  *  </pre>
  */
+@Slf4j
 @RestController
 public class EgovLoginApiController {
 
@@ -103,14 +105,14 @@ public class EgovLoginApiController {
 		
 		if (loginResultVO != null && loginResultVO.getId() != null && !loginResultVO.getId().equals("")) {
 
-			System.out.println("===>>> loginVO.getUserSe() = "+loginVO.getUserSe());
-			System.out.println("===>>> loginVO.getId() = "+loginVO.getId());
-			System.out.println("===>>> loginVO.getPassword() = "+loginVO.getPassword());
+			log.debug("===>>> loginVO.getUserSe() = "+loginVO.getUserSe());
+			log.debug("===>>> loginVO.getId() = "+loginVO.getId());
+			log.debug("===>>> loginVO.getPassword() = "+loginVO.getPassword());
 			
 			String jwtToken = jwtTokenUtil.generateToken(loginVO);
 			
 			String username = jwtTokenUtil.getUsernameFromToken(jwtToken);
-	    	System.out.println("Dec jwtToken username = "+username);
+	    	log.debug("Dec jwtToken username = "+username);
 	    	 
 	    	//서버사이드 권한 체크 통과를 위해 삽입
 	    	//EgovUserDetailsHelper.isAuthenticated() 가 그 역할 수행. DB에 정보가 없으면 403을 돌려 줌. 로그인으로 튕기는 건 프론트 쪽에서 처리

@@ -40,6 +40,7 @@ import egovframework.com.cmm.web.EgovFileDownloadController;
 import egovframework.com.jwt.config.JwtVerification;
 import egovframework.let.cop.smt.sim.service.EgovIndvdlSchdulManageService;
 import egovframework.let.cop.smt.sim.service.IndvdlSchdulManageVO;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 일정관리를 처리하는 Controller Class 구현
@@ -56,6 +57,7 @@ import egovframework.let.cop.smt.sim.service.IndvdlSchdulManageVO;
  * @version 1.0
  * @created 09-6-2011 오전 10:08:04
  */
+@Slf4j
 @RestController
 public class EgovIndvdlSchdulManageApiController {
 
@@ -272,7 +274,7 @@ public class EgovIndvdlSchdulManageApiController {
 			.selectIndvdlSchdulManageDetail(indvdlSchdulManageVO);
 		resultMap.put("scheduleDetail", scheduleDetail);
 		Object testAtchFiledId = commandMap.get("atchFileId");
-		System.out.println(testAtchFiledId);
+		log.debug(testAtchFiledId.toString());
 		// 첨부파일 확인
 		if (scheduleDetail.getAtchFileId() != null && !scheduleDetail.getAtchFileId().isEmpty()) {
 			FileVO fileVO = new FileVO();

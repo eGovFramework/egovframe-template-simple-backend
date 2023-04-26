@@ -22,12 +22,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class EgovNumberUtil {
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(EgovNumberUtil.class);
 	
 	private static SecureRandom rnd = new SecureRandom();
 
@@ -118,7 +116,7 @@ public class EgovNumberUtil {
 		try {
 			cnvrDate = dateFormatter.parse(srcStr);
 		} catch (ParseException e) {
-			LOGGER.error("ERROR parsing", e.getMessage());
+			log.error("ERROR parsing", e.getMessage());
 		}
 
 		cnvrStr = String.format("%1$tY-%1$tm-%1$td", cnvrDate);

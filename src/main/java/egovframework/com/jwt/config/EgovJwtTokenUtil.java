@@ -13,9 +13,10 @@ import egovframework.com.cmm.LoginVO;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.extern.slf4j.Slf4j;
 
 //security 관련 제외한 jwt util 클래스
-
+@Slf4j
 @Component
 public class EgovJwtTokenUtil implements Serializable{
 
@@ -43,7 +44,7 @@ public class EgovJwtTokenUtil implements Serializable{
 	
     //for retrieveing any information from token we will need the secret key
     public Claims getAllClaimsFromToken(String token) {
-    	System.out.println("===>>> secret = "+secret);
+    	log.debug("===>>> secret = "+secret);
         return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
     }
     
@@ -69,7 +70,7 @@ public class EgovJwtTokenUtil implements Serializable{
 	//3. According to JWS Compact Serialization(https://tools.ietf.org/html/draft-ietf-jose-json-web-signature-41#section-3.1)
 	//   compaction of the JWT to a URL-safe string
     private String doGenerateToken(Map<String, Object> claims, String subject) {
-    	System.out.println("===>>> secret = "+secret);
+    	log.debug("===>>> secret = "+secret);
         return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
             .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000))
             .signWith(SignatureAlgorithm.HS512, secret).compact();

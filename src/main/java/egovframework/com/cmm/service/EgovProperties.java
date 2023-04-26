@@ -11,13 +11,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourcePatternUtils;
 
 import egovframework.com.cmm.EgovWebUtil;
+import lombok.extern.slf4j.Slf4j;
 
 //import java.io.FileNotFoundException;
 //import java.io.IOException;
@@ -41,9 +40,8 @@ import egovframework.com.cmm.EgovWebUtil;
  *
  */
 
+@Slf4j
 public class EgovProperties {
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(EgovProperties.class);
 
 	//프로퍼티값 로드시 에러발생하면 반환되는 에러문자열
 	public static final String ERR_CODE = " EXCEPTION OCCURRED";
@@ -234,7 +232,7 @@ public class EgovProperties {
 	 */
 	private static void debug(Object obj) {
 		if (obj instanceof java.lang.Exception) {
-			LOGGER.debug("IGNORED: {}", ((Exception)obj).getMessage());
+			log.debug("IGNORED: {}", ((Exception)obj).getMessage());
 		}
 	}
 }

@@ -11,10 +11,8 @@ import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletResponse;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import egovframework.com.cmm.service.EgovProperties;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * SimpleCORSFilter.java 클래스
@@ -32,10 +30,10 @@ import egovframework.com.cmm.service.EgovProperties;
  *  2019.10.18   신용호                최초 생성
  * </pre>
  */
+@Slf4j
 @WebFilter(urlPatterns = "*.do")
 public class SimpleCORSFilter implements Filter {
 
-	private final Logger log = LoggerFactory.getLogger(SimpleCORSFilter.class);
 	//private final List<String> allowedOrigins = Arrays.asList("http://localhost:9700");
 
 	public SimpleCORSFilter() {

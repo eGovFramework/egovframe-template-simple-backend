@@ -11,10 +11,9 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.ibm.icu.util.ChineseCalendar;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  *
@@ -34,9 +33,9 @@ import com.ibm.icu.util.ChineseCalendar;
  *
  * </pre>
  */
+@Slf4j
 public class EgovDateUtil {
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(EgovDateUtil.class);
+	
 	private static SecureRandom r = new SecureRandom();
 
 	/**
@@ -279,7 +278,7 @@ public class EgovDateUtil {
 			}
 			simpledateformat = new SimpleDateFormat(_toDateFormat, Locale.getDefault());
 		} catch (ParseException exception) {
-			LOGGER.debug("{}", exception);
+			log.debug("{}", exception);
 		}
 		if (simpledateformat.format(date) != null) {
 			return simpledateformat.format(date);

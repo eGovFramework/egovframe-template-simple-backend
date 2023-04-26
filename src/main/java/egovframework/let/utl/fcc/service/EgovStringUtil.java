@@ -39,12 +39,7 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 public class EgovStringUtil {
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(EgovStringUtil.class);
 
 	/**
 	 * 빈 문자열 <code>""</code>.
