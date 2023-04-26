@@ -2,7 +2,7 @@
 <configuration scan="true">
 
     <!-- 로그 파일이 저장될 경로 -->
-    <property name="LOG_PATH" value="/Users/crlee/Desktop/dev/egov-log"/>
+    <property name="LOG_PATH" value="Log File Path"/>
     <!-- 로그 파일 이름 -->
     <property name="LOG_FILE_NAME" value="backend"/>
     <!-- 로그 출력 패턴 -->
