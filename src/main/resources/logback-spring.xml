@@ -2,9 +2,9 @@
 <configuration scan="true">
 
     <!-- 로그 파일이 저장될 경로 -->
-    <property name="LOG_PATH" value="/Users/egov/backend"/>
+    <property name="LOG_PATH" value="/Users/crlee/Desktop/dev/egov-log"/>
     <!-- 로그 파일 이름 -->
-    <property name="LOG_FILE_NAME" value="log"/>
+    <property name="LOG_FILE_NAME" value="backend"/>
     <!-- 로그 출력 패턴 -->
     <property name="LOG_PATTERN" value="%-5level %d{yy-MM-dd HH:mm:ss}[%thread] [%logger{0}:%line] - %msg%n"/>
 
@@ -55,7 +55,11 @@
     </appender>
 
 
-
+    <logger name="java.sql" level="DEBUG" />
+    <logger name="egovframework" level="DEBUG" />
+    <logger name="org.egovframe" level="DEBUG" />
+    <logger name="jdbc.sqltiming" level="DEBUG" />
+    <logger name="org.springframework" level="DEBUG" />
 
     <!-- 로그 전역 세팅 -->
     <root level="${LOG_LEVEL}">
