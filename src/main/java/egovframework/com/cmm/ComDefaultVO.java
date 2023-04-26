@@ -2,6 +2,8 @@ package egovframework.com.cmm;
 
 import java.io.Serializable;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
@@ -19,6 +21,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  *  @see
  *
  */
+@Getter
+@Setter
 public class ComDefaultVO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -56,112 +60,9 @@ public class ComDefaultVO implements Serializable {
 	/** 검색KeywordTo */
     private String searchKeywordTo = "";
 
-	public int getFirstIndex() {
-		return firstIndex;
-	}
-
-	public void setFirstIndex(int firstIndex) {
-		this.firstIndex = firstIndex;
-	}
-
-	public int getLastIndex() {
-		return lastIndex;
-	}
-
-	public void setLastIndex(int lastIndex) {
-		this.lastIndex = lastIndex;
-	}
-
-	public int getRecordCountPerPage() {
-		return recordCountPerPage;
-	}
-
-	public void setRecordCountPerPage(int recordCountPerPage) {
-		this.recordCountPerPage = recordCountPerPage;
-	}
-
-	public String getSearchCondition() {
-        return searchCondition;
-    }
-
-    public void setSearchCondition(String searchCondition) {
-        this.searchCondition = searchCondition;
-    }
-
-    public String getSearchKeyword() {
-        return searchKeyword;
-    }
-
-    public void setSearchKeyword(String searchKeyword) {
-        this.searchKeyword = searchKeyword;
-    }
-
-    public String getSearchUseYn() {
-        return searchUseYn;
-    }
-
-    public void setSearchUseYn(String searchUseYn) {
-        this.searchUseYn = searchUseYn;
-    }
-
-    public int getPageIndex() {
-        return pageIndex;
-    }
-
-    public void setPageIndex(int pageIndex) {
-        this.pageIndex = pageIndex;
-    }
-
-    public int getPageUnit() {
-        return pageUnit;
-    }
-
-    public void setPageUnit(int pageUnit) {
-        this.pageUnit = pageUnit;
-    }
-
-    public int getPageSize() {
-        return pageSize;
-    }
-
-    public void setPageSize(int pageSize) {
-        this.pageSize = pageSize;
-    }
-
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
     }
 
-
-    /**
-	 * searchKeywordFrom attribute를 리턴한다.
-	 * @return String
-	 */
-	public String getSearchKeywordFrom() {
-		return searchKeywordFrom;
-	}
-
-	/**
-	 * searchKeywordFrom attribute 값을 설정한다.
-	 * @param searchKeywordFrom String
-	 */
-	public void setSearchKeywordFrom(String searchKeywordFrom) {
-		this.searchKeywordFrom = searchKeywordFrom;
-	}
-
-	/**
-	 * searchKeywordTo attribute를 리턴한다.
-	 * @return String
-	 */
-	public String getSearchKeywordTo() {
-		return searchKeywordTo;
-	}
-
-	/**
-	 * searchKeywordTo attribute 값을 설정한다.
-	 * @param searchKeywordTo String
-	 */
-	public void setSearchKeywordTo(String searchKeywordTo) {
-		this.searchKeywordTo = searchKeywordTo;
-	}
+    
 }

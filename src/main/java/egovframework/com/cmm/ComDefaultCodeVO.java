@@ -2,6 +2,8 @@ package egovframework.com.cmm;
 
 import java.io.Serializable;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
@@ -20,6 +22,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  *
  * </pre>
  */
+@Getter
+@Setter
 public class ComDefaultCodeVO implements Serializable {
     /**
 	 *  serialVersion UID
@@ -46,139 +50,6 @@ public class ComDefaultCodeVO implements Serializable {
 
     /** 상세 조건 */
     private String detailCondition = "";
-
-    /**
-     * codeId attribute를 리턴한다.
-     *
-     * @return the codeId
-     */
-    public String getCodeId() {
-	return codeId;
-    }
-
-    /**
-     * codeId attribute 값을 설정한다.
-     *
-     * @param codeId
-     *            the codeId to set
-     */
-    public void setCodeId(String codeId) {
-	this.codeId = codeId;
-    }
-
-    /**
-     * code attribute를 리턴한다.
-     *
-     * @return the code
-     */
-    public String getCode() {
-	return code;
-    }
-
-    /**
-     * code attribute 값을 설정한다.
-     *
-     * @param code
-     *            the code to set
-     */
-    public void setCode(String code) {
-	this.code = code;
-    }
-
-    /**
-     * codeNm attribute를 리턴한다.
-     *
-     * @return the codeNm
-     */
-    public String getCodeNm() {
-	return codeNm;
-    }
-
-    /**
-     * codeNm attribute 값을 설정한다.
-     *
-     * @param codeNm
-     *            the codeNm to set
-     */
-    public void setCodeNm(String codeNm) {
-	this.codeNm = codeNm;
-    }
-
-    /**
-     * codeDc attribute를 리턴한다.
-     *
-     * @return the codeDc
-     */
-    public String getCodeDc() {
-	return codeDc;
-    }
-
-    /**
-     * codeDc attribute 값을 설정한다.
-     *
-     * @param codeDc
-     *            the codeDc to set
-     */
-    public void setCodeDc(String codeDc) {
-	this.codeDc = codeDc;
-    }
-
-    /**
-     * tableNm attribute를 리턴한다.
-     *
-     * @return the tableNm
-     */
-    public String getTableNm() {
-	return tableNm;
-    }
-
-    /**
-     * tableNm attribute 값을 설정한다.
-     *
-     * @param tableNm
-     *            the tableNm to set
-     */
-    public void setTableNm(String tableNm) {
-	this.tableNm = tableNm;
-    }
-
-    /**
-     * haveDetailCondition attribute를 리턴한다.
-     *
-     * @return the haveDetailCondition
-     */
-    public String getHaveDetailCondition() {
-	return haveDetailCondition;
-    }
-
-    /**
-     * haveDetailCondition attribute 값을 설정한다.
-     *
-     * @param haveDetailCondition
-     *            the haveDetailCondition to set
-     */
-    public void setHaveDetailCondition(String haveDetailCondition) {
-	this.haveDetailCondition = haveDetailCondition;
-    }
-
-    /**
-     * detailCondition attribute를 리턴한다.
-     *
-     * @return the detailCondition
-     */
-    public String getDetailCondition() {
-	return detailCondition;
-    }
-
-    /**
-     * detailCondition attribute 값을 설정한다.
-     *
-     * @param detailCondition
-     *            the detailCondition to set
-     */
-    public void setDetailCondition(String detailCondition) {
-	this.detailCondition = detailCondition;
-    }
 
     /**
      * toString 메소드를 대치한다.

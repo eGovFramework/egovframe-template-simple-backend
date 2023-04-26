@@ -2,6 +2,8 @@ package egovframework.let.cop.com.service;
 
 import java.io.Serializable;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 
@@ -22,6 +24,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  *
  * </pre>
  */
+@Getter
+@Setter
 public class BoardUseInf implements Serializable {
 
     /**
@@ -56,174 +60,8 @@ public class BoardUseInf implements Serializable {
     /** 사용여부 */
     private String useAt = "";
 
-    /**
-     * bbsId attribute를 리턴한다.
-     *
-     * @return the bbsId
-     */
-    public String getBbsId() {
-	return bbsId;
-    }
 
-    /**
-     * bbsId attribute 값을 설정한다.
-     *
-     * @param bbsId
-     *            the bbsId to set
-     */
-    public void setBbsId(String bbsId) {
-	this.bbsId = bbsId;
-    }
-
-    /**
-     * trgetId attribute를 리턴한다.
-     *
-     * @return the trgetId
-     */
-    public String getTrgetId() {
-	return trgetId;
-    }
-
-    /**
-     * trgetId attribute 값을 설정한다.
-     *
-     * @param trgetId
-     *            the trgetId to set
-     */
-    public void setTrgetId(String trgetId) {
-	this.trgetId = trgetId;
-    }
-
-    /**
-     * frstRegisterId attribute를 리턴한다.
-     *
-     * @return the frstRegisterId
-     */
-    public String getFrstRegisterId() {
-	return frstRegisterId;
-    }
-
-    /**
-     * frstRegisterId attribute 값을 설정한다.
-     *
-     * @param frstRegisterId
-     *            the frstRegisterId to set
-     */
-    public void setFrstRegisterId(String frstRegisterId) {
-	this.frstRegisterId = frstRegisterId;
-    }
-
-    /**
-     * frstRegisterPnttm attribute를 리턴한다.
-     *
-     * @return the frstRegisterPnttm
-     */
-    public String getFrstRegisterPnttm() {
-	return frstRegisterPnttm;
-    }
-
-    /**
-     * frstRegisterPnttm attribute 값을 설정한다.
-     *
-     * @param frstRegisterPnttm
-     *            the frstRegisterPnttm to set
-     */
-    public void setFrstRegisterPnttm(String frstRegisterPnttm) {
-	this.frstRegisterPnttm = frstRegisterPnttm;
-    }
-
-    /**
-     * lastUpdusrId attribute를 리턴한다.
-     *
-     * @return the lastUpdusrId
-     */
-    public String getLastUpdusrId() {
-	return lastUpdusrId;
-    }
-
-    /**
-     * lastUpdusrId attribute 값을 설정한다.
-     *
-     * @param lastUpdusrId
-     *            the lastUpdusrId to set
-     */
-    public void setLastUpdusrId(String lastUpdusrId) {
-	this.lastUpdusrId = lastUpdusrId;
-    }
-
-    /**
-     * lastUpdusrPnttm attribute를 리턴한다.
-     *
-     * @return the lastUpdusrPnttm
-     */
-    public String getLastUpdusrPnttm() {
-	return lastUpdusrPnttm;
-    }
-
-    /**
-     * lastUpdusrPnttm attribute 값을 설정한다.
-     *
-     * @param lastUpdusrPnttm
-     *            the lastUpdusrPnttm to set
-     */
-    public void setLastUpdusrPnttm(String lastUpdusrPnttm) {
-	this.lastUpdusrPnttm = lastUpdusrPnttm;
-    }
-
-    /**
-     * registSeCode attribute를 리턴한다.
-     *
-     * @return the registSeCode
-     */
-    public String getRegistSeCode() {
-	return registSeCode;
-    }
-
-    /**
-     * registSeCode attribute 값을 설정한다.
-     *
-     * @param registSeCode
-     *            the registSeCode to set
-     */
-    public void setRegistSeCode(String registSeCode) {
-	this.registSeCode = registSeCode;
-    }
-
-    /**
-     * useAt attribute를 리턴한다.
-     *
-     * @return the useAt
-     */
-    public String getUseAt() {
-	return useAt;
-    }
-
-    /**
-     * useAt attribute 값을 설정한다.
-     *
-     * @param useAt
-     *            the useAt to set
-     */
-    public void setUseAt(String useAt) {
-	this.useAt = useAt;
-    }
-
-    /**
-     * trgetType attribute를 리턴한다.
-     * @return the trgetType
-     */
-    public String getTrgetType() {
-        return trgetType;
-    }
-
-    /**
-     * trgetType attribute 값을 설정한다.
-     * @param trgetType the trgetType to set
-     */
-    public void setTrgetType(String trgetType) {
-        this.trgetType = trgetType;
-    }
-
+    
     /**
      * toString 메소드를 대치한다.
      */
