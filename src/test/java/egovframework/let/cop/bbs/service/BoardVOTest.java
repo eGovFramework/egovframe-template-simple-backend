@@ -1,5 +1,5 @@
+package egovframework.let.cop.bbs.service;
 
-import egovframework.let.cop.bbs.service.BoardVO;
 import org.junit.Test;
 
 /**
