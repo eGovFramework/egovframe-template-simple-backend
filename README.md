@@ -49,6 +49,7 @@ mvn spring-boot:run
 
 #### 3) properties 변환(예정) boot 지원
 
+#### 4) logback-spring.xml 의 Log File Path 설정
 ### 2. API 변환
 
 직접 View와 연결하던 방법에서 API 형식으로 변환 -> 다양한 프론트에서 적용 가능 하도록 예제 제공\
