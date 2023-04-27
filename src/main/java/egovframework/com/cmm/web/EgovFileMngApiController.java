@@ -7,8 +7,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.egovframe.rte.fdl.cryptography.EgovCryptoService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import egovframework.com.cmm.ResponseCode;
@@ -56,20 +56,16 @@ public class EgovFileMngApiController {
      * @return resultVO
      * @throws Exception
      */
-    @DeleteMapping(value ="/cmm/fms/deleteFileInfsAPI/{atchFileId}/{fileSn}.do")
-    public ResultVO deleteFileInf(HttpServletRequest request, @PathVariable("atchFileId") String atchFileId,
-    	@PathVariable("fileSn") String fileSn) throws Exception {
+    @PostMapping(value ="/cmm/fms/deleteFileInfsAPI.do")
+    public ResultVO deleteFileInf(HttpServletRequest request, @RequestBody FileVO fileVO) throws Exception {
     	ResultVO resultVO = new ResultVO();
     	
     	// 암호화된 atchFileId 를 복호화 (2022.12.06 추가) - 파일아이디가 유추 불가능하도록 조치
-    	atchFileId = atchFileId.replaceAll(" ", "+");
+    	String atchFileId = fileVO.getAtchFileId().replaceAll(" ", "+");
     	byte[] decodedBytes = Base64.getDecoder().decode(atchFileId);
     	String decodedFileId = new String(cryptoService.decrypt(decodedBytes,EgovFileDownloadController.ALGORITM_KEY));
     			
-    	FileVO fileVO = new FileVO();
-    	
     	fileVO.setAtchFileId(decodedFileId);
-    	fileVO.setFileSn(fileSn);
 
 		//Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
 
