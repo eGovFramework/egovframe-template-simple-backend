@@ -273,8 +273,7 @@ public class EgovIndvdlSchdulManageApiController {
 		IndvdlSchdulManageVO scheduleDetail = egovIndvdlSchdulManageService
 			.selectIndvdlSchdulManageDetail(indvdlSchdulManageVO);
 		resultMap.put("scheduleDetail", scheduleDetail);
-		Object testAtchFiledId = commandMap.get("atchFileId");
-		log.debug(testAtchFiledId.toString());
+		
 		// 첨부파일 확인
 		if (scheduleDetail.getAtchFileId() != null && !scheduleDetail.getAtchFileId().isEmpty()) {
 			FileVO fileVO = new FileVO();
