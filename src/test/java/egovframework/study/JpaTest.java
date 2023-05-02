@@ -25,7 +25,7 @@ import java.util.List;
  */
 @DataJpaTest
 @TestInstance(TestInstance. Lifecycle.PER_CLASS)
-public class jpaTest {
+public class JpaTest {
 
     @PersistenceUnit
     EntityManagerFactory emf; //엔티티 매니저 팩토리 생성
