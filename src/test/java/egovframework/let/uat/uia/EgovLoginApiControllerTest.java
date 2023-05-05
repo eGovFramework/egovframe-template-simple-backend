@@ -4,9 +4,9 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.LoginVO;
 import egovframework.com.cmm.ResponseCode;
 import egovframework.com.cmm.service.ResultVO;
-import egovframework.let.uat.uia.service.EgovLoginService;
+import egovframework.com.config.EgovConfigAppMsg;
+import egovframework.com.jwt.config.EgovJwtTokenUtil;
 import egovframework.let.uat.uia.web.EgovLoginApiController;
-import egovframework.let.utl.sim.service.EgovFileScrty;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.mock.web.MockHttpServletRequest;
+
 import java.util.HashMap;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -30,18 +31,19 @@ import static org.assertj.core.api.Assertions.assertThat;
  * -----------------------------------------------------------
  * 2023/05/06        crlee       최초 생성
  */
-@SpringBootTest
-@TestInstance(TestInstance. Lifecycle.PER_CLASS)
+@SpringBootTest(classes = {EgovConfigAppMsg.class,EgovJwtTokenUtil.class})
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class EgovLoginApiControllerTest {
 
-    @Autowired
     EgovLoginApiController egovLoginApiController;
     @Autowired
     EgovMessageSource egovMessageSource;
+    @Autowired
+    EgovJwtTokenUtil egovJwtTokenUtil;
 
     @BeforeAll
     void init(){
-        this.egovLoginApiController.setLoginService(  new MockLoginService() );
+        this.egovLoginApiController = new EgovLoginApiController(new MockLoginService(),egovMessageSource,egovJwtTokenUtil);
     }
 
     @Test
@@ -71,28 +73,6 @@ public class EgovLoginApiControllerTest {
         HashMap<String, Object> result = egovLoginApiController.actionLoginJWT(loginVO , request,null);
         assertThat(result.get("resultCode")).isEqualTo(HttpStatus.MULTIPLE_CHOICES);
         assertThat(result.get("resultMessage")).isEqualTo( egovMessageSource.getMessage("fail.common.login"));
-    }
-    private class MockLoginService implements EgovLoginService {
-
-        @Override
-        public LoginVO actionLogin(LoginVO vo) throws Exception {
-            if( vo.getPassword().equals("badPwd")){
-                return null;
-            }
-            String enpassword = EgovFileScrty.encryptPassword(vo.getPassword(), vo.getId());
-            vo.setPassword(enpassword);
-            return vo;
-        }
-
-        @Override
-        public LoginVO searchId(LoginVO vo) throws Exception {
-            return vo;
-        }
-
-        @Override
-        public boolean searchPassword(LoginVO vo) throws Exception {
-            return true;
-        }
     }
 
     @Test

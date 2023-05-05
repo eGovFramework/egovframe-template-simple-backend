@@ -54,14 +54,19 @@ public class EgovLoginApiController {
 	@Resource(name = "egovMessageSource")
 	EgovMessageSource egovMessageSource;
 
-	/** EgovPropertyService */
-	@Resource(name = "propertiesService")
-	protected EgovPropertyService propertiesService;
-
-	
 	/** JWT */
 	@Autowired
     private EgovJwtTokenUtil jwtTokenUtil;
+
+	public EgovLoginApiController(
+			EgovLoginService loginService,
+			EgovMessageSource egovMessageSource,
+			EgovJwtTokenUtil jwtTokenUtil
+	){
+		this.loginService = loginService;
+		this.egovMessageSource = egovMessageSource;
+		this.jwtTokenUtil = jwtTokenUtil;
+	}
 
 	/**
 	 * 일반 로그인을 처리한다
@@ -146,7 +151,4 @@ public class EgovLoginApiController {
 		return resultVO;
 	}
 
-	public void setLoginService(EgovLoginService loginService) {
-		this.loginService = loginService;
-	}
 }
