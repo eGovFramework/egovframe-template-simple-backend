@@ -42,14 +42,23 @@ public class EgovMessageSource extends ReloadableResourceBundleMessageSource imp
 	public ReloadableResourceBundleMessageSource getReloadableResourceBundleMessageSource() {
 		return reloadableResourceBundleMessageSource;
 	}
-	
+
 	/**
-	 * 정의된 메세지 조회
+	 * Default Locale 정의된 메세지 조회
 	 * @param code - 메세지 코드
 	 * @return String
 	 */	
 	public String getMessage(String code) {
-		return getReloadableResourceBundleMessageSource().getMessage(code, null, Locale.getDefault());
+		return this.getMessage(code, Locale.getDefault());
+	}
+	/**
+	 * 정의된 메세지 조회
+	 * @param code - 메세지 코드
+	 * @param locale - locale 설정
+	 * @return String
+	 */
+	public String getMessage(String code, Locale locale) {
+		return getReloadableResourceBundleMessageSource().getMessage(code, null, locale);
 	}
 
 }
