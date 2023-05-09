@@ -18,7 +18,7 @@ import java.util.stream.Stream;
  * fileName       : EgovMessageSourceTest
  * author         : crlee
  * date           : 2023/05/05
- * description    :
+ * description    : EgovMessageSource 테스트
  * ===========================================================
  * DATE              AUTHOR             NOTE
  * -----------------------------------------------------------

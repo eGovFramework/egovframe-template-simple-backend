@@ -1,6 +1,7 @@
 package egovframework.let.uat.uia.service.impl;
 
 import egovframework.com.cmm.LoginVO;
+import egovframework.let.uat.uia.service.EgovLoginDao;
 import egovframework.let.uat.uia.service.EgovLoginService;
 import egovframework.let.utl.fcc.service.EgovNumberUtil;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
@@ -33,8 +34,11 @@ import org.springframework.stereotype.Service;
 public class EgovLoginServiceImpl extends EgovAbstractServiceImpl implements EgovLoginService {
 
 	@Resource(name = "loginDAO")
-	private LoginDAO loginDAO;
+	private EgovLoginDao loginDAO;
 
+	public EgovLoginServiceImpl(EgovLoginDao loginDao){
+		this.loginDAO = loginDao;
+	}
 	/**
 	 * 일반 로그인을 처리한다
 	 * @param vo LoginVO
