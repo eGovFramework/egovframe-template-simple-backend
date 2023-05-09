@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.FilterType;
-import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
@@ -15,7 +14,6 @@ import org.springframework.util.AntPathMatcher;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import egovframework.com.cmm.EgovComTraceHandler;
-import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.ImagePaginationRenderer;
 import egovframework.com.cmm.web.EgovMultipartResolver;
 
@@ -42,6 +40,7 @@ import org.egovframe.rte.ptl.mvc.tags.ui.pagination.PaginationRenderer;
  *   수정일              수정자               수정내용
  *  -------------  ------------   ---------------------
  *   2021. 7. 20    윤주호               최초 생성
+ *   2023. 5. 05    crlee              remove EgovMessageSource config
  * </pre>
  *
  */
@@ -63,30 +62,6 @@ public class EgovConfigAppCommon {
 		return new AntPathMatcher();
 	}
 
-	/**
-	 * @return [Resource 설정] 메세지 Properties 경로 설정
-	 */
-	@Bean
-	public ReloadableResourceBundleMessageSource messageSource() {
-		ReloadableResourceBundleMessageSource reloadableResourceBundleMessageSource = new ReloadableResourceBundleMessageSource();
-		
-		reloadableResourceBundleMessageSource.setBasenames(
-			"classpath:/egovframework/message/com/message-common",
-			"classpath:/org/egovframe/rte/fdl/idgnr/messages/idgnr",
-			"classpath:/org/egovframe/rte/fdl/property/messages/properties");
-		reloadableResourceBundleMessageSource.setCacheSeconds(60);
-		return reloadableResourceBundleMessageSource;
-	}
-
-	/**
-	 * @return [Resource 설정] 메세지 소스 등록
-	 */
-	@Bean
-	public EgovMessageSource egovMessageSource() {
-		EgovMessageSource egovMessageSource = new EgovMessageSource();
-		egovMessageSource.setReloadableResourceBundleMessageSource(messageSource());
-		return egovMessageSource;
-	}
 
 	/**
 	 * @return [LeaveaTrace 설정] defaultTraceHandler 등록
