@@ -28,7 +28,26 @@
 })
 ```
 
+메시지소스빈 설정
 
+<context-common.xml>
+```xml
+<bean id="egovMessageSource" class="egovframework.com.cmm.EgovMessageSource">
+    <property name="reloadableResourceBundleMessageSource">
+        <ref bean="messageSource" />
+    </property> 
+</bean>
+```
+
+<EgovConfigAppMsg.class>
+```java
+@Bean
+public EgovMessageSource egovMessageSource() {
+    EgovMessageSource egovMessageSource = new EgovMessageSource();
+        egovMessageSource.setReloadableResourceBundleMessageSource(messageSource());
+    return egovMessageSource;
+}
+```
 
 
 프로퍼티 파일 위치 등록
@@ -50,7 +69,7 @@
 </bean>
 ```
 
-<EgovConfigAppCommon.class>
+<EgovConfigAppMsg.class>
 
 ```java
 @Bean
