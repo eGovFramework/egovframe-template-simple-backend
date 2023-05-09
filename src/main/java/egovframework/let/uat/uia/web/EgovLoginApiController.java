@@ -5,9 +5,9 @@ import java.util.HashMap;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
-import org.egovframe.rte.fdl.cmmn.trace.LeaveaTrace;
 import org.egovframe.rte.fdl.property.EgovPropertyService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -54,17 +54,19 @@ public class EgovLoginApiController {
 	@Resource(name = "egovMessageSource")
 	EgovMessageSource egovMessageSource;
 
-	/** EgovPropertyService */
-	@Resource(name = "propertiesService")
-	protected EgovPropertyService propertiesService;
-
-	/** TRACE */
-	@Resource(name = "leaveaTrace")
-	LeaveaTrace leaveaTrace;
-	
 	/** JWT */
 	@Autowired
     private EgovJwtTokenUtil jwtTokenUtil;
+
+	public EgovLoginApiController(
+			EgovLoginService loginService,
+			EgovMessageSource egovMessageSource,
+			EgovJwtTokenUtil jwtTokenUtil
+	){
+		this.loginService = loginService;
+		this.egovMessageSource = egovMessageSource;
+		this.jwtTokenUtil = jwtTokenUtil;
+	}
 
 	/**
 	 * 일반 로그인을 처리한다
@@ -84,11 +86,11 @@ public class EgovLoginApiController {
 
 			request.getSession().setAttribute("LoginVO", loginResultVO);
 			resultMap.put("resultVO", loginResultVO);
-			resultMap.put("resultCode", "200");
+			resultMap.put("resultCode", HttpStatus.OK);
 			resultMap.put("resultMessage", "성공 !!!");
 		} else {
 			resultMap.put("resultVO", loginResultVO);
-			resultMap.put("resultCode", "300");
+			resultMap.put("resultCode", HttpStatus.MULTIPLE_CHOICES);
 			resultMap.put("resultMessage", egovMessageSource.getMessage("fail.common.login"));
 		}
 
@@ -120,12 +122,12 @@ public class EgovLoginApiController {
 	    	
 			resultMap.put("resultVO", loginResultVO);
 			resultMap.put("jToken", jwtToken);
-			resultMap.put("resultCode", "200");
+			resultMap.put("resultCode", HttpStatus.OK);
 			resultMap.put("resultMessage", "성공 !!!");
 			
 		} else {
 			resultMap.put("resultVO", loginResultVO);
-			resultMap.put("resultCode", "300");
+			resultMap.put("resultCode", HttpStatus.MULTIPLE_CHOICES);
 			resultMap.put("resultMessage", egovMessageSource.getMessage("fail.common.login"));
 		}
 		
@@ -138,7 +140,7 @@ public class EgovLoginApiController {
 	 * @exception Exception
 	 */
 	@GetMapping(value = "/uat/uia/actionLogoutAPI.do")
-	public ResultVO actionLogoutJSON(HttpServletRequest request) throws Exception {
+	public ResultVO actionLogoutJSON() throws Exception {
 		ResultVO resultVO = new ResultVO();
 
 		RequestContextHolder.currentRequestAttributes().removeAttribute("LoginVO", RequestAttributes.SCOPE_SESSION);
@@ -148,4 +150,5 @@ public class EgovLoginApiController {
 
 		return resultVO;
 	}
+
 }
