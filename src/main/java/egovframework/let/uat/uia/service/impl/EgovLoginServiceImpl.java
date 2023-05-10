@@ -1,7 +1,7 @@
 package egovframework.let.uat.uia.service.impl;
 
 import egovframework.com.cmm.LoginVO;
-import egovframework.let.uat.uia.service.EgovLoginDao;
+import egovframework.let.uat.uia.dao.EgovLoginDao;
 import egovframework.let.uat.uia.service.EgovLoginService;
 import egovframework.let.utl.fcc.service.EgovNumberUtil;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
@@ -117,13 +117,13 @@ public class EgovLoginServiceImpl extends EgovAbstractServiceImpl implements Ego
 		}
 
 		// 3. 임시 비밀번호를 암호화하여 DB에 저장한다.
-		LoginVO pwVO = new LoginVO();
-		String enpassword = EgovFileScrty.encryptPassword(newpassword, vo.getId());
-		pwVO.setId(vo.getId());
-		pwVO.setPassword(enpassword);
-		pwVO.setUserSe(vo.getUserSe());
-		loginDAO.updatePassword(pwVO);
+		LoginVO pwVO = LoginVO.builder()
+				.id(vo.getId())
+				.password( EgovFileScrty.encryptPassword(newpassword, vo.getId()) )
+				.userSe( vo.getUserSe() )
+				.build();
 
+		loginDAO.updatePassword(pwVO);
 		return result;
 	}
 }

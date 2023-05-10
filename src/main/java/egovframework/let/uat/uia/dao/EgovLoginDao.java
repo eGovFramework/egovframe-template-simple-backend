@@ -1,4 +1,4 @@
-package egovframework.let.uat.uia.service;
+package egovframework.let.uat.uia.dao;
 
 import egovframework.com.cmm.LoginVO;
 

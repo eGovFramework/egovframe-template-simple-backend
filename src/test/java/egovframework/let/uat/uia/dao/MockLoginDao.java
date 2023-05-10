@@ -1,13 +1,12 @@
-package egovframework.let.uat.uia;
+package egovframework.let.uat.uia.dao;
 
 import egovframework.com.cmm.LoginVO;
-import egovframework.let.uat.uia.service.EgovLoginDao;
 
 /**
  * fileName       : MockLoginDao
  * author         : crlee
  * date           : 2023/05/10
- * description    :
+ * description    : 로그인 Dao 목
  * ===========================================================
  * DATE              AUTHOR             NOTE
  * -----------------------------------------------------------
@@ -22,10 +21,10 @@ public class MockLoginDao implements EgovLoginDao {
             vo.setUserSe("USR");
             return vo;
         }
-        LoginVO failLogin = new LoginVO();
-        failLogin.setId("");
-        failLogin.setPassword("");
-        return failLogin;
+        return LoginVO.builder()
+                .id("")
+                .password("")
+                .build();
     }
 
     @Override
@@ -34,14 +33,14 @@ public class MockLoginDao implements EgovLoginDao {
             vo.getName().equals("홍길동") &&
             vo.getEmail().equals("korea@naver.com")
         ){
-            LoginVO sucSearch = new LoginVO();
-            sucSearch.setId("helloHong123");
-            return sucSearch;
+            return LoginVO.builder()
+                    .id("helloHong123")
+                    .build();
         }
 
-        LoginVO failSearch = new LoginVO();
-        failSearch.setId("");
-        return failSearch;
+        return LoginVO.builder()
+                .id("")
+                .build();
     }
 
     @Override
@@ -51,14 +50,13 @@ public class MockLoginDao implements EgovLoginDao {
             vo.getEmail().equals("admin@naver.com") &&
             vo.getPasswordHint().equals("인하사대부속고등학교")
         ){
-            LoginVO sucSearch = new LoginVO();
-            sucSearch.setPassword("qwer1234!");
-            return sucSearch;
+            return LoginVO.builder()
+                    .password("qwer1234!")
+                    .build();
         }
-
-        LoginVO failSearch = new LoginVO();
-        failSearch.setPassword("");
-        return failSearch;
+        return LoginVO.builder()
+                .password("")
+                .build();
     }
 
     @Override

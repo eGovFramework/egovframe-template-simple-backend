@@ -1,8 +1,8 @@
-package egovframework.let.uat.uia.service.impl;
+package egovframework.let.uat.uia.dao.impl;
 
 import egovframework.com.cmm.LoginVO;
 
-import egovframework.let.uat.uia.service.EgovLoginDao;
+import egovframework.let.uat.uia.dao.EgovLoginDao;
 import org.egovframe.rte.psl.dataaccess.EgovAbstractMapper;
 
 import org.springframework.stereotype.Repository;

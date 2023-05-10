@@ -1,4 +1,4 @@
-package egovframework.let.uat.uia;
+package egovframework.let.uat.uia.service;
 
 import egovframework.com.cmm.LoginVO;
 import egovframework.let.uat.uia.service.EgovLoginService;
@@ -8,7 +8,7 @@ import egovframework.let.utl.sim.service.EgovFileScrty;
  * fileName       : MockLoginService
  * author         : crlee
  * date           : 2023/05/06
- * description    :
+ * description    : Login Service 목
  * ===========================================================
  * DATE              AUTHOR             NOTE
  * -----------------------------------------------------------

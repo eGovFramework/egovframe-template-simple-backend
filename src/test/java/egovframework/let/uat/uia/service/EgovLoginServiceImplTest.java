@@ -1,7 +1,7 @@
 package egovframework.let.uat.uia.service;
 
 import egovframework.com.cmm.LoginVO;
-import egovframework.let.uat.uia.MockLoginDao;
+import egovframework.let.uat.uia.dao.MockLoginDao;
 import egovframework.let.uat.uia.service.impl.EgovLoginServiceImpl;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -13,7 +13,7 @@ import org.junit.jupiter.api.TestInstance;
  * fileName       : EgovLoginServiceImplTest
  * author         : crlee
  * date           : 2023/05/10
- * description    :
+ * description    : 로그인 서비스 테스트
  * ===========================================================
  * DATE              AUTHOR             NOTE
  * -----------------------------------------------------------

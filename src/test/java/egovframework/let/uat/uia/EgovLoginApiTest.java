@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.*;
+import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.Locale;
 import java.util.Map;
@@ -18,13 +19,13 @@ import static org.assertj.core.api.Assertions.assertThat;
  * fileName       : EgovLoginApiTest
  * author         : crlee
  * date           : 2023/05/06
- * description    :
+ * description    : Login Api Test
  * ===========================================================
  * DATE              AUTHOR             NOTE
  * -----------------------------------------------------------
  * 2023/05/06        crlee       최초 생성
  */
-
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 public class EgovLoginApiTest {
 

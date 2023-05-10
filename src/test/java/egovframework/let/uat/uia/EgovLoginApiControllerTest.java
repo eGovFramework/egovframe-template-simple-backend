@@ -6,6 +6,7 @@ import egovframework.com.cmm.ResponseCode;
 import egovframework.com.cmm.service.ResultVO;
 import egovframework.com.config.EgovConfigAppMsg;
 import egovframework.com.jwt.config.EgovJwtTokenUtil;
+import egovframework.let.uat.uia.service.MockLoginService;
 import egovframework.let.uat.uia.web.EgovLoginApiController;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -25,7 +26,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * fileName       : EgovLoginApiControllerTest
  * author         : crlee
  * date           : 2023/05/06
- * description    :
+ * description    : Login 컨트롤러 테스트
  * ===========================================================
  * DATE              AUTHOR             NOTE
  * -----------------------------------------------------------
