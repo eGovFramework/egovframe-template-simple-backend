@@ -3,8 +3,6 @@ package egovframework.com.cmm.annotation;
 import egovframework.com.config.EgovConfigAppDatasource;
 import egovframework.com.config.EgovConfigAppMapper;
 import egovframework.com.config.EgovConfigAppTransaction;
-import egovframework.let.uat.uia.dao.impl.EgovLoginDaoImpl;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.transaction.annotation.Transactional;
 

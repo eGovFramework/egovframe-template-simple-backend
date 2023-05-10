@@ -1,7 +1,6 @@
 package egovframework.let.uat.uia.service;
 
 import egovframework.com.cmm.LoginVO;
-import egovframework.let.uat.uia.service.EgovLoginService;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
 /**
