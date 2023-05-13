@@ -1,7 +1,6 @@
 package egovframework.let.uat.uia.service.impl;
 
 import egovframework.com.cmm.LoginVO;
-import egovframework.let.uat.uia.dao.EgovLoginDao;
 import egovframework.let.uat.uia.service.EgovLoginService;
 import egovframework.let.utl.fcc.service.EgovNumberUtil;
 import egovframework.let.utl.fcc.service.EgovStringUtil;

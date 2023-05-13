@@ -2,7 +2,7 @@ package egovframework.let.uat.uia.dao;
 
 import egovframework.com.cmm.LoginVO;
 import egovframework.com.cmm.annotation.EgovDaoTest;
-import egovframework.let.uat.uia.dao.impl.EgovLoginDaoImpl;
+import egovframework.let.uat.uia.service.impl.EgovLoginDao;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
@@ -22,10 +22,10 @@ import javax.sql.DataSource;
  * 2023/05/10        crlee       최초 생성
  */
 @SpringBootTest(classes = {
-        EgovLoginDaoImpl.class
+        EgovLoginDao.class
 })
 @EgovDaoTest
-public class EgovLoginDaoImplTest {
+public class EgovLoginDaoTest {
 
     @Autowired
     EgovLoginDao loginDao;
