@@ -152,8 +152,8 @@ public class EgovBBSManageApiController {
 
 		PaginationInfo paginationInfo = new PaginationInfo();
 		paginationInfo.setCurrentPageNo(boardVO.getPageIndex());
-		paginationInfo.setRecordCountPerPage(propertyService.getInt("pageUnit"));
-		paginationInfo.setPageSize(propertyService.getInt("pageSize"));
+		paginationInfo.setRecordCountPerPage(propertyService.getInt("Globals.pageUnit"));
+		paginationInfo.setPageSize(propertyService.getInt("Globals.pageSize"));
 
 		boardVO.setFirstIndex(paginationInfo.getFirstRecordIndex());
 		boardVO.setLastIndex(paginationInfo.getLastRecordIndex());
