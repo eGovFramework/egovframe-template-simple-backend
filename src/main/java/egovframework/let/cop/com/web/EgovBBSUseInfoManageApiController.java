@@ -93,8 +93,8 @@ public class EgovBBSUseInfoManageApiController {
 			return handleAuthError(resultVO); // 토큰 확인
 		}
 
-		bdUseVO.setPageUnit(propertyService.getInt("pageUnit"));
-		bdUseVO.setPageSize(propertyService.getInt("pageSize"));
+		bdUseVO.setPageUnit(propertyService.getInt("Globals.pageUnit"));
+		bdUseVO.setPageSize(propertyService.getInt("Globals.pageSize"));
 
 		PaginationInfo paginationInfo = new PaginationInfo();
 

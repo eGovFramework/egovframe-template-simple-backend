@@ -95,8 +95,8 @@ public class EgovBBSAttributeManageApiController {
 			return handleAuthError(resultVO); // 토큰 확인
 		}
 
-		boardMasterVO.setPageUnit(propertyService.getInt("pageUnit"));
-		boardMasterVO.setPageSize(propertyService.getInt("pageSize"));
+		boardMasterVO.setPageUnit(propertyService.getInt("Globals.pageUnit"));
+		boardMasterVO.setPageSize(propertyService.getInt("Globals.pageSize"));
 
 		PaginationInfo paginationInfo = new PaginationInfo();
 
