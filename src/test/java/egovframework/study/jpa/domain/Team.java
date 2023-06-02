@@ -31,7 +31,7 @@ public class Team {
     private String id;
 
     private String name;
-
+    @Builder.Default
     @OneToMany(mappedBy = "team")
     private List<Member> members = new ArrayList<Member>();
 

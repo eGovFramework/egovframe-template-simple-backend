@@ -1,4 +1,4 @@
-package egovframework.study;
+package egovframework.study.jpa;
 
 import egovframework.study.jpa.domain.Locker;
 import egovframework.study.jpa.domain.Member;
