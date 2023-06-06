@@ -5,6 +5,11 @@ import java.util.HashMap;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.egovframe.rte.fdl.cmmn.trace.LeaveaTrace;
 import org.egovframe.rte.fdl.property.EgovPropertyService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +49,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @RestController
+@Tag(name="EgovLogin",description = "로그인 관련")
 public class EgovLoginApiController {
 
 	/** EgovLoginService */
@@ -73,6 +79,16 @@ public class EgovLoginApiController {
 	 * @return result - 로그인결과(세션정보)
 	 * @exception Exception
 	 */
+
+	@Operation(
+			summary = "일반 로그인",
+			description = "일반 로그인 처리",
+			tags = {"EgovLogin"}
+	)
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "로그인 성공"),
+			@ApiResponse(responseCode = "300", description = "로그인 실패")
+	})
 	@PostMapping(value = "/uat/uia/actionLoginAPI.do", consumes = {MediaType.APPLICATION_JSON_VALUE , MediaType.TEXT_HTML_VALUE})
 	public HashMap<String, Object> actionLogin(@RequestBody LoginVO loginVO, HttpServletRequest request) throws Exception {
 		HashMap<String,Object> resultMap = new HashMap<String,Object>();
@@ -96,6 +112,15 @@ public class EgovLoginApiController {
 
 	}
 
+	@Operation(
+			summary = "JWT 로그인",
+			description = "JWT 로그인 처리",
+			tags = {"EgovLogin"}
+	)
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "로그인 성공"),
+			@ApiResponse(responseCode = "300", description = "로그인 실패")
+	})
 	@PostMapping(value = "/uat/uia/actionLoginJWT.do")
 	public HashMap<String, Object> actionLoginJWT(@RequestBody LoginVO loginVO, HttpServletRequest request, ModelMap model) throws Exception {
 		HashMap<String, Object> resultMap = new HashMap<String, Object>();
@@ -137,6 +162,14 @@ public class EgovLoginApiController {
 	 * @return resultVO
 	 * @exception Exception
 	 */
+	@Operation(
+			summary = "로그아웃",
+			description = "로그아웃 처리(JWT,일반 관계 없이)",
+			tags = {"EgovLogin"}
+	)
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "로그아웃 성공"),
+	})
 	@GetMapping(value = "/uat/uia/actionLogoutAPI.do")
 	public ResultVO actionLogoutJSON(HttpServletRequest request) throws Exception {
 		ResultVO resultVO = new ResultVO();
