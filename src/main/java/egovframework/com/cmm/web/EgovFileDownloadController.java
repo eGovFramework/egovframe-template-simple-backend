@@ -172,34 +172,12 @@ public class EgovFileDownloadController {
 				 * response.getOutputStream().flush();
 				 * response.getOutputStream().close();
 				 */
-				BufferedInputStream in = null;
-				BufferedOutputStream out = null;
-
-				try {
-					in = new BufferedInputStream(new FileInputStream(uFile));
-					out = new BufferedOutputStream(response.getOutputStream());
-
-					FileCopyUtils.copy(in, out);
+				try (BufferedInputStream in = new BufferedInputStream(new FileInputStream(uFile));
+				     BufferedOutputStream out = new BufferedOutputStream(response.getOutputStream());){
+				        FileCopyUtils.copy(in, out);
 					out.flush();
 				} catch (FileNotFoundException ex) {
-					// 다음 Exception 무시 처리
-					// Connection reset by peer: socket write error
 					log.debug("IGNORED: {}", ex.getMessage());
-				} finally {
-					if (in != null) {
-						try {
-							in.close();
-						} catch (IOException ignore) {
-							log.debug("IGNORED: {}", ignore.getMessage());
-						}
-					}
-					if (out != null) {
-						try {
-							out.close();
-						} catch (IOException ignore) {
-							log.debug("IGNORED: {}", ignore.getMessage());
-						}
-					}
 				}
 
 			} else {
