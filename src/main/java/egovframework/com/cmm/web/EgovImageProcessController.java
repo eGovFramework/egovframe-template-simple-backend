@@ -90,14 +90,10 @@ public class EgovImageProcessController extends HttpServlet {
 		String streFileNm = EgovWebUtil.filePathBlackList(fvo.getStreFileNm());
 
 		File file = new File(fileStreCours, streFileNm);
-		FileInputStream fis = null;
-
-		BufferedInputStream in = null;
-		ByteArrayOutputStream bStream = null;
-		try {
-			fis = new FileInputStream(file);
-			in = new BufferedInputStream(fis);
-			bStream = new ByteArrayOutputStream();
+		try (FileInputStream fis = new FileInputStream(file);
+		     BufferedInputStream in = new BufferedInputStream(fis);
+		     ByteArrayOutputStream bStream = new ByteArrayOutputStream();) {
+			
 			int imgByte;
 			while ((imgByte = in.read()) != -1) {
 				bStream.write(imgByte);
@@ -127,28 +123,6 @@ public class EgovImageProcessController extends HttpServlet {
 
 		} catch (IOException e) {
 			log.debug("{}", e);
-		} finally {
-			if (bStream != null) {
-				try {
-					bStream.close();
-				} catch (IOException est) {
-					log.debug("IGNORED: {}", est.getMessage());
-				}
-			}
-			if (in != null) {
-				try {
-					in.close();
-				} catch (IOException ei) {
-					log.debug("IGNORED: {}", ei.getMessage());
-				}
-			}
-			if (fis != null) {
-				try {
-					fis.close();
-				} catch (IOException efis) {
-					log.debug("IGNORED: {}", efis.getMessage());
-				}
-			}
 		}
 	}
 }
