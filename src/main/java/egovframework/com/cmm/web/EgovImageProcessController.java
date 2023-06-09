@@ -66,7 +66,6 @@ public class EgovImageProcessController extends HttpServlet {
 	 * @param response
 	 * @throws Exception
 	 */
-	@SuppressWarnings("resource")
 	@RequestMapping("/cmm/fms/getImage.do")
 	public void getImageInf(SessionVO sessionVO, ModelMap model, @RequestParam Map<String, Object> commandMap,
 		HttpServletResponse response) throws Exception {
@@ -90,6 +89,9 @@ public class EgovImageProcessController extends HttpServlet {
 		String streFileNm = EgovWebUtil.filePathBlackList(fvo.getStreFileNm());
 
 		File file = new File(fileStreCours, streFileNm);
+		
+		// Try-with-resources를 이용한 자원 해제 처리 (try 구문에 선언한 리소스를 자동 반납)
+		// try에 전달할 수 있는 자원은 java.lang.AutoCloseable 인터페이스의 구현 객체로 한정
 		try (FileInputStream fis = new FileInputStream(file);
 		     BufferedInputStream in = new BufferedInputStream(fis);
 		     ByteArrayOutputStream bStream = new ByteArrayOutputStream();) {

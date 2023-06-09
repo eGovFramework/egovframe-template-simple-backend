@@ -172,6 +172,9 @@ public class EgovFileDownloadController {
 				 * response.getOutputStream().flush();
 				 * response.getOutputStream().close();
 				 */
+				
+				// Try-with-resources를 이용한 자원 해제 처리 (try 구문에 선언한 리소스를 자동 반납)
+				// try에 전달할 수 있는 자원은 java.lang.AutoCloseable 인터페이스의 구현 객체로 한정
 				try (BufferedInputStream in = new BufferedInputStream(new FileInputStream(uFile));
 				     BufferedOutputStream out = new BufferedOutputStream(response.getOutputStream());){
 				        FileCopyUtils.copy(in, out);
