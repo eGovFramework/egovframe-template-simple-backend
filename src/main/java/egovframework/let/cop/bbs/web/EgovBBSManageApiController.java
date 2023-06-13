@@ -38,6 +38,10 @@ import egovframework.let.cop.bbs.service.BoardVO;
 import egovframework.let.cop.bbs.service.EgovBBSAttributeManageService;
 import egovframework.let.cop.bbs.service.EgovBBSManageService;
 import egovframework.let.utl.sim.service.EgovFileScrty;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 /**
  * 게시물 관리를 위한 컨트롤러 클래스
@@ -58,6 +62,7 @@ import egovframework.let.utl.sim.service.EgovFileScrty;
  *  </pre>
  */
 @RestController
+@Tag(name="EgovBBSManageApiController",description = "게시물 관리")
 public class EgovBBSManageApiController {
 	
 	/** JwtVerification */
@@ -114,6 +119,15 @@ public class EgovBBSManageApiController {
 	 * @return resultVO
 	 * @throws Exception
 	 */
+	@Operation(
+			summary = "게시판 마스터 상세 조회",
+			description = "게시판 마스터 상세내용을 조회 (파일 첨부가능 여부 조회용)",
+			tags = {"EgovBBSManageApiController"}
+	)
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "조회 성공"),
+			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
+	})
 	@PostMapping(value = "/cop/bbs/selectUserBBSMasterInfAPI.do", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResultVO selectUserBBSMasterInf(@RequestBody BoardMasterVO searchVO)
 		throws Exception {
@@ -137,6 +151,15 @@ public class EgovBBSManageApiController {
 	 * @return resultVO
 	 * @throws Exception
 	 */
+	@Operation(
+			summary = "게시물 목록 조회",
+			description = "게시물에 대한 목록을 조회",
+			tags = {"EgovBBSManageApiController"}
+	)
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "조회 성공"),
+			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
+	})
 	@PostMapping(value = "/cop/bbs/selectBoardListAPI.do", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResultVO selectBoardArticles(@RequestBody BoardVO boardVO)
 		throws Exception {
@@ -183,6 +206,15 @@ public class EgovBBSManageApiController {
 	 * @return resultVO
 	 * @throws Exception
 	 */
+	@Operation(
+			summary = "게시물 상세 조회",
+			description = "게시물에 대한 상세 정보를 조회",
+			tags = {"EgovBBSManageApiController"}
+	)
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "조회 성공"),
+			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
+	})
 	@PostMapping(value = "/cop/bbs/selectBoardArticleAPI.do")
 	public ResultVO selectBoardArticle(@RequestBody BoardVO boardVO)
 		throws Exception {
@@ -258,6 +290,16 @@ public class EgovBBSManageApiController {
 	 * @return resultVO
 	 * @throws Exception
 	 */
+	@Operation(
+			summary = "게시물 수정",
+			description = "게시물에 대한 내용을 수정",
+			tags = {"EgovBBSManageApiController"}
+	)
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "수정 성공"),
+			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님"),
+			@ApiResponse(responseCode = "900", description = "입력값 무결성 오류")
+	})
 	@PostMapping(value ="/cop/bbs/updateBoardArticleAPI.do")
 	public ResultVO updateBoardArticle(final MultipartHttpServletRequest multiRequest,
 		BoardVO boardVO,
@@ -324,6 +366,16 @@ public class EgovBBSManageApiController {
 	 * @return
 	 * @throws Exception
 	 */
+	@Operation(
+			summary = "게시물 등록",
+			description = "게시물을 등록",
+			tags = {"EgovBBSManageApiController"}
+	)
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "등록 성공"),
+			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님"),
+			@ApiResponse(responseCode = "900", description = "입력값 무결성 오류")
+	})
 	@PostMapping(value ="/cop/bbs/insertBoardArticleAPI.do")
 	public ResultVO insertBoardArticle(final MultipartHttpServletRequest multiRequest,
 		BoardVO boardVO,
@@ -381,6 +433,16 @@ public class EgovBBSManageApiController {
 	 * @return resultVO
 	 * @throws Exception
 	 */
+	@Operation(
+			summary = "게시물 답변 등록",
+			description = "게시물에 대한 답변을 등록",
+			tags = {"EgovBBSManageApiController"}
+	)
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "등록 성공"),
+			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님"),
+			@ApiResponse(responseCode = "900", description = "입력값 무결성 오류")
+	})
 	@PostMapping(value ="/cop/bbs/replyBoardArticleAPI.do")
 	public ResultVO replyBoardArticle(final MultipartHttpServletRequest multiRequest,
 		BoardVO boardVO,
@@ -443,6 +505,15 @@ public class EgovBBSManageApiController {
 	 * @return resultVO
 	 * @throws Exception
 	 */
+	@Operation(
+			summary = "게시물 삭제",
+			description = "게시물에 대한 내용을 삭제",
+			tags = {"EgovBBSManageApiController"}
+	)
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "삭제 성공"),
+			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
+	})
 	@PutMapping(value = "/cop/bbs/deleteBoardArticleAPI/{nttId}.do")
 	public ResultVO deleteBoardArticle(@RequestBody BoardVO boardVO, 
 		@PathVariable("nttId") String nttId,

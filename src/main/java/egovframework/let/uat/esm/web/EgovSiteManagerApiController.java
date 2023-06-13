@@ -18,6 +18,10 @@ import egovframework.com.cmm.util.EgovUserDetailsHelper;
 import egovframework.com.jwt.config.JwtVerification;
 import egovframework.let.uat.esm.service.EgovSiteManagerService;
 import egovframework.let.utl.sim.service.EgovFileScrty;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -39,6 +43,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @RestController
+@Tag(name="EgovSiteManagerApiController",description = "사용자 관리")
 public class EgovSiteManagerApiController {
 	/** EgovSiteManagerService */
 	@Resource(name = "siteManagerService")
@@ -59,6 +64,15 @@ public class EgovSiteManagerApiController {
 	 * @return result - JWT 토큰값 비교결과 코드와 메세지
 	 * @exception Exception
 	 */
+	@Operation(
+			summary = "토큰값 검증",
+			description = "Headers에서 Authorization 속성값에 발급한 토큰값 검증",
+			tags = {"EgovSiteManagerApiController"}
+	)
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "성공"),
+			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
+	})
 	@PostMapping(value = "/uat/esm/jwtAuthAPI.do")
 	public ResultVO jwtAuthentication(HttpServletRequest request) throws Exception {
 		ResultVO resultVO = new ResultVO();
@@ -78,6 +92,16 @@ public class EgovSiteManagerApiController {
 	 * @return result - 수정결과
 	 * @exception Exception
 	 */
+	@Operation(
+			summary = "비밀번호 변경",
+			description = "사이트관리자의 기존 비번과 비교하여 변경된 비밀번호를 저장",
+			tags = {"EgovSiteManagerApiController"}
+	)
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "성공"),
+			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님"),
+			@ApiResponse(responseCode = "800", description = "저장시 내부 오류")
+	})
 	@PostMapping(value = "/uat/esm/updateAdminPasswordAPI.do")
 	public ResultVO updateAdminPassword(@RequestBody Map<String,String> param, HttpServletRequest request) throws Exception {
 		ResultVO resultVO = new ResultVO();

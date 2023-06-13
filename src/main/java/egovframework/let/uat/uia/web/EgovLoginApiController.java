@@ -48,7 +48,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @RestController
-@Tag(name="EgovLogin",description = "로그인 관련")
+@Tag(name="EgovLoginApiController",description = "로그인 관련")
 public class EgovLoginApiController {
 
 	/** EgovLoginService */
@@ -82,7 +82,7 @@ public class EgovLoginApiController {
 	@Operation(
 			summary = "일반 로그인",
 			description = "일반 로그인 처리",
-			tags = {"EgovLogin"}
+			tags = {"EgovLoginApiController"}
 	)
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "로그인 성공"),
@@ -114,7 +114,7 @@ public class EgovLoginApiController {
 	@Operation(
 			summary = "JWT 로그인",
 			description = "JWT 로그인 처리",
-			tags = {"EgovLogin"}
+			tags = {"EgovLoginApiController"}
 	)
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "로그인 성공"),
@@ -164,7 +164,7 @@ public class EgovLoginApiController {
 	@Operation(
 			summary = "로그아웃",
 			description = "로그아웃 처리(JWT,일반 관계 없이)",
-			tags = {"EgovLogin"}
+			tags = {"EgovLoginApiController"}
 	)
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "로그아웃 성공"),

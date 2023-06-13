@@ -15,6 +15,10 @@ import egovframework.com.cmm.ResponseCode;
 import egovframework.com.cmm.service.ResultVO;
 import egovframework.let.cop.bbs.service.BoardVO;
 import egovframework.let.cop.bbs.service.EgovBBSManageService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 /**
  * 템플릿 메인 페이지 컨트롤러 클래스(Sample 소스)
@@ -34,6 +38,7 @@ import egovframework.let.cop.bbs.service.EgovBBSManageService;
  */
 @RestController
 @SessionAttributes(types = ComDefaultVO.class)
+@Tag(name="EgovMainApiController",description = "메인 페이지")
 public class EgovMainApiController {
 
 	/**
@@ -48,6 +53,14 @@ public class EgovMainApiController {
 	 *
 	 * @throws Exception
 	 */
+	@Operation(
+			summary = "메인 페이지",
+			description = "템플릿 메인 페이지 조회",
+			tags = {"EgovMainApiController"}
+	)
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "조회 성공")
+	})
 	@PostMapping(value = "/cmm/main/mainPageAPI.do")
 	public ResultVO getMgtMainPage()
 	  throws Exception{

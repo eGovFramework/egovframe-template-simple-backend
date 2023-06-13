@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 /**
  * @Class Name : FileVO.java
  * @Description : 파일정보 처리를 위한 VO 클래스
@@ -21,6 +23,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  * @see
  *
  */
+@Schema(description = "파일 정보 VO")
 @Getter
 @Setter
 public class FileVO implements Serializable {
@@ -29,41 +32,32 @@ public class FileVO implements Serializable {
 	 *  serialVersion UID
 	 */
 	private static final long serialVersionUID = -287950405903719128L;
-	/**
-     * 첨부파일 아이디
-     */
+	
+	@Schema(description = "첨부파일 아이디")
     public String atchFileId = "";
-    /**
-     * 생성일자
-     */
+	
+	@Schema(description = "생성일자")
     public String creatDt = "";
-    /**
-     * 파일내용
-     */
+	
+	@Schema(description = "파일내용")
     public String fileCn = "";
-    /**
-     * 파일확장자
-     */
+	
+	@Schema(description = "파일확장자")
     public String fileExtsn = "";
-    /**
-     * 파일크기
-     */
+	
+	@Schema(description = "파일크기")
     public String fileMg = "";
-    /**
-     * 파일연번
-     */
+	
+	@Schema(description = "파일연번")
     public String fileSn = "";
-    /**
-     * 파일저장경로
-     */
+    
+	@Schema(description = "파일저장경로")
     public String fileStreCours = "";
-    /**
-     * 원파일명
-     */
+    
+	@Schema(description = "원파일명")
     public String orignlFileNm = "";
-    /**
-     * 저장파일명
-     */
+	
+	@Schema(description = "저장파일명")
     public String streFileNm = "";
 
     /**
