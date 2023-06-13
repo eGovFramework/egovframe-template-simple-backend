@@ -144,9 +144,9 @@ public class EgovFormBasedFileUtil {
 				String name = item.getFieldName();
 				InputStream stream = item.openStream();
 				if (item.isFormField()) {
-					LOGGER.info("Form field '{}' with value '{}' detected.", name, Streams.asString(stream));
+					log.info("Form field '{}' with value '{}' detected.", name, Streams.asString(stream));
 				} else {
-					LOGGER.info("File field '{}' with file name '{}' detected.", name, item.getName());
+					log.info("File field '{}' with file name '{}' detected.", name, item.getName());
 
 					if ("".equals(item.getName())) {
 						continue;
