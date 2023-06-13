@@ -16,6 +16,10 @@ import egovframework.com.cmm.service.EgovFileMngService;
 import egovframework.com.cmm.service.FileVO;
 import egovframework.com.cmm.service.ResultVO;
 import egovframework.com.jwt.config.JwtVerification;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 /**
  * 파일 조회, 삭제, 다운로드 처리를 위한 컨트롤러 클래스
@@ -35,6 +39,7 @@ import egovframework.com.jwt.config.JwtVerification;
  * </pre>
  */
 @RestController
+@Tag(name="EgovFileMngApiController",description = "파일 관리")
 public class EgovFileMngApiController {
 
     @Resource(name = "EgovFileMngService")
@@ -56,6 +61,14 @@ public class EgovFileMngApiController {
      * @return resultVO
      * @throws Exception
      */
+    @Operation(
+			summary = "파일 삭제",
+			description = "첨부파일에 대한 삭제를 처리",
+			tags = {"EgovFileMngApiController"}
+	)
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "성공")
+	})
     @PostMapping(value ="/cmm/fms/deleteFileInfsAPI.do")
     public ResultVO deleteFileInf(HttpServletRequest request, @RequestBody FileVO fileVO) throws Exception {
     	ResultVO resultVO = new ResultVO();

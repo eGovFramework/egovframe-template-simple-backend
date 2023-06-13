@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 /**
  * 게시판의 이용정보를 관리하기 위한 모델 클래스
@@ -24,6 +26,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  *
  * </pre>
  */
+@Schema(description = "게시판 이용정보 모델")
 @Getter
 @Setter
 public class BoardUseInf implements Serializable {
@@ -33,31 +36,31 @@ public class BoardUseInf implements Serializable {
 	 */
 	private static final long serialVersionUID = -8164785314697750055L;
 
-	/** 게시판 아이디 */
+	@Schema(description = "게시판 아이디")
     private String bbsId = "";
 
-    /** 대상시스템 아이디 */
+	@Schema(description = "대상시스템 아이디")
     private String trgetId = "";
 
-    /** 대상 구분 (커뮤니티, 동호회) */
+	@Schema(description = "대상 구분 (커뮤니티, 동호회)")
     private String trgetType = "";
 
-    /** 최초 등록자 아이디 */
+	@Schema(description = "최초 등록자 아이디")
     private String frstRegisterId = "";
 
-    /** 최초등록시점 */
+	@Schema(description = "최초등록시점")
     private String frstRegisterPnttm = "";
 
-    /** 최종수정자 아이디 */
+	@Schema(description = "최종수정자 아이디")
     private String lastUpdusrId = "";
 
-    /** 최종수정시점 */
+	@Schema(description = "최종수정시점")
     private String lastUpdusrPnttm = "";
 
-    /** 등록구분코드 */
+	@Schema(description = "등록구분코드")
     private String registSeCode = "";
 
-    /** 사용여부 */
+	@Schema(description = "사용여부", allowableValues = {"Y", "N"})
     private String useAt = "";
 
 

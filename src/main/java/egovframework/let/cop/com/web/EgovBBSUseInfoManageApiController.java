@@ -28,6 +28,10 @@ import egovframework.let.cop.bbs.service.BoardMasterVO;
 import egovframework.let.cop.bbs.service.EgovBBSAttributeManageService;
 import egovframework.let.cop.com.service.BoardUseInfVO;
 import egovframework.let.cop.com.service.EgovBBSUseInfoManageService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 /**
  * 게시판의 이용정보를 관리하기 위한 컨트롤러 클래스
@@ -47,6 +51,7 @@ import egovframework.let.cop.com.service.EgovBBSUseInfoManageService;
  * </pre>
  */
 @RestController
+@Tag(name="EgovBBSUseInfoManageApiController",description = "게시판 이용정보 관리")
 public class EgovBBSUseInfoManageApiController {
 	
 	/** JwtVerification */
@@ -81,6 +86,15 @@ public class EgovBBSUseInfoManageApiController {
 	 * @return
 	 * @throws Exception
 	 */
+	@Operation(
+			summary = "게시판 사용정보 목록 조회",
+			description = "게시판 사용정보 목록을 조회",
+			tags = {"EgovBBSUseInfoManageApiController"}
+	)
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "조회 성공"),
+			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
+	})
 	@PostMapping(value ="/cop/com/selectBBSUseInfsAPI.do")
 	public ResultVO selectBBSUseInfs(HttpServletRequest request,
 		@RequestBody BoardUseInfVO bdUseVO) throws Exception {
@@ -128,6 +142,14 @@ public class EgovBBSUseInfoManageApiController {
 	 * @return
 	 * @throws Exception
 	 */
+	@Operation(
+			summary = "미사용 게시판 속성정보 목록 조회",
+			description = "사용중이지 않은 게시판 속성 정보의 목록을 조회",
+			tags = {"EgovBBSUseInfoManageApiController"}
+	)
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "조회 성공")
+	})
 	@PostMapping(value ="/cop/com/selectNotUsedBdMstrList.do")
 	public ResultVO selectNotUsedBdMstrList(
 		BoardMasterVO boardMasterVO) throws Exception {
@@ -151,6 +173,15 @@ public class EgovBBSUseInfoManageApiController {
 	 * @return
 	 * @throws Exception
 	 */
+	@Operation(
+			summary = "게시판 사용정보 상세 조회",
+			description = "게시판 사용정보에 대한 상세정보를 조회",
+			tags = {"EgovBBSUseInfoManageApiController"}
+	)
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "조회 성공"),
+			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
+	})
 	@PostMapping(value ="/cop/com/selectBBSUseInfAPI.do")
 	public ResultVO selectBBSUseInf(HttpServletRequest request,
 		@RequestBody BoardUseInfVO bdUseVO) throws Exception {
@@ -194,6 +225,16 @@ public class EgovBBSUseInfoManageApiController {
      * @return ResultVO
 	 * @throws Exception
 	 */
+	@Operation(
+			summary = "게시판 사용정보 등록",
+			description = " 게시판 사용정보를 등록",
+			tags = {"EgovBBSUseInfoManageApiController"}
+	)
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "등록 성공"),
+			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님"),
+			@ApiResponse(responseCode = "900", description = "입력값 무결성 오류")
+	})
 	@PostMapping(value ="/cop/com/insertBBSUseInfAPI.do")
 	public ResultVO insertBBSUseInf(HttpServletRequest request,
 		BoardUseInfVO bdUseVO,
@@ -249,6 +290,16 @@ public class EgovBBSUseInfoManageApiController {
 	 * @return ResultVO
 	 * @throws Exception
 	 */
+	@Operation(
+			summary = "게시판 사용정보 수정",
+			description = " 게시판 사용정보를 수정",
+			tags = {"EgovBBSUseInfoManageApiController"}
+	)
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "수정 성공"),
+			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님"),
+			@ApiResponse(responseCode = "900", description = "입력값 무결성 오류")
+	})
 	@PutMapping(value ="/cop/com/updateBBSUseInfAPI/{bbsId}.do")
 	public ResultVO updateBBSUseInf(HttpServletRequest request,
 		@RequestBody BoardUseInfVO bdUseVO,

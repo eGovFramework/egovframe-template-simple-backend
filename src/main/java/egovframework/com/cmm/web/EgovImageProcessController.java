@@ -15,13 +15,17 @@ import javax.servlet.http.HttpServletResponse;
 import org.egovframe.rte.fdl.cryptography.EgovCryptoService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import egovframework.com.cmm.EgovWebUtil;
 import egovframework.com.cmm.SessionVO;
 import egovframework.com.cmm.service.EgovFileMngService;
 import egovframework.com.cmm.service.FileVO;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -42,6 +46,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @Controller
+@Tag(name="EgovImageProcessController",description = "이미지 처리")
 public class EgovImageProcessController extends HttpServlet {
 
 	/**
@@ -66,7 +71,15 @@ public class EgovImageProcessController extends HttpServlet {
 	 * @param response
 	 * @throws Exception
 	 */
-	@RequestMapping("/cmm/fms/getImage.do")
+    @Operation(
+			summary = "이미지 미리보기",
+			description = "첨부된 이미지에 대한 미리보기 기능을 제공",
+			tags = {"EgovImageProcessController"}
+	)
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "성공")
+	})
+    @GetMapping("/cmm/fms/getImage.do")
 	public void getImageInf(SessionVO sessionVO, ModelMap model, @RequestParam Map<String, Object> commandMap,
 		HttpServletResponse response) throws Exception {
 

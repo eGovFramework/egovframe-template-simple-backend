@@ -28,7 +28,7 @@ public class SwaggerConfig {
 		return new Docket(DocumentationType.SWAGGER_2)
 				.apiInfo(apiInfo())
 				.select()
-				.apis(RequestHandlerSelectors.any())
+				.apis(RequestHandlerSelectors.basePackage("egovframework"))
 				.paths(PathSelectors.any())
 				.build()
 				.securityContexts(Arrays.asList(securityContext())) // 스웨그에서 컨텐츠 url 접근 시 인증처리를 위한 보안 규칙 호출

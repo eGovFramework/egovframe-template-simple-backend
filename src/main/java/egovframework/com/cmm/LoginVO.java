@@ -2,6 +2,9 @@ package egovframework.com.cmm;
 
 import java.io.Serializable;
 
+import javax.validation.constraints.Email;
+
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,6 +23,7 @@ import lombok.Setter;
  *  @see
  *  
  */
+@Schema(description = "사용자 정보 VO")
 @Getter
 @Setter
 public class LoginVO implements Serializable{
@@ -29,33 +33,47 @@ public class LoginVO implements Serializable{
 	 */
 	private static final long serialVersionUID = -8274004534207618049L;
 	
-	/** 아이디 */
+	@Schema(description = "아이디")
 	private String id;
-	/** 이름 */
+	
+	@Schema(description = "이름")
 	private String name;
-	/** 주민등록번호 */
+	
+	@Schema(description = "주민등록번호")
 	private String ihidNum;
-	/** 이메일주소 */
+	
+	@Email(regexp = "[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,3}")
+	@Schema(description = "이메일주소")
 	private String email;
-	/** 비밀번호 */
+	
+	@Schema(description = "비밀번호")
 	private String password;
-	/** 비밀번호 힌트 */
+	
+	@Schema(description = "비밀번호 힌트")
 	private String passwordHint;
-	/** 비밀번호 정답 */
+	
+	@Schema(description = "비밀번호 정답")
 	private String passwordCnsr;
-	/** 사용자구분 */
+	
+	@Schema(description = "사용자 구분", allowableValues = {"GNR", "ENT", "USR"}, defaultValue = "USR")
 	private String userSe;
-	/** 조직(부서)ID */
+	
+	@Schema(description = "조직(부서)ID")
 	private String orgnztId;
-	/** 조직(부서)명 */
+	
+	@Schema(description = "조직(부서)명")
 	private String orgnztNm;
-	/** 고유아이디 */
+	
+	@Schema(description = "고유아이디")
 	private String uniqId;
-	/** 로그인 후 이동할 페이지 */
+	
+	@Schema(description = "로그인 후 이동할 페이지")
 	private String url;
-	/** 사용자 IP정보 */
+	
+	@Schema(description = "사용자 IP정보")
 	private String ip;
-	/** GPKI인증 DN */
+	
+	@Schema(description = "GPKI인증 DN")
 	private String dn;
 	
 	

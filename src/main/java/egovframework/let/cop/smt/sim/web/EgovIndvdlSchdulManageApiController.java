@@ -40,7 +40,10 @@ import egovframework.com.cmm.web.EgovFileDownloadController;
 import egovframework.com.jwt.config.JwtVerification;
 import egovframework.let.cop.smt.sim.service.EgovIndvdlSchdulManageService;
 import egovframework.let.cop.smt.sim.service.IndvdlSchdulManageVO;
-import lombok.extern.slf4j.Slf4j;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 /**
  * 일정관리를 처리하는 Controller Class 구현
@@ -57,8 +60,8 @@ import lombok.extern.slf4j.Slf4j;
  * @version 1.0
  * @created 09-6-2011 오전 10:08:04
  */
-@Slf4j
 @RestController
+@Tag(name="EgovIndvdlSchdulManageApiController",description = "일정관리")
 public class EgovIndvdlSchdulManageApiController {
 
 	@Autowired
@@ -100,6 +103,15 @@ public class EgovIndvdlSchdulManageApiController {
 	 * @return resultVO
 	 * @throws Exception
 	 */
+    @Operation(
+			summary = "월별 일정 조회",
+			description = "일정(월별) 목록을 조회",
+			tags = {"EgovIndvdlSchdulManageApiController"}
+	)
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "조회 성공"),
+			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
+	})
 	@PostMapping(value = "/cop/smt/sim/egovIndvdlSchdulManageMonthListAPI.do")
 	public ResultVO EgovIndvdlSchdulManageMonthList(HttpServletRequest request,
 		@RequestBody Map<String, Object> commandMap) throws Exception {
@@ -169,6 +181,16 @@ public class EgovIndvdlSchdulManageApiController {
 	 * @return resultVO
 	 * @throws Exception
 	 */
+    @Operation(
+			summary = "일정 등록",
+			description = "일정을 등록 처리",
+			tags = {"EgovIndvdlSchdulManageApiController"}
+	)
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "등록 성공"),
+			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님"),
+			@ApiResponse(responseCode = "900", description = "입력값 무결성 오류")
+	})
 	@PostMapping(value = "/cop/smt/sim/egovIndvdlSchdulManageRegistActorAPI.do")
 	public ResultVO IndvdlSchdulManageRegistActor(
 		HttpServletRequest request,
@@ -227,11 +249,19 @@ public class EgovIndvdlSchdulManageApiController {
 	}
 
 	/**
-	 * 일정 목록을 상세조회 조회한다.
+	 * 일정 목록을 상세조회한다.
 	 * @param commandMap
 	 * @return resultVO
 	 * @throws Exception
 	 */
+    @Operation(
+			summary = "일정 상세조회",
+			description = "일정 목록을 상세조회",
+			tags = {"EgovIndvdlSchdulManageApiController"}
+	)
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "조회 성공")
+	})
 	@PostMapping(value = "/cop/smt/sim/egovIndvdlSchdulManageDetailAPI.do")
 	public ResultVO EgovIndvdlSchdulManageDetail(
 		@RequestBody Map<String, Object> commandMap)
@@ -304,6 +334,15 @@ public class EgovIndvdlSchdulManageApiController {
 	* @return ResultVO
 	* @throws Exception
 	*/
+    @Operation(
+			summary = "일정 삭제",
+			description = "일정을 삭제 처리",
+			tags = {"EgovIndvdlSchdulManageApiController"}
+	)
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "등록 성공"),
+			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
+	})
 	@DeleteMapping(value = "/cop/smt/sim/egovIndvdlSchdulManageDeleteAPI/{schdulId}.do")
 	public ResultVO EgovIndvdlSchdulManageDelete(HttpServletRequest request,
 		@PathVariable("schdulId") String schdulId) 
@@ -335,6 +374,16 @@ public class EgovIndvdlSchdulManageApiController {
 	 * @return resultVO
 	 * @throws Exception
 	 */
+    @Operation(
+			summary = "일정 수정",
+			description = "일정을 수정 처리",
+			tags = {"EgovIndvdlSchdulManageApiController"}
+	)
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "등록 성공"),
+			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님"),
+			@ApiResponse(responseCode = "900", description = "입력값 무결성 오류")
+	})
 	@PostMapping(value = "/cop/smt/sim/egovIndvdlSchdulManageModifyActorAPI.do")
 	public ResultVO IndvdlSchdulManageModifyActor(
 		final MultipartHttpServletRequest multiRequest,
@@ -413,6 +462,15 @@ public class EgovIndvdlSchdulManageApiController {
 	 * @return resultVO
 	 * @throws Exception
 	 */
+    @Operation(
+			summary = "일별 일정 조회",
+			description = "일정(일별) 목록을 조회",
+			tags = {"EgovIndvdlSchdulManageApiController"}
+	)
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "조회 성공"),
+			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
+	})
 	@PostMapping(value = "/cop/smt/sim/egovIndvdlSchdulManageDailyListAPI.do")
 	public ResultVO EgovIndvdlSchdulManageDailyList(
 		@RequestBody Map<String, Object> commandMap)
@@ -478,6 +536,15 @@ public class EgovIndvdlSchdulManageApiController {
 	 * @return resultVO
 	 * @throws Exception
 	 */
+    @Operation(
+			summary = "주간별 일정 조회",
+			description = "일정(주간별) 목록을 조회",
+			tags = {"EgovIndvdlSchdulManageApiController"}
+	)
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "조회 성공"),
+			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
+	})
 	@PostMapping(value = "/cop/smt/sim/egovIndvdlSchdulManageWeekListAPI.do")
 	public ResultVO EgovIndvdlSchdulManageWeekList(
 		@RequestBody Map<String, Object> commandMap)

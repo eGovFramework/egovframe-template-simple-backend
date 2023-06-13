@@ -29,6 +29,10 @@ import egovframework.com.cmm.util.EgovUserDetailsHelper;
 import egovframework.com.jwt.config.JwtVerification;
 import egovframework.let.cop.bbs.service.BoardMasterVO;
 import egovframework.let.cop.bbs.service.EgovBBSAttributeManageService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 /**
  * 게시판 속성관리를 위한 컨트롤러  클래스
@@ -49,6 +53,7 @@ import egovframework.let.cop.bbs.service.EgovBBSAttributeManageService;
  *  </pre>
  */
 @RestController
+@Tag(name="EgovBBSAttributeManageApiController",description = "게시판 속성관리")
 public class EgovBBSAttributeManageApiController {
 	
 	/** JwtVerification */
@@ -83,6 +88,15 @@ public class EgovBBSAttributeManageApiController {
 	 * @return resultVO
 	 * @throws Exception
 	 */
+	@Operation(
+			summary = "게시판 마스터 조회",
+			description = "게시판 마스터 목록을 조회",
+			tags = {"EgovBBSAttributeManageApiController"}
+	)
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "조회 성공"),
+			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
+	})
 	@PostMapping(value ="/cop/bbs/selectBBSMasterInfsAPI.do")
 	public ResultVO selectBBSMasterInfs(HttpServletRequest request,
 		@RequestBody BoardMasterVO boardMasterVO)
@@ -130,6 +144,15 @@ public class EgovBBSAttributeManageApiController {
 	 * @return resultVO
 	 * @throws Exception
 	 */
+	@Operation(
+			summary = "게시판 마스터 상세 조회",
+			description = "게시판 마스터 상세내용을 조회",
+			tags = {"EgovBBSAttributeManageApiController"}
+	)
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "조회 성공"),
+			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
+	})
 	@PostMapping(value ="/cop/bbs/selectBBSMasterInfAPI.do")
 	public ResultVO selectBBSMasterInf(HttpServletRequest request,
 		@RequestBody BoardMasterVO searchVO)
@@ -162,6 +185,16 @@ public class EgovBBSAttributeManageApiController {
 	 * @return resultVO
 	 * @throws Exception
 	 */
+	@Operation(
+			summary = "게시판 마스터 등록",
+			description = "신규 게시판 마스터 정보를 등록",
+			tags = {"EgovBBSAttributeManageApiController"}
+	)
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "조회 성공"),
+			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님"),
+			@ApiResponse(responseCode = "900", description = "입력값 무결성 오류")
+	})
 	@PostMapping(value ="/cop/bbs/insertBBSMasterInfAPI.do")
 	public ResultVO insertBBSMasterInf(HttpServletRequest request,
 		BoardMasterVO boardMasterVO,
@@ -228,6 +261,16 @@ public class EgovBBSAttributeManageApiController {
 	 * @return resultVO
 	 * @throws Exception
 	 */
+	@Operation(
+			summary = "게시판 마스터 수정",
+			description = "게시판 마스터 정보를 수정",
+			tags = {"EgovBBSAttributeManageApiController"}
+	)
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "수정 성공"),
+			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님"),
+			@ApiResponse(responseCode = "900", description = "입력값 무결성 오류")
+	})
 	@PutMapping(value ="/cop/bbs/updateBBSMasterInfAPI/{bbsId}.do")
 	public ResultVO updateBBSMasterInf(HttpServletRequest request,
 		@PathVariable("bbsId") String bbsId,
@@ -279,6 +322,15 @@ public class EgovBBSAttributeManageApiController {
 	 * @return resultVO
 	 * @throws Exception
 	 */
+	@Operation(
+			summary = "게시판 마스터 삭제",
+			description = "게시판 마스터 정보를 삭제",
+			tags = {"EgovBBSAttributeManageApiController"}
+	)
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "삭제 성공"),
+			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
+	})
 	@PutMapping(value ="/cop/bbs/deleteBBSMasterInfAPI/{bbsId}.do")
 	public ResultVO deleteBBSMasterInf(HttpServletRequest request,
 		@PathVariable("bbsId") String bbsId,

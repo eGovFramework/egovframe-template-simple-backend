@@ -25,7 +25,10 @@ import egovframework.com.cmm.EgovWebUtil;
 import egovframework.com.cmm.service.EgovFileMngService;
 import egovframework.com.cmm.service.EgovProperties;
 import egovframework.com.cmm.service.FileVO;
-import egovframework.com.cmm.util.EgovUserDetailsHelper;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -47,6 +50,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @Controller
+@Tag(name="EgovFileDownloadController",description = "파일 다운로드")
 public class EgovFileDownloadController {
 
 	@Resource(name = "EgovFileMngService")
@@ -131,12 +135,17 @@ public class EgovFileDownloadController {
 	 * @param response
 	 * @throws Exception
 	 */
+	
+	@Operation(
+			summary = "파일 다운로드",
+			description = "첨부파일로 등록된 파일에 대하여 다운로드를 제공",
+			tags = {"EgovFileDownloadController"}
+	)
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "성공")
+	})
 	@GetMapping(value = "/cmm/fms/FileDown.do")
 	public void cvplFileDownload(@RequestParam Map<String, Object> commandMap, HttpServletRequest request, HttpServletResponse response) throws Exception {
-
-		Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-
-		if (isAuthenticated) {
 
 			// 암호화된 atchFileId 를 복호화 (2022.12.06 추가) - 파일아이디가 유추 불가능하도록 조치
 			String param_atchFileId = (String) commandMap.get("atchFileId");
@@ -187,5 +196,4 @@ public class EgovFileDownloadController {
 				throw new EgovBizException();
 			}
 		}
-	}
 }
