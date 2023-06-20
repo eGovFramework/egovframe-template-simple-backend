@@ -26,7 +26,6 @@ import egovframework.com.cmm.ResponseCode;
 import egovframework.com.cmm.service.EgovCmmUseService;
 import egovframework.com.cmm.service.ResultVO;
 import egovframework.com.cmm.util.EgovUserDetailsHelper;
-import egovframework.com.jwt.JwtVerification;
 import egovframework.let.cop.bbs.service.BoardMasterVO;
 import egovframework.let.cop.bbs.service.EgovBBSAttributeManageService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -55,10 +54,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @RestController
 @Tag(name="EgovBBSAttributeManageApiController",description = "게시판 속성관리")
 public class EgovBBSAttributeManageApiController {
-	
-	/** JwtVerification */
-	@Autowired
-	private JwtVerification jwtVerification;
+
 
 	/** EgovBBSAttributeManageService */
 	@Resource(name = "EgovBBSAttributeManageService")
@@ -103,11 +99,6 @@ public class EgovBBSAttributeManageApiController {
 		throws Exception {
 
 		ResultVO resultVO = new ResultVO();
-
-		// 기존 세션 체크 인증에서 토큰 방식으로 변경
-		if (!jwtVerification.isVerification(request)) {
-			return handleAuthError(resultVO); // 토큰 확인
-		}
 
 		boardMasterVO.setPageUnit(propertyService.getInt("Globals.pageUnit"));
 		boardMasterVO.setPageSize(propertyService.getInt("Globals.pageSize"));
@@ -160,11 +151,6 @@ public class EgovBBSAttributeManageApiController {
 		ResultVO resultVO = new ResultVO();
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 
-		// 기존 세션 체크 인증에서 토큰 방식으로 변경
-		if (!jwtVerification.isVerification(request)) {
-			return handleAuthError(resultVO); // 토큰 확인
-		}
-
 		BoardMasterVO vo = bbsAttrbService.selectBBSMasterInf(searchVO);
 		resultMap.put("boardMasterVO", vo);
 
@@ -202,11 +188,6 @@ public class EgovBBSAttributeManageApiController {
 		throws Exception {
 		ResultVO resultVO = new ResultVO();
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-
-		// 기존 세션 체크 인증에서 토큰 방식으로 변경
-		if (!jwtVerification.isVerification(request)) {
-			return handleAuthError(resultVO); // 토큰 확인
-		}
 
 		LoginVO user = (LoginVO)EgovUserDetailsHelper.getAuthenticatedUser();
 		Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
@@ -279,11 +260,6 @@ public class EgovBBSAttributeManageApiController {
 		ResultVO resultVO = new ResultVO();
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 
-		// 기존 세션 체크 인증에서 토큰 방식으로 변경
-		if (!jwtVerification.isVerification(request)) {
-			return handleAuthError(resultVO); // 토큰 확인
-		}
-
 		LoginVO user = (LoginVO)EgovUserDetailsHelper.getAuthenticatedUser();
 		Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
 
@@ -337,11 +313,6 @@ public class EgovBBSAttributeManageApiController {
 		@RequestBody BoardMasterVO boardMasterVO) throws Exception {
 		ResultVO resultVO = new ResultVO();
 
-		// 기존 세션 체크 인증에서 토큰 방식으로 변경
-		if (!jwtVerification.isVerification(request)) {
-			return handleAuthError(resultVO); // 토큰 확인
-		}
-
 		LoginVO user = (LoginVO)EgovUserDetailsHelper.getAuthenticatedUser();
 		Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
 
@@ -356,11 +327,7 @@ public class EgovBBSAttributeManageApiController {
 		return resultVO;
 	}
 
-	private ResultVO handleAuthError(ResultVO resultVO) {
-		resultVO.setResultCode(ResponseCode.AUTH_ERROR.getCode());
-		resultVO.setResultMessage(ResponseCode.AUTH_ERROR.getMessage());
-		return resultVO;
-	}
+	
 
 	/**
 	 * 운영자 권한을 확인한다.(로그인 여부를 확인한다.)

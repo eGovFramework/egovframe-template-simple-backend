@@ -5,7 +5,6 @@ import java.util.HashMap;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
-import egovframework.com.cmm.annotation.EgovSecurity;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -90,7 +89,6 @@ public class EgovLoginApiController {
 			@ApiResponse(responseCode = "300", description = "로그인 실패")
 	})
 	@PostMapping(value = "/uat/uia/actionLoginAPI.do", consumes = {MediaType.APPLICATION_JSON_VALUE , MediaType.TEXT_HTML_VALUE})
-	@EgovSecurity
 	public HashMap<String, Object> actionLogin(@RequestBody LoginVO loginVO, HttpServletRequest request) throws Exception {
 		HashMap<String,Object> resultMap = new HashMap<String,Object>();
 

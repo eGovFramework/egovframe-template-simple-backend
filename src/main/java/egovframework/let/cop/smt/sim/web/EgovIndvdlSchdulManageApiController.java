@@ -38,7 +38,6 @@ import egovframework.com.cmm.service.FileVO;
 import egovframework.com.cmm.service.ResultVO;
 import egovframework.com.cmm.util.EgovUserDetailsHelper;
 import egovframework.com.cmm.web.EgovFileDownloadController;
-import egovframework.com.jwt.JwtVerification;
 import egovframework.let.cop.smt.sim.service.EgovIndvdlSchdulManageService;
 import egovframework.let.cop.smt.sim.service.IndvdlSchdulManageVO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -67,10 +66,6 @@ public class EgovIndvdlSchdulManageApiController {
 
 	@Autowired
 	private DefaultBeanValidator beanValidator;
-	
-	/** JwtVerification */
-	@Autowired
-	private JwtVerification jwtVerification;
 
 	/** EgovMessageSource */
 	@Resource(name = "egovMessageSource")
@@ -120,11 +115,6 @@ public class EgovIndvdlSchdulManageApiController {
 		ResultVO resultVO = new ResultVO();
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 
-		// 기존 세션 체크 인증에서 토큰 방식으로 변경
-		 if (!jwtVerification.isVerification(request)) {
-			return handleAuthError(resultVO); // 토큰 확인
-		}
-		
 		//일정구분 검색 유지
 		resultMap.put("searchKeyword",
 			commandMap.get("searchKeyword") == null ? "" : (String)commandMap.get("searchKeyword"));
@@ -202,10 +192,6 @@ public class EgovIndvdlSchdulManageApiController {
 
 		ResultVO resultVO = new ResultVO();
 
-		// 기존 세션 체크 인증에서 토큰 방식으로 변경
-		if (!jwtVerification.isVerification(request)) {
-			return handleAuthError(resultVO); // 토큰 확인
-		}
 
 		LoginVO user = (LoginVO)EgovUserDetailsHelper.getAuthenticatedUser();
 
@@ -354,15 +340,12 @@ public class EgovIndvdlSchdulManageApiController {
 		IndvdlSchdulManageVO indvdlSchdulManageVO = new IndvdlSchdulManageVO();
 		indvdlSchdulManageVO.setSchdulId(schdulId);
 		
-		// 기존 세션 체크 인증에서 토큰 방식으로 변경
-		if (!jwtVerification.isVerification(request)) {
-			return handleAuthError(resultVO); // 토큰 확인
-		} else {
-			egovIndvdlSchdulManageService.deleteIndvdlSchdulManage(indvdlSchdulManageVO);//schdulId
 
-			resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
-			resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());
-		}
+		egovIndvdlSchdulManageService.deleteIndvdlSchdulManage(indvdlSchdulManageVO);//schdulId
+
+		resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
+		resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());
+
 
 		return resultVO;
 	}
@@ -395,9 +378,6 @@ public class EgovIndvdlSchdulManageApiController {
 		ResultVO resultVO = new ResultVO();
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 
-		if (!EgovUserDetailsHelper.isAuthenticated()) {
-			return handleAuthError(resultVO); // server-side 권한 확인
-		}
 
 		//로그인 객체 선언
 		LoginVO user = (LoginVO)EgovUserDetailsHelper.getAuthenticatedUser();
@@ -702,10 +682,6 @@ public class EgovIndvdlSchdulManageApiController {
 		}
 	}
 
-	private ResultVO handleAuthError(ResultVO resultVO) {
-		resultVO.setResultCode(ResponseCode.AUTH_ERROR.getCode());
-		resultVO.setResultMessage(ResponseCode.AUTH_ERROR.getMessage());
-		return resultVO;
-	}
+	
 
 }

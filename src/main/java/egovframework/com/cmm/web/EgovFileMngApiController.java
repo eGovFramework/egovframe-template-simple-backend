@@ -15,7 +15,6 @@ import egovframework.com.cmm.ResponseCode;
 import egovframework.com.cmm.service.EgovFileMngService;
 import egovframework.com.cmm.service.FileVO;
 import egovframework.com.cmm.service.ResultVO;
-import egovframework.com.jwt.JwtVerification;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -44,11 +43,7 @@ public class EgovFileMngApiController {
 
     @Resource(name = "EgovFileMngService")
     private EgovFileMngService fileService;
-    
-    /** JwtVerification */
-	@Autowired
-	private JwtVerification jwtVerification;
-	
+
 	/** 암호화서비스 */
     @Resource(name="egovARIACryptoService")
     EgovCryptoService cryptoService;
@@ -82,15 +77,11 @@ public class EgovFileMngApiController {
 
 		//Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
 
-		if (jwtVerification.isVerification(request)) {
-		    fileService.deleteFileInf(fileVO);
-		    
-		    resultVO.setResultCode(200);
-			resultVO.setResultMessage("삭제 성공");
-		} else {
-			resultVO.setResultCode(ResponseCode.AUTH_ERROR.getCode());
-			resultVO.setResultMessage(ResponseCode.AUTH_ERROR.getMessage());
-		}
+		fileService.deleteFileInf(fileVO);
+
+		resultVO.setResultCode(200);
+		resultVO.setResultMessage("삭제 성공");
+
 
 		//--------------------------------------------
 		// contextRoot가 있는 경우 제외 시켜야 함

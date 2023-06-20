@@ -15,7 +15,6 @@ import egovframework.com.cmm.LoginVO;
 import egovframework.com.cmm.ResponseCode;
 import egovframework.com.cmm.service.ResultVO;
 import egovframework.com.cmm.util.EgovUserDetailsHelper;
-import egovframework.com.jwt.JwtVerification;
 import egovframework.let.uat.esm.service.EgovSiteManagerService;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 import io.swagger.v3.oas.annotations.Operation;
@@ -49,14 +48,7 @@ public class EgovSiteManagerApiController {
 	@Resource(name = "siteManagerService")
 	private EgovSiteManagerService siteManagerService;
 	
-	/** JwtVerification */
-	@Autowired
-	private JwtVerification jwtVerification;
-	private ResultVO handleAuthError(ResultVO resultVO) {
-		resultVO.setResultCode(ResponseCode.AUTH_ERROR.getCode());
-		resultVO.setResultMessage(ResponseCode.AUTH_ERROR.getMessage());
-		return resultVO;
-	}
+	
 	/**
 	 * 리액트에서 사이트관리자에 접근하는 토큰값 위변조 방지용으로 서버에서 비교한다.
 	 * @param map데이터: String old_password, new_password
@@ -76,13 +68,9 @@ public class EgovSiteManagerApiController {
 	@PostMapping(value = "/uat/esm/jwtAuthAPI.do")
 	public ResultVO jwtAuthentication(HttpServletRequest request) throws Exception {
 		ResultVO resultVO = new ResultVO();
-		// Headers에서 Authorization 속성값에 발급한 토큰값이 정상인지 확인
-		if (!jwtVerification.isVerification(request)) {
-			resultVO = handleAuthError(resultVO); // 토큰 확인
-		}else{
-			resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
-			resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());
-		}
+
+		resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
+		resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());
 		return resultVO;
 	}
 	/**
@@ -105,10 +93,7 @@ public class EgovSiteManagerApiController {
 	@PostMapping(value = "/uat/esm/updateAdminPasswordAPI.do")
 	public ResultVO updateAdminPassword(@RequestBody Map<String,String> param, HttpServletRequest request) throws Exception {
 		ResultVO resultVO = new ResultVO();
-		// Headers에서 Authorization 속성값에 발급한 토큰값이 정상인지 확인
-		if (!jwtVerification.isVerification(request)) {
-			return handleAuthError(resultVO); // 토큰 확인
-		}
+
 		LoginVO user = (LoginVO)EgovUserDetailsHelper.getAuthenticatedUser();
 		String old_password = param.get("old_password");
 		String new_password = param.get("new_password");

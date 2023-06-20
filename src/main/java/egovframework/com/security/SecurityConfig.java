@@ -1,6 +1,5 @@
 package egovframework.com.security;
 
-import egovframework.com.cmm.annotation.EgovSecurity;
 import egovframework.com.jwt.JwtAuthenticationEntryPoint;
 import egovframework.com.jwt.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
@@ -15,10 +14,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * fileName       : SecurityConfig

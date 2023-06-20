@@ -32,7 +32,6 @@ import egovframework.com.cmm.service.FileVO;
 import egovframework.com.cmm.service.ResultVO;
 import egovframework.com.cmm.util.EgovUserDetailsHelper;
 import egovframework.com.cmm.web.EgovFileDownloadController;
-import egovframework.com.jwt.JwtVerification;
 import egovframework.let.cop.bbs.service.BoardMasterVO;
 import egovframework.let.cop.bbs.service.BoardVO;
 import egovframework.let.cop.bbs.service.EgovBBSAttributeManageService;
@@ -65,10 +64,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @Tag(name="EgovBBSManageApiController",description = "게시물 관리")
 public class EgovBBSManageApiController {
 	
-	/** JwtVerification */
-	@Autowired
-	private JwtVerification jwtVerification;
-
 	@Resource(name = "EgovBBSManageService")
 	private EgovBBSManageService bbsMngService;
 
@@ -322,33 +317,28 @@ public class EgovBBSManageApiController {
 
 			return resultVO;
 		}
-		
-		// 기존 세션 체크 인증에서 토큰 방식으로 변경
-		if (!jwtVerification.isVerification(request)) {
-			return handleAuthError(resultVO); // 토큰 확인
-		} else if (jwtVerification.isVerification(request)) {
-			final Map<String, MultipartFile> files = multiRequest.getFileMap();
-			if (!files.isEmpty()) {
-				if ("".equals(atchFileId)) {
-					List<FileVO> result = fileUtil.parseFileInf(files, "BBS_", 0, atchFileId, "");
-					atchFileId = fileMngService.insertFileInfs(result);
-					boardVO.setAtchFileId(atchFileId);
-				} else {
-					FileVO fvo = new FileVO();
-					fvo.setAtchFileId(atchFileId);
-					int cnt = fileMngService.getMaxFileSN(fvo);
-					List<FileVO> _result = fileUtil.parseFileInf(files, "BBS_", cnt, atchFileId, "");
-					fileMngService.updateFileInfs(_result);
-				}
+	
+		final Map<String, MultipartFile> files = multiRequest.getFileMap();
+		if (!files.isEmpty()) {
+			if ("".equals(atchFileId)) {
+				List<FileVO> result = fileUtil.parseFileInf(files, "BBS_", 0, atchFileId, "");
+				atchFileId = fileMngService.insertFileInfs(result);
+				boardVO.setAtchFileId(atchFileId);
+			} else {
+				FileVO fvo = new FileVO();
+				fvo.setAtchFileId(atchFileId);
+				int cnt = fileMngService.getMaxFileSN(fvo);
+				List<FileVO> _result = fileUtil.parseFileInf(files, "BBS_", cnt, atchFileId, "");
+				fileMngService.updateFileInfs(_result);
 			}
-
-			boardVO.setLastUpdusrId(user.getUniqId());
-			boardVO.setNtcrNm(""); // dummy 오류 수정 (익명이 아닌 경우 validator 처리를 위해 dummy로 지정됨) 
-			boardVO.setPassword(EgovFileScrty.encryptPassword("", user.getUniqId())); // dummy 오류 수정 (익명이 아닌 경우 validator 처리를 위해 dummy로 지정됨)
-			boardVO.setNttCn(unscript(boardVO.getNttCn())); // XSS 방지
-
-			bbsMngService.updateBoardArticle(boardVO);
 		}
+
+		boardVO.setLastUpdusrId(user.getUniqId());
+		boardVO.setNtcrNm(""); // dummy 오류 수정 (익명이 아닌 경우 validator 처리를 위해 dummy로 지정됨) 
+		boardVO.setPassword(EgovFileScrty.encryptPassword("", user.getUniqId())); // dummy 오류 수정 (익명이 아닌 경우 validator 처리를 위해 dummy로 지정됨)
+		boardVO.setNttCn(unscript(boardVO.getNttCn())); // XSS 방지
+
+		bbsMngService.updateBoardArticle(boardVO);
 
 		resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
 		resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());
@@ -394,29 +384,25 @@ public class EgovBBSManageApiController {
 
 			return resultVO;
 		}
-		
-		// 기존 세션 체크 인증에서 토큰 방식으로 변경
-		if (!jwtVerification.isVerification(request)) {
-			return handleAuthError(resultVO); // 토큰 확인
-		} else if (jwtVerification.isVerification(request)) {
-			List<FileVO> result = null;
-			String atchFileId = "";
+	
+		List<FileVO> result = null;
+		String atchFileId = "";
 
-			final Map<String, MultipartFile> files = multiRequest.getFileMap();
-			if (!files.isEmpty()) {
-				result = fileUtil.parseFileInf(files, "BBS_", 0, "", "");
-				atchFileId = fileMngService.insertFileInfs(result);
-			}
-			boardVO.setAtchFileId(atchFileId);
-			boardVO.setFrstRegisterId(user.getUniqId());
-			boardVO.setBbsId(boardVO.getBbsId());
-
-			boardVO.setNtcrNm(""); // dummy 오류 수정 (익명이 아닌 경우 validator 처리를 위해 dummy로 지정됨)
-			boardVO.setPassword(EgovFileScrty.encryptPassword("", user.getUniqId())); // dummy 오류 수정 (익명이 아닌 경우 validator 처리를 위해 dummy로 지정됨)
-			// board.setNttCn(unscript(board.getNttCn())); // XSS 방지
-
-			bbsMngService.insertBoardArticle(boardVO);
+		final Map<String, MultipartFile> files = multiRequest.getFileMap();
+		if (!files.isEmpty()) {
+			result = fileUtil.parseFileInf(files, "BBS_", 0, "", "");
+			atchFileId = fileMngService.insertFileInfs(result);
 		}
+		boardVO.setAtchFileId(atchFileId);
+		boardVO.setFrstRegisterId(user.getUniqId());
+		boardVO.setBbsId(boardVO.getBbsId());
+
+		boardVO.setNtcrNm(""); // dummy 오류 수정 (익명이 아닌 경우 validator 처리를 위해 dummy로 지정됨)
+		boardVO.setPassword(EgovFileScrty.encryptPassword("", user.getUniqId())); // dummy 오류 수정 (익명이 아닌 경우 validator 처리를 위해 dummy로 지정됨)
+		// board.setNttCn(unscript(board.getNttCn())); // XSS 방지
+
+		bbsMngService.insertBoardArticle(boardVO);
+	
 
 		resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
 		resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());
@@ -462,33 +448,29 @@ public class EgovBBSManageApiController {
 			return resultVO;
 		}
 		
-		// 기존 세션 체크 인증에서 토큰 방식으로 변경
-		if (!jwtVerification.isVerification(request)) {
-			return handleAuthError(resultVO); // 토큰 확인
-		} else if (jwtVerification.isVerification(request)) {
-			final Map<String, MultipartFile> files = multiRequest.getFileMap();
-			String atchFileId = "";
+		final Map<String, MultipartFile> files = multiRequest.getFileMap();
+		String atchFileId = "";
 
-			if (!files.isEmpty()) {
-				List<FileVO> result = fileUtil.parseFileInf(files, "BBS_", 0, "", "");
-				atchFileId = fileMngService.insertFileInfs(result);
-			}
-
-			boardVO.setAtchFileId(atchFileId);
-			boardVO.setReplyAt("Y");
-			boardVO.setFrstRegisterId(user.getUniqId());
-			boardVO.setBbsId(boardVO.getBbsId());
-			boardVO.setParnts(Long.toString(boardVO.getNttId()));
-			boardVO.setSortOrdr(boardVO.getSortOrdr());
-			boardVO.setReplyLc(Integer.toString(Integer.parseInt(boardVO.getReplyLc()) + 1));
-
-			boardVO.setNtcrNm(""); // dummy 오류 수정 (익명이 아닌 경우 validator 처리를 위해 dummy로 지정됨)
-			boardVO.setPassword(EgovFileScrty.encryptPassword("", user.getUniqId())); // dummy 오류 수정 (익명이 아닌 경우 validator 처리를 위해 dummy로 지정됨)
-
-			boardVO.setNttCn(unscript(boardVO.getNttCn())); // XSS 방지
-
-			bbsMngService.insertBoardArticle(boardVO);
+		if (!files.isEmpty()) {
+			List<FileVO> result = fileUtil.parseFileInf(files, "BBS_", 0, "", "");
+			atchFileId = fileMngService.insertFileInfs(result);
 		}
+
+		boardVO.setAtchFileId(atchFileId);
+		boardVO.setReplyAt("Y");
+		boardVO.setFrstRegisterId(user.getUniqId());
+		boardVO.setBbsId(boardVO.getBbsId());
+		boardVO.setParnts(Long.toString(boardVO.getNttId()));
+		boardVO.setSortOrdr(boardVO.getSortOrdr());
+		boardVO.setReplyLc(Integer.toString(Integer.parseInt(boardVO.getReplyLc()) + 1));
+
+		boardVO.setNtcrNm(""); // dummy 오류 수정 (익명이 아닌 경우 validator 처리를 위해 dummy로 지정됨)
+		boardVO.setPassword(EgovFileScrty.encryptPassword("", user.getUniqId())); // dummy 오류 수정 (익명이 아닌 경우 validator 처리를 위해 dummy로 지정됨)
+
+		boardVO.setNttCn(unscript(boardVO.getNttCn())); // XSS 방지
+
+		bbsMngService.insertBoardArticle(boardVO);
+	
 
 		//return "forward:/cop/bbs/selectBoardList.do";
 		resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
@@ -522,10 +504,6 @@ public class EgovBBSManageApiController {
 		throws Exception {
 		ResultVO resultVO = new ResultVO();
 		
-		// 기존 세션 체크 인증에서 토큰 방식으로 변경
-		if (!jwtVerification.isVerification(request)) {
-			return handleAuthError(resultVO); // 토큰 확인
-		}
 
 		LoginVO user = (LoginVO)EgovUserDetailsHelper.getAuthenticatedUser();
 		
@@ -571,10 +549,6 @@ public class EgovBBSManageApiController {
 		return ret;
 	}
 	
-	private ResultVO handleAuthError(ResultVO resultVO) {
-		resultVO.setResultCode(ResponseCode.AUTH_ERROR.getCode());
-		resultVO.setResultMessage(ResponseCode.AUTH_ERROR.getMessage());
-		return resultVO;
-	}
+	
 
 }
