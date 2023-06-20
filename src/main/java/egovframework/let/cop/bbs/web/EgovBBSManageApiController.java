@@ -32,7 +32,7 @@ import egovframework.com.cmm.service.FileVO;
 import egovframework.com.cmm.service.ResultVO;
 import egovframework.com.cmm.util.EgovUserDetailsHelper;
 import egovframework.com.cmm.web.EgovFileDownloadController;
-import egovframework.com.jwt.config.JwtVerification;
+import egovframework.com.jwt.JwtVerification;
 import egovframework.let.cop.bbs.service.BoardMasterVO;
 import egovframework.let.cop.bbs.service.BoardVO;
 import egovframework.let.cop.bbs.service.EgovBBSAttributeManageService;

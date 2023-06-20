@@ -1,4 +1,4 @@
-package egovframework.com.jwt.config;
+package egovframework.com.jwt;
 
 import javax.servlet.http.HttpServletRequest;
 

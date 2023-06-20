@@ -15,7 +15,7 @@ import egovframework.com.cmm.LoginVO;
 import egovframework.com.cmm.ResponseCode;
 import egovframework.com.cmm.service.ResultVO;
 import egovframework.com.cmm.util.EgovUserDetailsHelper;
-import egovframework.com.jwt.config.JwtVerification;
+import egovframework.com.jwt.JwtVerification;
 import egovframework.let.uat.esm.service.EgovSiteManagerService;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 import io.swagger.v3.oas.annotations.Operation;

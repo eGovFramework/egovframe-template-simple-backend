@@ -15,6 +15,7 @@ import org.egovframe.rte.fdl.cmmn.exception.EgovBizException;
 import org.egovframe.rte.fdl.cryptography.EgovCryptoService;
 import org.egovframe.rte.fdl.property.EgovPropertyService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -37,7 +38,7 @@ import egovframework.com.cmm.service.FileVO;
 import egovframework.com.cmm.service.ResultVO;
 import egovframework.com.cmm.util.EgovUserDetailsHelper;
 import egovframework.com.cmm.web.EgovFileDownloadController;
-import egovframework.com.jwt.config.JwtVerification;
+import egovframework.com.jwt.JwtVerification;
 import egovframework.let.cop.smt.sim.service.EgovIndvdlSchdulManageService;
 import egovframework.let.cop.smt.sim.service.IndvdlSchdulManageVO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -113,8 +114,8 @@ public class EgovIndvdlSchdulManageApiController {
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
 	})
 	@PostMapping(value = "/cop/smt/sim/egovIndvdlSchdulManageMonthListAPI.do")
-	public ResultVO EgovIndvdlSchdulManageMonthList(HttpServletRequest request,
-		@RequestBody Map<String, Object> commandMap) throws Exception {
+	public ResultVO EgovIndvdlSchdulManageMonthList(@AuthenticationPrincipal LoginVO loginVO, HttpServletRequest request,
+													@RequestBody Map<String, Object> commandMap) throws Exception {
 		
 		ResultVO resultVO = new ResultVO();
 		Map<String, Object> resultMap = new HashMap<String, Object>();

@@ -15,7 +15,7 @@ import egovframework.com.cmm.ResponseCode;
 import egovframework.com.cmm.service.EgovFileMngService;
 import egovframework.com.cmm.service.FileVO;
 import egovframework.com.cmm.service.ResultVO;
-import egovframework.com.jwt.config.JwtVerification;
+import egovframework.com.jwt.JwtVerification;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
