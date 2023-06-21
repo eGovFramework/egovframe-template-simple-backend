@@ -39,7 +39,14 @@ public class SecurityConfig {
             "/cop/smt/sim/egovIndvdlSchdulManageDailyListAPI.do", // 일별 일정 조회
             "/cop/smt/sim/egovIndvdlSchdulManageWeekListAPI.do", //주별 일정 조회
             "/cop/bbs/selectBoardArticleAPI.do", //게시판 상세조회
-            "/cop/bbs/selectBoardListAPI.do" //게시판 조회
+            "/cop/bbs/selectBoardListAPI.do", //게시판 조회
+
+            /* swagger v2 */
+            "/v2/api-docs",
+            "/swagger-resources",
+            "/swagger-resources/**",
+            "/swagger-ui.html",
+            "/swagger-ui/**"
     };
     private static final String[] ORIGINS_WHITELIST = {
             "http://localhost:3000",
