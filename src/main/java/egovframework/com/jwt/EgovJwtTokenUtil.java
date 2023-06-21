@@ -33,7 +33,7 @@ public class EgovJwtTokenUtil implements Serializable{
         Claims claims = getClaimFromToken(token);
         return claims.get("id").toString();
     }
-    public String getUsernameFromToken(String token) {
+    public String getUserSeFromToken(String token) {
         Claims claims = getClaimFromToken(token);
         return claims.get("userSe").toString();
     }
@@ -52,7 +52,6 @@ public class EgovJwtTokenUtil implements Serializable{
 
     //generate token for user
     public String generateToken(LoginVO loginVO) {
-        Map<String, Object> claims = new HashMap<>();
         return doGenerateToken(loginVO, "Authorization");
     }
 

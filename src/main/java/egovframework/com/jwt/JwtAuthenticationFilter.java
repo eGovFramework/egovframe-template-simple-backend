@@ -67,7 +67,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             logger.debug("jwtToken validated");
             LoginVO loginVO = new LoginVO();
             loginVO.setId(id);
-            loginVO.setUserSe( jwtTokenUtil.getUsernameFromToken(jwtToken) );
+            loginVO.setUserSe( jwtTokenUtil.getUserSeFromToken(jwtToken) );
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(loginVO, null,
                     Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"))
             );
