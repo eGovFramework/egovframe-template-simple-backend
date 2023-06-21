@@ -135,7 +135,7 @@ public class EgovLoginApiController {
 			
 			String jwtToken = jwtTokenUtil.generateToken(loginVO);
 			
-			String username = jwtTokenUtil.getUsernameFromToken(jwtToken);
+			String username = jwtTokenUtil.getUserSeFromToken(jwtToken);
 	    	log.debug("Dec jwtToken username = "+username);
 	    	 
 	    	//서버사이드 권한 체크 통과를 위해 삽입
