@@ -6,7 +6,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 import egovframework.com.cmm.LoginVO;
 import egovframework.com.cmm.ResponseCode;
 import egovframework.com.cmm.service.ResultVO;
-import egovframework.com.cmm.util.EgovUserDetailsHelper;
 import egovframework.let.uat.esm.service.EgovSiteManagerService;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 import io.swagger.v3.oas.annotations.Operation;
@@ -91,10 +90,9 @@ public class EgovSiteManagerApiController {
 			@ApiResponse(responseCode = "800", description = "저장시 내부 오류")
 	})
 	@PostMapping(value = "/uat/esm/updateAdminPasswordAPI.do")
-	public ResultVO updateAdminPassword(@RequestBody Map<String,String> param, HttpServletRequest request) throws Exception {
+	public ResultVO updateAdminPassword(@RequestBody Map<String,String> param, HttpServletRequest request, @AuthenticationPrincipal LoginVO user) throws Exception {
 		ResultVO resultVO = new ResultVO();
 
-		LoginVO user = (LoginVO)EgovUserDetailsHelper.getAuthenticatedUser();
 		String old_password = param.get("old_password");
 		String new_password = param.get("new_password");
 		String login_id = user.getId();

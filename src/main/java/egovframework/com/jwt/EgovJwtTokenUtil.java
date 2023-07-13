@@ -37,8 +37,10 @@ public class EgovJwtTokenUtil implements Serializable{
         Claims claims = getClaimFromToken(token);
         return claims.get("userSe").toString();
     }
-
-    
+    public String getInfoFromToken(String type, String token) {
+        Claims claims = getClaimFromToken(token);
+        return claims.get(type).toString();
+    }
     public Claims getClaimFromToken(String token) {
         final Claims claims = getAllClaimsFromToken(token);
         return claims;
@@ -64,7 +66,10 @@ public class EgovJwtTokenUtil implements Serializable{
 
         Map<String, Object> claims = new HashMap<>();
         claims.put("id", loginVO.getId() );
+        claims.put("name", loginVO.getName() );
         claims.put("userSe", loginVO.getUserSe() );
+        claims.put("orgnztId", loginVO.getOrgnztId() );
+        claims.put("uniqId", loginVO.getUniqId() );
         claims.put("type", subject);
 
     	log.debug("===>>> secret = "+SECRET_KEY);

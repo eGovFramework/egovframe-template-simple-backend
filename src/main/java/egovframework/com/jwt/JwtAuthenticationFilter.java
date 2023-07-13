@@ -63,18 +63,24 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             logger.debug("Unable to verify JWT Token: " + e.getMessage());
             verificationFlag = false;
         }
+
+        LoginVO loginVO = new LoginVO();
         if( verificationFlag ){
             logger.debug("jwtToken validated");
-            LoginVO loginVO = new LoginVO();
             loginVO.setId(id);
             loginVO.setUserSe( jwtTokenUtil.getUserSeFromToken(jwtToken) );
+            loginVO.setUniqId( jwtTokenUtil.getInfoFromToken("uniqId",jwtToken) );
+            loginVO.setOrgnztId( jwtTokenUtil.getInfoFromToken("orgnztId",jwtToken) );
+            loginVO.setName( jwtTokenUtil.getInfoFromToken("name",jwtToken) );
+
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(loginVO, null,
                     Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"))
             );
             authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(req));
-            logger.info("authenticated user " + id + ", setting security context");
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
+
+
         chain.doFilter(req, res);
 
     }

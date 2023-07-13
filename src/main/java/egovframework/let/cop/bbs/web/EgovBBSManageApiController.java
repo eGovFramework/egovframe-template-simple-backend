@@ -13,6 +13,7 @@ import org.egovframe.rte.fdl.property.EgovPropertyService;
 import org.egovframe.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,7 +31,6 @@ import egovframework.com.cmm.service.EgovFileMngService;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.com.cmm.service.FileVO;
 import egovframework.com.cmm.service.ResultVO;
-import egovframework.com.cmm.util.EgovUserDetailsHelper;
 import egovframework.com.cmm.web.EgovFileDownloadController;
 import egovframework.let.cop.bbs.service.BoardMasterVO;
 import egovframework.let.cop.bbs.service.BoardVO;
@@ -156,11 +156,9 @@ public class EgovBBSManageApiController {
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
 	})
 	@PostMapping(value = "/cop/bbs/selectBoardListAPI.do", consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResultVO selectBoardArticles(@RequestBody BoardVO boardVO)
+	public ResultVO selectBoardArticles(@RequestBody BoardVO boardVO, @AuthenticationPrincipal LoginVO user)
 		throws Exception {
 		ResultVO resultVO = new ResultVO();
-
-		LoginVO user = (LoginVO)EgovUserDetailsHelper.getAuthenticatedUser();
 
 		BoardMasterVO vo = new BoardMasterVO();
 		vo.setBbsId(boardVO.getBbsId());
@@ -211,15 +209,10 @@ public class EgovBBSManageApiController {
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
 	})
 	@PostMapping(value = "/cop/bbs/selectBoardArticleAPI.do")
-	public ResultVO selectBoardArticle(@RequestBody BoardVO boardVO)
+	public ResultVO selectBoardArticle(@RequestBody BoardVO boardVO,@AuthenticationPrincipal LoginVO user)
 		throws Exception {
 
 		ResultVO resultVO = new ResultVO();
-
-		LoginVO user = new LoginVO();
-		if (EgovUserDetailsHelper.isAuthenticated()) {
-			user = (LoginVO)EgovUserDetailsHelper.getAuthenticatedUser();
-		}
 
 		// 조회수 증가 여부 지정
 		boardVO.setPlusCount(true);
@@ -499,14 +492,12 @@ public class EgovBBSManageApiController {
 	@PutMapping(value = "/cop/bbs/deleteBoardArticleAPI/{nttId}.do")
 	public ResultVO deleteBoardArticle(@RequestBody BoardVO boardVO, 
 		@PathVariable("nttId") String nttId,
+		@AuthenticationPrincipal LoginVO user,
 		HttpServletRequest request)
 
 		throws Exception {
 		ResultVO resultVO = new ResultVO();
-		
 
-		LoginVO user = (LoginVO)EgovUserDetailsHelper.getAuthenticatedUser();
-		
 		boardVO.setNttId(Long.parseLong(nttId));
 		boardVO.setLastUpdusrId(user.getUniqId());
 

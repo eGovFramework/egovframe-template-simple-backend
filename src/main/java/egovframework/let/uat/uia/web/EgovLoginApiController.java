@@ -133,7 +133,7 @@ public class EgovLoginApiController {
 			log.debug("===>>> loginVO.getId() = "+loginVO.getId());
 			log.debug("===>>> loginVO.getPassword() = "+loginVO.getPassword());
 			
-			String jwtToken = jwtTokenUtil.generateToken(loginVO);
+			String jwtToken = jwtTokenUtil.generateToken(loginResultVO);
 			
 			String username = jwtTokenUtil.getUserSeFromToken(jwtToken);
 	    	log.debug("Dec jwtToken username = "+username);

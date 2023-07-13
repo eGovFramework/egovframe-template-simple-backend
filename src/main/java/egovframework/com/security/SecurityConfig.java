@@ -36,10 +36,14 @@ public class SecurityConfig {
             "/login/**",
             "/uat/uia/**.do", // 로그인
             "/cmm/main/**.do", // 메인페이지
-            "/cop/smt/sim/egovIndvdlSchdulManageDailyListAPI.do", // 일별 일정 조회
-            "/cop/smt/sim/egovIndvdlSchdulManageWeekListAPI.do", //주별 일정 조회
-            "/cop/bbs/selectBoardArticleAPI.do", //게시판 상세조회
-            "/cop/bbs/selectBoardListAPI.do", //게시판 조회
+            "/cmm/fms/FileDown.do", //파일 다운로드
+            "/cop/smt/sim/egovIndvdlSchdulManageDailyListAPI.do", //일별 일정 조회
+            "/cop/smt/sim/egovIndvdlSchdulManageWeekListAPI.do", //주간 일정 조회
+            "/cop/smt/sim/egovIndvdlSchdulManageDetailAPI.do", //일정 상세조회
+
+            "/cop/bbs/selectUserBBSMasterInfAPI.do", //게시판 마스터 상세 조회
+            "/cop/bbs/selectBoardListAPI.do", //게시판 목록조회
+            "/cop/bbs/selectBoardArticleAPI.do", //게시물 상세조회
 
             /* swagger v2 */
             "/v2/api-docs",

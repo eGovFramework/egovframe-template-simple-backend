@@ -10,6 +10,7 @@ import org.egovframe.rte.fdl.cmmn.exception.EgovBizException;
 import org.egovframe.rte.fdl.property.EgovPropertyService;
 import org.egovframe.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,7 +23,6 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.LoginVO;
 import egovframework.com.cmm.ResponseCode;
 import egovframework.com.cmm.service.ResultVO;
-import egovframework.com.cmm.util.EgovUserDetailsHelper;
 import egovframework.let.cop.bbs.service.BoardMasterVO;
 import egovframework.let.cop.bbs.service.EgovBBSAttributeManageService;
 import egovframework.let.cop.com.service.BoardUseInfVO;
@@ -226,15 +226,11 @@ public class EgovBBSUseInfoManageApiController {
 	@PostMapping(value ="/cop/com/insertBBSUseInfAPI.do")
 	public ResultVO insertBBSUseInf(HttpServletRequest request,
 		BoardUseInfVO bdUseVO,
-		BindingResult bindingResult
-
+		BindingResult bindingResult,
+		@AuthenticationPrincipal LoginVO loginVO
 	) throws Exception {
 
 		ResultVO resultVO = new ResultVO();
-
-
-		LoginVO user = (LoginVO)EgovUserDetailsHelper.getAuthenticatedUser();
-		Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
 
 		beanValidator.validate(bdUseVO, bindingResult);
 
@@ -253,14 +249,12 @@ public class EgovBBSUseInfoManageApiController {
 		}
 
 		bdUseVO.setUseAt("Y");
-		bdUseVO.setFrstRegisterId(user.getUniqId());
+		bdUseVO.setFrstRegisterId(loginVO.getUniqId());
 
-		if (isAuthenticated) {
-			bbsUseService.insertBBSUseInf(bdUseVO);
+		bbsUseService.insertBBSUseInf(bdUseVO);
 
-			resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
-			resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());
-		}
+		resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
+		resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());
 
 		return resultVO;
 	}
@@ -287,38 +281,18 @@ public class EgovBBSUseInfoManageApiController {
 	@PutMapping(value ="/cop/com/updateBBSUseInfAPI/{bbsId}.do")
 	public ResultVO updateBBSUseInf(HttpServletRequest request,
 		@RequestBody BoardUseInfVO bdUseVO,
-		@PathVariable("bbsId") String bbsId) throws Exception {
+		@PathVariable("bbsId") String bbsId,
+		@AuthenticationPrincipal LoginVO loginVO
+	) throws Exception {
 
 		ResultVO resultVO = new ResultVO();
+		bdUseVO.setBbsId(bbsId);
+		bbsUseService.updateBBSUseInf(bdUseVO);
 
-
-		Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-
-		if (isAuthenticated) {
-			bdUseVO.setBbsId(bbsId);
-			bbsUseService.updateBBSUseInf(bdUseVO);
-
-			resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
-			resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());
-		}
+		resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
+		resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());
 
 		return resultVO;
-	}
-
-	
-
-	/**
-	 * 운영자 권한을 확인한다.(로그인 여부를 확인한다.)
-	 *
-	 * @throws EgovBizException
-	 */
-	protected boolean checkAuthority() throws Exception {
-		// 사용자권한 처리
-		if (!EgovUserDetailsHelper.isAuthenticated()) {
-			return false;
-		} else {
-			return true;
-		}
 	}
 
 }

@@ -3,6 +3,8 @@ package egovframework.com.cmm.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 
@@ -36,8 +38,8 @@ public class EgovUserDetailsHelper {
 		 * @return Object - 사용자 ValueObject
 		 */
 		public static Object getAuthenticatedUser() {
-			return (LoginVO)RequestContextHolder.currentRequestAttributes().getAttribute("LoginVO", RequestAttributes.SCOPE_SESSION)==null ?
-					new LoginVO() : (LoginVO) RequestContextHolder.currentRequestAttributes().getAttribute("LoginVO", RequestAttributes.SCOPE_SESSION);
+			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+			return (LoginVO) authentication.getPrincipal();
 
 		}
 
@@ -62,10 +64,7 @@ public class EgovUserDetailsHelper {
 		 * @return Boolean - 인증된 사용자 여부(TRUE / FALSE)
 		 */
 		public static Boolean isAuthenticated() {
-			if (EgovObjectUtil.isNull(RequestContextHolder.currentRequestAttributes().getAttribute("LoginVO", RequestAttributes.SCOPE_SESSION))) {
-				// log.debug("## authentication object is null!!");
-				return Boolean.FALSE;
-			}
-			return Boolean.TRUE;
+			return EgovUserDetailsHelper.getAuthenticatedUser()!=null? Boolean.TRUE : Boolean.FALSE ;
+
 		}
 }

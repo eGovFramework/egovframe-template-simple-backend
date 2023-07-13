@@ -11,6 +11,9 @@ import org.egovframe.rte.fdl.cmmn.exception.EgovBizException;
 import org.egovframe.rte.fdl.property.EgovPropertyService;
 import org.egovframe.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,7 +28,6 @@ import egovframework.com.cmm.LoginVO;
 import egovframework.com.cmm.ResponseCode;
 import egovframework.com.cmm.service.EgovCmmUseService;
 import egovframework.com.cmm.service.ResultVO;
-import egovframework.com.cmm.util.EgovUserDetailsHelper;
 import egovframework.let.cop.bbs.service.BoardMasterVO;
 import egovframework.let.cop.bbs.service.EgovBBSAttributeManageService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -183,14 +185,16 @@ public class EgovBBSAttributeManageApiController {
 	})
 	@PostMapping(value ="/cop/bbs/insertBBSMasterInfAPI.do")
 	public ResultVO insertBBSMasterInf(HttpServletRequest request,
-		BoardMasterVO boardMasterVO,
-		BindingResult bindingResult)
+									   BoardMasterVO boardMasterVO,
+									   BindingResult bindingResult,
+									   @AuthenticationPrincipal LoginVO loginVO
+	)
 		throws Exception {
 		ResultVO resultVO = new ResultVO();
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 
-		LoginVO user = (LoginVO)EgovUserDetailsHelper.getAuthenticatedUser();
-		Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		LoginVO loginVO222 = (LoginVO) authentication.getPrincipal();
 
 		beanValidator.validate(boardMasterVO, bindingResult);
 		if (bindingResult.hasErrors()) {
@@ -216,18 +220,16 @@ public class EgovBBSAttributeManageApiController {
 			return resultVO;
 		}
 
-		if (isAuthenticated) {
-			boardMasterVO.setFrstRegisterId(user.getUniqId());
-			boardMasterVO.setUseAt("Y");
-			boardMasterVO.setTrgetId("SYSTEMDEFAULT_REGIST");
-			boardMasterVO.setPosblAtchFileSize(propertyService.getString("posblAtchFileSize"));
+		boardMasterVO.setFrstRegisterId(loginVO.getUniqId());
+		boardMasterVO.setUseAt("Y");
+		boardMasterVO.setTrgetId("SYSTEMDEFAULT_REGIST");
+		boardMasterVO.setPosblAtchFileSize(propertyService.getString("posblAtchFileSize"));
 
-			bbsAttrbService.insertBBSMastetInf(boardMasterVO);
+		bbsAttrbService.insertBBSMastetInf(boardMasterVO);
 
-			resultVO.setResult(resultMap);
-			resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
-			resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());
-		}
+		resultVO.setResult(resultMap);
+		resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
+		resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());
 
 		return resultVO;
 	}
@@ -254,14 +256,13 @@ public class EgovBBSAttributeManageApiController {
 	})
 	@PutMapping(value ="/cop/bbs/updateBBSMasterInfAPI/{bbsId}.do")
 	public ResultVO updateBBSMasterInf(HttpServletRequest request,
-		@PathVariable("bbsId") String bbsId,
-		@RequestBody BoardMasterVO boardMasterVO,
-		BindingResult bindingResult) throws Exception {
+									   @PathVariable("bbsId") String bbsId,
+									   @RequestBody BoardMasterVO boardMasterVO,
+									   BindingResult bindingResult,
+									   @AuthenticationPrincipal LoginVO loginVO
+									   ) throws Exception {
 		ResultVO resultVO = new ResultVO();
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-
-		LoginVO user = (LoginVO)EgovUserDetailsHelper.getAuthenticatedUser();
-		Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
 
 		beanValidator.validate(boardMasterVO, bindingResult);
 
@@ -276,15 +277,13 @@ public class EgovBBSAttributeManageApiController {
 			return resultVO;
 		}
 
-		if (isAuthenticated) {
-			boardMasterVO.setLastUpdusrId(user.getUniqId());
-			boardMasterVO.setPosblAtchFileSize(propertyService.getString("posblAtchFileSize"));
-			bbsAttrbService.updateBBSMasterInf(boardMasterVO);
+		boardMasterVO.setLastUpdusrId(loginVO.getUniqId());
+		boardMasterVO.setPosblAtchFileSize(propertyService.getString("posblAtchFileSize"));
+		bbsAttrbService.updateBBSMasterInf(boardMasterVO);
 
-			resultVO.setResult(resultMap);
-			resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
-			resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());
-		}
+		resultVO.setResult(resultMap);
+		resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
+		resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());
 
 		return resultVO;
 	}
@@ -309,38 +308,20 @@ public class EgovBBSAttributeManageApiController {
 	})
 	@PutMapping(value ="/cop/bbs/deleteBBSMasterInfAPI/{bbsId}.do")
 	public ResultVO deleteBBSMasterInf(HttpServletRequest request,
+	    @AuthenticationPrincipal LoginVO loginVO,
 		@PathVariable("bbsId") String bbsId,
 		@RequestBody BoardMasterVO boardMasterVO) throws Exception {
 		ResultVO resultVO = new ResultVO();
 
-		LoginVO user = (LoginVO)EgovUserDetailsHelper.getAuthenticatedUser();
-		Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-
-		if (isAuthenticated) {
-			boardMasterVO.setLastUpdusrId(user.getUniqId());
+			boardMasterVO.setLastUpdusrId(loginVO.getUniqId());
 			bbsAttrbService.deleteBBSMasterInf(boardMasterVO);
 
 			resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
 			resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());
-		}
 
 		return resultVO;
 	}
 
-	
 
-	/**
-	 * 운영자 권한을 확인한다.(로그인 여부를 확인한다.)
-	 *
-	 * @throws EgovBizException
-	 */
-	protected boolean checkAuthority() throws Exception {
-		// 사용자권한 처리
-		if (!EgovUserDetailsHelper.isAuthenticated()) {
-			return false;
-		} else {
-			return true;
-		}
-	}
 
 }
