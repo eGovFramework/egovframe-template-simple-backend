@@ -13,7 +13,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
 import java.util.Arrays;
 
 /**
@@ -34,9 +33,11 @@ public class SecurityConfig {
     private String[] AUTH_WHITELIST = {
             "/",
             "/login/**",
-            "/uat/uia/**.do", // 로그인
+            "/uat/uia/actionLoginJWT.do",//JWT 로그인
+            "/uat/uia/actionLoginAPI.do",//일반 로그인
             "/cmm/main/**.do", // 메인페이지
             "/cmm/fms/FileDown.do", //파일 다운로드
+            "/cmm/fms/getImage.do", //갤러리 이미지보기
             "/cop/smt/sim/egovIndvdlSchdulManageDailyListAPI.do", //일별 일정 조회
             "/cop/smt/sim/egovIndvdlSchdulManageWeekListAPI.do", //주간 일정 조회
             "/cop/smt/sim/egovIndvdlSchdulManageDetailAPI.do", //일정 상세조회

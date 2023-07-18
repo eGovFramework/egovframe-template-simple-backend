@@ -193,9 +193,6 @@ public class EgovBBSAttributeManageApiController {
 		ResultVO resultVO = new ResultVO();
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		LoginVO loginVO222 = (LoginVO) authentication.getPrincipal();
-
 		beanValidator.validate(boardMasterVO, bindingResult);
 		if (bindingResult.hasErrors()) {
 

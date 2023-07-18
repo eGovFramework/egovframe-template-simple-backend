@@ -3,24 +3,13 @@ package egovframework.let.uat.uia.web;
 import egovframework.com.cmm.ResponseCode;
 import egovframework.com.cmm.service.ResultVO;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.*;
-import org.springframework.http.client.ClientHttpResponse;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.client.DefaultResponseErrorHandler;
 
-import java.io.IOException;
-import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,16 +26,16 @@ import static org.assertj.core.api.Assertions.assertThat;
  * 2023/06/19        crlee       최초 생성
  */
 @TestInstance(TestInstance. Lifecycle.PER_CLASS)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-public class EgovLoginApiContollerTest {
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+public class EgovLoginApiControllerTest {
 
     @Value("${server.servlet.context-path}")
     String CONTEXT_PATH;
     String URL = "http://localhost";
-    String SERVER_URL;
 
     @LocalServerPort
     int randomServerPort;
+    String SERVER_URL;
 
     @BeforeAll
     void init(){
@@ -106,6 +95,7 @@ public class EgovLoginApiContollerTest {
         headers.set("Authorization", token);
         HttpEntity request = new HttpEntity(headers);
         TestRestTemplate rest = new TestRestTemplate();
+
          return rest.exchange(this.SERVER_URL + "/uat/esm/jwtAuthAPI.do", HttpMethod.POST, request,ResultVO.class);
     }
 }

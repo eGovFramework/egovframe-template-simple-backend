@@ -1,16 +1,12 @@
 package egovframework.com.cmm.util;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.context.request.RequestAttributes;
-import org.springframework.web.context.request.RequestContextHolder;
-
 import egovframework.com.cmm.LoginVO;
-
-import org.egovframe.rte.fdl.string.EgovObjectUtil;
 
 /**
  * EgovUserDetails Helper 클래스
@@ -49,14 +45,8 @@ public class EgovUserDetailsHelper {
 		 * @return List - 사용자 권한정보 목록
 		 */
 		public static List<String> getAuthorities() {
-			List<String> listAuth = new ArrayList<String>();
-
-			if (EgovObjectUtil.isNull(RequestContextHolder.currentRequestAttributes().getAttribute("LoginVO", RequestAttributes.SCOPE_SESSION))) {
-				// log.debug("## authentication object is null!!");
-				return null;
-			}
-
-			return listAuth;
+			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+			return authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
 		}
 
 		/**
