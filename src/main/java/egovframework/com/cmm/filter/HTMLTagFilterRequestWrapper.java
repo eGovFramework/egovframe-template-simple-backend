@@ -20,90 +20,70 @@ import javax.servlet.http.HttpServletRequestWrapper;
 
 public class HTMLTagFilterRequestWrapper extends HttpServletRequestWrapper {
 
-	public HTMLTagFilterRequestWrapper(HttpServletRequest request) {
-		super(request);
-	}
+    public HTMLTagFilterRequestWrapper(HttpServletRequest request) {
+        super(request);
+    }
 
-	public String[] getParameterValues(String parameter) {
+    // 매개변수로 전달된 파라미터의 값들 중에서 HTML 태그를 필터링하여 처리합니다.
+    public String[] getParameterValues(String parameter) {
+        String[] values = super.getParameterValues(parameter);
 
-		String[] values = super.getParameterValues(parameter);
-		
-		if(values==null){
-			return null;			
-		}
-		
-		for (int i = 0; i < values.length; i++) {			
-			if (values[i] != null) {				
-				StringBuffer strBuff = new StringBuffer();
-				for (int j = 0; j < values[i].length(); j++) {
-					char c = values[i].charAt(j);
-					switch (c) {
-					case '<':
-						strBuff.append("&lt;");
-						break;
-					case '>':
-						strBuff.append("&gt;");
-						break;
-					//case '&':
-						//strBuff.append("&amp;");
-						//break;
-					case '"':
-						strBuff.append("&quot;");
-						break;
-					case '\'':
-						strBuff.append("&apos;");
-						break;
-					default:
-						strBuff.append(c);
-						break;
-					}
-				}				
-				values[i] = strBuff.toString();
-			} else {
-				values[i] = null;
-			}
-		}
+        if (values == null) {
+            return null;
+        }
 
-		return values;
-	}
+        for (int i = 0; i < values.length; i++) {
+            if (values[i] != null) {
+                // HTML 태그를 변경하여 필터링한 결과를 새로운 배열로 반환합니다.
+                values[i] = filterHTMLTags(values[i]);
+            } else {
+                values[i] = null;
+            }
+        }
 
-	public String getParameter(String parameter) {
-		
-		String value = super.getParameter(parameter);
-		
-		if(value==null){
-			return null;
-		}
-		
-		StringBuffer strBuff = new StringBuffer();
+        return values;
+    }
 
-		for (int i = 0; i < value.length(); i++) {
-			char c = value.charAt(i);
-			switch (c) {
-			case '<':
-				strBuff.append("&lt;");
-				break;
-			case '>':
-				strBuff.append("&gt;");
-				break;
-			case '&':
-				strBuff.append("&amp;");
-				break;
-			case '"':
-				strBuff.append("&quot;");
-				break;
-			case '\'':
-				strBuff.append("&apos;");
-				break;	
-			default:
-				strBuff.append(c);
-				break;
-			}
-		}
-		
-		value = strBuff.toString();
-		
-		return value;
-	}
+    // 매개변수로 전달된 파라미터의 값에서 HTML 태그를 필터링하여 처리합니다.
+    public String getParameter(String parameter) {
+        String value = super.getParameter(parameter);
 
+        if (value == null) {
+            return null;
+        }
+
+        // HTML 태그를 변경하여 필터링한 결과를 반환합니다.
+        return filterHTMLTags(value);
+    }
+
+    // 문자열에서 HTML 태그를 변경하여 필터링합니다.
+    private String filterHTMLTags(String input) {
+        StringBuffer strBuff = new StringBuffer();
+
+        for (int i = 0; i < input.length(); i++) {
+            char c = input.charAt(i);
+            switch (c) {
+                case '<':
+                    strBuff.append("&lt;");
+                    break;
+                case '>':
+                    strBuff.append("&gt;");
+                    break;
+                case '&':
+                    strBuff.append("&amp;");
+                    break;
+                case '"':
+                    strBuff.append("&quot;");
+                    break;
+                case '\'':
+                    strBuff.append("&apos;");
+                    break;
+                default:
+                    strBuff.append(c);
+                    break;
+            }
+        }
+
+        return strBuff.toString();
+    }
 }
