@@ -26,12 +26,12 @@ public class EgovJwtTokenUtil implements Serializable{
 	
 	public static final String SECRET_KEY = EgovProperties.getProperty("Globals.jwt.secret");
 	
-	//retrieve username from jwt token
+	//토큰에서 사용자 이름(Subject)을 추출
     public String getUsernameFromToken(String token) {
         return getClaimFromToken(token, Claims::getSubject);
     }
 
-    //retrieve expiration date from jwt token
+    //토큰에서 만료 일자를 추출
     public Date getExpirationDateFromToken(String token) {
         return getClaimFromToken(token, Claims::getExpiration);
     }
@@ -41,33 +41,32 @@ public class EgovJwtTokenUtil implements Serializable{
         return claimsResolver.apply(claims);
     }
 	
-    //for retrieveing any information from token we will need the secret key
+    //토큰에서 클레임을 추출하는 일반화된 메서드
     public Claims getAllClaimsFromToken(String token) {
     	log.debug("===>>> secret = "+SECRET_KEY);
         return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
     }
     
-    //check if the token has expired
+    //토큰이 만료되었는지 확인
     private Boolean isTokenExpired(String token) {
         final Date expiration = getExpirationDateFromToken(token);
         return expiration.before(new Date());
     }
     
-    //generate token for user
+    //사용자의 정보를 기반으로 토큰을 생성
     public String generateToken(LoginVO loginVO) {
         Map<String, Object> claims = new HashMap<>();
         return doGenerateToken(claims, loginVO.getUserSe()+loginVO.getId());
     }
-
+    //사용자의 정보와 추가 클레임을 기반으로 토큰을 생성
     public String generateToken(LoginVO loginVO, Map<String, Object> claims) {
         return doGenerateToken(claims, loginVO.getUserSe()+loginVO.getId());
     }
-    
-	//while creating the token -
-	//1. Define  claims of the token, like Issuer, Expiration, Subject, and the ID
-	//2. Sign the JWT using the HS512 algorithm and secret key.
-	//3. According to JWS Compact Serialization(https://tools.ietf.org/html/draft-ietf-jose-json-web-signature-41#section-3.1)
-	//   compaction of the JWT to a URL-safe string
+	
+    // 토큰을 생성하는 메서드
+    // 1. 토큰의 클레임(정보)을 정의합니다. 발행자(Issuer), 만료 일자(Expiration), 주제(Subject), 그리고 ID를 포함할 수 있습니다.
+    // 2. HS512 알고리즘과 시크릿 키를 사용하여 JWT를 서명합니다.
+    // 3. JWS Compact Serialization(https://tools.ietf.org/html/draft-ietf-jose-json-web-signature-41#section-3.1)에 따라 JWT를 URL-안전한 문자열로 변환합니다.
     private String doGenerateToken(Map<String, Object> claims, String subject) {
     	log.debug("===>>> secret = "+SECRET_KEY);
         return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
@@ -75,7 +74,7 @@ public class EgovJwtTokenUtil implements Serializable{
             .signWith(SignatureAlgorithm.HS512, SECRET_KEY).compact();
     }
     
-    //validate token
+    //토큰을 검증
     public Boolean validateToken(String token, LoginVO loginVO) {
         final String username = getUsernameFromToken(token);
         return (username.equals(loginVO.getUserSe()+loginVO.getId()) && !isTokenExpired(token));
