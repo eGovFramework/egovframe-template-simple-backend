@@ -1,5 +1,7 @@
 package egovframework.com.cmm;
 
+import egovframework.com.cmm.service.ResultVO;
+
 import java.util.regex.Pattern;
 
 /**
@@ -18,6 +20,14 @@ import java.util.regex.Pattern;
  */
 
 public class EgovWebUtil {
+
+
+	public static ResultVO handleAuthError(int code, String msg) {
+		ResultVO resultVO = new ResultVO();
+		resultVO.setResultCode(code);
+		resultVO.setResultMessage(msg);
+		return resultVO;
+	}
 	public static String clearXSSMinimum(String value) {
 		if (value == null || value.trim().equals("")) {
 			return "";

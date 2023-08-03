@@ -10,6 +10,7 @@ import org.egovframe.rte.fdl.cmmn.exception.EgovBizException;
 import org.egovframe.rte.fdl.property.EgovPropertyService;
 import org.egovframe.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,8 +23,6 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.LoginVO;
 import egovframework.com.cmm.ResponseCode;
 import egovframework.com.cmm.service.ResultVO;
-import egovframework.com.cmm.util.EgovUserDetailsHelper;
-import egovframework.com.jwt.config.JwtVerification;
 import egovframework.let.cop.bbs.service.BoardMasterVO;
 import egovframework.let.cop.bbs.service.EgovBBSAttributeManageService;
 import egovframework.let.cop.com.service.BoardUseInfVO;
@@ -54,9 +53,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @Tag(name="EgovBBSUseInfoManageApiController",description = "게시판 이용정보 관리")
 public class EgovBBSUseInfoManageApiController {
 	
-	/** JwtVerification */
-	@Autowired
-	private JwtVerification jwtVerification;
 
 	/** EgovBBSUseInfoManageService */
 	@Resource(name = "EgovBBSUseInfoManageService")
@@ -102,10 +98,6 @@ public class EgovBBSUseInfoManageApiController {
 		ResultVO resultVO = new ResultVO();
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 
-		// 기존 세션 체크 인증에서 토큰 방식으로 변경
-		if (!jwtVerification.isVerification(request)) {
-			return handleAuthError(resultVO); // 토큰 확인
-		}
 
 		bdUseVO.setPageUnit(propertyService.getInt("Globals.pageUnit"));
 		bdUseVO.setPageSize(propertyService.getInt("Globals.pageSize"));
@@ -191,10 +183,6 @@ public class EgovBBSUseInfoManageApiController {
 
 		BoardUseInfVO vo = bbsUseService.selectBBSUseInf(bdUseVO);// bbsItrgetId
 
-		// 기존 세션 체크 인증에서 토큰 방식으로 변경
-		if (!jwtVerification.isVerification(request)) {
-			return handleAuthError(resultVO); // 토큰 확인
-		}
 
 		// 시스템 사용 게시판의 경우 URL 표시
 		if ("SYSTEM_DEFAULT_BOARD".equals(vo.getTrgetId())) {
@@ -238,19 +226,11 @@ public class EgovBBSUseInfoManageApiController {
 	@PostMapping(value ="/cop/com/insertBBSUseInfAPI.do")
 	public ResultVO insertBBSUseInf(HttpServletRequest request,
 		BoardUseInfVO bdUseVO,
-		BindingResult bindingResult
-
+		BindingResult bindingResult,
+		@AuthenticationPrincipal LoginVO loginVO
 	) throws Exception {
 
 		ResultVO resultVO = new ResultVO();
-
-		// 기존 세션 체크 인증에서 토큰 방식으로 변경
-		if (!jwtVerification.isVerification(request)) {
-			return handleAuthError(resultVO); // 토큰 확인
-		}
-
-		LoginVO user = (LoginVO)EgovUserDetailsHelper.getAuthenticatedUser();
-		Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
 
 		beanValidator.validate(bdUseVO, bindingResult);
 
@@ -269,14 +249,12 @@ public class EgovBBSUseInfoManageApiController {
 		}
 
 		bdUseVO.setUseAt("Y");
-		bdUseVO.setFrstRegisterId(user.getUniqId());
+		bdUseVO.setFrstRegisterId(loginVO.getUniqId());
 
-		if (isAuthenticated) {
-			bbsUseService.insertBBSUseInf(bdUseVO);
+		bbsUseService.insertBBSUseInf(bdUseVO);
 
-			resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
-			resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());
-		}
+		resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
+		resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());
 
 		return resultVO;
 	}
@@ -303,46 +281,18 @@ public class EgovBBSUseInfoManageApiController {
 	@PutMapping(value ="/cop/com/updateBBSUseInfAPI/{bbsId}.do")
 	public ResultVO updateBBSUseInf(HttpServletRequest request,
 		@RequestBody BoardUseInfVO bdUseVO,
-		@PathVariable("bbsId") String bbsId) throws Exception {
+		@PathVariable("bbsId") String bbsId,
+		@AuthenticationPrincipal LoginVO loginVO
+	) throws Exception {
 
 		ResultVO resultVO = new ResultVO();
+		bdUseVO.setBbsId(bbsId);
+		bbsUseService.updateBBSUseInf(bdUseVO);
 
-		// 기존 세션 체크 인증에서 토큰 방식으로 변경
-		if (!jwtVerification.isVerification(request)) {
-			return handleAuthError(resultVO); // 토큰 확인
-		}
-
-		Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-
-		if (isAuthenticated) {
-			bdUseVO.setBbsId(bbsId);
-			bbsUseService.updateBBSUseInf(bdUseVO);
-
-			resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
-			resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());
-		}
+		resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
+		resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());
 
 		return resultVO;
-	}
-
-	private ResultVO handleAuthError(ResultVO resultVO) {
-		resultVO.setResultCode(ResponseCode.AUTH_ERROR.getCode());
-		resultVO.setResultMessage(ResponseCode.AUTH_ERROR.getMessage());
-		return resultVO;
-	}
-
-	/**
-	 * 운영자 권한을 확인한다.(로그인 여부를 확인한다.)
-	 *
-	 * @throws EgovBizException
-	 */
-	protected boolean checkAuthority() throws Exception {
-		// 사용자권한 처리
-		if (!EgovUserDetailsHelper.isAuthenticated()) {
-			return false;
-		} else {
-			return true;
-		}
 	}
 
 }

@@ -15,6 +15,7 @@ import org.egovframe.rte.fdl.cmmn.exception.EgovBizException;
 import org.egovframe.rte.fdl.cryptography.EgovCryptoService;
 import org.egovframe.rte.fdl.property.EgovPropertyService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -35,9 +36,7 @@ import egovframework.com.cmm.service.EgovFileMngService;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.com.cmm.service.FileVO;
 import egovframework.com.cmm.service.ResultVO;
-import egovframework.com.cmm.util.EgovUserDetailsHelper;
 import egovframework.com.cmm.web.EgovFileDownloadController;
-import egovframework.com.jwt.config.JwtVerification;
 import egovframework.let.cop.smt.sim.service.EgovIndvdlSchdulManageService;
 import egovframework.let.cop.smt.sim.service.IndvdlSchdulManageVO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -66,10 +65,6 @@ public class EgovIndvdlSchdulManageApiController {
 
 	@Autowired
 	private DefaultBeanValidator beanValidator;
-	
-	/** JwtVerification */
-	@Autowired
-	private JwtVerification jwtVerification;
 
 	/** EgovMessageSource */
 	@Resource(name = "egovMessageSource")
@@ -113,17 +108,12 @@ public class EgovIndvdlSchdulManageApiController {
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
 	})
 	@PostMapping(value = "/cop/smt/sim/egovIndvdlSchdulManageMonthListAPI.do")
-	public ResultVO EgovIndvdlSchdulManageMonthList(HttpServletRequest request,
-		@RequestBody Map<String, Object> commandMap) throws Exception {
+	public ResultVO EgovIndvdlSchdulManageMonthList(@AuthenticationPrincipal LoginVO loginVO, HttpServletRequest request,
+													@RequestBody Map<String, Object> commandMap) throws Exception {
 		
 		ResultVO resultVO = new ResultVO();
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 
-		// 기존 세션 체크 인증에서 토큰 방식으로 변경
-		 if (!jwtVerification.isVerification(request)) {
-			return handleAuthError(resultVO); // 토큰 확인
-		}
-		
 		//일정구분 검색 유지
 		resultMap.put("searchKeyword",
 			commandMap.get("searchKeyword") == null ? "" : (String)commandMap.get("searchKeyword"));
@@ -196,17 +186,11 @@ public class EgovIndvdlSchdulManageApiController {
 		HttpServletRequest request,
 		final MultipartHttpServletRequest multiRequest,
 		IndvdlSchdulManageVO indvdlSchdulManageVO,
-		BindingResult bindingResult
+		BindingResult bindingResult,
+		@AuthenticationPrincipal LoginVO loginVO
 	) throws Exception {
 
 		ResultVO resultVO = new ResultVO();
-
-		// 기존 세션 체크 인증에서 토큰 방식으로 변경
-		if (!jwtVerification.isVerification(request)) {
-			return handleAuthError(resultVO); // 토큰 확인
-		}
-
-		LoginVO user = (LoginVO)EgovUserDetailsHelper.getAuthenticatedUser();
 
 		//서버  validate 체크
 		beanValidator.validate(indvdlSchdulManageVO, bindingResult);
@@ -232,8 +216,8 @@ public class EgovIndvdlSchdulManageApiController {
 		indvdlSchdulManageVO.setAtchFileId(_atchFileId); // 첨부파일 ID
 
 		//아이디 설정
-		indvdlSchdulManageVO.setFrstRegisterId(user.getUniqId());
-		indvdlSchdulManageVO.setLastUpdusrId(user.getUniqId());
+		indvdlSchdulManageVO.setFrstRegisterId(loginVO.getUniqId());
+		indvdlSchdulManageVO.setLastUpdusrId(loginVO.getUniqId());
 
 		indvdlSchdulManageVO.setSchdulDeptName("관리자부서");
 		indvdlSchdulManageVO.setSchdulDeptId("ORGNZT_0000000000000");
@@ -264,16 +248,12 @@ public class EgovIndvdlSchdulManageApiController {
 	})
 	@PostMapping(value = "/cop/smt/sim/egovIndvdlSchdulManageDetailAPI.do")
 	public ResultVO EgovIndvdlSchdulManageDetail(
-		@RequestBody Map<String, Object> commandMap)
+		@RequestBody Map<String, Object> commandMap,
+		@AuthenticationPrincipal LoginVO user)
 		throws Exception {
 
 		ResultVO resultVO = new ResultVO();
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-
-		LoginVO user = new LoginVO();
-		if (EgovUserDetailsHelper.isAuthenticated()) {
-			user = (LoginVO)EgovUserDetailsHelper.getAuthenticatedUser();
-		}
 
 		IndvdlSchdulManageVO indvdlSchdulManageVO = new IndvdlSchdulManageVO();
 		indvdlSchdulManageVO.setSchdulId((String)commandMap.get("schdulId"));
@@ -353,15 +333,12 @@ public class EgovIndvdlSchdulManageApiController {
 		IndvdlSchdulManageVO indvdlSchdulManageVO = new IndvdlSchdulManageVO();
 		indvdlSchdulManageVO.setSchdulId(schdulId);
 		
-		// 기존 세션 체크 인증에서 토큰 방식으로 변경
-		if (!jwtVerification.isVerification(request)) {
-			return handleAuthError(resultVO); // 토큰 확인
-		} else {
-			egovIndvdlSchdulManageService.deleteIndvdlSchdulManage(indvdlSchdulManageVO);//schdulId
 
-			resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
-			resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());
-		}
+		egovIndvdlSchdulManageService.deleteIndvdlSchdulManage(indvdlSchdulManageVO);//schdulId
+
+		resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
+		resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());
+
 
 		return resultVO;
 	}
@@ -388,18 +365,13 @@ public class EgovIndvdlSchdulManageApiController {
 	public ResultVO IndvdlSchdulManageModifyActor(
 		final MultipartHttpServletRequest multiRequest,
 		IndvdlSchdulManageVO indvdlSchdulManageVO,
-		BindingResult bindingResult)
+		BindingResult bindingResult,
+		@AuthenticationPrincipal LoginVO user)
 		throws Exception {
 
 		ResultVO resultVO = new ResultVO();
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 
-		if (!EgovUserDetailsHelper.isAuthenticated()) {
-			return handleAuthError(resultVO); // server-side 권한 확인
-		}
-
-		//로그인 객체 선언
-		LoginVO user = (LoginVO)EgovUserDetailsHelper.getAuthenticatedUser();
 
 		//서버  validate 체크
 		beanValidator.validate(indvdlSchdulManageVO, bindingResult);
@@ -683,28 +655,6 @@ public class EgovIndvdlSchdulManageApiController {
 		}
 
 		return sOutput;
-	}
-
-	/**
-	 * 운영자 권한을 확인한다.(로그인 여부를 확인한다.)
-	 *
-     * @param model
-	 * @throws EgovBizException
-	 */
-	protected boolean checkAuthority(ModelMap model) throws Exception {
-		// 사용자권한 처리
-		if (!EgovUserDetailsHelper.isAuthenticated()) {
-			model.addAttribute("message", egovMessageSource.getMessage("fail.common.login"));
-			return false;
-		} else {
-			return true;
-		}
-	}
-
-	private ResultVO handleAuthError(ResultVO resultVO) {
-		resultVO.setResultCode(ResponseCode.AUTH_ERROR.getCode());
-		resultVO.setResultMessage(ResponseCode.AUTH_ERROR.getMessage());
-		return resultVO;
 	}
 
 }
