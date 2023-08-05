@@ -11,6 +11,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import egovframework.com.cmm.annotation.SecurityPass;
 import org.egovframe.rte.fdl.cmmn.exception.EgovBizException;
 import org.egovframe.rte.fdl.cryptography.EgovCryptoService;
 import org.egovframe.rte.fdl.property.EgovPropertyService;
@@ -246,6 +247,7 @@ public class EgovIndvdlSchdulManageApiController {
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "조회 성공")
 	})
+	@SecurityPass
 	@PostMapping(value = "/cop/smt/sim/egovIndvdlSchdulManageDetailAPI.do")
 	public ResultVO EgovIndvdlSchdulManageDetail(
 		@RequestBody Map<String, Object> commandMap,
@@ -443,6 +445,7 @@ public class EgovIndvdlSchdulManageApiController {
 			@ApiResponse(responseCode = "200", description = "조회 성공"),
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
 	})
+	@SecurityPass
 	@PostMapping(value = "/cop/smt/sim/egovIndvdlSchdulManageDailyListAPI.do")
 	public ResultVO EgovIndvdlSchdulManageDailyList(
 		@RequestBody Map<String, Object> commandMap)
@@ -517,6 +520,7 @@ public class EgovIndvdlSchdulManageApiController {
 			@ApiResponse(responseCode = "200", description = "조회 성공"),
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
 	})
+	@SecurityPass
 	@PostMapping(value = "/cop/smt/sim/egovIndvdlSchdulManageWeekListAPI.do")
 	public ResultVO EgovIndvdlSchdulManageWeekList(
 		@RequestBody Map<String, Object> commandMap)

@@ -2,6 +2,8 @@ package egovframework.com.security;
 
 import egovframework.com.jwt.JwtAuthenticationEntryPoint;
 import egovframework.com.jwt.JwtAuthenticationFilter;
+import egovframework.com.security.pass.SecurityPassUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -33,18 +35,9 @@ public class SecurityConfig {
     private String[] AUTH_WHITELIST = {
             "/",
             "/login/**",
-            "/uat/uia/actionLoginJWT.do",//JWT 로그인
-            "/uat/uia/actionLoginAPI.do",//일반 로그인
             "/cmm/main/**.do", // 메인페이지
             "/cmm/fms/FileDown.do", //파일 다운로드
             "/cmm/fms/getImage.do", //갤러리 이미지보기
-            "/cop/smt/sim/egovIndvdlSchdulManageDailyListAPI.do", //일별 일정 조회
-            "/cop/smt/sim/egovIndvdlSchdulManageWeekListAPI.do", //주간 일정 조회
-            "/cop/smt/sim/egovIndvdlSchdulManageDetailAPI.do", //일정 상세조회
-
-            "/cop/bbs/selectUserBBSMasterInfAPI.do", //게시판 마스터 상세 조회
-            "/cop/bbs/selectBoardListAPI.do", //게시판 목록조회
-            "/cop/bbs/selectBoardArticleAPI.do", //게시물 상세조회
 
             /* swagger v2 */
             "/v2/api-docs",
@@ -56,6 +49,9 @@ public class SecurityConfig {
     private static final String[] ORIGINS_WHITELIST = {
             "http://localhost:3000",
     };
+
+    @Autowired
+    SecurityPassUtils securityPassUtils;
 
     @Bean
     public JwtAuthenticationFilter authenticationTokenFilterBean() throws Exception {
@@ -79,11 +75,13 @@ public class SecurityConfig {
     }
     @Bean
     protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        String[] permitAllUrls = securityPassUtils.getUrls();
 
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
                         .antMatchers(AUTH_WHITELIST).permitAll()
+                        .antMatchers(permitAllUrls).permitAll()
                         .anyRequest().authenticated()
                 ).sessionManagement((sessionManagement) ->
                     sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)

@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import egovframework.com.cmm.annotation.SecurityPass;
 import org.egovframe.rte.fdl.cryptography.EgovCryptoService;
 import org.egovframe.rte.fdl.property.EgovPropertyService;
 import org.egovframe.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
@@ -123,6 +124,7 @@ public class EgovBBSManageApiController {
 			@ApiResponse(responseCode = "200", description = "조회 성공"),
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
 	})
+	@SecurityPass
 	@PostMapping(value = "/cop/bbs/selectUserBBSMasterInfAPI.do", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResultVO selectUserBBSMasterInf(@RequestBody BoardMasterVO searchVO)
 		throws Exception {
@@ -155,6 +157,7 @@ public class EgovBBSManageApiController {
 			@ApiResponse(responseCode = "200", description = "조회 성공"),
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
 	})
+	@SecurityPass
 	@PostMapping(value = "/cop/bbs/selectBoardListAPI.do", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResultVO selectBoardArticles(@RequestBody BoardVO boardVO, @AuthenticationPrincipal LoginVO user)
 		throws Exception {
@@ -208,6 +211,7 @@ public class EgovBBSManageApiController {
 			@ApiResponse(responseCode = "200", description = "조회 성공"),
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
 	})
+	@SecurityPass
 	@PostMapping(value = "/cop/bbs/selectBoardArticleAPI.do")
 	public ResultVO selectBoardArticle(@RequestBody BoardVO boardVO,@AuthenticationPrincipal LoginVO user)
 		throws Exception {

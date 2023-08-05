@@ -6,7 +6,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import egovframework.com.cmm.util.EgovUserDetailsHelper;
+import egovframework.com.cmm.annotation.SecurityPass;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -89,6 +89,7 @@ public class EgovLoginApiController {
 			@ApiResponse(responseCode = "200", description = "로그인 성공"),
 			@ApiResponse(responseCode = "300", description = "로그인 실패")
 	})
+	@SecurityPass
 	@PostMapping(value = "/uat/uia/actionLoginAPI.do", consumes = {MediaType.APPLICATION_JSON_VALUE , MediaType.TEXT_HTML_VALUE})
 	public HashMap<String, Object> actionLogin(@RequestBody LoginVO loginVO, HttpServletRequest request) throws Exception {
 		HashMap<String,Object> resultMap = new HashMap<String,Object>();
@@ -111,7 +112,10 @@ public class EgovLoginApiController {
 		return resultMap;
 
 	}
-
+	@GetMapping(value = "/test")
+	public String test(){
+		return "!!!";
+	}
 	@Operation(
 			summary = "JWT 로그인",
 			description = "JWT 로그인 처리",
@@ -121,6 +125,7 @@ public class EgovLoginApiController {
 			@ApiResponse(responseCode = "200", description = "로그인 성공"),
 			@ApiResponse(responseCode = "300", description = "로그인 실패")
 	})
+	@SecurityPass()
 	@PostMapping(value = "/uat/uia/actionLoginJWT.do")
 	public HashMap<String, Object> actionLoginJWT(@RequestBody LoginVO loginVO, HttpServletRequest request, ModelMap model) throws Exception {
 		HashMap<String, Object> resultMap = new HashMap<String, Object>();
