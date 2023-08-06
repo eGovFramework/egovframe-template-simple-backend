@@ -49,14 +49,11 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 			log.debug("AuthenticInterceptor ================== ");
 			
 			return true;
-		} else {
-			
-			log.debug("AuthenticInterceptor Fail!!!!!!!!!!!!================== ");
-			
-//			ModelAndView modelAndView = new ModelAndView("redirect:/uat/uia/egovLoginUsr.do");
-			ModelAndView modelAndView = new ModelAndView("redirect:http://localhost:3000/login");
-			throw new ModelAndViewDefiningException(modelAndView);
 		}
-	}
+		log.debug("AuthenticInterceptor Fail!!!!!!!!!!!!================== ");
 
+//		ModelAndView modelAndView = new ModelAndView("redirect:/uat/uia/egovLoginUsr.do");
+		ModelAndView modelAndView = new ModelAndView("redirect:http://localhost:3000/login");
+		throw new ModelAndViewDefiningException(modelAndView);
+	}
 }
