@@ -11,18 +11,12 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
-import org.egovframe.rte.fdl.cmmn.exception.EgovBizException;
 import org.egovframe.rte.fdl.cryptography.EgovCryptoService;
 import org.egovframe.rte.fdl.property.EgovPropertyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springmodules.validation.commons.DefaultBeanValidator;
@@ -107,9 +101,9 @@ public class EgovIndvdlSchdulManageApiController {
 			@ApiResponse(responseCode = "200", description = "조회 성공"),
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
 	})
-	@PostMapping(value = "/cop/smt/sim/egovIndvdlSchdulManageMonthListAPI.do")
+	@GetMapping(value = "/schedule/month")
 	public ResultVO EgovIndvdlSchdulManageMonthList(@AuthenticationPrincipal LoginVO loginVO, HttpServletRequest request,
-													@RequestBody Map<String, Object> commandMap) throws Exception {
+													@RequestParam Map<String, Object> commandMap) throws Exception {
 		
 		ResultVO resultVO = new ResultVO();
 		Map<String, Object> resultMap = new HashMap<String, Object>();
@@ -181,7 +175,7 @@ public class EgovIndvdlSchdulManageApiController {
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님"),
 			@ApiResponse(responseCode = "900", description = "입력값 무결성 오류")
 	})
-	@PostMapping(value = "/cop/smt/sim/egovIndvdlSchdulManageRegistActorAPI.do")
+	@PostMapping(value = "/schedule")
 	public ResultVO IndvdlSchdulManageRegistActor(
 		HttpServletRequest request,
 		final MultipartHttpServletRequest multiRequest,
@@ -246,9 +240,9 @@ public class EgovIndvdlSchdulManageApiController {
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "조회 성공")
 	})
-	@PostMapping(value = "/cop/smt/sim/egovIndvdlSchdulManageDetailAPI.do")
+	@GetMapping(value = "/schedule/{schdulId}")
 	public ResultVO EgovIndvdlSchdulManageDetail(
-		@RequestBody Map<String, Object> commandMap,
+		@PathVariable("schdulId") String schdulId,
 		@AuthenticationPrincipal LoginVO user)
 		throws Exception {
 
@@ -256,7 +250,7 @@ public class EgovIndvdlSchdulManageApiController {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 
 		IndvdlSchdulManageVO indvdlSchdulManageVO = new IndvdlSchdulManageVO();
-		indvdlSchdulManageVO.setSchdulId((String)commandMap.get("schdulId"));
+		indvdlSchdulManageVO.setSchdulId(schdulId);
 
 		//일정시작일자(시)
 		resultMap.put("schdulBgndeHH", getTimeHH());
@@ -323,10 +317,10 @@ public class EgovIndvdlSchdulManageApiController {
 			@ApiResponse(responseCode = "200", description = "등록 성공"),
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
 	})
-	@DeleteMapping(value = "/cop/smt/sim/egovIndvdlSchdulManageDeleteAPI/{schdulId}.do")
-	public ResultVO EgovIndvdlSchdulManageDelete(HttpServletRequest request,
-		@PathVariable("schdulId") String schdulId) 
-		throws Exception {
+	@DeleteMapping(value = "/schedule/{schdulId}")
+	public ResultVO EgovIndvdlSchdulManageDelete(
+			@PathVariable("schdulId") String schdulId
+		) throws Exception {
 
 		ResultVO resultVO = new ResultVO();
 
@@ -361,19 +355,20 @@ public class EgovIndvdlSchdulManageApiController {
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님"),
 			@ApiResponse(responseCode = "900", description = "입력값 무결성 오류")
 	})
-	@PostMapping(value = "/cop/smt/sim/egovIndvdlSchdulManageModifyActorAPI.do")
+	@PutMapping(value = "/schedule/{schdulId}")
 	public ResultVO IndvdlSchdulManageModifyActor(
 		final MultipartHttpServletRequest multiRequest,
 		IndvdlSchdulManageVO indvdlSchdulManageVO,
 		BindingResult bindingResult,
+		@PathVariable("schdulId") String schdulId,
 		@AuthenticationPrincipal LoginVO user)
 		throws Exception {
 
 		ResultVO resultVO = new ResultVO();
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 
-
 		//서버  validate 체크
+		indvdlSchdulManageVO.setSchdulId(schdulId);
 		beanValidator.validate(indvdlSchdulManageVO, bindingResult);
 		if (bindingResult.hasErrors()) {
 
@@ -443,10 +438,8 @@ public class EgovIndvdlSchdulManageApiController {
 			@ApiResponse(responseCode = "200", description = "조회 성공"),
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
 	})
-	@PostMapping(value = "/cop/smt/sim/egovIndvdlSchdulManageDailyListAPI.do")
-	public ResultVO EgovIndvdlSchdulManageDailyList(
-		@RequestBody Map<String, Object> commandMap)
-		throws Exception {
+	@GetMapping(value = "/schedule/daily")
+	public ResultVO EgovIndvdlSchdulManageDailyList(@RequestParam Map<String, Object> commandMap) throws Exception {
 
 		ResultVO resultVO = new ResultVO();
 		Map<String, Object> resultMap = new HashMap<String, Object>();
@@ -517,9 +510,9 @@ public class EgovIndvdlSchdulManageApiController {
 			@ApiResponse(responseCode = "200", description = "조회 성공"),
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
 	})
-	@PostMapping(value = "/cop/smt/sim/egovIndvdlSchdulManageWeekListAPI.do")
+	@GetMapping(value = "/schedule/week")
 	public ResultVO EgovIndvdlSchdulManageWeekList(
-		@RequestBody Map<String, Object> commandMap)
+		@RequestParam Map<String, Object> commandMap)
 		throws Exception {
 
 		ResultVO resultVO = new ResultVO();
