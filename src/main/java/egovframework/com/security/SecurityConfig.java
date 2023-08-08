@@ -33,8 +33,8 @@ public class SecurityConfig {
     private String[] AUTH_WHITELIST = {
             "/",
             "/login/**",
-            "/uat/uia/actionLoginJWT.do",//JWT 로그인
-            "/uat/uia/actionLoginAPI.do",//일반 로그인
+            "/auth/login-jwt",//JWT 로그인
+            "/auth/login",//일반 로그인
             "/cmm/main/**.do", // 메인페이지
             "/cmm/fms/FileDown.do", //파일 다운로드
             "/cmm/fms/getImage.do", //갤러리 이미지보기

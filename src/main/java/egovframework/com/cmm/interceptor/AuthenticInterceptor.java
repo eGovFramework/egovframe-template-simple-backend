@@ -52,8 +52,7 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 		} else {
 			
 			log.debug("AuthenticInterceptor Fail!!!!!!!!!!!!================== ");
-			
-//			ModelAndView modelAndView = new ModelAndView("redirect:/uat/uia/egovLoginUsr.do");
+
 			ModelAndView modelAndView = new ModelAndView("redirect:http://localhost:3000/login");
 			throw new ModelAndViewDefiningException(modelAndView);
 		}
