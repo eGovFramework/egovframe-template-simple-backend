@@ -15,6 +15,26 @@ import springfox.documentation.service.*;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * 
+ * @author : 정완배
+ * @since : 2023. 8. 9.
+ * @version : 1.0
+ *
+ * @package : egovframework.com.config
+ * @filename : SwaggerConfig.java
+ * @modificationInformation
+ *
+ * <pre>
+ * << 개정이력(Modification Information) >>
+ *
+ *  수정일            수정자             수정내용
+ *  ----------   ----------   ----------------------
+ *  2023. 8. 9.    정완배              주석추가
+ * </pre>
+ *
+ *
+ */
 @Configuration
 @EnableSwagger2
 public class SwaggerConfig {

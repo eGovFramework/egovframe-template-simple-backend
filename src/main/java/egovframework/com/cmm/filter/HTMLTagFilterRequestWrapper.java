@@ -18,6 +18,27 @@ package egovframework.com.cmm.filter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 
+/**
+ * 
+ * @author : 정완배
+ * @since : 2023. 8. 9.
+ * @version : 1.0
+ *
+ * @package : egovframework.com.cmm.filter
+ * @filename : HTMLTagFilterRequestWrapper.java
+ * @modificationInformation
+ *
+ * <pre>
+ * << 개정이력(Modification Information) >>
+ *
+ *  수정일            수정자             수정내용
+ *  ----------   ----------   ----------------------
+ *  2023. 8. 9.    정완배             주석추가
+ * </pre>
+ *
+ *
+ */
+
 public class HTMLTagFilterRequestWrapper extends HttpServletRequestWrapper {
 
 	public HTMLTagFilterRequestWrapper(HttpServletRequest request) {

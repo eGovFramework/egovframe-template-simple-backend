@@ -25,6 +25,27 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
+/**
+ * 
+ * @author : 정완배
+ * @since : 2023. 8. 9.
+ * @version : 1.0
+ *
+ * @package : egovframework.com.cmm.filter
+ * @filename : HTMLTagFilter.java
+ * @modificationInformation
+ *
+ * <pre>
+ * << 개정이력(Modification Information) >>
+ *
+ *  수정일            수정자             수정내용
+ *  ----------   ----------   ----------------------
+ *  2023. 8. 9.    정완배             주석추가
+ * </pre>
+ *
+ *
+ */
+
 public class HTMLTagFilter implements Filter{
 
 	@SuppressWarnings("unused")
