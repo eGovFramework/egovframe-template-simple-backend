@@ -39,8 +39,7 @@ public class CustomAuthenticInterceptor extends HandlerInterceptorAdapter {
 		log.debug("CustomAuthenticInterceptor sessionID "+session.getId());
 		log.debug("CustomAuthenticInterceptor ================== ");
 		
-		boolean isPermittedURL = true;
-		return isPermittedURL;
+		return true;
 	}
 
 }
