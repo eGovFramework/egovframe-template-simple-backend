@@ -89,7 +89,7 @@ public class EgovLoginApiController {
 			@ApiResponse(responseCode = "200", description = "로그인 성공"),
 			@ApiResponse(responseCode = "300", description = "로그인 실패")
 	})
-	@PostMapping(value = "/uat/uia/actionLoginAPI.do", consumes = {MediaType.APPLICATION_JSON_VALUE , MediaType.TEXT_HTML_VALUE})
+	@PostMapping(value = "/auth/login", consumes = {MediaType.APPLICATION_JSON_VALUE , MediaType.TEXT_HTML_VALUE})
 	public HashMap<String, Object> actionLogin(@RequestBody LoginVO loginVO, HttpServletRequest request) throws Exception {
 		HashMap<String,Object> resultMap = new HashMap<String,Object>();
 
@@ -121,7 +121,7 @@ public class EgovLoginApiController {
 			@ApiResponse(responseCode = "200", description = "로그인 성공"),
 			@ApiResponse(responseCode = "300", description = "로그인 실패")
 	})
-	@PostMapping(value = "/uat/uia/actionLoginJWT.do")
+	@PostMapping(value = "/auth/login-jwt")
 	public HashMap<String, Object> actionLoginJWT(@RequestBody LoginVO loginVO, HttpServletRequest request, ModelMap model) throws Exception {
 		HashMap<String, Object> resultMap = new HashMap<String, Object>();
 
@@ -170,7 +170,7 @@ public class EgovLoginApiController {
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "로그아웃 성공"),
 	})
-	@GetMapping(value = "/uat/uia/actionLogoutAPI.do")
+	@GetMapping(value = "/auth/logout")
 	public ResultVO actionLogoutJSON(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
 		ResultVO resultVO = new ResultVO();

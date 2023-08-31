@@ -80,7 +80,7 @@ public class EgovLoginApiControllerTest {
         HttpEntity request = new HttpEntity(params,headers);
         TestRestTemplate rest = new TestRestTemplate();
 
-        ResponseEntity<HashMap> res = rest.exchange(this.SERVER_URL + "/uat/uia/actionLoginJWT.do", HttpMethod.POST,request , HashMap.class);
+        ResponseEntity<HashMap> res = rest.exchange(this.SERVER_URL + "/auth/login-jwt", HttpMethod.POST,request , HashMap.class);
         assertThat( res.getStatusCode() ).isEqualTo( HttpStatus.OK );
 
         HashMap<String,Object> body = (HashMap<String,Object>) res.getBody();
