@@ -56,10 +56,23 @@ public class SimpleCORSFilter implements Filter {
 
 		log.debug("===>>> origin = " + originHeader);
 
-		if (originHeader != null && !originHeader.equals("")) {
-			originHeader = originHeader.replace("\r", "").replace("\n", "");// Security - Potential HTTP Response Splitting 분할응답 조치
+		if (isValidOriginHeader(originHeader)) {
+			// Security - Potential HTTP Response Splitting 분할응답 조치
+			originHeader = originHeader
+					.replace("\r", "")
+					.replace("\n", "");
 		}
 
+		setCorsHeaders(response, originHeader);
+
+		chain.doFilter(req, res);
+	}
+
+	private static boolean isValidOriginHeader(String originHeader) {
+		return originHeader != null && !originHeader.isEmpty();
+	}
+
+	private static void setCorsHeaders(HttpServletResponse response, String originHeader) {
 		response.setHeader("Access-Control-Allow-Origin", originHeader);
 
 		// Access-Control-Max-Age
@@ -74,8 +87,6 @@ public class SimpleCORSFilter implements Filter {
 		// Access-Control-Allow-Headers
 		response.setHeader("Access-Control-Allow-Headers",
 			"Origin, X-Requested-With, Content-Type, Accept, Authorization, " + "X-CSRF-TOKEN");
-
-		chain.doFilter(req, res);
 	}
 
 	@Override
