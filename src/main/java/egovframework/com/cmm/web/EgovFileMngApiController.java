@@ -6,18 +6,17 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.egovframe.rte.fdl.cryptography.EgovCryptoService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import egovframework.com.cmm.ResponseCode;
 import egovframework.com.cmm.service.EgovFileMngService;
 import egovframework.com.cmm.service.FileVO;
 import egovframework.com.cmm.service.ResultVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 /**
@@ -59,12 +58,13 @@ public class EgovFileMngApiController {
     @Operation(
 			summary = "파일 삭제",
 			description = "첨부파일에 대한 삭제를 처리",
+			security = {@SecurityRequirement(name = "Authorization")},
 			tags = {"EgovFileMngApiController"}
 	)
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "성공")
 	})
-    @PostMapping(value ="/cmm/fms/deleteFileInfsAPI.do")
+    @PostMapping(value ="/file")
     public ResultVO deleteFileInf(HttpServletRequest request, @RequestBody FileVO fileVO) throws Exception {
     	ResultVO resultVO = new ResultVO();
     	

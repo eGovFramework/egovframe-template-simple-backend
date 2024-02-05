@@ -42,19 +42,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author Juergen Hoeller
  * @since 1.1.5
  * @see org.springframework.orm.ibatis.SqlMapClientFactoryBean#setLobHandler
- * 
- * @version : 1.0
- * @modificationInformation
- *
- * <pre>
- * << 개정이력(Modification Information) >>
- *
- *  수정일            수정자             수정내용
- *  ----------   ----------   ----------------------
- *  
- * </pre>
  */
-
 @Slf4j
 @SuppressWarnings("deprecation")
 public class AltibaseClobStringTypeHandler extends AbstractLobTypeHandler {

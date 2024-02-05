@@ -29,7 +29,7 @@ import org.egovframe.rte.fdl.property.impl.EgovPropertyServiceImpl;
 
 @Configuration
 public class EgovConfigAppProperties {
-
+	
 	@Value("${Globals.fileStorePath}")
 	private String fileStorePath;
 
@@ -42,8 +42,8 @@ public class EgovConfigAppProperties {
 	private String pageSize;
 	@Value("${Globals.posblAtchFileSize}")
 	private String posblAtchFileSize;
-
-
+	
+	
 	@Bean(destroyMethod = "destroy")
 	public EgovPropertyServiceImpl propertiesService() {
 		EgovPropertyServiceImpl egovPropertyServiceImpl = new EgovPropertyServiceImpl();

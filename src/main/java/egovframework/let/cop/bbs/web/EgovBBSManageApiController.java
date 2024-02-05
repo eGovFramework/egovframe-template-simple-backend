@@ -12,13 +12,14 @@ import org.egovframe.rte.fdl.cryptography.EgovCryptoService;
 import org.egovframe.rte.fdl.property.EgovPropertyService;
 import org.egovframe.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -38,8 +39,14 @@ import egovframework.let.cop.bbs.service.EgovBBSAttributeManageService;
 import egovframework.let.cop.bbs.service.EgovBBSManageService;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.Explode;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.enums.ParameterStyle;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 /**
@@ -115,23 +122,36 @@ public class EgovBBSManageApiController {
 	 * @throws Exception
 	 */
 	@Operation(
-			summary = "게시판 마스터 상세 조회",
-			description = "게시판 마스터 상세내용을 조회 (파일 첨부가능 여부 조회용)",
+			summary = "게시판 파일 첨부 관련 정보 조회",
+			description = "게시판의 파일 첨부가능 여부 및 첨부가능 파일 수 조회",
 			tags = {"EgovBBSManageApiController"}
 	)
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "조회 성공"),
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
 	})
-	@PostMapping(value = "/cop/bbs/selectUserBBSMasterInfAPI.do", consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResultVO selectUserBBSMasterInf(@RequestBody BoardMasterVO searchVO)
+	@GetMapping(value = "/boardFileAtch/{bbsId}")
+	public ResultVO selectUserBBSMasterInf(
+			@Parameter(name = "bbsId", description = "게시판 Id", in = ParameterIn.PATH, example="BBSMSTR_AAAAAAAAAAAA")
+			@PathVariable("bbsId") String bbsId)
 		throws Exception {
 		ResultVO resultVO = new ResultVO();
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		
+		BoardMasterVO searchVO = new BoardMasterVO();
+		searchVO.setBbsId(bbsId);
+		
 		BoardMasterVO master = bbsAttrbService.selectBBSMasterInf(searchVO);
-		resultMap.put("brdMstrVO", master);
-
+		
+		// 파일 첨부 외의 다른 정보를 전달하지 않기 위해 신규 객체 생성
+		BoardMasterVO masterFileAtchInfo = new BoardMasterVO();
+		
+		masterFileAtchInfo.setFileAtchPosblAt(master.getFileAtchPosblAt());
+		masterFileAtchInfo.setPosblAtchFileNumber(master.getPosblAtchFileNumber());
+		masterFileAtchInfo.setPosblAtchFileSize(master.getPosblAtchFileSize());
+		
+		resultMap.put("brdMstrVO", masterFileAtchInfo);
+		
 		resultVO.setResult(resultMap);
 		resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
 		resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());
@@ -155,10 +175,24 @@ public class EgovBBSManageApiController {
 			@ApiResponse(responseCode = "200", description = "조회 성공"),
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
 	})
-	@PostMapping(value = "/cop/bbs/selectBoardListAPI.do", consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResultVO selectBoardArticles(@RequestBody BoardVO boardVO, @AuthenticationPrincipal LoginVO user)
+	@GetMapping(value = "/board")
+	public ResultVO selectBoardArticles(
+			@Parameter(
+					in = ParameterIn.QUERY,
+					schema = @Schema(type = "object",
+							additionalProperties = Schema.AdditionalPropertiesValue.TRUE, 
+							ref = "#/components/schemas/searchBbsMap"),
+					style = ParameterStyle.FORM,
+					explode = Explode.TRUE
+			) @RequestParam Map<String, Object> commandMap, 
+			@Parameter(hidden = true) @AuthenticationPrincipal LoginVO user)
 		throws Exception {
 		ResultVO resultVO = new ResultVO();
+		BoardVO boardVO = new BoardVO();
+		
+		boardVO.setBbsId((String)commandMap.get("bbsId"));
+		boardVO.setSearchCnd((String)commandMap.get("searchCnd"));
+		boardVO.setSearchWrd((String)commandMap.get("searchWrd"));
 
 		BoardMasterVO vo = new BoardMasterVO();
 		vo.setBbsId(boardVO.getBbsId());
@@ -208,11 +242,20 @@ public class EgovBBSManageApiController {
 			@ApiResponse(responseCode = "200", description = "조회 성공"),
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
 	})
-	@PostMapping(value = "/cop/bbs/selectBoardArticleAPI.do")
-	public ResultVO selectBoardArticle(@RequestBody BoardVO boardVO,@AuthenticationPrincipal LoginVO user)
+	@GetMapping(value = "/board/{bbsId}/{nttId}")
+	public ResultVO selectBoardArticle(
+			@Parameter(name = "bbsId", description = "게시판 Id", in = ParameterIn.PATH, example="BBSMSTR_AAAAAAAAAAAA")
+			@PathVariable("bbsId") String bbsId,
+			@Parameter(name = "nttId", description = "게시글 Id", in = ParameterIn.PATH, example="1")
+			@PathVariable("nttId") String nttId,
+			@Parameter(hidden = true) @AuthenticationPrincipal LoginVO user)
 		throws Exception {
 
 		ResultVO resultVO = new ResultVO();
+		BoardVO boardVO = new BoardVO();
+		
+		boardVO.setBbsId(bbsId);
+		boardVO.setNttId(Long.parseLong(nttId));
 
 		// 조회수 증가 여부 지정
 		boardVO.setPlusCount(true);
@@ -281,6 +324,7 @@ public class EgovBBSManageApiController {
 	@Operation(
 			summary = "게시물 수정",
 			description = "게시물에 대한 내용을 수정",
+			security = {@SecurityRequirement(name = "Authorization")},
 			tags = {"EgovBBSManageApiController"}
 	)
 	@ApiResponses(value = {
@@ -288,9 +332,11 @@ public class EgovBBSManageApiController {
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님"),
 			@ApiResponse(responseCode = "900", description = "입력값 무결성 오류")
 	})
-	@PostMapping(value ="/cop/bbs/updateBoardArticleAPI.do")
+	@PutMapping(value ="/board/{nttId}")
 	public ResultVO updateBoardArticle(final MultipartHttpServletRequest multiRequest,
 		BoardVO boardVO,
+		@Parameter(name = "nttId", description = "게시글 Id", in = ParameterIn.PATH, example="1")
+		@PathVariable("nttId") String nttId,
 		BindingResult bindingResult,
 		HttpServletRequest request)
 		throws Exception {
@@ -326,6 +372,7 @@ public class EgovBBSManageApiController {
 			}
 		}
 
+		boardVO.setNttId(Long.parseLong(nttId));
 		boardVO.setLastUpdusrId(user.getUniqId());
 		boardVO.setNtcrNm(""); // dummy 오류 수정 (익명이 아닌 경우 validator 처리를 위해 dummy로 지정됨) 
 		boardVO.setPassword(EgovFileScrty.encryptPassword("", user.getUniqId())); // dummy 오류 수정 (익명이 아닌 경우 validator 처리를 위해 dummy로 지정됨)
@@ -352,6 +399,7 @@ public class EgovBBSManageApiController {
 	@Operation(
 			summary = "게시물 등록",
 			description = "게시물을 등록",
+			security = {@SecurityRequirement(name = "Authorization")},
 			tags = {"EgovBBSManageApiController"}
 	)
 	@ApiResponses(value = {
@@ -359,7 +407,7 @@ public class EgovBBSManageApiController {
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님"),
 			@ApiResponse(responseCode = "900", description = "입력값 무결성 오류")
 	})
-	@PostMapping(value ="/cop/bbs/insertBoardArticleAPI.do")
+	@PostMapping(value ="/board")
 	public ResultVO insertBoardArticle(final MultipartHttpServletRequest multiRequest,
 		BoardVO boardVO,
 		BindingResult bindingResult,
@@ -415,6 +463,7 @@ public class EgovBBSManageApiController {
 	@Operation(
 			summary = "게시물 답변 등록",
 			description = "게시물에 대한 답변을 등록",
+			security = {@SecurityRequirement(name = "Authorization")},
 			tags = {"EgovBBSManageApiController"}
 	)
 	@ApiResponses(value = {
@@ -422,7 +471,7 @@ public class EgovBBSManageApiController {
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님"),
 			@ApiResponse(responseCode = "900", description = "입력값 무결성 오류")
 	})
-	@PostMapping(value ="/cop/bbs/replyBoardArticleAPI.do")
+	@PostMapping(value ="/boardReply")
 	public ResultVO replyBoardArticle(final MultipartHttpServletRequest multiRequest,
 		BoardVO boardVO,
 		BindingResult bindingResult,
@@ -483,21 +532,27 @@ public class EgovBBSManageApiController {
 	@Operation(
 			summary = "게시물 삭제",
 			description = "게시물에 대한 내용을 삭제",
+			security = {@SecurityRequirement(name = "Authorization")},
 			tags = {"EgovBBSManageApiController"}
 	)
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "삭제 성공"),
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
 	})
-	@PutMapping(value = "/cop/bbs/deleteBoardArticleAPI/{nttId}.do")
-	public ResultVO deleteBoardArticle(@RequestBody BoardVO boardVO, 
+	@PatchMapping(value = "/board/{bbsId}/{nttId}")
+	public ResultVO deleteBoardArticle(
+		@Parameter(name = "bbsId", description = "게시판 Id", in = ParameterIn.PATH, example="BBSMSTR_AAAAAAAAAAAA")	
+		@PathVariable("bbsId") String bbsId,
+		@Parameter(name = "nttId", description = "게시글 Id", in = ParameterIn.PATH, example="1")
 		@PathVariable("nttId") String nttId,
-		@AuthenticationPrincipal LoginVO user,
+		@Parameter(hidden = true) @AuthenticationPrincipal LoginVO user,
 		HttpServletRequest request)
 
 		throws Exception {
 		ResultVO resultVO = new ResultVO();
+		BoardVO boardVO = new BoardVO();
 
+		boardVO.setBbsId(bbsId);
 		boardVO.setNttId(Long.parseLong(nttId));
 		boardVO.setLastUpdusrId(user.getUniqId());
 

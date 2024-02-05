@@ -7,18 +7,18 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
-import org.egovframe.rte.fdl.cmmn.exception.EgovBizException;
 import org.egovframe.rte.fdl.property.EgovPropertyService;
 import org.egovframe.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springmodules.validation.commons.DefaultBeanValidator;
 
@@ -31,8 +31,14 @@ import egovframework.com.cmm.service.ResultVO;
 import egovframework.let.cop.bbs.service.BoardMasterVO;
 import egovframework.let.cop.bbs.service.EgovBBSAttributeManageService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.Explode;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.enums.ParameterStyle;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 /**
@@ -89,19 +95,31 @@ public class EgovBBSAttributeManageApiController {
 	@Operation(
 			summary = "게시판 마스터 조회",
 			description = "게시판 마스터 목록을 조회",
+			security = {@SecurityRequirement(name = "Authorization")},
 			tags = {"EgovBBSAttributeManageApiController"}
 	)
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "조회 성공"),
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
 	})
-	@PostMapping(value ="/cop/bbs/selectBBSMasterInfsAPI.do")
+	@GetMapping(value = "/bbsMaster")
 	public ResultVO selectBBSMasterInfs(HttpServletRequest request,
-		@RequestBody BoardMasterVO boardMasterVO)
+		@Parameter(
+				in = ParameterIn.QUERY,
+				schema = @Schema(type = "object",
+				additionalProperties = Schema.AdditionalPropertiesValue.TRUE, 
+				ref = "#/components/schemas/searchMap"),
+				style = ParameterStyle.FORM,
+				explode = Explode.TRUE
+				) @RequestParam Map<String, Object> commandMap)
 		throws Exception {
 
 		ResultVO resultVO = new ResultVO();
-
+		BoardMasterVO boardMasterVO = new BoardMasterVO();
+		
+		boardMasterVO.setSearchCnd((String)commandMap.get("searchCnd"));
+		boardMasterVO.setSearchWrd((String)commandMap.get("searchWrd"));
+		
 		boardMasterVO.setPageUnit(propertyService.getInt("Globals.pageUnit"));
 		boardMasterVO.setPageSize(propertyService.getInt("Globals.pageSize"));
 
@@ -140,17 +158,23 @@ public class EgovBBSAttributeManageApiController {
 	@Operation(
 			summary = "게시판 마스터 상세 조회",
 			description = "게시판 마스터 상세내용을 조회",
+			security = {@SecurityRequirement(name = "Authorization")},
 			tags = {"EgovBBSAttributeManageApiController"}
 	)
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "조회 성공"),
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
 	})
-	@PostMapping(value ="/cop/bbs/selectBBSMasterInfAPI.do")
+	@GetMapping(value ="/bbsMaster/{bbsId}")
 	public ResultVO selectBBSMasterInf(HttpServletRequest request,
-		@RequestBody BoardMasterVO searchVO)
+			@Parameter(name = "bbsId", description = "게시판 Id", in = ParameterIn.PATH, example="BBSMSTR_AAAAAAAAAAAA") 
+			@PathVariable("bbsId") String bbsId)
 		throws Exception {
 		ResultVO resultVO = new ResultVO();
+		BoardMasterVO searchVO = new BoardMasterVO();
+		
+		searchVO.setBbsId(bbsId);
+		
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 
 		BoardMasterVO vo = bbsAttrbService.selectBBSMasterInf(searchVO);
@@ -176,6 +200,7 @@ public class EgovBBSAttributeManageApiController {
 	@Operation(
 			summary = "게시판 마스터 등록",
 			description = "신규 게시판 마스터 정보를 등록",
+			security = {@SecurityRequirement(name = "Authorization")},
 			tags = {"EgovBBSAttributeManageApiController"}
 	)
 	@ApiResponses(value = {
@@ -183,11 +208,11 @@ public class EgovBBSAttributeManageApiController {
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님"),
 			@ApiResponse(responseCode = "900", description = "입력값 무결성 오류")
 	})
-	@PostMapping(value ="/cop/bbs/insertBBSMasterInfAPI.do")
+	@PostMapping(value ="/bbsMaster")
 	public ResultVO insertBBSMasterInf(HttpServletRequest request,
 									   BoardMasterVO boardMasterVO,
 									   BindingResult bindingResult,
-									   @AuthenticationPrincipal LoginVO loginVO
+									   @Parameter(hidden = true) @AuthenticationPrincipal LoginVO loginVO
 	)
 		throws Exception {
 		ResultVO resultVO = new ResultVO();
@@ -244,6 +269,7 @@ public class EgovBBSAttributeManageApiController {
 	@Operation(
 			summary = "게시판 마스터 수정",
 			description = "게시판 마스터 정보를 수정",
+			security = {@SecurityRequirement(name = "Authorization")},
 			tags = {"EgovBBSAttributeManageApiController"}
 	)
 	@ApiResponses(value = {
@@ -251,13 +277,14 @@ public class EgovBBSAttributeManageApiController {
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님"),
 			@ApiResponse(responseCode = "900", description = "입력값 무결성 오류")
 	})
-	@PutMapping(value ="/cop/bbs/updateBBSMasterInfAPI/{bbsId}.do")
+	@PutMapping(value ="/bbsMaster/{bbsId}")
 	public ResultVO updateBBSMasterInf(HttpServletRequest request,
-									   @PathVariable("bbsId") String bbsId,
-									   @RequestBody BoardMasterVO boardMasterVO,
-									   BindingResult bindingResult,
-									   @AuthenticationPrincipal LoginVO loginVO
-									   ) throws Exception {
+			@Parameter(name = "bbsId", description = "게시판 Id", in = ParameterIn.PATH, example="BBSMSTR_AAAAAAAAAAAA")
+				@PathVariable("bbsId") String bbsId,
+				@RequestBody BoardMasterVO boardMasterVO,
+				BindingResult bindingResult,
+				@Parameter(hidden = true) @AuthenticationPrincipal LoginVO loginVO
+			) throws Exception {
 		ResultVO resultVO = new ResultVO();
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 
@@ -297,20 +324,26 @@ public class EgovBBSAttributeManageApiController {
 	@Operation(
 			summary = "게시판 마스터 삭제",
 			description = "게시판 마스터 정보를 삭제",
+			security = {@SecurityRequirement(name = "Authorization")},
 			tags = {"EgovBBSAttributeManageApiController"}
 	)
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "삭제 성공"),
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
 	})
-	@PutMapping(value ="/cop/bbs/deleteBBSMasterInfAPI/{bbsId}.do")
+	@PatchMapping(value ="/bbsMaster/{bbsId}")
 	public ResultVO deleteBBSMasterInf(HttpServletRequest request,
-	    @AuthenticationPrincipal LoginVO loginVO,
-		@PathVariable("bbsId") String bbsId,
-		@RequestBody BoardMasterVO boardMasterVO) throws Exception {
-		ResultVO resultVO = new ResultVO();
-
+		@Parameter(hidden = true) @AuthenticationPrincipal LoginVO loginVO,
+		@Parameter(name = "bbsId", description = "게시판 Id", in = ParameterIn.PATH, example="BBSMSTR_AAAAAAAAAAAA")
+		@PathVariable("bbsId") String bbsId
+		) throws Exception {
+		
+			ResultVO resultVO = new ResultVO();
+			BoardMasterVO boardMasterVO = new BoardMasterVO();
+			
 			boardMasterVO.setLastUpdusrId(loginVO.getUniqId());
+			boardMasterVO.setBbsId(bbsId);
+			
 			bbsAttrbService.deleteBBSMasterInf(boardMasterVO);
 
 			resultVO.setResultCode(ResponseCode.SUCCESS.getCode());

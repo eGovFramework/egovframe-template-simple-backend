@@ -17,26 +17,6 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
 
-/**
- * 
- * @author : 정완배
- * @since : 2023. 8. 9.
- * @version : 1.0
- *
- * @package : egovframework.com.jwt
- * @filename : EgovJwtTokenUtil.java
- * @modificationInformation
- *
- * <pre>
- * << 개정이력(Modification Information) >>
- *
- *  수정일            수정자             수정내용
- *  ----------   ----------   ----------------------
- *  2023. 8. 9.    정완배              주석추가
- * </pre>
- *
- *
- */
 //security 관련 제외한 jwt util 클래스
 @Slf4j
 @Component

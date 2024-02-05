@@ -22,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class EgovComExcepHndlr implements ExceptionHandler {
 
+
     /**
      * 발생된 Exception을 처리한다.
      */

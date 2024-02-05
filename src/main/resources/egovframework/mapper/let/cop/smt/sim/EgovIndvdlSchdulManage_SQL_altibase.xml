@@ -109,9 +109,9 @@
 	 <if test="searchMode == &quot;WEEK&quot;">
 	  		 
 		AND ( 
-		 ( SUBSTR(A.SCHDUL_BEGINDE,1,8) &gt; #{schdulBgnde} AND SUBSTR(A.SCHDUL_BEGINDE,1,8) &lt;= #{schdulEndde})
+		 ( SUBSTR(A.SCHDUL_BEGINDE,1,8) &gt;= #{schdulBgnde} AND SUBSTR(A.SCHDUL_BEGINDE,1,8) &lt;= #{schdulEndde})
 		OR
-		 ( SUBSTR(A.SCHDUL_ENDDE,1,8) &gt; #{schdulBgnde} AND SUBSTR(A.SCHDUL_BEGINDE,1,8) &lt;= #{schdulEndde})
+		 ( SUBSTR(A.SCHDUL_ENDDE,1,8) &gt;= #{schdulBgnde} AND SUBSTR(A.SCHDUL_BEGINDE,1,8) &lt;= #{schdulEndde})
 		) 
 	
 	 </if>

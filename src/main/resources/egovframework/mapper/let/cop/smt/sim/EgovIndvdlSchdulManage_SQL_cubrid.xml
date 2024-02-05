@@ -90,7 +90,8 @@
 			A.FRST_REGISTER_ID,
 			A.LAST_UPDT_PNTTM,
 			A.LAST_UPDUSR_ID,
-			A.REPTIT_SE_CODE 
+			A.REPTIT_SE_CODE,
+			(SELECT USER_NM FROM LETTNEMPLYRINFO WHERE ESNTL_ID = A.SCHDUL_CHARGER_ID) USER_NM   
 		FROM LETTNSCHDULINFO A
 		WHERE 1=1 
 		AND A.SCHDUL_KND_CODE = '2' 
@@ -108,9 +109,9 @@
 	 <if test="searchMode == &quot;WEEK&quot;">
 	  		 
 		AND ( 
-		 ( SUBSTR(A.SCHDUL_BEGINDE,1,8) &gt; #{schdulBgnde} AND SUBSTR(A.SCHDUL_BEGINDE,1,8) &lt;= #{schdulEndde})
+		 ( SUBSTR(A.SCHDUL_BEGINDE,1,8) &gt;= #{schdulBgnde} AND SUBSTR(A.SCHDUL_BEGINDE,1,8) &lt;= #{schdulEndde})
 		OR
-		 ( SUBSTR(A.SCHDUL_ENDDE,1,8) &gt; #{schdulBgnde} AND SUBSTR(A.SCHDUL_BEGINDE,1,8) &lt;= #{schdulEndde})
+		 ( SUBSTR(A.SCHDUL_ENDDE,1,8) &gt;= #{schdulBgnde} AND SUBSTR(A.SCHDUL_BEGINDE,1,8) &lt;= #{schdulEndde})
 		) 
 	
 	 </if>

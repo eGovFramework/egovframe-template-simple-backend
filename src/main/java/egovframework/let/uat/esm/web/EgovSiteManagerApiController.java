@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import egovframework.com.cmm.LoginVO;
@@ -17,8 +17,13 @@ import egovframework.com.cmm.service.ResultVO;
 import egovframework.let.uat.esm.service.EgovSiteManagerService;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.Explode;
+import io.swagger.v3.oas.annotations.enums.ParameterStyle;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 
@@ -58,13 +63,14 @@ public class EgovSiteManagerApiController {
 	@Operation(
 			summary = "토큰값 검증",
 			description = "Headers에서 Authorization 속성값에 발급한 토큰값 검증",
+			security = {@SecurityRequirement(name = "Authorization")},
 			tags = {"EgovSiteManagerApiController"}
 	)
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "성공"),
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
 	})
-	@PostMapping(value = "/uat/esm/jwtAuthAPI.do")
+	@PostMapping(value = "/jwtAuthAPI")
 	public ResultVO jwtAuthentication(HttpServletRequest request) throws Exception {
 		ResultVO resultVO = new ResultVO();
 
@@ -82,6 +88,7 @@ public class EgovSiteManagerApiController {
 	@Operation(
 			summary = "비밀번호 변경",
 			description = "사이트관리자의 기존 비번과 비교하여 변경된 비밀번호를 저장",
+			security = {@SecurityRequirement(name = "Authorization")},
 			tags = {"EgovSiteManagerApiController"}
 	)
 	@ApiResponses(value = {
@@ -89,8 +96,16 @@ public class EgovSiteManagerApiController {
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님"),
 			@ApiResponse(responseCode = "800", description = "저장시 내부 오류")
 	})
-	@PostMapping(value = "/uat/esm/updateAdminPasswordAPI.do")
-	public ResultVO updateAdminPassword(@RequestBody Map<String,String> param, HttpServletRequest request, @AuthenticationPrincipal LoginVO user) throws Exception {
+	@PostMapping(value = "/adminPassword")
+	public ResultVO updateAdminPassword(
+			@Parameter(
+					schema = @Schema(type = "object",
+					additionalProperties = Schema.AdditionalPropertiesValue.TRUE, 
+					ref = "#/components/schemas/passwordMap"),
+					style = ParameterStyle.FORM,
+					explode = Explode.TRUE
+					) @RequestParam Map<String, String> param, HttpServletRequest request, 
+			@Parameter(hidden = true) @AuthenticationPrincipal LoginVO user) throws Exception {
 		ResultVO resultVO = new ResultVO();
 
 		String old_password = param.get("old_password");

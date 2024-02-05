@@ -16,7 +16,13 @@ import org.egovframe.rte.fdl.property.EgovPropertyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springmodules.validation.commons.DefaultBeanValidator;
@@ -34,8 +40,14 @@ import egovframework.com.cmm.web.EgovFileDownloadController;
 import egovframework.let.cop.smt.sim.service.EgovIndvdlSchdulManageService;
 import egovframework.let.cop.smt.sim.service.IndvdlSchdulManageVO;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.Explode;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.enums.ParameterStyle;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 /**
@@ -101,9 +113,18 @@ public class EgovIndvdlSchdulManageApiController {
 			@ApiResponse(responseCode = "200", description = "조회 성공"),
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
 	})
-	@GetMapping(value = "/schedule/month")
-	public ResultVO EgovIndvdlSchdulManageMonthList(@AuthenticationPrincipal LoginVO loginVO, HttpServletRequest request,
-													@RequestParam Map<String, Object> commandMap) throws Exception {
+    @GetMapping(value = "/schedule/month")
+	public ResultVO EgovIndvdlSchdulManageMonthList(
+			HttpServletRequest request,
+			@Parameter(
+					in = ParameterIn.QUERY,
+					schema = @Schema(type = "object",
+					additionalProperties = Schema.AdditionalPropertiesValue.TRUE, 
+					ref = "#/components/schemas/searchSchdulMap"),
+					style = ParameterStyle.FORM,
+					explode = Explode.TRUE
+					) @RequestParam Map<String, Object> commandMap,
+			@Parameter(hidden = true) @AuthenticationPrincipal LoginVO loginVO) throws Exception {
 		
 		ResultVO resultVO = new ResultVO();
 		Map<String, Object> resultMap = new HashMap<String, Object>();
@@ -148,6 +169,7 @@ public class EgovIndvdlSchdulManageApiController {
 		resultMap.put("resultList", egovIndvdlSchdulManageService.selectIndvdlSchdulManageRetrieve(commandMap));
 
 		resultMap.put("prevRequest", commandMap);
+		
 
 		resultVO.setResult(resultMap);
 		resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
@@ -168,6 +190,7 @@ public class EgovIndvdlSchdulManageApiController {
     @Operation(
 			summary = "일정 등록",
 			description = "일정을 등록 처리",
+			security = {@SecurityRequirement(name = "Authorization")},
 			tags = {"EgovIndvdlSchdulManageApiController"}
 	)
 	@ApiResponses(value = {
@@ -175,13 +198,13 @@ public class EgovIndvdlSchdulManageApiController {
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님"),
 			@ApiResponse(responseCode = "900", description = "입력값 무결성 오류")
 	})
-	@PostMapping(value = "/schedule")
+    @PostMapping(value = "/schedule")
 	public ResultVO IndvdlSchdulManageRegistActor(
 		HttpServletRequest request,
 		final MultipartHttpServletRequest multiRequest,
 		IndvdlSchdulManageVO indvdlSchdulManageVO,
 		BindingResult bindingResult,
-		@AuthenticationPrincipal LoginVO loginVO
+		@Parameter(hidden = true) @AuthenticationPrincipal LoginVO loginVO
 	) throws Exception {
 
 		ResultVO resultVO = new ResultVO();
@@ -240,10 +263,11 @@ public class EgovIndvdlSchdulManageApiController {
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "조회 성공")
 	})
-	@GetMapping(value = "/schedule/{schdulId}")
+    @GetMapping(value = "/schedule/{schdulId}")
 	public ResultVO EgovIndvdlSchdulManageDetail(
+		@Parameter(name = "schdulId", description = "일정 Id", in = ParameterIn.PATH, example="SCHDUL_0000000000001")	
 		@PathVariable("schdulId") String schdulId,
-		@AuthenticationPrincipal LoginVO user)
+		@Parameter(hidden = true) @AuthenticationPrincipal LoginVO user)
 		throws Exception {
 
 		ResultVO resultVO = new ResultVO();
@@ -311,16 +335,18 @@ public class EgovIndvdlSchdulManageApiController {
     @Operation(
 			summary = "일정 삭제",
 			description = "일정을 삭제 처리",
+			security = {@SecurityRequirement(name = "Authorization")},
 			tags = {"EgovIndvdlSchdulManageApiController"}
 	)
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "등록 성공"),
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
 	})
-	@DeleteMapping(value = "/schedule/{schdulId}")
-	public ResultVO EgovIndvdlSchdulManageDelete(
-			@PathVariable("schdulId") String schdulId
-		) throws Exception {
+    @DeleteMapping(value = "/schedule/{schdulId}")
+    public ResultVO EgovIndvdlSchdulManageDelete(
+    		@Parameter(name = "schdulId", description = "일정 Id", in = ParameterIn.PATH, example="SCHDUL_0000000000001")	
+    		@PathVariable("schdulId") String schdulId
+    		) throws Exception {
 
 		ResultVO resultVO = new ResultVO();
 
@@ -348,6 +374,7 @@ public class EgovIndvdlSchdulManageApiController {
     @Operation(
 			summary = "일정 수정",
 			description = "일정을 수정 처리",
+			security = {@SecurityRequirement(name = "Authorization")},
 			tags = {"EgovIndvdlSchdulManageApiController"}
 	)
 	@ApiResponses(value = {
@@ -355,17 +382,19 @@ public class EgovIndvdlSchdulManageApiController {
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님"),
 			@ApiResponse(responseCode = "900", description = "입력값 무결성 오류")
 	})
-	@PutMapping(value = "/schedule/{schdulId}")
+    @PutMapping(value = "/schedule/{schdulId}")
 	public ResultVO IndvdlSchdulManageModifyActor(
 		final MultipartHttpServletRequest multiRequest,
 		IndvdlSchdulManageVO indvdlSchdulManageVO,
 		BindingResult bindingResult,
+		@Parameter(name = "schdulId", description = "일정 Id", in = ParameterIn.PATH, example="SCHDUL_0000000000001")	
 		@PathVariable("schdulId") String schdulId,
-		@AuthenticationPrincipal LoginVO user)
+		@Parameter(hidden = true) @AuthenticationPrincipal LoginVO user)
 		throws Exception {
 
 		ResultVO resultVO = new ResultVO();
 		Map<String, Object> resultMap = new HashMap<String, Object>();
+
 
 		//서버  validate 체크
 		indvdlSchdulManageVO.setSchdulId(schdulId);
@@ -393,7 +422,7 @@ public class EgovIndvdlSchdulManageApiController {
 
 		if (!files.isEmpty()) {
 			String atchFileAt = multiRequest.getAttribute("atchFileAt") == null ? "" : (String)multiRequest.getAttribute("atchFileAt");
-			if ("N".equals(atchFileAt) || _atchFileId.equals("")) {
+			if ("N".equals(atchFileAt) || _atchFileId.equals("") || _atchFileId.equals("undefined")) {
 				//기존 첨부 파일이 존재하지 않는 경우
 				List<FileVO> _result = fileUtil.parseFileInf(files, "DSCH_", 0, _atchFileId, "");
 				_atchFileId = fileMngService.insertFileInfs(_result);
@@ -438,8 +467,16 @@ public class EgovIndvdlSchdulManageApiController {
 			@ApiResponse(responseCode = "200", description = "조회 성공"),
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
 	})
-	@GetMapping(value = "/schedule/daily")
-	public ResultVO EgovIndvdlSchdulManageDailyList(@RequestParam Map<String, Object> commandMap) throws Exception {
+    @GetMapping(value = "/schedule/daily")
+    public ResultVO EgovIndvdlSchdulManageDailyList(
+    		@Parameter(
+					in = ParameterIn.QUERY,
+					schema = @Schema(type = "object",
+					additionalProperties = Schema.AdditionalPropertiesValue.TRUE, 
+					ref = "#/components/schemas/searchSchdulMap"),
+					style = ParameterStyle.FORM,
+					explode = Explode.TRUE
+					) @RequestParam Map<String, Object> commandMap) throws Exception {
 
 		ResultVO resultVO = new ResultVO();
 		Map<String, Object> resultMap = new HashMap<String, Object>();
@@ -510,9 +547,16 @@ public class EgovIndvdlSchdulManageApiController {
 			@ApiResponse(responseCode = "200", description = "조회 성공"),
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
 	})
-	@GetMapping(value = "/schedule/week")
+    @GetMapping(value = "/schedule/week")
 	public ResultVO EgovIndvdlSchdulManageWeekList(
-		@RequestParam Map<String, Object> commandMap)
+			@Parameter(
+					in = ParameterIn.QUERY,
+					schema = @Schema(type = "object",
+					additionalProperties = Schema.AdditionalPropertiesValue.TRUE, 
+					ref = "#/components/schemas/searchSchdulWeekMap"),
+					style = ParameterStyle.FORM,
+					explode = Explode.TRUE
+					) @RequestParam Map<String, Object> commandMap)
 		throws Exception {
 
 		ResultVO resultVO = new ResultVO();
