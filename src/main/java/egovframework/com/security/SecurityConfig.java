@@ -29,34 +29,34 @@ import java.util.Arrays;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-
-    //Http Methpd : Get 인증예외 List
+	
+	 //Http Methpd : Get 인증예외 List
     private String[] AUTH_GET_WHITELIST = {
+    		"/mainPage", //메인 화면 리스트 조회
+    		"/board", // 게시판 목록조회
+    		"/board/{bbsId}/{nttId}", // 게시물 상세조회
+    		"/boardFileAtch/{bbsId}", //게시판 파일 첨부가능 여부 조회
             "/schedule/daily", //일별 일정 조회
             "/schedule/week", //주간 일정 조회
             "/schedule/{schdulId}", //일정 상세조회
+            "/image", //갤러리 이미지보기
     };
 
     // 인증 예외 List
     private String[] AUTH_WHITELIST = {
-            "/",
+    		"/",
             "/login/**",
             "/auth/login-jwt",//JWT 로그인
             "/auth/login",//일반 로그인
-            "/cmm/main/**.do", // 메인페이지
-            "/cmm/fms/FileDown.do", //파일 다운로드
-            "/cmm/fms/getImage.do", //갤러리 이미지보기
-
-            "/cop/bbs/selectUserBBSMasterInfAPI.do", //게시판 마스터 상세 조회
-            "/cop/bbs/selectBoardListAPI.do", //게시판 목록조회
-            "/cop/bbs/selectBoardArticleAPI.do", //게시물 상세조회
-
-            /* swagger v2 */
-            "/v2/api-docs",
+            "/file", //파일 다운로드
+            
+            /* swagger*/
+            "/v3/api-docs/**",
             "/swagger-resources",
             "/swagger-resources/**",
             "/swagger-ui.html",
-            "/swagger-ui/**"
+            "/swagger-ui/**",
+            
     };
     private static final String[] ORIGINS_WHITELIST = {
             "http://localhost:3000",
@@ -73,7 +73,7 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
 
         configuration.setAllowedOriginPatterns(Arrays.asList("*"));
-        configuration.setAllowedMethods(Arrays.asList("HEAD","POST","GET","DELETE","PUT"));
+        configuration.setAllowedMethods(Arrays.asList("HEAD","POST","GET","DELETE","PUT","PATCH"));
         configuration.setAllowedOrigins(Arrays.asList(ORIGINS_WHITELIST));
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setAllowCredentials(true);

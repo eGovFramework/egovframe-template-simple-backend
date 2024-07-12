@@ -23,6 +23,11 @@ import egovframework.com.cmm.SessionVO;
 import egovframework.com.cmm.service.EgovFileMngService;
 import egovframework.com.cmm.service.FileVO;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.Explode;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.enums.ParameterStyle;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -79,8 +84,18 @@ public class EgovImageProcessController extends HttpServlet {
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "성공")
 	})
-    @GetMapping("/cmm/fms/getImage.do")
-	public void getImageInf(SessionVO sessionVO, ModelMap model, @RequestParam Map<String, Object> commandMap,
+    @GetMapping("/image")
+	public void getImageInf(
+			@Parameter(hidden = true)SessionVO sessionVO, 
+			ModelMap model, 
+			@Parameter(
+					in = ParameterIn.QUERY,
+					schema = @Schema(type = "object",
+							additionalProperties = Schema.AdditionalPropertiesValue.TRUE, 
+							ref = "#/components/schemas/fileMap"),
+					style = ParameterStyle.FORM,
+					explode = Explode.TRUE
+			) @RequestParam Map<String, Object> commandMap,
 		HttpServletResponse response) throws Exception {
 
 		// 암호화된 atchFileId 를 복호화. (2022.12.06 추가) - 파일아이디가 유추 불가능하도록 조치

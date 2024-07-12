@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configuration scan="true">
+<!DOCTYPE xml>
+<Configuration scan="true">
 
 	<property resource="application.properties"/>
 
@@ -75,4 +76,4 @@
 		<!-- 위에 설정한 파일 설정 추가 -->
 		<appender-ref ref="FILE" />
 	</root>
-</configuration>
+</Configuration>

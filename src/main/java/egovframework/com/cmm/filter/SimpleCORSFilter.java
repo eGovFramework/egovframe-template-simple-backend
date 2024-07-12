@@ -67,11 +67,11 @@ public class SimpleCORSFilter implements Filter {
 
 		chain.doFilter(req, res);
 	}
-
+	
 	private static boolean isValidOriginHeader(String originHeader) {
 		return originHeader != null && !originHeader.isEmpty();
 	}
-
+	
 	private static void setCorsHeaders(HttpServletResponse response, String originHeader) {
 		response.setHeader("Access-Control-Allow-Origin", originHeader);
 
@@ -82,7 +82,7 @@ public class SimpleCORSFilter implements Filter {
 		response.setHeader("Access-Control-Allow-Credentials", "true");
 
 		// Access-Control-Allow-Methods
-		response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE");
+		response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PATCH, PUT, DELETE");
 
 		// Access-Control-Allow-Headers
 		response.setHeader("Access-Control-Allow-Headers",

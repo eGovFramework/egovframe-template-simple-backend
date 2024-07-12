@@ -6,29 +6,9 @@ import javax.servlet.ServletContextListener;
 import egovframework.com.cmm.service.EgovProperties;
 import lombok.extern.slf4j.Slf4j;
 
-/**
- * 
- * @author : 정완배
- * @since : 2023. 8. 9.
- * @version : 1.0
- *
- * @package : egovframework.com.config
- * @filename : EgovWebServletContextListener.java
- * @modificationInformation
- *
- * <pre>
- * << 개정이력(Modification Information) >>
- *
- *  수정일            수정자             수정내용
- *  ----------   ----------   ----------------------
- *  2023. 8. 9.    정완배              주석추가
- * </pre>
- *
- *
- */
 @Slf4j
 public class EgovWebServletContextListener implements ServletContextListener {
-
+	
 	public EgovWebServletContextListener() {
 		setEgovProfileSetting();
 	}

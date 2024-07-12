@@ -26,14 +26,14 @@ import javax.servlet.jsp.tagext.BodyTagSupport;
 public class EgovComCrossSiteHndlr extends BodyTagSupport {
 	
 	public static final int HIGHEST_SPECIAL = '>';
-    public static char[][] specialCharactersRepresentation = new char[HIGHEST_SPECIAL + 1][];
-    static {
-        specialCharactersRepresentation['&'] = "&amp;".toCharArray();
-        specialCharactersRepresentation['<'] = "&lt;".toCharArray();
-        specialCharactersRepresentation['>'] = "&gt;".toCharArray();
-        specialCharactersRepresentation['"'] = "&#034;".toCharArray();
-        specialCharactersRepresentation['\''] = "&#039;".toCharArray();
-    }
+	public static char[][] specialCharactersRepresentation = new char[HIGHEST_SPECIAL + 1][];
+	static {
+	    specialCharactersRepresentation['&'] = "&amp;".toCharArray();
+	    specialCharactersRepresentation['<'] = "&lt;".toCharArray();
+	    specialCharactersRepresentation['>'] = "&gt;".toCharArray();
+	    specialCharactersRepresentation['"'] = "&#034;".toCharArray();
+	    specialCharactersRepresentation['\''] = "&#039;".toCharArray();
+	}
 
 	/*
 	 * (One almost wishes XML and JSP could support "anonymous tags," given the
