@@ -24,15 +24,24 @@
 mvn spring-boot:run
 ```
 
-### IDE 구동 방법
+### IDE에서 BackEnd 구동 방법
 
 개발환경에서 프로젝트 우클릭 > Run As > Spring Boot App을 통해 구동한다.
 
-### 구동 후 확인
+### BackEnd 구동 후 확인
 
 구동 후, 브라우저에서 `http://localhost:포트번호/` 로 확인이 가능하다.  
 초기 포트번호는 8080이며 `/src/main/resources/application.properties` 파일의 `server.port` 항목에서 변경 가능하다.  
-또한, `http://localhost:포트번호/swagger-ui/index.html#/` 로 애플리케이션의 엔드포인트를 확인 가능하다.
+또한, 스웨거(Swagger)에서 테스트할 때는 아래처럼 사용한다.
+- 스웨거3.x에서는 `http://localhost:포트번호/swagger-ui/index.html` 로 애플리케이션의 엔드포인트를 확인 가능하다.
+- 참고로, 예전 스웨거2.x에서는 `http://localhost:포트번호/swagger-ui.html` 로 애플리케이션의 엔드포인트 확인이 가능했다.
+- 스웨거에서 GET방식으로 테스트할 때는 jwt(토큰) 인증 없이 사용 가능하다.
+  단, POST,PUT,DELETE 엔드포인트를 사용 하기위해서는 jwt(토큰)을 사용해 인가된 사용자로 사용해야 한다.
+  인가 받지 않고 사용하면, 401(403) "인가된 사용자가 아닙니다." 와 같은 에러 메세지를 확인하게 된다.
+- [POST] 엔드포인트 사용 예), 스웨거에서 /auth/login-jwt 엔드포인트 [Try it out]에서 아이디/암호(admin/1)을 입력 및 [Execute]실행 후
+  [Response body] 항목의 "jToken": "토큰 값" 에서 토큰 값을 복사하여
+  [Authorize] 팝업창에서 "토큰 값"을 Value 란에 입력 후 [Authorize] 버튼을 클릭하면, 인증이 되고
+  이후 [POST]와 같은 보안 인가(인증)이 필요한 엔드포인트 사용이 가능해 진다.
 
 ## FrontEnd 구동 (React)
 
