@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import egovframework.com.cmm.LoginVO;
@@ -104,7 +104,7 @@ public class EgovSiteManagerApiController {
 					ref = "#/components/schemas/passwordMap"),
 					style = ParameterStyle.FORM,
 					explode = Explode.TRUE
-					) @RequestBody Map<String, String> param, HttpServletRequest request, 
+					) @RequestParam Map<String, String> param, HttpServletRequest request, 
 			@Parameter(hidden = true) @AuthenticationPrincipal LoginVO user) throws Exception {
 		ResultVO resultVO = new ResultVO();
 
