@@ -7,6 +7,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -96,7 +97,7 @@ public class EgovSiteManagerApiController {
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님"),
 			@ApiResponse(responseCode = "800", description = "저장시 내부 오류")
 	})
-	@PostMapping(value = "/adminPassword")
+	@PatchMapping(value = "/admin/password")
 	public ResultVO updateAdminPassword(
 			@Parameter(
 					schema = @Schema(type = "object",
