@@ -49,7 +49,7 @@ public class SecurityConfig {
             "/auth/login-jwt",//JWT 로그인
             "/auth/login",//일반 로그인
             "/file", //파일 다운로드
-            
+            "/etc/**",//사용자단의 회원약관,회원가입,사용자아이디 중복여부체크 URL허용
             /* swagger*/
             "/v3/api-docs/**",
             "/swagger-resources",
@@ -88,6 +88,7 @@ public class SecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
+                		.antMatchers("/members/**").hasRole("ADMIN") //ROLE_생략=자동으로 입력됨
                         .antMatchers(AUTH_WHITELIST).permitAll()
                         .antMatchers(HttpMethod.GET,AUTH_GET_WHITELIST).permitAll()
                         .anyRequest().authenticated()

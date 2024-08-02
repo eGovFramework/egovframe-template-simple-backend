@@ -65,15 +65,19 @@
 		<!-- 업무사용자 -->
 		<if test="userSe == &quot;USR&quot;">
 			
-			SELECT emplyr_id AS id
-			     , user_nm AS name
-			     , password AS password
-			     , ihidnum AS ihidNum
-			     , email_adres AS email
+			SELECT a.emplyr_id AS id
+			     , a.user_nm AS name
+			     , a.password AS password
+			     , a.ihidnum AS ihidNum
+			     , a.email_adres AS email
 			     , 'USR' AS userSe
-			     , orgnzt_id AS orgnztId
-			     , esntl_id AS uniqId
-			  FROM LETTNEMPLYRINFO
+			     , a.orgnzt_id AS orgnztId
+			     , a.esntl_id AS uniqId
+			     , a.group_id AS groupId
+			     , b.GROUP_NM AS groupNm
+			  FROM LETTNEMPLYRINFO a
+				LETTNAUTHORGROUPINFO b
+			  ON a.GROUP_ID = b.GROUP_ID
 			 WHERE emplyr_id = #{id}
 			   AND password = #{password}
 			   AND emplyr_sttus_code = 'P'

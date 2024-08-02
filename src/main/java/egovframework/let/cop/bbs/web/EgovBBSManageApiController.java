@@ -33,10 +33,12 @@ import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.com.cmm.service.FileVO;
 import egovframework.com.cmm.service.ResultVO;
 import egovframework.com.cmm.web.EgovFileDownloadController;
+import egovframework.com.jwt.EgovJwtTokenUtil;
 import egovframework.let.cop.bbs.service.BoardMasterVO;
 import egovframework.let.cop.bbs.service.BoardVO;
 import egovframework.let.cop.bbs.service.EgovBBSAttributeManageService;
 import egovframework.let.cop.bbs.service.EgovBBSManageService;
+import egovframework.let.utl.fcc.service.EgovStringUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -71,6 +73,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @Tag(name="EgovBBSManageApiController",description = "게시물 관리")
 public class EgovBBSManageApiController {
 	
+	@Autowired
+    private EgovJwtTokenUtil jwtTokenUtil;
+    public static final String HEADER_STRING = "Authorization";
+    
 	@Resource(name = "EgovBBSManageService")
 	private EgovBBSManageService bbsMngService;
 
@@ -342,9 +348,14 @@ public class EgovBBSManageApiController {
 		throws Exception {
 		ResultVO resultVO = new ResultVO();
 
+		// step 1. request header에서 토큰을 가져온다.
+		String jwtToken = EgovStringUtil.isNullToString(request.getHeader(HEADER_STRING));
+        // step 2. 토큰에 내용이 있는지 확인해서 id값을 가져옴
+		String uniqId = jwtTokenUtil.getInfoFromToken("uniqId",jwtToken);
+		String userNm = jwtTokenUtil.getInfoFromToken("name",jwtToken);
 		// 사용자권한 처리
 		LoginVO user = new LoginVO();
-		user.setUniqId("USRCNFRM_00000000000");
+		user.setUniqId(uniqId); //고정값(USRCNFRM_00000000000)에서 로그인 시 사용자 고유ID값으로 변경
 
 		String atchFileId = boardVO.getAtchFileId().replaceAll("\\s", "");
 
@@ -374,7 +385,7 @@ public class EgovBBSManageApiController {
 
 		boardVO.setNttId(Long.parseLong(nttId));
 		boardVO.setLastUpdusrId(user.getUniqId());
-		boardVO.setNtcrNm(""); // dummy 오류 수정 (익명이 아닌 경우 validator 처리를 위해 dummy로 지정됨) 
+		boardVO.setNtcrNm(userNm); // jwt토큰값으로 추가. dummy 오류 수정 (익명이 아닌 경우 validator 처리를 위해 dummy로 지정됨) 
 		boardVO.setPassword(EgovFileScrty.encryptPassword("", user.getUniqId())); // dummy 오류 수정 (익명이 아닌 경우 validator 처리를 위해 dummy로 지정됨)
 		boardVO.setNttCn(unscript(boardVO.getNttCn())); // XSS 방지
 
@@ -415,8 +426,14 @@ public class EgovBBSManageApiController {
 		throws Exception {
 		ResultVO resultVO = new ResultVO();
 
+		// step 1. request header에서 토큰을 가져온다.
+		String jwtToken = EgovStringUtil.isNullToString(request.getHeader(HEADER_STRING));
+        // step 2. 토큰에 내용이 있는지 확인해서 id값을 가져옴
+		String uniqId = jwtTokenUtil.getInfoFromToken("uniqId",jwtToken);
+		String userNm = jwtTokenUtil.getInfoFromToken("name",jwtToken);
+		// 사용자권한 처리
 		LoginVO user = new LoginVO();
-		user.setUniqId("USRCNFRM_00000000000");
+		user.setUniqId(uniqId); //고정값(USRCNFRM_00000000000)에서 로그인 시 사용자 고유ID값으로 변경
 
 		beanValidator.validate(boardVO, bindingResult);
 		if (bindingResult.hasErrors()) {
@@ -438,7 +455,7 @@ public class EgovBBSManageApiController {
 		boardVO.setFrstRegisterId(user.getUniqId());
 		boardVO.setBbsId(boardVO.getBbsId());
 
-		boardVO.setNtcrNm(""); // dummy 오류 수정 (익명이 아닌 경우 validator 처리를 위해 dummy로 지정됨)
+		boardVO.setNtcrNm(userNm); //jwt토큰값으로 추가. dummy 오류 수정 (익명이 아닌 경우 validator 처리를 위해 dummy로 지정됨)
 		boardVO.setPassword(EgovFileScrty.encryptPassword("", user.getUniqId())); // dummy 오류 수정 (익명이 아닌 경우 validator 처리를 위해 dummy로 지정됨)
 		// board.setNttCn(unscript(board.getNttCn())); // XSS 방지
 
@@ -479,8 +496,14 @@ public class EgovBBSManageApiController {
 		throws Exception {
 		ResultVO resultVO = new ResultVO();
 
+		// step 1. request header에서 토큰을 가져온다.
+		String jwtToken = EgovStringUtil.isNullToString(request.getHeader(HEADER_STRING));
+        // step 2. 토큰에 내용이 있는지 확인해서 id값을 가져옴
+		String uniqId = jwtTokenUtil.getInfoFromToken("uniqId",jwtToken);
+		String userNm = jwtTokenUtil.getInfoFromToken("name",jwtToken);
+		// 사용자권한 처리
 		LoginVO user = new LoginVO();
-		user.setUniqId("USRCNFRM_00000000000");
+		user.setUniqId(uniqId); //고정값(USRCNFRM_00000000000)에서 로그인 시 사용자 고유ID값으로 변경
 
 		beanValidator.validate(boardVO, bindingResult);
 		if (bindingResult.hasErrors()) {
@@ -506,7 +529,7 @@ public class EgovBBSManageApiController {
 		boardVO.setSortOrdr(boardVO.getSortOrdr());
 		boardVO.setReplyLc(Integer.toString(Integer.parseInt(boardVO.getReplyLc()) + 1));
 
-		boardVO.setNtcrNm(""); // dummy 오류 수정 (익명이 아닌 경우 validator 처리를 위해 dummy로 지정됨)
+		boardVO.setNtcrNm(userNm); //jwt토큰값으로 추가. dummy 오류 수정 (익명이 아닌 경우 validator 처리를 위해 dummy로 지정됨)
 		boardVO.setPassword(EgovFileScrty.encryptPassword("", user.getUniqId())); // dummy 오류 수정 (익명이 아닌 경우 validator 처리를 위해 dummy로 지정됨)
 
 		boardVO.setNttCn(unscript(boardVO.getNttCn())); // XSS 방지
