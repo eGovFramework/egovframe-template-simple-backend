@@ -1,10 +1,13 @@
 package egovframework.com.cmm.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import egovframework.com.cmm.ComDefaultCodeVO;
 import egovframework.com.cmm.service.CmmnDetailCode;
 
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -22,42 +25,55 @@ import org.springframework.stereotype.Repository;
  * @see
  *
  */
+@Slf4j
 @Repository("cmmUseDAO")
 public class CmmUseDAO extends EgovComAbstractDAO {
 
     /**
      * 주어진 조건에 따른 공통코드를 불러온다.
-     *
      * @param vo
-     * @return
-     * @throws Exception
+     * @return List<CmmnDetailCode>
      */
     @SuppressWarnings("unchecked")
-	public List<CmmnDetailCode> selectCmmCodeDetail(ComDefaultCodeVO vo) throws Exception {
-	return (List<CmmnDetailCode>) list("CmmUseDAO.selectCmmCodeDetail", vo);
+    public List<CmmnDetailCode> selectCmmCodeDetail(ComDefaultCodeVO vo){
+        List<CmmnDetailCode> result = new ArrayList<>();
+        try {
+            result = selectList("CmmUseDAO.selectCmmCodeDetail", vo);
+        }catch (DataAccessException e) {
+            log.error("DataAccessException occurred.", e);
+        }
+        return result;
     }
 
     /**
      * 공통코드로 사용할 조직정보를 를 불러온다.
-     *
      * @param vo
-     * @return
-     * @throws Exception
+     * @return List<CmmnDetailCode>
      */
     @SuppressWarnings("unchecked")
-    public List<CmmnDetailCode> selectOgrnztIdDetail(ComDefaultCodeVO vo) throws Exception {
-	return (List<CmmnDetailCode>) list("CmmUseDAO.selectOgrnztIdDetail", vo);
+    public List<CmmnDetailCode> selectOgrnztIdDetail(ComDefaultCodeVO vo){
+        List<CmmnDetailCode> result = new ArrayList<>();
+        try {
+            result = selectList("CmmUseDAO.selectOgrnztIdDetail", vo);
+        } catch (DataAccessException e) {
+            log.error("DataAccessException occurred", e);
+        }
+        return result;
     }
 
     /**
      * 공통코드로 사용할그룹정보를 를 불러온다.
-     *
      * @param vo
-     * @return
-     * @throws Exception
+     * @return List<CmmnDetailCode>
      */
     @SuppressWarnings("unchecked")
-    public List<CmmnDetailCode> selectGroupIdDetail(ComDefaultCodeVO vo) throws Exception {
-	return (List<CmmnDetailCode>) list("CmmUseDAO.selectGroupIdDetail", vo);
+    public List<CmmnDetailCode> selectGroupIdDetail(ComDefaultCodeVO vo){
+        List<CmmnDetailCode> result = new ArrayList<>();
+        try {
+            result = selectList("CmmUseDAO.selectGroupIdDetail", vo);
+        } catch (DataAccessException e) {
+            log.error("DataAccessException occurred", e);
+        }
+        return result;
     }
 }
