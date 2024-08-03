@@ -3,8 +3,10 @@
 -- ID Generation
 insert into IDS(TABLE_NAME,NEXT_ID) values ('BBS_ID',1);
 insert into IDS(TABLE_NAME,NEXT_ID) values ('FILE_ID',1);
+insert into IDS(TABLE_NAME,NEXT_ID) values ('SAMPLE',1);
 insert into IDS(TABLE_NAME,NEXT_ID) values ('SCHDUL_ID',1);
 insert into IDS(TABLE_NAME,NEXT_ID) values ('TMPLAT_ID',1);
+insert into COMTECOPSEQ(TABLE_NAME,NEXT_ID) values ('USRCNFRM_ID',20);
     
 
 -- 분류코드

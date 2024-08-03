@@ -3,9 +3,11 @@
 -- ID Generation
 insert into IDS(TABLE_NAME,NEXT_ID) values ('BBS_ID',1);
 insert into IDS(TABLE_NAME,NEXT_ID) values ('FILE_ID',1);
+insert into IDS(TABLE_NAME,NEXT_ID) values ('SAMPLE',1);
 insert into IDS(TABLE_NAME,NEXT_ID) values ('SCHDUL_ID',1);
 insert into IDS(TABLE_NAME,NEXT_ID) values ('TMPLAT_ID',1);
-    
+insert into COMTECOPSEQ(TABLE_NAME,NEXT_ID) values ('USRCNFRM_ID',20);
+
 
 -- 분류코드
 insert into LETTCCMMNCLCODE(CL_CODE,CL_CODE_NM,CL_CODE_DC,USE_AT,FRST_REGIST_PNTTM,FRST_REGISTER_ID,LAST_UPDT_PNTTM,LAST_UPDUSR_ID) values ('LET','전자정부 프레임워크 경량환경 템플릿','전자정부 프레임워크 경량환경 템플릿','Y',SYSDATETIME,'SYSTEM',SYSDATETIME,'SYSTEM');
