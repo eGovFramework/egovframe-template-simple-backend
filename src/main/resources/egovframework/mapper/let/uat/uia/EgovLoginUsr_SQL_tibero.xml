@@ -65,22 +65,23 @@
 		<!-- 업무사용자 -->
 		<if test="userSe == &quot;USR&quot;">
 			
-			SELECT a.emplyr_id AS id
-			     , a.user_nm AS name
-			     , a.password AS password
-			     , a.ihidnum AS ihidNum
-			     , a.email_adres AS email
-			     , 'USR' AS userSe
-			     , a.orgnzt_id AS orgnztId
-			     , a.esntl_id AS uniqId
-			     , a.group_id AS groupId
-			     , b.GROUP_NM AS groupNm
-			  FROM LETTNEMPLYRINFO a
+			SELECT a.EMPLYR_ID AS id
+                 , a.USER_NM AS name
+                 , a.PASSWORD AS password
+                 , a.IHIDNUM AS ihidNum
+                 , a.EMAIL_ADRES AS email
+                 , 'USR' AS userSe
+                 , a.ORGNZT_ID AS orgnztId
+                 , a.ESNTL_ID AS uniqId
+                 , a.GROUP_ID AS groupId
+                 , b.GROUP_NM AS groupNm
+              FROM LETTNEMPLYRINFO a
+              LEFT OUTER JOIN 
 				LETTNAUTHORGROUPINFO b
 			  ON a.GROUP_ID = b.GROUP_ID
-			 WHERE emplyr_id = #{id}
-			   AND password = #{password}
-			   AND emplyr_sttus_code = 'P'
+             WHERE EMPLYR_ID = #{id}
+               AND PASSWORD = #{password}
+               AND EMPLYR_STTUS_CODE = 'P'
 			
 		</if>
 	</select>

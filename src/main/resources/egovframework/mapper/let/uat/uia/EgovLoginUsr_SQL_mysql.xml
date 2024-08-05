@@ -38,9 +38,10 @@
                  , 'USR' AS userSe
                  , a.ORGNZT_ID AS orgnztId
                  , a.ESNTL_ID AS uniqId
-                 , a.group_id AS groupId
+                 , a.GROUP_ID AS groupId
                  , b.GROUP_NM AS groupNm
               FROM LETTNEMPLYRINFO a
+              LEFT OUTER JOIN 
 				LETTNAUTHORGROUPINFO b
 			  ON a.GROUP_ID = b.GROUP_ID
              WHERE EMPLYR_ID = #{id}

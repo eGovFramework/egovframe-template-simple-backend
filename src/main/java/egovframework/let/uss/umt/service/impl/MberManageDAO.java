@@ -88,7 +88,7 @@ public class MberManageDAO extends EgovAbstractMapper{
      * @return List 일반회원약관정보
      */
 	public List<?> selectStplat(String stplatId){
-    	return list("mberManageDAO.selectStplat_S", stplatId);
+    	return selectList("mberManageDAO.selectStplat_S", stplatId);
     }
 
     /**
