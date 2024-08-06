@@ -40,7 +40,7 @@
 		        MBTLNUM           moblphonNo,
 		        GROUP_ID              groupId,
 		        EMPLYR_STTUS_CODE     sttus,
-		        SBSCRB_DE             sbscrbDe
+		        TO_CHAR(SBSCRB_DE, 'YYYY-MM-DD HH24:MI:SS') as sbscrbDe
 		    FROM    LETTNEMPLYRINFO
 		) A
 	    WHERE 1=1

@@ -40,7 +40,7 @@
 		        MBTLNUM           as "moblphonNo",
 		        GROUP_ID          as "groupId",
 		        EMPLYR_STTUS_CODE as "sttus",
-		        SBSCRB_DE         as "sbscrbDe"
+		        TO_CHAR(SBSCRB_DE, 'YYYY-MM-DD HH24:MI:SS') as "sbscrbDe"
 		    FROM    LETTNEMPLYRINFO
 		    WHERE 1=1
 		    <if test="sbscrbSttus != 0">AND
