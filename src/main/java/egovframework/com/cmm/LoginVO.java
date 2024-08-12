@@ -55,8 +55,8 @@ public class LoginVO implements Serializable{
 	@Schema(description = "비밀번호 정답")
 	private String passwordCnsr;
 	
-	@Schema(description = "사용자 구분", allowableValues = {"GNR", "ENT", "USR"}, defaultValue = "USR")
-	private String userSe;
+	@Schema(description = "사용자 구분", allowableValues = {"GNR", "ENT", "USR", "ADM"}, defaultValue = "USR")
+	private String userSe; //사용자 구분에 ADM 추가
 	
 	@Schema(description = "조직(부서)ID")
 	private String orgnztId;
@@ -76,5 +76,9 @@ public class LoginVO implements Serializable{
 	@Schema(description = "GPKI인증 DN")
 	private String dn;
 	
+	@Schema(description = "그룹ID") //권한 그룹ID 추가
+	private String groupId;
 	
+	@Schema(description = "그룹명") //권한 그룹명 추가
+	private String groupNm;
 }

@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mberManageDAO">
+	<resultMap id="stplatMap" type="egovframework.let.uss.umt.service.StplatVO">
+        <result property="useStplatId"         column="USE_STPLAT_ID" />
+        <result property="useStplatCn"         column="USE_STPLAT_CN" />
+        <result property="infoProvdAgeCn"      column="INFO_PROVD_AGRE_CN" />
+    </resultMap>
+	<!-- Hsql과 호환때문에 아래 resultMap 추가: KIK -->
+	<resultMap id="userList" type="egovframework.let.uss.umt.service.MberManageVO">
+			<result property="uniqId" column="uniqId" />
+			<result property="orgnztId" column="orgnztId" />
+			<result property="userTy" column="userTy" />
+			<result property="mberId" column="userId" />
+			<result property="mberNm" column="userNm" />
+			<result property="mberEmailAdres" column="emailAdres" />
+			<result property="areaNo" column="areaNo" />
+			<result property="middleTelno" column="middleTelno" />
+			<result property="endTelno" column="endTelno" />
+			<result property="moblphonNo" column="moblphonNo" />		
+			<result property="groupId" column="groupId" />
+			<result property="mberSttus" column="sttus" />
+			<result property="sbscrbDe" column="sbscrbDe" />
+	</resultMap>
+	<select id="selectMberList" parameterType="userSearchVO" resultMap="userList">
+		SELECT 
+		    uniqId, orgnztId, userTy, userId , userNm, emailAdres, areaNo, middleTelno, endTelno, moblphonNo, groupId, sttus, sbscrbDe
+		FROM(  SELECT rownum rn, TB.* FROM (
+		    SELECT 
+		        ESNTL_ID             as "uniqId",
+		        ORGNZT_ID		  	 as	"orgnztId",
+		        'USR01'              as "userTy",
+		        EMPLYR_ID            as "userId",
+		        USER_NM             as "userNm",
+		        EMAIL_ADRES         as "emailAdres",
+		        AREA_NO             as "areaNo",
+		        HOUSE_MIDDLE_TELNO  as "middleTelno",
+		        HOUSE_END_TELNO     as "endTelno",
+		        MBTLNUM           as "moblphonNo",
+		        GROUP_ID          as "groupId",
+		        EMPLYR_STTUS_CODE as "sttus",
+		        TO_CHAR(SBSCRB_DE, 'YYYY-MM-DD HH24:MI:SS') as "sbscrbDe"
+		    FROM    LETTNEMPLYRINFO
+		    WHERE 1=1
+		    <if test="sbscrbSttus != 0">AND
+		    	EMPLYR_STTUS_CODE LIKE CONCAT('%' , #{sbscrbSttus}, '%')
+		    </if>
+		    <if test="searchCondition == 0">AND
+		    	EMPLYR_ID LIKE CONCAT('%' , #{searchKeyword}, '%')
+		    </if>
+		    <if test="searchCondition == 1">AND
+		    	USER_NM LIKE CONCAT('%' , #{searchKeyword}, '%')
+		    </if>
+		    ORDER BY SBSCRB_DE DESC
+	    ) TB ) WHERE rn BETWEEN #{firstIndex} + 1 AND #{firstIndex} + #{recordCountPerPage}
+   	</select>
+    	
+   	<select id="selectMberListTotCnt" parameterType="userSearchVO" resultType="int">
+        SELECT COUNT(1) totcnt
+        FROM(
+	        SELECT 
+	            ESNTL_ID               uniqId,
+	            ORGNZT_ID		  	  orgnztId,
+	            'USR01'               userTy,
+	            EMPLYR_ID               userId,
+	            USER_NM               userNm,
+	            EMAIL_ADRES      emailAdres,
+	            AREA_NO               areaNo,
+	            HOUSE_MIDDLE_TELNO          middleTelno,
+	            HOUSE_END_TELNO             endTelno,
+	            MBTLNUM           moblphonNo,
+	            GROUP_ID              groupId,
+	            EMPLYR_STTUS_CODE            sttus,
+	            SBSCRB_DE             sbscrbDe
+	        FROM    LETTNEMPLYRINFO
+	    ) A
+        WHERE 1=1
+        <if test="sbscrbSttus != 0">AND
+		    EMPLYR_STTUS_CODE LIKE CONCAT('%' , #{sbscrbSttus}, '%')
+	    </if>
+	    <if test="searchCondition == 0">AND
+	    	EMPLYR_ID LIKE CONCAT('%' , #{searchKeyword}, '%')
+	    </if>
+	    <if test="searchCondition == 1">AND
+	    	USER_NM LIKE CONCAT('%' , #{searchKeyword}, '%')
+	    </if>
+    </select>
+    
+    <insert id="insertMber_S">
+        INSERT INTO LETTNEMPLYRINFO 
+            (   
+                ESNTL_ID          ,
+                ORGNZT_ID		  ,
+                EMPLYR_ID          ,
+                USER_NM          ,
+                PASSWORD         ,
+                PASSWORD_HINT    ,
+                PASSWORD_CNSR    ,
+                IHIDNUM          ,
+                SEXDSTN_CODE     ,
+                ZIP              ,
+                HOUSE_ADRES            ,
+                AREA_NO          ,
+                EMPLYR_STTUS_CODE       ,
+                DETAIL_ADRES     ,
+                HOUSE_END_TELNO        ,
+                MBTLNUM      ,
+                GROUP_ID         ,
+                FXNUM       ,
+                EMAIL_ADRES ,
+                HOUSE_MIDDLE_TELNO     ,
+                SBSCRB_DE        )
+          VALUES(
+                #{uniqId},
+                'ORGNZT_0000000000000',
+                #{mberId},
+                #{mberNm},
+                #{password},
+                #{passwordHint},
+                #{passwordCnsr},
+                #{ihidnum},
+                #{sexdstnCode},
+                #{zip},
+                #{adres},
+                #{areaNo},
+                #{mberSttus},
+                #{detailAdres},
+                #{endTelno},
+                #{moblphonNo},
+                #{groupId},
+                #{mberFxnum},
+                #{mberEmailAdres},
+                #{middleTelno},
+                sysdate  )           
+    </insert>
+    
+    <delete id="deleteMber_S">
+            DELETE FROM LETTNEMPLYRINFO 
+            WHERE ESNTL_ID=#{delId}
+    </delete>
+    
+    <select id="selectMber_S" resultType="mberVO">
+        SELECT
+            ESNTL_ID          uniqId,
+            ORGNZT_ID		  orgnztId,
+            'USR01'          userTy,
+            EMPLYR_ID          mberId,
+            USER_NM          mberNm,
+            PASSWORD         password,
+            PASSWORD_HINT    passwordHint,
+            PASSWORD_CNSR    passwordCnsr,
+            IHIDNUM          ihidnum,
+            SEXDSTN_CODE     sexdstnCode,
+            ZIP              zip,
+            HOUSE_ADRES            adres,
+            AREA_NO          areaNo,
+            EMPLYR_STTUS_CODE       mberSttus,
+            DETAIL_ADRES     detailAdres,
+            HOUSE_END_TELNO        endTelno,
+            MBTLNUM      moblphonNo,
+            GROUP_ID         groupId,
+            FXNUM       mberFxnum,
+            EMAIL_ADRES mberEmailAdres,
+            HOUSE_MIDDLE_TELNO     middleTelno,
+            SBSCRB_DE        sbscrbDe
+        FROM LETTNEMPLYRINFO
+        WHERE ESNTL_ID=#{uniqId}
+    </select>
+    
+    <update id="updateMber_S">
+        UPDATE LETTNEMPLYRINFO 
+         SET EMPLYR_ID          = #{mberId},
+             USER_NM          = #{mberNm},
+             PASSWORD_HINT    = #{passwordHint},
+             PASSWORD_CNSR    = #{passwordCnsr},
+             IHIDNUM          = #{ihidnum},
+             SEXDSTN_CODE     = #{sexdstnCode},
+             ZIP              = #{zip},
+             HOUSE_ADRES            = #{adres},
+             AREA_NO          = #{areaNo},
+             EMPLYR_STTUS_CODE       = #{mberSttus},
+             DETAIL_ADRES     = #{detailAdres},
+             HOUSE_END_TELNO        = #{endTelno},
+             MBTLNUM      = #{moblphonNo},
+             GROUP_ID         = #{groupId},
+             FXNUM       = #{mberFxnum},
+             EMAIL_ADRES = #{mberEmailAdres},
+             HOUSE_MIDDLE_TELNO     = #{middleTelno}
+         WHERE ESNTL_ID=#{uniqId}
+    </update>
+    
+    <select id="selectStplat_S" resultMap="stplatMap">
+        SELECT
+            USE_STPLAT_ID           ,
+            USE_STPLAT_CN           ,
+            INFO_PROVD_AGRE_CN      
+        FROM LETTNSTPLATINFO
+        WHERE USE_STPLAT_ID=#{stplatId}
+    </select>
+    
+    <update id="updatePassword_S">
+        UPDATE LETTNEMPLYRINFO 
+        SET 
+               PASSWORD   =  #{password}
+        WHERE  ESNTL_ID  = #{uniqId}
+    </update>
+    
+    <select id="selectPassword_S" resultType="mberVO">
+        SELECT
+                PASSWORD          password 
+        FROM    LETTNEMPLYRINFO
+        WHERE   ESNTL_ID=#{uniqId}
+    </select>
+    
+    <select id="checkIdDplct_S" resultType="int">
+         SELECT COUNT(1) usedCnt
+             FROM(
+             SELECT
+                 EMPLYR_ID             userId
+             FROM    LETTNEMPLYRINFO
+             UNION ALL
+             SELECT
+                 ENTRPRS_MBER_ID        userId
+             FROM    LETTNENTRPRSMBER
+             UNION ALL
+             SELECT
+                 MBER_ID               userId
+             FROM    LETTNGNRLMBER
+             ) A
+         WHERE userId = #{checkId}
+    </select>
+</mapper>

@@ -125,20 +125,24 @@ public class EgovLoginApiController {
 	public HashMap<String, Object> actionLoginJWT(@RequestBody LoginVO loginVO, HttpServletRequest request, ModelMap model) throws Exception {
 		HashMap<String, Object> resultMap = new HashMap<String, Object>();
 
-		// 1. 일반 로그인 처리
+		// 1. JWT 로그인 처리
 		LoginVO loginResultVO = loginService.actionLogin(loginVO);
 		
 		if (loginResultVO != null && loginResultVO.getId() != null && !loginResultVO.getId().equals("")) {
-
-			log.debug("===>>> loginVO.getUserSe() = "+loginVO.getUserSe());
-			log.debug("===>>> loginVO.getId() = "+loginVO.getId());
-			log.debug("===>>> loginVO.getPassword() = "+loginVO.getPassword());
+			if(loginResultVO.getGroupNm().equals("ROLE_ADMIN")) {//로그인 결과에서 스프링시큐리티용 그룹명값에 따른 권한부여
+				loginResultVO.setUserSe("ADM");
+	        }
+			log.debug("===>>> loginResultVO.getUserSe() = "+loginResultVO.getUserSe());
+			log.debug("===>>> loginResultVO.getId() = "+loginResultVO.getId());
+			log.debug("===>>> loginResultVO.getPassword() = "+loginResultVO.getPassword());
+			log.debug("===>>> loginResultVO.getGroupNm() = "+loginResultVO.getGroupNm());//로그인 결과에서 스프링시큐리티용 그룹명값 출력
 			
 			String jwtToken = jwtTokenUtil.generateToken(loginResultVO);
 			
 			String username = jwtTokenUtil.getUserSeFromToken(jwtToken);
 	    	log.debug("Dec jwtToken username = "+username);
-	    	 
+	    	String groupnm = jwtTokenUtil.getInfoFromToken("groupNm", jwtToken);
+	    	log.debug("Dec jwtToken groupnm = "+groupnm);//생성한 토큰에서 스프링시큐리티용 그룹명값 출력
 	    	//서버사이드 권한 체크 통과를 위해 삽입
 	    	//EgovUserDetailsHelper.isAuthenticated() 가 그 역할 수행. DB에 정보가 없으면 403을 돌려 줌. 로그인으로 튕기는 건 프론트 쪽에서 처리
 	    	request.getSession().setAttribute("LoginVO", loginResultVO);

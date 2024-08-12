@@ -30,15 +30,20 @@
 	<select id="actionLogin" resultMap="login">
 		<if test="userSe == &quot;USR&quot;">
 			
-            SELECT EMPLYR_ID AS id
-                 , USER_NM AS name
-                 , PASSWORD AS password
-                 , IHIDNUM AS ihidNum
-                 , EMAIL_ADRES AS email
+            SELECT a.EMPLYR_ID AS id
+                 , a.USER_NM AS name
+                 , a.PASSWORD AS password
+                 , a.IHIDNUM AS ihidNum
+                 , a.EMAIL_ADRES AS email
                  , 'USR' AS userSe
-                 , ORGNZT_ID AS orgnztId
-                 , ESNTL_ID AS uniqId
-              FROM LETTNEMPLYRINFO
+                 , a.ORGNZT_ID AS orgnztId
+                 , a.ESNTL_ID AS uniqId
+                 , a.GROUP_ID AS groupId
+                 , b.GROUP_NM AS groupNm
+              FROM LETTNEMPLYRINFO a
+              LEFT OUTER JOIN 
+				LETTNAUTHORGROUPINFO b
+			  ON a.GROUP_ID = b.GROUP_ID
              WHERE EMPLYR_ID = #{id}
                AND PASSWORD = #{password}
                AND EMPLYR_STTUS_CODE = 'P'
