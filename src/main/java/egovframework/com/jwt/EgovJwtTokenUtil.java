@@ -24,7 +24,7 @@ public class EgovJwtTokenUtil implements Serializable {
 	public static final long JWT_TOKEN_VALIDITY = (long) ((1 * 60 * 60) / 60) * 60; // 토큰의 유효시간 설정, 기본 60분
 
 	public static final String SECRET_KEY = EgovProperties.getProperty("Globals.jwt.secret");
-
+  
 	// retrieve username from jwt token
 	public String getUserIdFromToken(String token) {
 		Claims claims = getClaimFromToken(token);
