@@ -26,6 +26,27 @@ class SnsVO {
 	    private String name;
 	}
 	/**
-	 * 네이버용 토큰, 응답, 프로필  변수 VO 끝
+	 * 카카오용 토큰, 응답, 프로필  변수 VO 끝
 	 */
+	@Getter
+	static class KakaoTokenVO {
+		private String access_token;
+	    private String refresh_token;
+	    private String token_type;
+	    private String expires_in;
+	    private String scope;
+	    private String refresh_token_expires_in;
+	}
+	@Getter
+	static class KakaoResponseVO {
+		private String id;
+		private String connected_at;
+		private Object properties;
+		private Object kakao_account;
+	}
+	@Getter
+	static class KakaoProfileVO {
+		private String id;
+	    private String nickname;
+	}
 }

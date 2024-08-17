@@ -8,6 +8,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
+
 /**
  * Sns 로그인을 처리하는 공통 메서드 클래스
  * @version 1.0
@@ -22,11 +23,11 @@ import java.util.Map;
  *  </pre>
  */
 public class SnsUtils {
-	//외부 데이터 파싱(아래)
-	public static String get(String openApiUrl, Map<String, String> requestHeaders){
+	
+	//Open Api 데이터 가져오기(공통)
+	public static String getOpenApi(String openApiUrl, Map<String, String> requestHeaders){
 		HttpURLConnection con = connect(openApiUrl);
         try {
-            con.setRequestMethod("GET");
             for(Map.Entry<String, String> header :requestHeaders.entrySet()) {
                 con.setRequestProperty(header.getKey(), header.getValue());
             }
@@ -42,7 +43,8 @@ public class SnsUtils {
             con.disconnect();
         }
     }
-	//외부 URL 커넥션 호출(아래)
+	
+	//외부 URL 커넥션 호출(공통)
 	private static HttpURLConnection connect(String apiUrl){
         try {
             URL url = new URL(apiUrl);
@@ -53,7 +55,7 @@ public class SnsUtils {
             throw new RuntimeException("연결이 실패했습니다. : " + apiUrl, e);
         }
     }
-	//외부 프로필 내용 출력(아래)
+	//외부 프로필 내용 출력(공통)
     private static String readBody(InputStream body){
         InputStreamReader streamReader = new InputStreamReader(body);
         try (BufferedReader lineReader = new BufferedReader(streamReader)) {
