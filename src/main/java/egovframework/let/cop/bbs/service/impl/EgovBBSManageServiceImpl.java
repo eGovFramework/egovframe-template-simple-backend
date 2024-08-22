@@ -8,6 +8,8 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
+import org.egovframe.rte.fdl.property.EgovPropertyService;
 import org.springframework.stereotype.Service;
 
 import egovframework.com.cmm.service.EgovFileMngService;
@@ -16,32 +18,32 @@ import egovframework.let.cop.bbs.service.Board;
 import egovframework.let.cop.bbs.service.BoardVO;
 import egovframework.let.cop.bbs.service.EgovBBSManageService;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
-
-import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
-import org.egovframe.rte.fdl.property.EgovPropertyService;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 게시물 관리를 위한 서비스 구현 클래스
+ * 
  * @author 공통 서비스 개발팀 한성곤
  * @since 2009.03.19
  * @version 1.0
  * @see
  *
- * <pre>
+ *      <pre>
  * << 개정이력(Modification Information) >>
  *
  *   수정일      수정자          수정내용
  *  -------    --------    ---------------------------
- *  2009.03.19  이삼섭          최초 생성
- *  2011.08.31  JJY            경량환경 템플릿 커스터마이징버전 생성
+ *   2009.03.19  이삼섭          최초 생성
+ *   2011.08.31  JJY           경량환경 템플릿 커스터마이징버전 생성
+ *   2024.08.15  이백행          롬복으로 생성자 기반 종속성 주입으로 수정
  *
- *  </pre>
+ *      </pre>
  */
 @Service("EgovBBSManageService")
+@RequiredArgsConstructor
 public class EgovBBSManageServiceImpl extends EgovAbstractServiceImpl implements EgovBBSManageService {
 
-	@Resource(name = "BBSManageDAO")
-	private BBSManageDAO bbsMngDAO;
+	private final BBSManageDAO bbsMngDAO;
 
 	@Resource(name = "EgovFileMngService")
 	private EgovFileMngService fileService;
@@ -79,10 +81,12 @@ public class EgovBBSManageServiceImpl extends EgovAbstractServiceImpl implements
 		// SORT_ORDR는 부모글의 소트 오더와 같게, NTT_NO는 순서대로 부여
 
 		if ("Y".equals(board.getReplyAt())) {
-			// 답글인 경우 1. Parnts를 세팅, 2.Parnts의 sortOrdr을 현재글의 sortOrdr로 가져오도록, 3.nttNo는 현재 게시판의 순서대로
+			// 답글인 경우 1. Parnts를 세팅, 2.Parnts의 sortOrdr을 현재글의 sortOrdr로 가져오도록, 3.nttNo는 현재
+			// 게시판의 순서대로
 			// replyLc는 부모글의 ReplyLc + 1
 
-			@SuppressWarnings("unused") long tmpNttId = 0L; // 답글 게시물 ID
+			@SuppressWarnings("unused")
+			long tmpNttId = 0L; // 답글 게시물 ID
 
 			tmpNttId = bbsMngDAO.replyBoardArticle(board);
 
@@ -134,7 +138,7 @@ public class EgovBBSManageServiceImpl extends EgovAbstractServiceImpl implements
 
 				if (!"".equals(vo.getNtceBgnde()) || !"".equals(vo.getNtceEndde())) {
 					if (EgovDateUtil.getDaysDiff(today, vo.getNtceBgnde()) > 0
-						|| EgovDateUtil.getDaysDiff(today, vo.getNtceEndde()) < 0) {
+							|| EgovDateUtil.getDaysDiff(today, vo.getNtceEndde()) < 0) {
 						// 시작일이 오늘날짜보다 크거나, 종료일이 오늘 날짜보다 작은 경우
 						vo.setIsExpired("Y");
 					}
