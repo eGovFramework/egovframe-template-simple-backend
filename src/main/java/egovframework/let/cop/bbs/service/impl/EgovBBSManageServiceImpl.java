@@ -6,8 +6,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Resource;
-
 import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import org.egovframe.rte.fdl.property.EgovPropertyService;
 import org.springframework.stereotype.Service;
@@ -19,6 +17,7 @@ import egovframework.let.cop.bbs.service.BoardVO;
 import egovframework.let.cop.bbs.service.EgovBBSManageService;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 게시물 관리를 위한 서비스 구현 클래스
@@ -36,20 +35,29 @@ import lombok.RequiredArgsConstructor;
  *   2009.03.19  이삼섭          최초 생성
  *   2011.08.31  JJY           경량환경 템플릿 커스터마이징버전 생성
  *   2024.08.15  이백행          롬복으로 생성자 기반 종속성 주입으로 수정
+ *   2024.08.26  이백행          컨트리뷰션 롬복 생성자 기반 종속성 주입
  *
  *      </pre>
  */
-@Service("EgovBBSManageService")
+@Service
 @RequiredArgsConstructor
+@Slf4j
 public class EgovBBSManageServiceImpl extends EgovAbstractServiceImpl implements EgovBBSManageService {
 
-	private final BBSManageDAO bbsMngDAO;
+	/**
+	 * 게시물 관리를 위한 데이터 접근 클래스
+	 */
+	private final BBSManageDAO bbsManageDAO;
 
-	@Resource(name = "EgovFileMngService")
-	private EgovFileMngService fileService;
+	/**
+	 * 파일정보의 관리를 위한 서비스 인터페이스
+	 */
+	private final EgovFileMngService egovFileMngService;
 
-	@Resource(name = "propertiesService")
-	protected EgovPropertyService propertyService;
+	/**
+	 * 파일정보의 관리를 위한 서비스 인터페이스
+	 */
+	private final EgovPropertyService egovPropertyService;
 
 	/**
 	 * 게시물 한 건을 삭제 한다.
@@ -64,10 +72,13 @@ public class EgovBBSManageServiceImpl extends EgovAbstractServiceImpl implements
 
 		board.setNttSj("이 글은 작성자에 의해서 삭제되었습니다.");
 
-		bbsMngDAO.deleteBoardArticle(board);
+		bbsManageDAO.deleteBoardArticle(board);
 
 		if (!"".equals(fvo.getAtchFileId()) || fvo.getAtchFileId() != null) {
-			fileService.deleteAllFileInf(fvo);
+			if (log.isDebugEnabled()) {
+				log.debug("spring.profiles.active={}", egovPropertyService.getString("Globals.pageUnit"));
+			}
+			egovFileMngService.deleteAllFileInf(fvo);
 		}
 	}
 
@@ -88,7 +99,7 @@ public class EgovBBSManageServiceImpl extends EgovAbstractServiceImpl implements
 			@SuppressWarnings("unused")
 			long tmpNttId = 0L; // 답글 게시물 ID
 
-			tmpNttId = bbsMngDAO.replyBoardArticle(board);
+			tmpNttId = bbsManageDAO.replyBoardArticle(board);
 
 		} else {
 			// 답글이 아닌경우 Parnts = 0, replyLc는 = 0, sortOrdr = nttNo(Query에서 처리)
@@ -96,7 +107,7 @@ public class EgovBBSManageServiceImpl extends EgovAbstractServiceImpl implements
 			board.setReplyLc("0");
 			board.setReplyAt("N");
 
-			bbsMngDAO.insertBoardArticle(board);
+			bbsManageDAO.insertBoardArticle(board);
 		}
 	}
 
@@ -108,13 +119,13 @@ public class EgovBBSManageServiceImpl extends EgovAbstractServiceImpl implements
 	@Override
 	public BoardVO selectBoardArticle(BoardVO boardVO) throws Exception {
 		if (boardVO.isPlusCount()) {
-			int iniqireCo = bbsMngDAO.selectMaxInqireCo(boardVO);
+			int iniqireCo = bbsManageDAO.selectMaxInqireCo(boardVO);
 
 			boardVO.setInqireCo(iniqireCo);
-			bbsMngDAO.updateInqireCo(boardVO);
+			bbsManageDAO.updateInqireCo(boardVO);
 		}
 
-		return bbsMngDAO.selectBoardArticle(boardVO);
+		return bbsManageDAO.selectBoardArticle(boardVO);
 	}
 
 	/**
@@ -124,7 +135,7 @@ public class EgovBBSManageServiceImpl extends EgovAbstractServiceImpl implements
 	 */
 	@Override
 	public Map<String, Object> selectBoardArticles(BoardVO boardVO, String attrbFlag) throws Exception {
-		List<BoardVO> list = bbsMngDAO.selectBoardArticleList(boardVO);
+		List<BoardVO> list = bbsManageDAO.selectBoardArticleList(boardVO);
 		List<BoardVO> result = new ArrayList<BoardVO>();
 
 		if ("BBSA01".equals(attrbFlag)) {
@@ -149,7 +160,7 @@ public class EgovBBSManageServiceImpl extends EgovAbstractServiceImpl implements
 			result = list;
 		}
 
-		int cnt = bbsMngDAO.selectBoardArticleListCnt(boardVO);
+		int cnt = bbsManageDAO.selectBoardArticleListCnt(boardVO);
 
 		Map<String, Object> map = new HashMap<String, Object>();
 
@@ -166,7 +177,7 @@ public class EgovBBSManageServiceImpl extends EgovAbstractServiceImpl implements
 	 */
 	@Override
 	public void updateBoardArticle(Board board) throws Exception {
-		bbsMngDAO.updateBoardArticle(board);
+		bbsManageDAO.updateBoardArticle(board);
 	}
 
 	/**
@@ -176,7 +187,7 @@ public class EgovBBSManageServiceImpl extends EgovAbstractServiceImpl implements
 	 */
 	@Override
 	public void deleteGuestList(BoardVO boardVO) throws Exception {
-		bbsMngDAO.deleteGuestList(boardVO);
+		bbsManageDAO.deleteGuestList(boardVO);
 	}
 
 	/**
@@ -186,8 +197,8 @@ public class EgovBBSManageServiceImpl extends EgovAbstractServiceImpl implements
 	 */
 	@Override
 	public Map<String, Object> selectGuestList(BoardVO boardVO) throws Exception {
-		List<BoardVO> result = bbsMngDAO.selectGuestList(boardVO);
-		int cnt = bbsMngDAO.selectGuestListCnt(boardVO);
+		List<BoardVO> result = bbsManageDAO.selectGuestList(boardVO);
+		int cnt = bbsManageDAO.selectGuestListCnt(boardVO);
 
 		Map<String, Object> map = new HashMap<String, Object>();
 
@@ -206,6 +217,6 @@ public class EgovBBSManageServiceImpl extends EgovAbstractServiceImpl implements
 	 */
 	@Override
 	public String getPasswordInf(Board board) throws Exception {
-		return bbsMngDAO.getPasswordInf(board);
+		return bbsManageDAO.getPasswordInf(board);
 	}
 }
