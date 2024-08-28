@@ -16,17 +16,20 @@ import egovframework.let.cop.smt.sim.service.IndvdlSchdulManageVO;
  * @see
  * 
  *      <pre>
- * << 개정이력(Modification Information) >>  수정일      수정자           수정내용 -------    ---
- * -----    --------------------------- 2009.04.10  장동한          최초 생성 2011.05.31
- * JJY           경량환경 커스터마이징버전 생성
+ * << 개정이력(Modification Information) >>
+ *   수정일      수정자           수정내용
+ *  -------    --------    ---------------------------
+ *   2009.04.10  장동한          최초 생성
+ *   2011.05.31  JJY           경량환경 커스터마이징버전 생성
  *   2024.08.12  이백행          이클립스 문제(Problems) 제거
+ *   2024.08.27  이백행          컨트리뷰션 롬복 생성자 기반 종속성 주입
  *      </pre>
  * 
  * @author 조재영
  * @version 1.0
  * @created 09-6-2011 오전 10:08:07
  */
-@Repository("indvdlSchdulManageDao")
+@Repository
 public class IndvdlSchdulManageDao extends EgovAbstractMapper {
 
 	/**
