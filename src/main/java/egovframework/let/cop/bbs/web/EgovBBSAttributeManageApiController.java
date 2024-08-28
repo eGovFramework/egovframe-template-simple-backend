@@ -65,23 +65,15 @@ import lombok.RequiredArgsConstructor;
 public class EgovBBSAttributeManageApiController {
 
 	/** EgovBBSAttributeManageService */
-//	@Resource(name = "EgovBBSAttributeManageService")
-//	private EgovBBSAttributeManageService bbsAttrbService;
 	private final EgovBBSAttributeManageService egovBBSAttributeManageService;
 
 	/** EgovCmmUseService */
-//	@Resource(name = "EgovCmmUseService")
-//	private EgovCmmUseService cmmUseService;
 	private final EgovCmmUseService egovCmmUseService;
 
 	/** EgovPropertyService */
-//	@Resource(name = "propertiesService")
-//	protected EgovPropertyService propertyService;
 	private final EgovPropertyService egovPropertyService;
 
 	/** DefaultBeanValidator */
-//	@Autowired
-//	private DefaultBeanValidator beanValidator;
 	private final DefaultBeanValidator beanValidator;
 
 	/**

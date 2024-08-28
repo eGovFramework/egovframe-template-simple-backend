@@ -73,8 +73,6 @@ public class EgovBBSUseInfoManageApiController {
 	protected EgovPropertyService propertyService;
 
 	/** EgovBBSAttributeManageService */
-//	@Resource(name = "EgovBBSAttributeManageService")
-//	private EgovBBSAttributeManageService bbsAttrbService;
 	private final EgovBBSAttributeManageService bbsAttrbService;
 
 	/** DefaultBeanValidator */

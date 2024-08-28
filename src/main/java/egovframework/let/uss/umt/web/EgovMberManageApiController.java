@@ -82,8 +82,6 @@ public class EgovMberManageApiController {
 	private EgovMberManageService mberManageService;
 
 	/** cmmUseService */
-//	@Resource(name = "EgovCmmUseService")
-//	private EgovCmmUseService cmmUseService;
 	private final EgovCmmUseService cmmUseService;
 
 	/** EgovMessageSource */

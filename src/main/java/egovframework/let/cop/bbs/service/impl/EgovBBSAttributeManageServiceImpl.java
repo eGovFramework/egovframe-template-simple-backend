@@ -46,33 +46,23 @@ import lombok.extern.slf4j.Slf4j;
 public class EgovBBSAttributeManageServiceImpl extends EgovAbstractServiceImpl
 		implements EgovBBSAttributeManageService {
 
-//	@Resource(name = "BBSAttributeManageDAO")
-//	private BBSAttributeManageDAO attrbMngDAO;
 	private final BBSAttributeManageDAO bbsAttributeManageDAO;
 
-//	@Resource(name = "BBSUseInfoManageDAO")
-//	private BBSUseInfoManageDAO bbsUseDAO;
 	private final BBSUseInfoManageDAO bbsUseInfoManageDAO;
 
-//	@Resource(name = "EgovUserInfManageService")
-//	private EgovUserInfManageService userService;
 	private final EgovUserInfManageService egovUserInfManageService;
 
-//	@Resource(name = "egovBBSMstrIdGnrService")
-//	private EgovIdGnrService idgenService;
 	private final EgovIdGnrService egovBBSMstrIdGnrService;
 
-//	@Resource(name = "propertiesService")
-//	protected EgovPropertyService propertyService;
 	private final EgovPropertyService egovPropertyService;
 
-	// ---------------------------------
-	// 2009.06.26 : 2단계 기능 추가
-	// ---------------------------------
-//	@Resource(name = "BBSAddedOptionsDAO")
-//	private BBSAddedOptionsDAO addedOptionsDAO;
+	/**
+	 * <pre>
+	 * 2단계 기능 추가 (댓글관리, 만족도조사) 관리를 위한 데이터 접근 클래스
+	 * 2009.06.26 : 2단계 기능 추가
+	 * </pre>
+	 */
 	private final BBSAddedOptionsDAO addedOptionsDAO;
-	//// -------------------------------
 
 	/**
 	 * 등록된 게시판 속성정보를 삭제한다.
