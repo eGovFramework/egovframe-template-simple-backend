@@ -17,6 +17,7 @@ import egovframework.com.cmm.ComDefaultVO;
  *   -------    --------    ---------------------------
  *   2009.04.10  장동한          최초 생성
  *   2011.05.31  JJY           경량환경 커스터마이징버전 생성
+ *   2024.09.05  이백행          컨트리뷰션 시큐어코딩 Exception 제거
  *      </pre>
  * 
  * @author 조재영
@@ -100,9 +101,8 @@ public interface EgovIndvdlSchdulManageService {
 	 * @return List
 	 *
 	 * @param map
-	 * @exception Exception Exception
 	 */
-	public List<?> selectIndvdlSchdulManageRetrieve(Map<?, ?> map) throws Exception;
+	public List<?> selectIndvdlSchdulManageRetrieve(Map<?, ?> map);
 
 	/**
 	 * 일정를(을) 수정한다.

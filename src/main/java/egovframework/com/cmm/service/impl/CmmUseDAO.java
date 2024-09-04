@@ -15,8 +15,9 @@ import egovframework.com.cmm.service.CmmnDetailCode;
  *               <pre>
  *    수정일       수정자         수정내용
  *    -------        -------     -------------------
- *    2009. 3. 11.     이삼섭
+ *   2009.03.11  이삼섭
  *   2024.08.12  이백행          이클립스 문제(Problems) 제거
+ *   2024.09.05  이백행          컨트리뷰션 시큐어코딩 Exception 제거
  *               </pre>
  * 
  * @author 공통 서비스 개발팀 이삼섭
@@ -33,9 +34,8 @@ public class CmmUseDAO extends EgovComAbstractDAO {
 	 *
 	 * @param vo
 	 * @return
-	 * @throws Exception
 	 */
-	public List<CmmnDetailCode> selectCmmCodeDetail(ComDefaultCodeVO vo) throws Exception {
+	public List<CmmnDetailCode> selectCmmCodeDetail(ComDefaultCodeVO vo) {
 		return selectList("CmmUseDAO.selectCmmCodeDetail", vo);
 	}
 

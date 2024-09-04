@@ -60,6 +60,7 @@ import lombok.RequiredArgsConstructor;
  *   2009.04.10  장동한          최초 생성
  *   2011.05.31  JJY           경량환경 커스터마이징버전 생성
  *   2024.08.27  이백행          컨트리뷰션 롬복 생성자 기반 종속성 주입
+ *   2024.09.05  이백행          컨트리뷰션 시큐어코딩 Exception 제거
  *      </pre>
  * 
  * @author 조재영
@@ -418,15 +419,13 @@ public class EgovIndvdlSchdulManageApiController {
 	 * 
 	 * @param commandMap
 	 * @return resultVO
-	 * @throws Exception
 	 */
 	@Operation(summary = "일별 일정 조회", description = "일정(일별) 목록을 조회", tags = { "EgovIndvdlSchdulManageApiController" })
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "조회 성공"),
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님") })
 	@GetMapping(value = "/schedule/daily")
 	public ResultVO EgovIndvdlSchdulManageDailyList(
-			@Parameter(in = ParameterIn.QUERY, schema = @Schema(type = "object", additionalProperties = Schema.AdditionalPropertiesValue.TRUE, ref = "#/components/schemas/searchSchdulMap"), style = ParameterStyle.FORM, explode = Explode.TRUE) @RequestParam Map<String, Object> commandMap)
-			throws Exception {
+			@Parameter(in = ParameterIn.QUERY, schema = @Schema(type = "object", additionalProperties = Schema.AdditionalPropertiesValue.TRUE, ref = "#/components/schemas/searchSchdulMap"), style = ParameterStyle.FORM, explode = Explode.TRUE) @RequestParam Map<String, Object> commandMap) {
 
 		ResultVO resultVO = new ResultVO();
 		Map<String, Object> resultMap = new HashMap<String, Object>();
