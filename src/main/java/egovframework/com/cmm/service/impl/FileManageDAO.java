@@ -3,6 +3,7 @@ package egovframework.com.cmm.service.impl;
 import java.util.Iterator;
 import java.util.List;
 
+import org.egovframe.rte.psl.dataaccess.EgovAbstractMapper;
 import org.springframework.stereotype.Repository;
 
 import egovframework.com.cmm.service.FileVO;
@@ -15,8 +16,9 @@ import egovframework.com.cmm.service.FileVO;
  *               <pre>
  *    수정일       수정자         수정내용
  *    -------        -------     -------------------
- *    2009. 3. 25.     이삼섭    최초생성
- *   2024.08.12  이백행          이클립스 문제(Problems) 제거
+ *   2009.03.25  이삼섭          최초생성
+ *   2024.08.12  이백행          컨트리뷰션 이클립스 문제(Problems) 제거
+ *   2024.09.05  이백행          컨트리뷰션 EgovComAbstractDAO 를 EgovAbstractMapper 로 수정 후 EgovComAbstractDAO 제거
  *               </pre>
  * 
  * @author 공통 서비스 개발팀 이삼섭
@@ -26,7 +28,7 @@ import egovframework.com.cmm.service.FileVO;
  *
  */
 @Repository("FileManageDAO")
-public class FileManageDAO extends EgovComAbstractDAO {
+public class FileManageDAO extends EgovAbstractMapper {
 
 	/**
 	 * 여러 개의 파일에 대한 정보(속성 및 상세)를 등록한다.
