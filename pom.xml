@@ -17,7 +17,7 @@
 	<properties>
 		<spring.maven.artifact.version>5.3.27</spring.maven.artifact.version>
 		<org.egovframe.rte.version>4.2.0</org.egovframe.rte.version>
-		<selenium.version>4.23.1</selenium.version>
+		<selenium.version>4.13.0</selenium.version>
 	</properties>
 	<repositories>
 		<repository>
