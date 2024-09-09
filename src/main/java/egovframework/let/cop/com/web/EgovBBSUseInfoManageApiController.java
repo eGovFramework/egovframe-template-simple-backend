@@ -3,12 +3,10 @@ package egovframework.let.cop.com.web;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.egovframe.rte.fdl.property.EgovPropertyService;
 import org.egovframe.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springmodules.validation.commons.DefaultBeanValidator;
 
-import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.LoginVO;
 import egovframework.com.cmm.ResponseCode;
 import egovframework.com.cmm.service.ResultVO;
@@ -54,8 +51,8 @@ import lombok.RequiredArgsConstructor;
  *   수정일      수정자           수정내용
  *  -------    --------    ---------------------------
  *   2009.04.02  이삼섭          최초 생성
- *   2011.08.31  JJY            경량환경 템플릿 커스터마이징버전 생성
- *   2024.08.28  이백행          컨트리뷰션 롬복 생성자 기반 종속성 주입
+ *   2011.08.31  JJY           경량환경 템플릿 커스터마이징버전 생성
+ *   2024.08.29  이백행          컨트리뷰션 롬복 생성자 기반 종속성 주입
  *
  *      </pre>
  */
@@ -65,23 +62,24 @@ import lombok.RequiredArgsConstructor;
 public class EgovBBSUseInfoManageApiController {
 
 	/** EgovBBSUseInfoManageService */
-	@Resource(name = "EgovBBSUseInfoManageService")
-	private EgovBBSUseInfoManageService bbsUseService;
+//	@Resource(name = "EgovBBSUseInfoManageService")
+//	private EgovBBSUseInfoManageService bbsUseService;
+	private final EgovBBSUseInfoManageService egovBBSUseInfoManageService;
 
 	/** EgovPropertyService */
-	@Resource(name = "propertiesService")
-	protected EgovPropertyService propertyService;
+//	@Resource(name = "propertiesService")
+//	protected EgovPropertyService propertyService;
+	private final EgovPropertyService egovPropertyService;
 
 	/** EgovBBSAttributeManageService */
-	private final EgovBBSAttributeManageService bbsAttrbService;
+//	@Resource(name = "EgovBBSAttributeManageService")
+//	private EgovBBSAttributeManageService bbsAttrbService;
+	private final EgovBBSAttributeManageService bbsAttributeManageService;
 
 	/** DefaultBeanValidator */
-	@Autowired
-	private DefaultBeanValidator beanValidator;
-
-	/** EgovMessageSource */
-	@Resource(name = "egovMessageSource")
-	EgovMessageSource egovMessageSource;
+//	@Autowired
+//	private DefaultBeanValidator beanValidator;
+	private final DefaultBeanValidator beanValidator;
 
 	/**
 	 * 게시판 사용정보 목록을 조회한다.
@@ -106,8 +104,8 @@ public class EgovBBSUseInfoManageApiController {
 
 		bdUseVO.setSearchWrd((String) commandMap.get("searchWrd"));
 
-		bdUseVO.setPageUnit(propertyService.getInt("Globals.pageUnit"));
-		bdUseVO.setPageSize(propertyService.getInt("Globals.pageSize"));
+		bdUseVO.setPageUnit(egovPropertyService.getInt("Globals.pageUnit"));
+		bdUseVO.setPageSize(egovPropertyService.getInt("Globals.pageSize"));
 
 		PaginationInfo paginationInfo = new PaginationInfo();
 
@@ -119,7 +117,7 @@ public class EgovBBSUseInfoManageApiController {
 		bdUseVO.setLastIndex(paginationInfo.getLastRecordIndex());
 		bdUseVO.setRecordCountPerPage(paginationInfo.getRecordCountPerPage());
 
-		Map<String, Object> map = bbsUseService.selectBBSUseInfs(bdUseVO);
+		Map<String, Object> map = egovBBSUseInfoManageService.selectBBSUseInfs(bdUseVO);
 		int totCnt = Integer.parseInt((String) map.get("resultCnt"));
 
 		paginationInfo.setTotalRecordCount(totCnt);
@@ -151,7 +149,7 @@ public class EgovBBSUseInfoManageApiController {
 		BoardMasterVO boardMasterVO = new BoardMasterVO();
 
 		boardMasterVO.setFirstIndex(0);
-		Map<String, Object> resultMap = bbsAttrbService.selectNotUsedBdMstrList(boardMasterVO);
+		Map<String, Object> resultMap = bbsAttributeManageService.selectNotUsedBdMstrList(boardMasterVO);
 
 		resultVO.setResult(resultMap);
 		resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
@@ -185,7 +183,7 @@ public class EgovBBSUseInfoManageApiController {
 		bdUseVO.setBbsId(bbsId);
 		bdUseVO.setTrgetId(trgetId);
 
-		BoardUseInfVO vo = bbsUseService.selectBBSUseInf(bdUseVO);// bbsItrgetId
+		BoardUseInfVO vo = egovBBSUseInfoManageService.selectBBSUseInf(bdUseVO);// bbsItrgetId
 
 		// 시스템 사용 게시판의 경우 URL 표시
 		if ("SYSTEM_DEFAULT_BOARD".equals(vo.getTrgetId())) {
@@ -196,7 +194,7 @@ public class EgovBBSUseInfoManageApiController {
 		}
 
 		BoardMasterVO boardMasterVO = new BoardMasterVO();
-		resultMap = bbsAttrbService.selectNotUsedBdMstrList(boardMasterVO);
+		resultMap = bbsAttributeManageService.selectNotUsedBdMstrList(boardMasterVO);
 
 		resultMap.put("bdUseVO", vo);
 
@@ -246,7 +244,7 @@ public class EgovBBSUseInfoManageApiController {
 		bdUseVO.setUseAt("Y");
 		bdUseVO.setFrstRegisterId(loginVO.getUniqId());
 
-		bbsUseService.insertBBSUseInf(bdUseVO);
+		egovBBSUseInfoManageService.insertBBSUseInf(bdUseVO);
 
 		resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
 		resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());
@@ -275,7 +273,7 @@ public class EgovBBSUseInfoManageApiController {
 
 		ResultVO resultVO = new ResultVO();
 		bdUseVO.setBbsId(bbsId);
-		bbsUseService.updateBBSUseInf(bdUseVO);
+		egovBBSUseInfoManageService.updateBBSUseInf(bdUseVO);
 
 		resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
 		resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());
