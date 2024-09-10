@@ -29,7 +29,9 @@ class TestEgovLoginApiControllerSelenium {
 		}
 
 		// given
-		// 로그인 화면 이동
+		if (log.isDebugEnabled()) {
+			log.debug("로그인 화면 이동");
+		}
 		driver.get("http://localhost:3000/login");
 
 		// 아이디 입력
