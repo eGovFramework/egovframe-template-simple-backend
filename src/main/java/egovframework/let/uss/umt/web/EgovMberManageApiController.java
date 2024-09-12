@@ -410,7 +410,7 @@ public class EgovMberManageApiController {
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님"),
 			@ApiResponse(responseCode = "900", description = "입력값 무결성 오류")
 	})
-	@PatchMapping("/members/delete/{uniqId}")
+	@DeleteMapping("/members/{uniqId}")
 	public ResultVO deleteMber(@PathVariable("uniqId") String uniqId, UserDefaultVO userSearchVO) throws Exception {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		ResultVO resultVO = new ResultVO();
