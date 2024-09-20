@@ -16,10 +16,13 @@ import egovframework.com.cmm.service.FileVO;
  * @Class Name : EgovFileMngServiceImpl.java
  * @Description : 파일정보의 관리를 위한 구현 클래스
  * @Modification Information
- *
- *               수정일 수정자 수정내용 ------- ------- ------------------- 2009. 3. 25.
- *               이삼섭 최초생성
- *
+ * 
+ *               <pre>
+ *    수정일       수정자         수정내용
+ *    -------        -------     -------------------
+ *    2009. 3. 25.     이삼섭    최초생성
+ *               </pre>
+ * 
  * @author 공통 서비스 개발팀 이삼섭
  * @since 2009. 3. 25.
  * @version
