@@ -21,12 +21,13 @@ import egovframework.let.uss.umt.service.UserDefaultVO;
  *
  *   수정일      수정자           수정내용
  *  -------    --------    ---------------------------
- *   2009.04.10  JJY            최초 생성
- *   2011.08.31  JJY            경량환경 템플릿 커스터마이징버전 생성
- *	 2024.07.23	 김일국			스프링부트용으로 커스터마이징
+ *   2009.04.10  JJY           최초 생성
+ *   2011.08.31  JJY           경량환경 템플릿 커스터마이징버전 생성
+ *   2024.07.23  김일국          스프링부트용으로 커스터마이징
+ *   2024.09.19  강동휘          컨트리뷰션 롬복 생성자 기반 종속성 주입
  *      </pre>
  */
-@Repository("mberManageDAO")
+@Repository
 public class MberManageDAO extends EgovAbstractMapper {
 
 	/**
@@ -35,7 +36,6 @@ public class MberManageDAO extends EgovAbstractMapper {
 	 * @param userSearchVO 검색조건
 	 * @return List<MberManageVO> 기업회원 목록정보
 	 */
-	@SuppressWarnings("unchecked")
 	public List<MberManageVO> selectMberList(UserDefaultVO userSearchVO) {
 		return selectList("mberManageDAO.selectMberList", userSearchVO);
 	}

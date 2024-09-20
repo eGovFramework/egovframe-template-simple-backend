@@ -2,8 +2,6 @@ package egovframework.let.uss.umt.service.impl;
 
 import java.util.List;
 
-import javax.annotation.Resource;
-
 import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import org.egovframe.rte.fdl.idgnr.EgovIdGnrService;
 import org.springframework.stereotype.Service;
@@ -12,6 +10,7 @@ import egovframework.let.uss.umt.service.EgovMberManageService;
 import egovframework.let.uss.umt.service.MberManageVO;
 import egovframework.let.uss.umt.service.UserDefaultVO;
 import egovframework.let.utl.sim.service.EgovFileScrty;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 일반회원관리에 관한비지니스클래스를 정의한다.
@@ -26,21 +25,21 @@ import egovframework.let.utl.sim.service.EgovFileScrty;
  *
  *   수정일      수정자           수정내용
  *  -------    --------    ---------------------------
- *   2009.04.10  JJY            최초 생성
- *   2011.08.31  JJY            경량환경 템플릿 커스터마이징버전 생성
+ *   2009.04.10  JJY          최초 생성
+ *   2011.08.31  JJY          경량환경 템플릿 커스터마이징버전 생성
+ *   2024.09.19  강동휘          컨트리뷰션 롬복 생성자 기반 종속성 주입
  *
  *      </pre>
  */
-@Service("mberManageService")
+@Service
+@RequiredArgsConstructor
 public class EgovMberManageServiceImpl extends EgovAbstractServiceImpl implements EgovMberManageService {
 
 	/** mberManageDAO */
-	@Resource(name = "mberManageDAO")
-	private MberManageDAO mberManageDAO;
+	private final MberManageDAO mberManageDAO;
 
 	/** egovUsrCnfrmIdGnrService */
-	@Resource(name = "egovUsrCnfrmIdGnrService")
-	private EgovIdGnrService idgenService;
+	private final EgovIdGnrService egovUsrCnfrmIdGnrService;
 
 	/**
 	 * 사용자의 기본정보를 화면에서 입력하여 항목의 정합성을 체크하고 데이터베이스에 저장
@@ -52,7 +51,7 @@ public class EgovMberManageServiceImpl extends EgovAbstractServiceImpl implement
 	@Override
 	public int insertMber(MberManageVO mberManageVO) throws Exception {
 		// 고유아이디 셋팅
-		String uniqId = idgenService.getNextStringId();
+		String uniqId = egovUsrCnfrmIdGnrService.getNextStringId();
 		mberManageVO.setUniqId(uniqId);
 		// 패스워드 암호화
 		String pass = EgovFileScrty.encryptPassword(mberManageVO.getPassword(), mberManageVO.getMberId());
