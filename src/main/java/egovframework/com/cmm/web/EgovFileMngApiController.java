@@ -2,7 +2,6 @@ package egovframework.com.cmm.web;
 
 import java.util.Base64;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.egovframe.rte.fdl.cryptography.EgovCryptoService;
@@ -18,6 +17,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 파일 조회, 삭제, 다운로드 처리를 위한 컨트롤러 클래스
@@ -33,20 +33,20 @@ import io.swagger.v3.oas.annotations.tags.Tag;
  *   수정일      수정자           수정내용
  *  -------    --------    ---------------------------
  *   2009.03.25  이삼섭          최초 생성
- *   2011.08.31  JJY            경량환경 템플릿 커스터마이징버전 생성
+ *   2011.08.31  JJY           경량환경 템플릿 커스터마이징버전 생성
+ *   2024.09.20  이백행          컨트리뷰션 롬복 생성자 기반 종속성 주입
  *
  *      </pre>
  */
 @RestController
 @Tag(name = "EgovFileMngApiController", description = "파일 관리")
+@RequiredArgsConstructor
 public class EgovFileMngApiController {
 
-	@Resource(name = "EgovFileMngService")
-	private EgovFileMngService fileService;
+	private final EgovFileMngService fileService;
 
 	/** 암호화서비스 */
-	@Resource(name = "egovARIACryptoService")
-	EgovCryptoService cryptoService;
+	private final EgovCryptoService cryptoService;
 
 	/**
 	 * 첨부파일에 대한 삭제를 처리한다.

@@ -2,13 +2,9 @@ package egovframework.let.uat.uia.web;
 
 import java.util.HashMap;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.egovframe.rte.fdl.cmmn.trace.LeaveaTrace;
-import org.egovframe.rte.fdl.property.EgovPropertyService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.ui.ModelMap;
@@ -28,6 +24,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -51,27 +48,17 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 @Tag(name = "EgovLoginApiController", description = "로그인 관련")
+@RequiredArgsConstructor
 public class EgovLoginApiController {
 
 	/** EgovLoginService */
-	@Resource(name = "loginService")
-	private EgovLoginService loginService;
+	private final EgovLoginService loginService;
 
 	/** EgovMessageSource */
-	@Resource(name = "egovMessageSource")
-	EgovMessageSource egovMessageSource;
-
-	/** EgovPropertyService */
-	@Resource(name = "propertiesService")
-	protected EgovPropertyService propertiesService;
-
-	/** TRACE */
-	@Resource(name = "leaveaTrace")
-	LeaveaTrace leaveaTrace;
+	private final EgovMessageSource egovMessageSource;
 
 	/** JWT */
-	@Autowired
-	private EgovJwtTokenUtil jwtTokenUtil;
+	private final EgovJwtTokenUtil jwtTokenUtil;
 
 	/**
 	 * 일반 로그인을 처리한다

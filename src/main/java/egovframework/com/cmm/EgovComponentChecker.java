@@ -21,11 +21,12 @@ import org.springframework.util.ObjectUtils;
  *
  *   수정일      수정자           수정내용
  *  -------    -------------    ----------------------
- *   2011.09.15  서준식        최초 생성
+ *   2011.09.15  서준식          최초 생성
+ *   2024.09.20  이백행          컨트리뷰션 롬복 생성자 기반 종속성 주입
  *      </pre>
  */
 
-@Service("egovUtil")
+@Service
 public class EgovComponentChecker extends EgovAbstractServiceImpl implements ApplicationContextAware {
 
 	public static ApplicationContext context;

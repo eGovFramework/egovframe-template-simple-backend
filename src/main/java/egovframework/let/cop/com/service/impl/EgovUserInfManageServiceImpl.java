@@ -4,13 +4,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Resource;
-
 import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import org.springframework.stereotype.Service;
 
 import egovframework.let.cop.com.service.EgovUserInfManageService;
 import egovframework.let.cop.com.service.UserInfVO;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 협업에서 사용할 사용자 조회 서비스 기능 구현 클래스
@@ -26,15 +25,16 @@ import egovframework.let.cop.com.service.UserInfVO;
  *   수정일      수정자           수정내용
  *  -------    --------    ---------------------------
  *   2009.04.06  이삼섭          최초 생성
- *   2011.08.31  JJY            경량환경 템플릿 커스터마이징버전 생성
+ *   2011.08.31  JJY           경량환경 템플릿 커스터마이징버전 생성
+ *   2024.09.20  이백행          컨트리뷰션 롬복 생성자 기반 종속성 주입
  *
  *      </pre>
  */
-@Service("EgovUserInfManageService")
+@Service
+@RequiredArgsConstructor
 public class EgovUserInfManageServiceImpl extends EgovAbstractServiceImpl implements EgovUserInfManageService {
 
-	@Resource(name = "EgovUserInfManageDAO")
-	private EgovUserInfManageDAO userInfDAO;
+	private final EgovUserInfManageDAO userInfDAO;
 
 	/**
 	 * 동호회 운영자 목록을 조회한다.

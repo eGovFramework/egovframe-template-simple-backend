@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.util.Base64;
 import java.util.Map;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletResponse;
 
@@ -31,6 +30,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -41,8 +41,9 @@ import lombok.extern.slf4j.Slf4j;
  *               <pre>
  *    수정일       수정자         수정내용
  *    -------        -------     -------------------
- *    2009. 4. 2.     이삼섭
- *    2011.08.31.     JJY        경량환경 템플릿 커스터마이징버전 생성
+ *   2009.04.02  이삼섭
+ *   2011.08.31  JJY           경량환경 템플릿 커스터마이징버전 생성
+ *   2024.09.20  이백행          컨트리뷰션 롬복 생성자 기반 종속성 주입
  *               </pre>
  * 
  * @author 공통 서비스 개발팀 이삼섭
@@ -54,6 +55,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Controller
 @Tag(name = "EgovImageProcessController", description = "이미지 처리")
+@RequiredArgsConstructor
 public class EgovImageProcessController extends HttpServlet {
 
 	/**
@@ -61,12 +63,10 @@ public class EgovImageProcessController extends HttpServlet {
 	 */
 	private static final long serialVersionUID = -6339945210971171173L;
 
-	@Resource(name = "EgovFileMngService")
-	private EgovFileMngService fileService;
+	private final EgovFileMngService fileService;
 
 	/** 암호화서비스 */
-	@Resource(name = "egovARIACryptoService")
-	EgovCryptoService cryptoService;
+	private final EgovCryptoService cryptoService;
 
 	/**
 	 * 첨부된 이미지에 대한 미리보기 기능을 제공한다.

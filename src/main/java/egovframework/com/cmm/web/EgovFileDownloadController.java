@@ -10,7 +10,6 @@ import java.net.URLEncoder;
 import java.util.Base64;
 import java.util.Map;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -34,6 +33,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -57,14 +57,13 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Controller
 @Tag(name = "EgovFileDownloadController", description = "파일 다운로드")
+@RequiredArgsConstructor
 public class EgovFileDownloadController {
 
-	@Resource(name = "EgovFileMngService")
-	private EgovFileMngService fileService;
+	private final EgovFileMngService fileService;
 
 	/** 암호화서비스 */
-	@Resource(name = "egovARIACryptoService")
-	EgovCryptoService cryptoService;
+	private final EgovCryptoService cryptoService;
 
 	public static final String ALGORITM_KEY = EgovProperties.getProperty("Globals.crypto.algoritm");
 

@@ -1,7 +1,5 @@
 package egovframework.let.uat.uia.service.impl;
 
-import javax.annotation.Resource;
-
 import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import org.springframework.stereotype.Service;
 
@@ -10,6 +8,7 @@ import egovframework.let.uat.uia.service.EgovLoginService;
 import egovframework.let.utl.fcc.service.EgovNumberUtil;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 일반 로그인을 처리하는 비즈니스 구현 클래스
@@ -24,16 +23,17 @@ import egovframework.let.utl.sim.service.EgovFileScrty;
  *
  *   수정일      수정자          수정내용
  *  -------    --------    ---------------------------
- *  2009.03.06  박지욱          최초 생성
- *  2011.08.31  JJY            경량환경 템플릿 커스터마이징버전 생성
+ *   2009.03.06  박지욱          최초 생성
+ *   2011.08.31  JJY           경량환경 템플릿 커스터마이징버전 생성
+ *   2024.09.20  이백행          컨트리뷰션 롬복 생성자 기반 종속성 주입
  *
  *      </pre>
  */
-@Service("loginService")
+@Service
+@RequiredArgsConstructor
 public class EgovLoginServiceImpl extends EgovAbstractServiceImpl implements EgovLoginService {
 
-	@Resource(name = "loginDAO")
-	private LoginDAO loginDAO;
+	private final LoginDAO loginDAO;
 
 	/**
 	 * 일반 로그인을 처리한다

@@ -4,13 +4,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Resource;
-
 import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import org.springframework.stereotype.Service;
 
 import egovframework.com.cmm.service.EgovFileMngService;
 import egovframework.com.cmm.service.FileVO;
+import lombok.RequiredArgsConstructor;
 
 /**
  * @Class Name : EgovFileMngServiceImpl.java
@@ -20,7 +19,8 @@ import egovframework.com.cmm.service.FileVO;
  *               <pre>
  *    수정일       수정자         수정내용
  *    -------        -------     -------------------
- *    2009. 3. 25.     이삼섭    최초생성
+ *   2009.03.25  이삼섭          최초생성
+ *   2024.09.20  이백행          컨트리뷰션 롬복 생성자 기반 종속성 주입
  *               </pre>
  * 
  * @author 공통 서비스 개발팀 이삼섭
@@ -29,11 +29,11 @@ import egovframework.com.cmm.service.FileVO;
  * @see
  *
  */
-@Service("EgovFileMngService")
+@Service
+@RequiredArgsConstructor
 public class EgovFileMngServiceImpl extends EgovAbstractServiceImpl implements EgovFileMngService {
 
-	@Resource(name = "FileManageDAO")
-	private FileManageDAO fileMngDAO;
+	private final FileManageDAO fileMngDAO;
 
 	/**
 	 * 여러 개의 파일을 삭제한다.
