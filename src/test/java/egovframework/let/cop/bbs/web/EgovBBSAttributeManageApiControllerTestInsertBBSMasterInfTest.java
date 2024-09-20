@@ -1,8 +1,10 @@
 package egovframework.let.cop.bbs.web;
 
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.time.LocalDateTime;
@@ -56,7 +58,7 @@ class EgovBBSAttributeManageApiControllerTestInsertBBSMasterInfTest {
 
 		boardMaster.setPosblAtchFileSize("0");
 
-		final String bbsId = egovBBSAttributeManageService.insertBBSMastetInf(boardMaster);
+		final String resultBbsId = egovBBSAttributeManageService.insertBBSMastetInf(boardMaster);
 
 		// given
 
@@ -75,11 +77,36 @@ class EgovBBSAttributeManageApiControllerTestInsertBBSMasterInfTest {
 
 				.andExpect(status().isOk())
 
+				// resultCode
+				.andExpect(jsonPath("$.resultCode").value(200))
+
+				.andExpect(jsonPath("$.resultCode").value(equalTo(200)))
+
+				// resultMessage
+				.andExpect(jsonPath("$.resultMessage").value("성공했습니다."))
+
+				.andExpect(jsonPath("$.resultMessage").value(equalTo("성공했습니다.")))
+
+				// resultCnt
+				.andExpect(jsonPath("$.result.resultCnt").value("1"))
+
+				.andExpect(jsonPath("$.result.resultCnt").value(equalTo("1")))
+
+				// bbsNm
+				.andExpect(jsonPath("$.result.resultList[0].bbsNm").value(boardMaster.getBbsNm()))
+
+				.andExpect(jsonPath("$.result.resultList[0].bbsNm").value(equalTo(boardMaster.getBbsNm())))
+
+				// bbsId
+				.andExpect(jsonPath("$.result.resultList[0].bbsId").value(resultBbsId))
+
+				.andExpect(jsonPath("$.result.resultList[0].bbsId").value(equalTo(resultBbsId)))
+
 		;
 
 		// then
 		if (log.isDebugEnabled()) {
-			log.debug("bbsId={}", bbsId);
+			log.debug("resultBbsId={}", resultBbsId);
 		}
 
 		assertEquals("", "", "게시판 마스터 목록을 조회한다.");
