@@ -39,7 +39,7 @@ import lombok.RequiredArgsConstructor;
 
 /**
  * 게시판의 이용정보를 관리하기 위한 컨트롤러 클래스
- * 
+ *
  * @author 공통서비스개발팀 이삼섭
  * @since 2009.04.02
  * @version 1.0
@@ -62,23 +62,15 @@ import lombok.RequiredArgsConstructor;
 public class EgovBBSUseInfoManageApiController {
 
 	/** EgovBBSUseInfoManageService */
-//	@Resource(name = "EgovBBSUseInfoManageService")
-//	private EgovBBSUseInfoManageService bbsUseService;
 	private final EgovBBSUseInfoManageService egovBBSUseInfoManageService;
 
 	/** EgovPropertyService */
-//	@Resource(name = "propertiesService")
-//	protected EgovPropertyService propertyService;
 	private final EgovPropertyService egovPropertyService;
 
 	/** EgovBBSAttributeManageService */
-//	@Resource(name = "EgovBBSAttributeManageService")
-//	private EgovBBSAttributeManageService bbsAttrbService;
 	private final EgovBBSAttributeManageService bbsAttributeManageService;
 
 	/** DefaultBeanValidator */
-//	@Autowired
-//	private DefaultBeanValidator beanValidator;
 	private final DefaultBeanValidator beanValidator;
 
 	/**
@@ -89,10 +81,8 @@ public class EgovBBSUseInfoManageApiController {
 	 * @return
 	 * @throws Exception
 	 */
-	@Operation(summary = "게시판 사용정보 목록 조회", description = "게시판 사용정보 목록을 조회", security = {
-			@SecurityRequirement(name = "Authorization") }, tags = { "EgovBBSUseInfoManageApiController" })
-	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "조회 성공"),
-			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님") })
+	@Operation(summary = "게시판 사용정보 목록 조회", description = "게시판 사용정보 목록을 조회", security = { @SecurityRequirement(name = "Authorization") }, tags = { "EgovBBSUseInfoManageApiController" })
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "조회 성공"), @ApiResponse(responseCode = "403", description = "인가된 사용자가 아님") })
 	@GetMapping(value = "/bbsUseInf")
 	public ResultVO selectBBSUseInfs(HttpServletRequest request,
 			@Parameter(in = ParameterIn.QUERY, schema = @Schema(type = "object", additionalProperties = Schema.AdditionalPropertiesValue.TRUE, ref = "#/components/schemas/searchMap"), style = ParameterStyle.FORM, explode = Explode.TRUE) @RequestParam Map<String, Object> commandMap)
@@ -135,12 +125,11 @@ public class EgovBBSUseInfoManageApiController {
 
 	/**
 	 * 미사용 게시판 속성정보 목록을 조회한다
-	 * 
+	 *
 	 * @return
 	 * @throws Exception
 	 */
-	@Operation(summary = "미사용 게시판 속성정보 목록 조회", description = "사용중이지 않은 게시판 속성 정보의 목록을 조회", security = {
-			@SecurityRequirement(name = "Authorization") }, tags = { "EgovBBSUseInfoManageApiController" })
+	@Operation(summary = "미사용 게시판 속성정보 목록 조회", description = "사용중이지 않은 게시판 속성 정보의 목록을 조회", security = { @SecurityRequirement(name = "Authorization") }, tags = { "EgovBBSUseInfoManageApiController" })
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "조회 성공") })
 	@GetMapping(value = "/notUsedBbsMaster")
 	public ResultVO selectNotUsedBdMstrList() throws Exception {
@@ -166,15 +155,12 @@ public class EgovBBSUseInfoManageApiController {
 	 * @return
 	 * @throws Exception
 	 */
-	@Operation(summary = "게시판 사용정보 상세 조회", description = "게시판 사용정보에 대한 상세정보를 조회", security = {
-			@SecurityRequirement(name = "Authorization") }, tags = { "EgovBBSUseInfoManageApiController" })
-	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "조회 성공"),
-			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님") })
+	@Operation(summary = "게시판 사용정보 상세 조회", description = "게시판 사용정보에 대한 상세정보를 조회", security = { @SecurityRequirement(name = "Authorization") }, tags = { "EgovBBSUseInfoManageApiController" })
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "조회 성공"), @ApiResponse(responseCode = "403", description = "인가된 사용자가 아님") })
 	@GetMapping(value = "/bbsUseInf/{trgetId}/{bbsId}")
 	public ResultVO selectBBSUseInf(HttpServletRequest request,
 			@Parameter(name = "trgetId", description = "대상시스템 Id", in = ParameterIn.PATH, example = "SYSTEM_DEFAULT_BOARD") @PathVariable("trgetId") String trgetId,
-			@Parameter(name = "bbsId", description = "게시판 Id", in = ParameterIn.PATH, example = "BBSMSTR_AAAAAAAAAAAA") @PathVariable("bbsId") String bbsId)
-			throws Exception {
+			@Parameter(name = "bbsId", description = "게시판 Id", in = ParameterIn.PATH, example = "BBSMSTR_AAAAAAAAAAAA") @PathVariable("bbsId") String bbsId) throws Exception {
 
 		ResultVO resultVO = new ResultVO();
 		BoardUseInfVO bdUseVO = new BoardUseInfVO();
@@ -214,14 +200,12 @@ public class EgovBBSUseInfoManageApiController {
 	 * @return ResultVO
 	 * @throws Exception
 	 */
-	@Operation(summary = "게시판 사용정보 등록", description = " 게시판 사용정보를 등록", security = {
-			@SecurityRequirement(name = "Authorization") }, tags = { "EgovBBSUseInfoManageApiController" })
-	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "등록 성공"),
-			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님"),
+	@Operation(summary = "게시판 사용정보 등록", description = " 게시판 사용정보를 등록", security = { @SecurityRequirement(name = "Authorization") }, tags = { "EgovBBSUseInfoManageApiController" })
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "등록 성공"), @ApiResponse(responseCode = "403", description = "인가된 사용자가 아님"),
 			@ApiResponse(responseCode = "900", description = "입력값 무결성 오류") })
 	@PostMapping(value = "/bbsUseInf")
-	public ResultVO insertBBSUseInf(HttpServletRequest request, BoardUseInfVO bdUseVO, BindingResult bindingResult,
-			@Parameter(hidden = true) @AuthenticationPrincipal LoginVO loginVO) throws Exception {
+	public ResultVO insertBBSUseInf(HttpServletRequest request, BoardUseInfVO bdUseVO, BindingResult bindingResult, @Parameter(hidden = true) @AuthenticationPrincipal LoginVO loginVO)
+			throws Exception {
 
 		ResultVO resultVO = new ResultVO();
 
@@ -261,10 +245,8 @@ public class EgovBBSUseInfoManageApiController {
 	 * @return ResultVO
 	 * @throws Exception
 	 */
-	@Operation(summary = "게시판 사용정보 수정", description = " 게시판 사용정보를 수정", security = {
-			@SecurityRequirement(name = "Authorization") }, tags = { "EgovBBSUseInfoManageApiController" })
-	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "수정 성공"),
-			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님"),
+	@Operation(summary = "게시판 사용정보 수정", description = " 게시판 사용정보를 수정", security = { @SecurityRequirement(name = "Authorization") }, tags = { "EgovBBSUseInfoManageApiController" })
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "수정 성공"), @ApiResponse(responseCode = "403", description = "인가된 사용자가 아님"),
 			@ApiResponse(responseCode = "900", description = "입력값 무결성 오류") })
 	@PutMapping(value = "/bbsUseInf/{bbsId}")
 	public ResultVO updateBBSUseInf(HttpServletRequest request, @RequestBody BoardUseInfVO bdUseVO,
