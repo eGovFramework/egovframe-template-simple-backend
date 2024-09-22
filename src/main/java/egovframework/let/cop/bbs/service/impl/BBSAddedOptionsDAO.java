@@ -21,10 +21,10 @@ import egovframework.let.cop.bbs.service.BoardMasterVO;
  *  -------    --------    ---------------------------
  *   2009.06.26  한성곤          최초 생성
  *   2011.08.31  JJY            경량환경 템플릿 커스터마이징버전 생성
- *
+ *   2024.09.20  안단희          롬복 생성자 기반 종속성 주입
  *      </pre>
  */
-@Repository("BBSAddedOptionsDAO")
+@Repository
 public class BBSAddedOptionsDAO extends EgovAbstractMapper {
 
 	/**

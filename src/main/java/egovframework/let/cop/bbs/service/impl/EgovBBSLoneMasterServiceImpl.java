@@ -15,6 +15,7 @@ import egovframework.let.cop.bbs.service.BoardMasterVO;
 import egovframework.let.cop.bbs.service.EgovBBSLoneMasterService;
 import egovframework.let.cop.com.service.BoardUseInf;
 import egovframework.let.cop.com.service.impl.BBSUseInfoManageDAO;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 게시판 속성관리를 위한 서비스 구현 클래스
@@ -31,17 +32,16 @@ import egovframework.let.cop.com.service.impl.BBSUseInfoManageDAO;
  *  -------    --------    ---------------------------
  *   2009.08.25  한성곤          최초 생성
  *   2011.08.31  JJY            경량환경 템플릿 커스터마이징버전 생성
- *
+ *   2024.09.20  안단희          롬복 생성자 기반 종속성 주입
  *      </pre>
  */
-@Service("EgovBBSLoneMasterService")
+@Service
+@RequiredArgsConstructor
 public class EgovBBSLoneMasterServiceImpl extends EgovAbstractServiceImpl implements EgovBBSLoneMasterService {
 
-	@Resource(name = "BBSLoneMasterDAO")
-	private BBSLoneMasterDAO masterDAO;
+	private final BBSLoneMasterDAO bBSLoneMasterDAO;
 
-	@Resource(name = "BBSUseInfoManageDAO")
-	private BBSUseInfoManageDAO bbsUseDAO;
+	private final BBSUseInfoManageDAO bBSUseInfoManageDAO;
 
 	@Resource(name = "egovBBSMstrIdGnrService")
 	private EgovIdGnrService idgenService;
@@ -51,14 +51,14 @@ public class EgovBBSLoneMasterServiceImpl extends EgovAbstractServiceImpl implem
 	 */
 	@Override
 	public void deleteMaster(BoardMaster boardMaster) throws Exception {
-		masterDAO.deleteMaster(boardMaster);
+		bBSLoneMasterDAO.deleteMaster(boardMaster);
 
 		BoardUseInf bdUseInf = new BoardUseInf();
 
 		bdUseInf.setBbsId(boardMaster.getBbsId());
 		bdUseInf.setLastUpdusrId(boardMaster.getLastUpdusrId());
 
-		bbsUseDAO.deleteBBSUseInfByBoardId(bdUseInf);
+		bBSUseInfoManageDAO.deleteBBSUseInfByBoardId(bdUseInf);
 	}
 
 	/**
@@ -70,7 +70,7 @@ public class EgovBBSLoneMasterServiceImpl extends EgovAbstractServiceImpl implem
 
 		boardMaster.setBbsId(bbsId);
 
-		masterDAO.insertMaster(boardMaster);
+		bBSLoneMasterDAO.insertMaster(boardMaster);
 
 		// ----------------------------------------------
 		// 게시판 사용 등록 (시스템)
@@ -83,7 +83,7 @@ public class EgovBBSLoneMasterServiceImpl extends EgovAbstractServiceImpl implem
 		bdUseInf.setFrstRegisterId(boardMaster.getFrstRegisterId());
 		bdUseInf.setUseAt("Y");
 
-		bbsUseDAO.insertBBSUseInf(bdUseInf);
+		bBSUseInfoManageDAO.insertBBSUseInf(bdUseInf);
 
 		return bbsId;
 	}
@@ -93,7 +93,7 @@ public class EgovBBSLoneMasterServiceImpl extends EgovAbstractServiceImpl implem
 	 */
 	@Override
 	public BoardMasterVO selectMaster(BoardMaster searchVO) throws Exception {
-		return masterDAO.selectMaster(searchVO);
+		return bBSLoneMasterDAO.selectMaster(searchVO);
 	}
 
 	/**
@@ -101,8 +101,8 @@ public class EgovBBSLoneMasterServiceImpl extends EgovAbstractServiceImpl implem
 	 */
 	@Override
 	public Map<String, Object> selectMasterList(BoardMasterVO searchVO) throws Exception {
-		List<BoardMasterVO> result = masterDAO.selectMasterList(searchVO);
-		int cnt = masterDAO.selectMasterListCnt(searchVO);
+		List<BoardMasterVO> result = bBSLoneMasterDAO.selectMasterList(searchVO);
+		int cnt = bBSLoneMasterDAO.selectMasterListCnt(searchVO);
 
 		Map<String, Object> map = new HashMap<String, Object>();
 
@@ -117,6 +117,6 @@ public class EgovBBSLoneMasterServiceImpl extends EgovAbstractServiceImpl implem
 	 */
 	@Override
 	public void updateMaster(BoardMaster boardMaster) throws Exception {
-		masterDAO.updateMaster(boardMaster);
+		bBSLoneMasterDAO.updateMaster(boardMaster);
 	}
 }
