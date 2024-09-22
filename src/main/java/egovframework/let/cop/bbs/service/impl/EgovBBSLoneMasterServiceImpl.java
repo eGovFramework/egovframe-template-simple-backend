@@ -4,8 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Resource;
-
 import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import org.egovframe.rte.fdl.idgnr.EgovIdGnrService;
 import org.springframework.stereotype.Service;
@@ -43,8 +41,7 @@ public class EgovBBSLoneMasterServiceImpl extends EgovAbstractServiceImpl implem
 
 	private final BBSUseInfoManageDAO bBSUseInfoManageDAO;
 
-	@Resource(name = "egovBBSMstrIdGnrService")
-	private EgovIdGnrService idgenService;
+	private final EgovIdGnrService egovIdGnrService;
 
 	/**
 	 * 등록된 게시판 속성정보를 삭제한다.
@@ -66,7 +63,7 @@ public class EgovBBSLoneMasterServiceImpl extends EgovAbstractServiceImpl implem
 	 */
 	@Override
 	public String insertMaster(BoardMaster boardMaster) throws Exception {
-		String bbsId = idgenService.getNextStringId();
+		String bbsId = egovIdGnrService.getNextStringId();
 
 		boardMaster.setBbsId(bbsId);
 
