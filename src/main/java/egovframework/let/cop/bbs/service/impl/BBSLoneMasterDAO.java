@@ -10,7 +10,7 @@ import egovframework.let.cop.bbs.service.BoardMasterVO;
 
 /**
  * 게시판 속성정보 관리를 위한 데이터 접근 클래스
- * 
+ *
  * @author 공통 서비스 개발팀 한성곤
  * @since 2009.08.25
  * @version 1.0
@@ -21,13 +21,13 @@ import egovframework.let.cop.bbs.service.BoardMasterVO;
  *
  *   수정일      수정자          수정내용
  *  -------    --------    ---------------------------
- *  2009.08.25  한성곤          최초 생성
- *  2011.08.31  JJY            경량환경 템플릿 커스터마이징버전 생성
+ *   2009.08.25  한성곤          최초 생성
+ *   2011.08.31  JJY            경량환경 템플릿 커스터마이징버전 생성
  *   2024.08.12  이백행          이클립스 문제(Problems) 제거
- *
+ *   2024.09.20  안단희          롬복 생성자 기반 종속성 주입
  *      </pre>
  */
-@Repository("BBSLoneMasterDAO")
+@Repository
 public class BBSLoneMasterDAO extends EgovAbstractMapper {
 
 	/**
