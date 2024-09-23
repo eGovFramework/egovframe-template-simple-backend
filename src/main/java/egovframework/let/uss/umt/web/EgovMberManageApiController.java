@@ -4,13 +4,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.egovframe.rte.fdl.property.EgovPropertyService;
 import org.egovframe.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.validation.BindingResult;
@@ -25,7 +23,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springmodules.validation.commons.DefaultBeanValidator;
 
 import egovframework.com.cmm.ComDefaultCodeVO;
-import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.LoginVO;
 import egovframework.com.cmm.ResponseCode;
 import egovframework.com.cmm.service.EgovCmmUseService;
@@ -64,6 +61,7 @@ import lombok.extern.slf4j.Slf4j;
  *   2009.04.10  조재영          최초 생성
  *   2024.07.22  김일국          Boot 템플릿 커스터마이징버전 생성
  *   2024.08.28  이백행          컨트리뷰션 롬복 생성자 기반 종속성 주입
+ *   2024.09.19  강동휘          컨트리뷰션 롬복 생성자 기반 종속성 주입
  *
  *      </pre>
  */
@@ -73,28 +71,20 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class EgovMberManageApiController {
 
-	@Autowired
-	private EgovJwtTokenUtil jwtTokenUtil;
+	private final EgovJwtTokenUtil jwtTokenUtil;
 	public static final String HEADER_STRING = "Authorization";
 
 	/** mberManageService */
-	@Resource(name = "mberManageService")
-	private EgovMberManageService mberManageService;
+	private final EgovMberManageService mberManageService;
 
 	/** cmmUseService */
 	private final EgovCmmUseService cmmUseService;
 
-	/** EgovMessageSource */
-	@Resource(name = "egovMessageSource")
-	EgovMessageSource egovMessageSource;
-
 	/** EgovPropertyService */
-	@Resource(name = "propertiesService")
-	protected EgovPropertyService propertiesService;
+	private final EgovPropertyService propertiesService;
 
 	/** DefaultBeanValidator beanValidator */
-	@Autowired
-	private DefaultBeanValidator beanValidator;
+	private final DefaultBeanValidator beanValidator;
 
 	/**
 	 * 관리자단에서 회원목록을 조회한다. (pageing)
@@ -364,8 +354,7 @@ public class EgovMberManageApiController {
 			@SecurityRequirement(name = "Authorization") }, tags = { "EgovMberManageApiController" })
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "삭제 성공"),
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님"),
-			@ApiResponse(responseCode = "900", description = "입력값 무결성 오류")
-	})
+			@ApiResponse(responseCode = "900", description = "입력값 무결성 오류") })
 	@DeleteMapping("/members/{uniqId}")
 	public ResultVO deleteMber(@PathVariable("uniqId") String uniqId, UserDefaultVO userSearchVO) throws Exception {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
