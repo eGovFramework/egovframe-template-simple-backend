@@ -19,6 +19,7 @@ import egovframework.com.cmm.service.FileVO;
  *   2009.03.25  이삼섭          최초생성
  *   2024.08.12  이백행          컨트리뷰션 이클립스 문제(Problems) 제거
  *   2024.09.05  이백행          컨트리뷰션 EgovComAbstractDAO 를 EgovAbstractMapper 로 수정 후 EgovComAbstractDAO 제거
+ *   2024.09.20  이백행          컨트리뷰션 롬복 생성자 기반 종속성 주입
  *               </pre>
  * 
  * @author 공통 서비스 개발팀 이삼섭
@@ -27,7 +28,7 @@ import egovframework.com.cmm.service.FileVO;
  * @see
  *
  */
-@Repository("FileManageDAO")
+@Repository
 public class FileManageDAO extends EgovAbstractMapper {
 
 	/**
