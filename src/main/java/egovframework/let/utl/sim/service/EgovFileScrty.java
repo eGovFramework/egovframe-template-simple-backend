@@ -207,8 +207,8 @@ public class EgovFileScrty {
      * @param data 암호화할 비밀번호
      * @return String result 암호화된 비밀번호
      * @exception Exception
-     * @Deprecated 부분 이클립스에서 에러표시가 나와서 주석처리
      */
+    @Deprecated
     public static String encryptPassword(String data) throws Exception {
 
 		if (data == null) {

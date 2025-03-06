@@ -118,7 +118,8 @@ public class EgovProperties {
 		try (InputStream in = resources.getInputStream()) {
 			Properties props = new Properties(); 
 			props.load(new java.io.BufferedInputStream(in));
-			value = props.getProperty(keyName).trim();
+			if ( props.getProperty(keyName) != null ) 
+				value = props.getProperty(keyName).trim();
 		} catch (FileNotFoundException fne) {
 			debug(fne);
 		} catch (IOException ioe) {

@@ -19,7 +19,7 @@ import io.swagger.v3.oas.models.security.SecurityScheme;
 public class OpenApiConfig {
 	
 	private static final String API_NAME = "Simple Homepage Project API";
-	private static final String API_VERSION = "4.2.0";
+	private static final String API_VERSION = "4.3.0";
 	private static final String API_DESCRIPTION = "심플홈페이지 프로젝트 명세서";
 
 	@Bean
