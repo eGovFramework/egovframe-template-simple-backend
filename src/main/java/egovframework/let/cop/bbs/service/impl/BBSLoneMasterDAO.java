@@ -34,7 +34,7 @@ public class BBSLoneMasterDAO extends EgovAbstractMapper {
      * @param BoardMaster
      */
     public void deleteMaster(BoardMaster boardMaster) throws Exception {
-	update("BBSLoneMasterDAO.deleteMaster", boardMaster);
+    	update("BBSLoneMasterDAO.deleteMaster", boardMaster);
     }
 
     /**
@@ -43,7 +43,7 @@ public class BBSLoneMasterDAO extends EgovAbstractMapper {
      * @param BoardMaster
      */
     public int insertMaster(BoardMaster boardMaster) throws Exception {
-	return (int)insert("BBSLoneMasterDAO.insertMaster", boardMaster);
+    	return insert("BBSLoneMasterDAO.insertMaster", boardMaster);
     }
 
     /**
@@ -52,7 +52,7 @@ public class BBSLoneMasterDAO extends EgovAbstractMapper {
      * @param BoardMasterVO
      */
     public BoardMasterVO selectMaster(BoardMaster vo) throws Exception {
-	return (BoardMasterVO)selectOne("BBSLoneMasterDAO.selectMaster", vo);
+    	return (BoardMasterVO)selectOne("BBSLoneMasterDAO.selectMaster", vo);
     }
 
     /**
@@ -60,10 +60,9 @@ public class BBSLoneMasterDAO extends EgovAbstractMapper {
      *
      * @param BoardMasterVO
      */
-    @SuppressWarnings("unchecked")
     public List<BoardMasterVO> selectMasterList(BoardMasterVO vo) throws Exception {
-	return (List<BoardMasterVO>) list("BBSLoneMasterDAO.selectMasterList", vo);
-    }
+		return selectList("BBSLoneMasterDAO.selectMasterList", vo);
+	}
 
     /**
      * 게시판 속성정보 목록 숫자를 조회한다
@@ -73,7 +72,7 @@ public class BBSLoneMasterDAO extends EgovAbstractMapper {
      * @throws Exception
      */
     public int selectMasterListCnt(BoardMasterVO vo) throws Exception {
-	return (Integer)selectOne("BBSLoneMasterDAO.selectMasterListCnt", vo);
+    	return (Integer)selectOne("BBSLoneMasterDAO.selectMasterListCnt", vo);
     }
 
     /**
@@ -82,6 +81,6 @@ public class BBSLoneMasterDAO extends EgovAbstractMapper {
      * @param BoardMaster
      */
     public void updateMaster(BoardMaster boardMaster) throws Exception {
-	update("BBSLoneMasterDAO.updateMaster", boardMaster);
+    	update("BBSLoneMasterDAO.updateMaster", boardMaster);
     }
 }

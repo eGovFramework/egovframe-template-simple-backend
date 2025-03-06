@@ -7,8 +7,9 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import egovframework.com.cmm.LoginVO;
@@ -41,7 +42,7 @@ import lombok.extern.slf4j.Slf4j;
  *  -------            --------        ---------------------------
  *  2023.04.15  김일국     최초 생성
  *  2023.04.20  김일국     리액트에서 사용할 공통인증메서드 추가
- *
+ *	2024.07.17	김일국	 @RequestParam 에서 @RequestBody로 변경
  *  </pre>
  */
 @Slf4j
@@ -96,7 +97,7 @@ public class EgovSiteManagerApiController {
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님"),
 			@ApiResponse(responseCode = "800", description = "저장시 내부 오류")
 	})
-	@PostMapping(value = "/adminPassword")
+	@PatchMapping(value = "/admin/password")
 	public ResultVO updateAdminPassword(
 			@Parameter(
 					schema = @Schema(type = "object",
@@ -104,7 +105,7 @@ public class EgovSiteManagerApiController {
 					ref = "#/components/schemas/passwordMap"),
 					style = ParameterStyle.FORM,
 					explode = Explode.TRUE
-					) @RequestParam Map<String, String> param, HttpServletRequest request, 
+					) @RequestBody Map<String, String> param, HttpServletRequest request, 
 			@Parameter(hidden = true) @AuthenticationPrincipal LoginVO user) throws Exception {
 		ResultVO resultVO = new ResultVO();
 

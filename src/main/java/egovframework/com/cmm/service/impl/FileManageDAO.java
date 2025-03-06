@@ -3,9 +3,10 @@ package egovframework.com.cmm.service.impl;
 import java.util.Iterator;
 import java.util.List;
 
-import egovframework.com.cmm.service.FileVO;
-
+import org.egovframe.rte.psl.dataaccess.EgovAbstractMapper;
 import org.springframework.stereotype.Repository;
+
+import egovframework.com.cmm.service.FileVO;
 
 /**
  * @Class Name : EgovFileMngDAO.java
@@ -23,7 +24,7 @@ import org.springframework.stereotype.Repository;
  *
  */
 @Repository("FileManageDAO")
-public class FileManageDAO extends EgovComAbstractDAO {
+public class FileManageDAO extends EgovAbstractMapper {
 
 	/**
 	 * 여러 개의 파일에 대한 정보(속성 및 상세)를 등록한다.
@@ -108,9 +109,8 @@ public class FileManageDAO extends EgovComAbstractDAO {
 	 * @return
 	 * @throws Exception
 	 */
-	@SuppressWarnings("unchecked")
 	public List<FileVO> selectFileInfs(FileVO vo) throws Exception {
-		return (List<FileVO>) list("FileManageDAO.selectFileList", vo);
+		return selectList("FileManageDAO.selectFileList", vo);
 	}
 
 	/**
@@ -152,9 +152,8 @@ public class FileManageDAO extends EgovComAbstractDAO {
 	 * @return
 	 * @throws Exception
 	 */
-	@SuppressWarnings("unchecked")
 	public List<FileVO> selectFileListByFileNm(FileVO fvo) throws Exception {
-		return (List<FileVO>) list("FileManageDAO.selectFileListByFileNm", fvo);
+		return selectList("FileManageDAO.selectFileListByFileNm", fvo);
 	}
 
 	/**
@@ -175,8 +174,7 @@ public class FileManageDAO extends EgovComAbstractDAO {
 	 * @return
 	 * @throws Exception
 	 */
-	@SuppressWarnings("unchecked")
 	public List<FileVO> selectImageFileList(FileVO vo) throws Exception {
-		return (List<FileVO>) list("FileManageDAO.selectImageFileList", vo);
+		return selectList("FileManageDAO.selectImageFileList", vo);
 	}
 }

@@ -36,7 +36,7 @@ public class BBSUseInfoManageDAO extends EgovAbstractMapper {
      * @throws Exception
      */
     public void deleteBBSUseInf(BoardUseInf bdUseInf) throws Exception {
-	update("BBSUseInfoManageDAO.deleteBBSUseInf", bdUseInf);
+    	update("BBSUseInfoManageDAO.deleteBBSUseInf", bdUseInf);
     }
 
     /**
@@ -45,10 +45,9 @@ public class BBSUseInfoManageDAO extends EgovAbstractMapper {
      * @param bdUseInf
      * @throws Exception
      */
-    @SuppressWarnings("unchecked")
     public List<BoardUseInf> selectBBSUseInfByCmmnty(BoardUseInfVO bdUseVO) throws Exception {
-	return (List<BoardUseInf>) list("BBSUseInfoManageDAO.selectBBSUseInfByCmmnty", bdUseVO);
-    }
+		return selectList("BBSUseInfoManageDAO.selectBBSUseInfByCmmnty", bdUseVO);
+	}
 
     /**
      * 동호회에 사용되는 게시판 사용정보 목록을 조회한다.
@@ -56,10 +55,9 @@ public class BBSUseInfoManageDAO extends EgovAbstractMapper {
      * @param bdUseInf
      * @throws Exception
      */
-    @SuppressWarnings("unchecked")
     public List<BoardUseInf> selectBBSUseInfByClub(BoardUseInfVO bdUseVO) throws Exception {
-	return (List<BoardUseInf>) list("BBSUseInfoManageDAO.selectBBSUseInfByClub", bdUseVO);
-    }
+		return selectList("BBSUseInfoManageDAO.selectBBSUseInfByClub", bdUseVO);
+	}
 
     /**
      * 커뮤니티에 사용되는 모든 게시판 사용정보를 삭제한다.
@@ -68,7 +66,7 @@ public class BBSUseInfoManageDAO extends EgovAbstractMapper {
      * @throws Exception
      */
     public void deleteAllBBSUseInfByCmmnty(BoardUseInfVO bdUseVO) throws Exception {
-	update("BBSUseInfoManageDAO.deleteAllBBSUseInfByCmmnty", bdUseVO);
+    	update("BBSUseInfoManageDAO.deleteAllBBSUseInfByCmmnty", bdUseVO);
     }
 
     /**
@@ -78,7 +76,7 @@ public class BBSUseInfoManageDAO extends EgovAbstractMapper {
      * @throws Exception
      */
     public void deleteAllBBSUseInfByClub(BoardUseInfVO bdUseVO) throws Exception {
-	update("BBSUseInfoManageDAO.deleteAllBBSUseInfByClub", bdUseVO);
+    	update("BBSUseInfoManageDAO.deleteAllBBSUseInfByClub", bdUseVO);
     }
 
     /**
@@ -88,7 +86,7 @@ public class BBSUseInfoManageDAO extends EgovAbstractMapper {
      * @throws Exception
      */
     public void insertBBSUseInf(BoardUseInf bdUseInf) throws Exception {
-	insert("BBSUseInfoManageDAO.insertBBSUseInf", bdUseInf);
+    	insert("BBSUseInfoManageDAO.insertBBSUseInf", bdUseInf);
     }
 
     /**
@@ -98,10 +96,9 @@ public class BBSUseInfoManageDAO extends EgovAbstractMapper {
      * @return
      * @throws Exception
      */
-    @SuppressWarnings("unchecked")
     public List<BoardUseInfVO> selectBBSUseInfs(BoardUseInfVO bdUseVO) throws Exception {
-	return (List<BoardUseInfVO>) list("BBSUseInfoManageDAO.selectBBSUseInfs", bdUseVO);
-    }
+		return selectList("BBSUseInfoManageDAO.selectBBSUseInfs", bdUseVO);
+	}
 
     /**
      *
@@ -110,7 +107,7 @@ public class BBSUseInfoManageDAO extends EgovAbstractMapper {
      * @throws Exception
      */
     public int selectBBSUseInfsCnt(BoardUseInfVO bdUseVO) throws Exception {
-	return (Integer)selectOne("BBSUseInfoManageDAO.selectBBSUseInfsCnt", bdUseVO);
+    	return (Integer)selectOne("BBSUseInfoManageDAO.selectBBSUseInfsCnt", bdUseVO);
     }
 
     /**
@@ -121,7 +118,7 @@ public class BBSUseInfoManageDAO extends EgovAbstractMapper {
      * @throws Exception
      */
     public BoardUseInfVO selectBBSUseInf(BoardUseInfVO bdUseVO) throws Exception {
-	return (BoardUseInfVO)selectOne("BBSUseInfoManageDAO.selectBBSUseInf", bdUseVO);
+    	return (BoardUseInfVO)selectOne("BBSUseInfoManageDAO.selectBBSUseInf", bdUseVO);
     }
 
     /**
@@ -131,7 +128,7 @@ public class BBSUseInfoManageDAO extends EgovAbstractMapper {
      * @throws Exception
      */
     public void updateBBSUseInf(BoardUseInf bdUseInf) throws Exception {
-	update("BBSUseInfoManageDAO.updateBBSUseInf", bdUseInf);
+    	update("BBSUseInfoManageDAO.updateBBSUseInf", bdUseInf);
     }
 
     /**
@@ -141,7 +138,7 @@ public class BBSUseInfoManageDAO extends EgovAbstractMapper {
      * @throws Exception
      */
     public void deleteBBSUseInfByBoardId(BoardUseInf bdUseInf) throws Exception {
-	update("BBSUseInfoManageDAO.deleteBBSUseInfByBoardId", bdUseInf);
+    	update("BBSUseInfoManageDAO.deleteBBSUseInfByBoardId", bdUseInf);
     }
 
     /**
@@ -151,10 +148,9 @@ public class BBSUseInfoManageDAO extends EgovAbstractMapper {
      * @return
      * @throws Exception
      */
-    @SuppressWarnings("unchecked")
     public List<BoardUseInfVO> selectBBSUseInfsByTrget(BoardUseInfVO bdUseVO) throws Exception {
-	return (List<BoardUseInfVO>) list("BBSUseInfoManageDAO.selectBBSUseInfsByTrget", bdUseVO);
-    }
+		return selectList("BBSUseInfoManageDAO.selectBBSUseInfsByTrget", bdUseVO);
+	}
 
     /**
      * 커뮤니티, 동호회에 사용되는 게시판 사용정보에 대한 전체 건수를 조회한다.
@@ -164,7 +160,7 @@ public class BBSUseInfoManageDAO extends EgovAbstractMapper {
      * @throws Exception
      */
     public int selectBBSUseInfsCntByTrget(BoardUseInfVO bdUseVO) throws Exception {
-	return (Integer)selectOne("BBSUseInfoManageDAO.selectBBSUseInfsCntByTrget", bdUseVO);
+    	return (Integer)selectOne("BBSUseInfoManageDAO.selectBBSUseInfsCntByTrget", bdUseVO);
     }
 
     /**
@@ -174,6 +170,6 @@ public class BBSUseInfoManageDAO extends EgovAbstractMapper {
      * @throws Exception
      */
     public void updateBBSUseInfByTrget(BoardUseInf bdUseInf) throws Exception {
-	update("BBSUseInfoManageDAO.updateBBSUseInfByTrget", bdUseInf);
+    	update("BBSUseInfoManageDAO.updateBBSUseInfByTrget", bdUseInf);
     }
 }

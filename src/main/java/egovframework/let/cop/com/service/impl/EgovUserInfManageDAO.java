@@ -35,10 +35,9 @@ public class EgovUserInfManageDAO extends EgovAbstractMapper {
      * @return
      * @throws Exception
      */
-    @SuppressWarnings("unchecked")
-    public List<UserInfVO> selectUserList(UserInfVO userVO) throws Exception {
-	return (List<UserInfVO>) list("EgovUserInfManageDAO.selectUserList", userVO);
-    }
+	public List<UserInfVO> selectUserList(UserInfVO userVO) throws Exception {
+		return selectList("EgovUserInfManageDAO.selectUserList", userVO);
+	}
 
     /**
      * 사용자 정보에 대한 목록 전체 건수를 조회한다.
@@ -48,7 +47,7 @@ public class EgovUserInfManageDAO extends EgovAbstractMapper {
      * @throws Exception
      */
     public int selectUserListCnt(UserInfVO userVO) throws Exception {
-	return (Integer)selectOne("EgovUserInfManageDAO.selectUserListCnt", userVO);
+    	return (Integer)selectOne("EgovUserInfManageDAO.selectUserListCnt", userVO);
     }
 
     /**
@@ -58,10 +57,9 @@ public class EgovUserInfManageDAO extends EgovAbstractMapper {
      * @return
      * @throws Exception
      */
-    @SuppressWarnings("unchecked")
     public List<UserInfVO> selectCmmntyUserList(UserInfVO userVO) throws Exception {
-	return (List<UserInfVO>) list("EgovUserInfManageDAO.selectCmmntyUserList", userVO);
-    }
+		return selectList("EgovUserInfManageDAO.selectCmmntyUserList", userVO);
+	}
 
     /**
      * 커뮤니티 사용자 목록에 대한 전체 건수를 조회한다.
@@ -71,7 +69,7 @@ public class EgovUserInfManageDAO extends EgovAbstractMapper {
      * @throws Exception
      */
     public int selectCmmntyUserListCnt(UserInfVO userVO) throws Exception {
-	return (Integer)selectOne("EgovUserInfManageDAO.selectCmmntyUserListCnt", userVO);
+    	return (Integer)selectOne("EgovUserInfManageDAO.selectCmmntyUserListCnt", userVO);
     }
 
     /**
@@ -81,10 +79,9 @@ public class EgovUserInfManageDAO extends EgovAbstractMapper {
      * @return
      * @throws Exception
      */
-    @SuppressWarnings("unchecked")
     public List<UserInfVO> selectCmmntyMngrList(UserInfVO userVO) throws Exception {
-	return (List<UserInfVO>) list("EgovUserInfManageDAO.selectCmmntyMngrList", userVO);
-    }
+		return selectList("EgovUserInfManageDAO.selectCmmntyMngrList", userVO);
+	}
 
     /**
      * 커뮤니티 관리자 목록에 대한 전체 건수를 조회한다.
@@ -94,7 +91,7 @@ public class EgovUserInfManageDAO extends EgovAbstractMapper {
      * @throws Exception
      */
     public int selectCmmntyMngrListCnt(UserInfVO userVO) throws Exception {
-	return (Integer)selectOne("EgovUserInfManageDAO.selectCmmntyMngrListCnt", userVO);
+    	return (Integer)selectOne("EgovUserInfManageDAO.selectCmmntyMngrListCnt", userVO);
     }
 
     /**
@@ -104,10 +101,9 @@ public class EgovUserInfManageDAO extends EgovAbstractMapper {
      * @return
      * @throws Exception
      */
-    @SuppressWarnings("unchecked")
     public List<UserInfVO> selectClubUserList(UserInfVO userVO) throws Exception {
-	return (List<UserInfVO>) list("EgovUserInfManageDAO.selectClubUserList", userVO);
-    }
+		return selectList("EgovUserInfManageDAO.selectClubUserList", userVO);
+	}
 
     /**
      * 동호회 사용자 목록에 대한 전체 건수를 조회한다.
@@ -117,7 +113,7 @@ public class EgovUserInfManageDAO extends EgovAbstractMapper {
      * @throws Exception
      */
     public int selectClubUserListCnt(UserInfVO userVO) throws Exception {
-	return (Integer)selectOne("EgovUserInfManageDAO.selectClubUserListCnt", userVO);
+    	return (Integer)selectOne("EgovUserInfManageDAO.selectClubUserListCnt", userVO);
     }
 
     /**
@@ -127,10 +123,9 @@ public class EgovUserInfManageDAO extends EgovAbstractMapper {
      * @return
      * @throws Exception
      */
-    @SuppressWarnings("unchecked")
     public List<UserInfVO> selectClubOprtrList(UserInfVO userVO) throws Exception {
-	return (List<UserInfVO>) list("EgovUserInfManageDAO.selectClubOprtrList", userVO);
-    }
+		return selectList("EgovUserInfManageDAO.selectClubOprtrList", userVO);
+	}
 
     /**
      * 동호회 운영자 목록에 대한 전체 건수를 조회한다.
@@ -140,7 +135,7 @@ public class EgovUserInfManageDAO extends EgovAbstractMapper {
      * @throws Exception
      */
     public int selectClubOprtrListCnt(UserInfVO userVO) throws Exception {
-	return (Integer)selectOne("EgovUserInfManageDAO.selectClubOprtrListCnt", userVO);
+    	return (Integer)selectOne("EgovUserInfManageDAO.selectClubOprtrListCnt", userVO);
     }
 
     /**
@@ -150,10 +145,9 @@ public class EgovUserInfManageDAO extends EgovAbstractMapper {
      * @return
      * @throws Exception
      */
-    @SuppressWarnings("unchecked")
     public List<UserInfVO> selectAllClubUser(UserInfVO userVO) throws Exception {
-	return (List<UserInfVO>) list("EgovUserInfManageDAO.selectAllClubUser", userVO);
-    }
+		return selectList("EgovUserInfManageDAO.selectAllClubUser", userVO);
+	}
 
     /**
      * 커뮤니티에 대한 모든 사용자 목록을 조회한다.
@@ -162,8 +156,7 @@ public class EgovUserInfManageDAO extends EgovAbstractMapper {
      * @return
      * @throws Exception
      */
-    @SuppressWarnings("unchecked")
     public List<UserInfVO> selectAllCmmntyUser(UserInfVO userVO) throws Exception {
-	return (List<UserInfVO>) list("EgovUserInfManageDAO.selectAllCmmntyUser", userVO);
-    }
+		return selectList("EgovUserInfManageDAO.selectAllCmmntyUser", userVO);
+	}
 }

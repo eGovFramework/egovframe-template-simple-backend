@@ -4,7 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+import org.springframework.web.servlet.HandlerInterceptor;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -26,7 +26,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 
 @Slf4j
-public class CustomAuthenticInterceptor extends HandlerInterceptorAdapter {
+public class CustomAuthenticInterceptor implements HandlerInterceptor {
 	
 	/**
 	 * 세션에 계정정보(LoginVO)가 있는지 여부로 인증 여부를 체크한다.
@@ -36,7 +36,7 @@ public class CustomAuthenticInterceptor extends HandlerInterceptorAdapter {
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
 		HttpSession session = request.getSession();
-		log.debug("CustomAuthenticInterceptor sessionID "+session.getId());
+		log.debug("CustomAuthenticInterceptor sessionID " + session.getId());
 		log.debug("CustomAuthenticInterceptor ================== ");
 		
 		return true;

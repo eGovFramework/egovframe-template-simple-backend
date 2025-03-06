@@ -1,12 +1,9 @@
 package egovframework.com.jwt;
 
 import java.io.Serializable;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Function;
 
 import org.springframework.stereotype.Component;
 
@@ -71,6 +68,7 @@ public class EgovJwtTokenUtil implements Serializable{
         claims.put("orgnztId", loginVO.getOrgnztId() );
         claims.put("uniqId", loginVO.getUniqId() );
         claims.put("type", subject);
+        claims.put("groupNm", loginVO.getGroupNm());//권한그룹으로 시프링시큐리티 사용
 
     	log.debug("===>>> secret = "+SECRET_KEY);
         return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))

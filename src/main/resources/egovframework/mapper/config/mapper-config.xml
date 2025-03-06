@@ -16,6 +16,8 @@
 		<typeAlias alias="FileVO"			type="egovframework.com.cmm.service.FileVO" />
 		<typeAlias alias="ComDefaultCodeVO" type="egovframework.com.cmm.ComDefaultCodeVO" />
 		<typeAlias alias="comDefaultVO"		type="egovframework.com.cmm.ComDefaultVO" />
+		<typeAlias  alias="userSearchVO" type = "egovframework.let.uss.umt.service.UserDefaultVO"/>
+    	<typeAlias  alias="mberVO"       type = "egovframework.let.uss.umt.service.MberManageVO"/>
 	</typeAliases>
     
 </configuration>

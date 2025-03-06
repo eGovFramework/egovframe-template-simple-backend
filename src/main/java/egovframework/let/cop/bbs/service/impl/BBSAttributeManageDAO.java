@@ -34,7 +34,7 @@ public class BBSAttributeManageDAO extends EgovAbstractMapper {
      * @param BoardMaster
      */
     public void deleteBBSMasterInf(BoardMaster boardMaster) throws Exception {
-	update("BBSAttributeManageDAO.deleteBBSMasterInf", boardMaster);
+    	update("BBSAttributeManageDAO.deleteBBSMasterInf", boardMaster);
     }
 
     /**
@@ -43,7 +43,7 @@ public class BBSAttributeManageDAO extends EgovAbstractMapper {
      * @param BoardMaster
      */
     public int insertBBSMasterInf(BoardMaster boardMaster) throws Exception {
-	return (int)insert("BBSAttributeManageDAO.insertBBSMasterInf", boardMaster);
+    	return insert("BBSAttributeManageDAO.insertBBSMasterInf", boardMaster);
     }
 
     /**
@@ -52,7 +52,7 @@ public class BBSAttributeManageDAO extends EgovAbstractMapper {
      * @param BoardMasterVO
      */
     public BoardMasterVO selectBBSMasterInf(BoardMaster vo) throws Exception {
-	return (BoardMasterVO)selectOne("BBSAttributeManageDAO.selectBBSMasterInf", vo);
+    	return (BoardMasterVO)selectOne("BBSAttributeManageDAO.selectBBSMasterInf", vo);
     }
 
     /**
@@ -60,10 +60,9 @@ public class BBSAttributeManageDAO extends EgovAbstractMapper {
      *
      * @param BoardMasterVO
      */
-    @SuppressWarnings("unchecked")
     public List<BoardMasterVO> selectBBSMasterInfs(BoardMasterVO vo) throws Exception {
-	return (List<BoardMasterVO>) list("BBSAttributeManageDAO.selectBBSMasterInfs", vo);
-    }
+		return selectList("BBSAttributeManageDAO.selectBBSMasterInfs", vo);
+	}
 
     /**
      * 게시판 속성정보 목록 숫자를 조회한다
@@ -73,7 +72,7 @@ public class BBSAttributeManageDAO extends EgovAbstractMapper {
      * @throws Exception
      */
     public int selectBBSMasterInfsCnt(BoardMasterVO vo) throws Exception {
-	return (Integer)selectOne("BBSAttributeManageDAO.selectBBSMasterInfsCnt", vo);
+    	return (Integer)selectOne("BBSAttributeManageDAO.selectBBSMasterInfsCnt", vo);
     }
 
     /**
@@ -82,7 +81,7 @@ public class BBSAttributeManageDAO extends EgovAbstractMapper {
      * @param BoardMaster
      */
     public void updateBBSMasterInf(BoardMaster boardMaster) throws Exception {
-	update("BBSAttributeManageDAO.updateBBSMasterInf", boardMaster);
+    	update("BBSAttributeManageDAO.updateBBSMasterInf", boardMaster);
     }
 
     /**
@@ -91,7 +90,7 @@ public class BBSAttributeManageDAO extends EgovAbstractMapper {
      * @param BoardMasterVO
      */
     public boolean validateTemplate(BoardMasterVO vo) throws Exception {
-	return true;
+    	return true;
     }
 
     /**
@@ -101,21 +100,19 @@ public class BBSAttributeManageDAO extends EgovAbstractMapper {
      * @return
      * @throws Exception
      */
-    @SuppressWarnings("unchecked")
     public List<BoardMasterVO> selectAllBBSMasteInf(BoardMasterVO vo) throws Exception {
-	// 커뮤니티, 동호회의 게시판이 나오지 않도록 LETTNBBSUSE 테이블과 Join 필요
-	return (List<BoardMasterVO>) list("BBSAttributeManageDAO.selectAllBBSMaster", vo);
-    }
+		// 커뮤니티, 동호회의 게시판이 나오지 않도록 LETTNBBSUSE 테이블과 Join 필요
+		return selectList("BBSAttributeManageDAO.selectAllBBSMaster", vo);
+	}
 
     /**
      * 사용중인 게시판 속성정보 목록을 조회한다.
      *
      * @param BoardMasterVO
      */
-    @SuppressWarnings("unchecked")
     public List<BoardMasterVO> selectBdMstrListByTrget(BoardMasterVO vo) throws Exception {
-	return (List<BoardMasterVO>) list("BBSAttributeManageDAO.selectBdMstrListByTrget", vo);
-    }
+		return selectList("BBSAttributeManageDAO.selectBdMstrListByTrget", vo);
+	}
 
     /**
      * 사용중인 게시판 속성정보 목록 숫자를 조회한다
@@ -125,7 +122,7 @@ public class BBSAttributeManageDAO extends EgovAbstractMapper {
      * @throws Exception
      */
     public int selectBdMstrListCntByTrget(BoardMasterVO vo) throws Exception {
-	return (Integer)selectOne("BBSAttributeManageDAO.selectBdMstrListCntByTrget", vo);
+    	return (Integer)selectOne("BBSAttributeManageDAO.selectBdMstrListCntByTrget", vo);
     }
 
     /**
@@ -135,20 +132,18 @@ public class BBSAttributeManageDAO extends EgovAbstractMapper {
      * @return
      * @throws Exception
      */
-    @SuppressWarnings("unchecked")
     public List<BoardMasterVO> selectAllBdMstrByTrget(BoardMasterVO vo) throws Exception {
-	return (List<BoardMasterVO>) list("BBSAttributeManageDAO.selectAllBdMstrByTrget", vo);
-    }
+		return selectList("BBSAttributeManageDAO.selectAllBdMstrByTrget", vo);
+	}
 
     /**
      * 사용 중이지 않은 게시판 속성정보 목록을 조회한다.
      *
      * @param BoardMasterVO
      */
-    @SuppressWarnings("unchecked")
     public List<BoardMasterVO> selectNotUsedBdMstrList(BoardMasterVO vo) throws Exception {
-	return (List<BoardMasterVO>) list("BBSAttributeManageDAO.selectNotUsedBdMstrList", vo);
-    }
+		return selectList("BBSAttributeManageDAO.selectNotUsedBdMstrList", vo);
+	}
 
     /**
      * 사용 중이지 않은 게시판 속성정보 목록 숫자를 조회한다
@@ -158,6 +153,6 @@ public class BBSAttributeManageDAO extends EgovAbstractMapper {
      * @throws Exception
      */
 	public int selectNotUsedBdMstrListCnt(BoardMasterVO vo) throws Exception {
-	return (Integer)selectOne("BBSAttributeManageDAO.selectNotUsedBdMstrListCnt", vo);
+		return (Integer)selectOne("BBSAttributeManageDAO.selectNotUsedBdMstrListCnt", vo);
     }
 }

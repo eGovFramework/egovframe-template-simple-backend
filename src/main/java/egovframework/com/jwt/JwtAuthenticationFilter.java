@@ -38,7 +38,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private EgovJwtTokenUtil jwtTokenUtil;
     public static final String HEADER_STRING = "Authorization";
 
-    @Override
+    @Override //로그인 이후 HttpServletRequest 요청할 때마다 실행(스프링의 AOP기능)
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain chain)
             throws IOException, ServletException {
         boolean verificationFlag = true;
@@ -73,12 +73,23 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             loginVO.setUniqId( jwtTokenUtil.getInfoFromToken("uniqId",jwtToken) );
             loginVO.setOrgnztId( jwtTokenUtil.getInfoFromToken("orgnztId",jwtToken) );
             loginVO.setName( jwtTokenUtil.getInfoFromToken("name",jwtToken) );
-
-            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(loginVO, null,
-                    Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"))
-            );
-            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(req));
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+            loginVO.setGroupNm(jwtTokenUtil.getInfoFromToken("groupNm", jwtToken));//토큰에서 가져온 스프링시큐리티용 그룹명값 부여
+            logger.debug("===>>> loginVO.getUserSe() = "+loginVO.getUserSe());
+            if(loginVO.getGroupNm().equals("ROLE_ADMIN")) { //스프링시큐리티 관리자 권한은 getGroupNm값으로 구분
+            	UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(loginVO, null,
+                        Arrays.asList(new SimpleGrantedAuthority("ROLE_ADMIN"))
+                );
+            	logger.debug("authentication1 ===>>> " + authentication);
+            	authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(req));
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }else {
+            	UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(loginVO, null,
+                        Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"))
+                );
+            	logger.debug("authentication2 ===>>> " + authentication);
+            	authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(req));
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
         }
 
 
