@@ -2,6 +2,7 @@ package egovframework.let.cop.com.web;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -109,13 +110,17 @@ public class EgovBBSUseInfoManageApiController {
 					style = ParameterStyle.FORM,
 					explode = Explode.TRUE
 					) @RequestParam Map<String, Object> commandMap) throws Exception {
-
 		ResultVO resultVO = new ResultVO();
 		BoardUseInfVO bdUseVO = new BoardUseInfVO();
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-
+		
+		int pageIndex = Optional.ofNullable((String) commandMap.get("pageIndex"))
+                .filter(s -> s.matches("\\d+"))
+                .map(Integer::parseInt)
+                .orElse(1);
+		
+		bdUseVO.setPageIndex(pageIndex);
 		bdUseVO.setSearchWrd((String)commandMap.get("searchWrd"));
-
 		bdUseVO.setPageUnit(propertyService.getInt("Globals.pageUnit"));
 		bdUseVO.setPageSize(propertyService.getInt("Globals.pageSize"));
 

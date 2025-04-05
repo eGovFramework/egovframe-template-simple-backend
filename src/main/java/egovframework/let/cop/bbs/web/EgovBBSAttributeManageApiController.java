@@ -3,6 +3,7 @@ package egovframework.let.cop.bbs.web;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -117,6 +118,12 @@ public class EgovBBSAttributeManageApiController {
 		ResultVO resultVO = new ResultVO();
 		BoardMasterVO boardMasterVO = new BoardMasterVO();
 		
+		int pageIndex = Optional.ofNullable((String) commandMap.get("pageIndex"))
+                .filter(s -> s.matches("\\d+"))
+                .map(Integer::parseInt)
+                .orElse(1);
+		
+		boardMasterVO.setPageIndex(pageIndex);
 		boardMasterVO.setSearchCnd((String)commandMap.get("searchCnd"));
 		boardMasterVO.setSearchWrd((String)commandMap.get("searchWrd"));
 		
