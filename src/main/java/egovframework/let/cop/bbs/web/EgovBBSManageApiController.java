@@ -340,15 +340,12 @@ public class EgovBBSManageApiController {
 		BindingResult bindingResult,
 		HttpServletRequest request)
 		throws Exception {
-		ResultVO resultVO = new ResultVO();
 		LoginVO user = extractUserFromJwt(request);
 		
 		beanValidator.validate(boardVO, bindingResult);
 		if (bindingResult.hasErrors()) {
-			resultVO.setResultCode(ResponseCode.INPUT_CHECK_ERROR.getCode());
-			resultVO.setResultMessage(ResponseCode.INPUT_CHECK_ERROR.getMessage());
 
-			return resultVoHelper.buildFromResultVO(resultVO, ResponseCode.INPUT_CHECK_ERROR);
+			return resultVoHelper.buildFromResultVO(new ResultVO(), ResponseCode.INPUT_CHECK_ERROR);
 		}
 	
 		List<FileVO> result = null;

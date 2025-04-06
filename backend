@@ -584,3 +584,6 @@ This generated password is for development use only. Your security configuration
 2025-04-06 10:36:12.074  INFO 248 --- [http-nio-8080-exec-1] o.s.w.s.DispatcherServlet                : Initializing Servlet 'dispatcherServlet'
 2025-04-06 10:36:12.076  INFO 248 --- [http-nio-8080-exec-1] o.s.w.s.DispatcherServlet                : Completed initialization in 2 ms
 2025-04-06 10:36:17.893  WARN 248 --- [http-nio-8080-exec-1] o.a.c.v.ValidatorResources               : Form 'mberManageVO' not found for locale 'ko_KR'
+2025-04-06 10:46:14.427  INFO 248 --- [http-nio-8080-exec-3] o.s.a.AbstractOpenApiResource            : Init duration for springdoc-openapi is: 587 ms
+2025-04-06 10:50:32.608  INFO 248 --- [RMI TCP Connection(25)-127.0.0.1] inMXBeanRegistrar$SpringApplicationAdmin : Application shutdown requested.
+2025-04-06 10:50:32.666  INFO 248 --- [RMI TCP Connection(25)-127.0.0.1] o.s.j.d.e.EmbeddedDatabaseFactory        : Shutting down embedded database: url='jdbc:hsqldb:mem:testdb'
