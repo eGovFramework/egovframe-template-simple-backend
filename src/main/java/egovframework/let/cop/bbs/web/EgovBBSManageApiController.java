@@ -4,35 +4,32 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.egovframe.rte.fdl.cryptography.EgovCryptoService;
 import org.egovframe.rte.fdl.property.EgovPropertyService;
 import org.egovframe.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springmodules.validation.commons.DefaultBeanValidator;
 
-import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.LoginVO;
 import egovframework.com.cmm.ResponseCode;
 import egovframework.com.cmm.service.EgovFileMngService;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.com.cmm.service.FileVO;
 import egovframework.com.cmm.service.ResultVO;
+import egovframework.com.cmm.util.ResultVoHelper;
 import egovframework.com.cmm.web.EgovFileDownloadController;
 import egovframework.com.jwt.EgovJwtTokenUtil;
 import egovframework.let.cop.bbs.service.BoardMasterVO;
@@ -43,14 +40,12 @@ import egovframework.let.utl.fcc.service.EgovStringUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.Explode;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
-import io.swagger.v3.oas.annotations.enums.ParameterStyle;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 게시물 관리를 위한 컨트롤러 클래스
@@ -62,62 +57,30 @@ import io.swagger.v3.oas.annotations.tags.Tag;
  * <pre>
  * << 개정이력(Modification Information) >>
  *
- *   수정일      수정자          수정내용
- *  -------    --------    ---------------------------
- *  2009.03.19  이삼섭          최초 생성
- *  2009.06.29  한성곤	       2단계 기능 추가 (댓글관리, 만족도조사)
- *  2011.08.31  JJY            경량환경 템플릿 커스터마이징버전 생성
+ *   수정일      수정자             수정내용
+ *  -------    --------        ---------------------------
+ *  2009.03.19  이삼섭            최초 생성
+ *  2009.06.29  한성곤	         2단계 기능 추가 (댓글관리, 만족도조사)
+ *  2011.08.31  JJY              경량환경 템플릿 커스터마이징버전 생성
+ *  2024.04.06  김재섭(nirsa)     생성자 주입 전환, 불필요한 필드 제거, ResultVoHelper 적용 및 1차 코드 리팩토링
  *
  *  </pre>
  */
 @RestController
+@RequiredArgsConstructor
 @Tag(name="EgovBBSManageApiController",description = "게시물 관리")
 public class EgovBBSManageApiController {
-	
-	@Autowired
-    private EgovJwtTokenUtil jwtTokenUtil;
-    public static final String HEADER_STRING = "Authorization";
-    
-	@Resource(name = "EgovBBSManageService")
-	private EgovBBSManageService bbsMngService;
-
-	@Resource(name = "EgovBBSAttributeManageService")
-	private EgovBBSAttributeManageService bbsAttrbService;
-
-	@Resource(name = "EgovFileMngService")
-	private EgovFileMngService fileMngService;
-
-	@Resource(name = "EgovFileMngUtil")
-	private EgovFileMngUtil fileUtil;
-
-	@Resource(name = "propertiesService")
-	protected EgovPropertyService propertyService;
-
-	@Resource(name = "egovMessageSource")
-	EgovMessageSource egovMessageSource;
-
-	@Resource(name = "EgovFileMngService")
-	private EgovFileMngService fileService;
-	
-	/** 암호화서비스 */
-    @Resource(name="egovARIACryptoService")
-    EgovCryptoService cryptoService;
-
-	//---------------------------------
-	// 2009.06.29 : 2단계 기능 추가
-	//---------------------------------
-	//SHT-CUSTOMIZING//@Resource(name = "EgovBBSCommentService")
-	//SHT-CUSTOMIZING//private EgovBBSCommentService bbsCommentService;
-
-	//SHT-CUSTOMIZING//@Resource(name = "EgovBBSSatisfactionService")
-	//SHT-CUSTOMIZING//private EgovBBSSatisfactionService bbsSatisfactionService;
-
-	//SHT-CUSTOMIZING//@Resource(name = "EgovBBSScrapService")
-	//SHT-CUSTOMIZING//private EgovBBSScrapService bbsScrapService;
-	////-------------------------------
-
-	@Autowired
-	private DefaultBeanValidator beanValidator;
+	public static final String HEADER_STRING = "Authorization";
+    private final EgovJwtTokenUtil jwtTokenUtil;
+    private final EgovFileMngUtil fileUtil;
+    private final EgovFileMngService fileService;
+    private final ResultVoHelper resultVoHelper;
+    private final EgovBBSManageService bbsMngService;
+    private final EgovCryptoService cryptoService;
+    private final EgovFileMngService fileMngService;
+    private final EgovPropertyService propertyService;
+    private final EgovBBSAttributeManageService bbsAttrbService;
+    private final DefaultBeanValidator beanValidator;
 	
 	/**
 	 * 게시판 마스터 상세내용을 조회한다.
@@ -142,9 +105,7 @@ public class EgovBBSManageApiController {
 			@Parameter(name = "bbsId", description = "게시판 Id", in = ParameterIn.PATH, example="BBSMSTR_AAAAAAAAAAAA")
 			@PathVariable("bbsId") String bbsId)
 		throws Exception {
-		ResultVO resultVO = new ResultVO();
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		
 		BoardMasterVO searchVO = new BoardMasterVO();
 		searchVO.setBbsId(bbsId);
 		
@@ -158,14 +119,8 @@ public class EgovBBSManageApiController {
 		masterFileAtchInfo.setPosblAtchFileSize(master.getPosblAtchFileSize());
 		
 		resultMap.put("brdMstrVO", masterFileAtchInfo);
-		
-		resultVO.setResult(resultMap);
-		resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
-		resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());
-		
-		return resultVO;
+		return resultVoHelper.buildFromMap(resultMap, ResponseCode.SUCCESS);
 	}
-
 	/**
 	 * 게시물에 대한 목록을 조회한다.
 	 *
@@ -183,30 +138,9 @@ public class EgovBBSManageApiController {
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
 	})
 	@GetMapping(value = "/board")
-	public ResultVO selectBoardArticles(
-			@Parameter(
-					in = ParameterIn.QUERY,
-					schema = @Schema(type = "object",
-							additionalProperties = Schema.AdditionalPropertiesValue.TRUE, 
-							ref = "#/components/schemas/searchBbsMap"),
-					style = ParameterStyle.FORM,
-					explode = Explode.TRUE
-			) @RequestParam Map<String, Object> commandMap, 
+	public ResultVO selectBoardArticles(@ModelAttribute BoardVO boardVO, 
 			@Parameter(hidden = true) @AuthenticationPrincipal LoginVO user)
 		throws Exception {
-		ResultVO resultVO = new ResultVO();
-		BoardVO boardVO = new BoardVO();
-		
-		int pageIndex = Optional.ofNullable((String) commandMap.get("pageIndex"))
-                .filter(s -> s.matches("\\d+"))
-                .map(Integer::parseInt)
-                .orElse(1);
-		
-		boardVO.setPageIndex(pageIndex);
-		boardVO.setBbsId((String)commandMap.get("bbsId"));
-		boardVO.setSearchCnd((String)commandMap.get("searchCnd"));
-		boardVO.setSearchWrd((String)commandMap.get("searchWrd"));
-
 		BoardMasterVO vo = new BoardMasterVO();
 		vo.setBbsId(boardVO.getBbsId());
 		vo.setUniqId(user.getUniqId());
@@ -231,12 +165,8 @@ public class EgovBBSManageApiController {
 		resultMap.put("brdMstrVO", master);
 		resultMap.put("paginationInfo", paginationInfo);
 		resultMap.put("user", user);
-
-		resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
-		resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());
-		resultVO.setResult(resultMap);
-
-		return resultVO;
+ 
+		return resultVoHelper.buildFromMap(resultMap, ResponseCode.SUCCESS);
 	}
 
 	/**
@@ -264,7 +194,6 @@ public class EgovBBSManageApiController {
 			@Parameter(hidden = true) @AuthenticationPrincipal LoginVO user)
 		throws Exception {
 
-		ResultVO resultVO = new ResultVO();
 		BoardVO boardVO = new BoardVO();
 		
 		boardVO.setBbsId(bbsId);
@@ -318,10 +247,7 @@ public class EgovBBSManageApiController {
 			resultMap.put("resultFiles", resultFiles);
 		}
 
-		resultVO.setResult(resultMap);
-		resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
-		resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());
-		return resultVO;
+		return resultVoHelper.buildFromMap(resultMap, ResponseCode.SUCCESS);
 	}
 
 	/**
@@ -347,32 +273,18 @@ public class EgovBBSManageApiController {
 	})
 	@PutMapping(value ="/board/{nttId}")
 	public ResultVO updateBoardArticle(final MultipartHttpServletRequest multiRequest,
-		BoardVO boardVO,
+		HttpServletRequest request,
+		@ModelAttribute BoardVO boardVO,
 		@Parameter(name = "nttId", description = "게시글 Id", in = ParameterIn.PATH, example="1")
 		@PathVariable("nttId") String nttId,
-		BindingResult bindingResult,
-		HttpServletRequest request)
+		BindingResult bindingResult)
 		throws Exception {
-		ResultVO resultVO = new ResultVO();
-
-		// step 1. request header에서 토큰을 가져온다.
-		String jwtToken = EgovStringUtil.isNullToString(request.getHeader(HEADER_STRING));
-        // step 2. 토큰에 내용이 있는지 확인해서 id값을 가져옴
-		String uniqId = jwtTokenUtil.getInfoFromToken("uniqId",jwtToken);
-		String userNm = jwtTokenUtil.getInfoFromToken("name",jwtToken);
-		// 사용자권한 처리
-		LoginVO user = new LoginVO();
-		user.setUniqId(uniqId); //고정값(USRCNFRM_00000000000)에서 로그인 시 사용자 고유ID값으로 변경
-
+		LoginVO user = extractUserFromJwt(request);
 		String atchFileId = boardVO.getAtchFileId().replaceAll("\\s", "");
 
 		beanValidator.validate(boardVO, bindingResult);
 		if (bindingResult.hasErrors()) {
-
-			resultVO.setResultCode(ResponseCode.INPUT_CHECK_ERROR.getCode());
-			resultVO.setResultMessage(ResponseCode.INPUT_CHECK_ERROR.getMessage());
-
-			return resultVO;
+			return resultVoHelper.buildFromResultVO(new ResultVO(), ResponseCode.INPUT_CHECK_ERROR);
 		}
 	
 		final Map<String, MultipartFile> files = multiRequest.getFileMap();
@@ -392,16 +304,13 @@ public class EgovBBSManageApiController {
 
 		boardVO.setNttId(Long.parseLong(nttId));
 		boardVO.setLastUpdusrId(user.getUniqId());
-		boardVO.setNtcrNm(userNm); // jwt토큰값으로 추가. dummy 오류 수정 (익명이 아닌 경우 validator 처리를 위해 dummy로 지정됨) 
+		boardVO.setNtcrNm(user.getName()); // jwt토큰값으로 추가. dummy 오류 수정 (익명이 아닌 경우 validator 처리를 위해 dummy로 지정됨) 
 		boardVO.setPassword(EgovFileScrty.encryptPassword("", user.getUniqId())); // dummy 오류 수정 (익명이 아닌 경우 validator 처리를 위해 dummy로 지정됨)
 		boardVO.setNttCn(unscript(boardVO.getNttCn())); // XSS 방지
 
 		bbsMngService.updateBoardArticle(boardVO);
 
-		resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
-		resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());
-
-		return resultVO;
+		return resultVoHelper.buildFromMap(new HashMap<String, Object>(), ResponseCode.SUCCESS);
 	}
 
 	/**
@@ -427,27 +336,19 @@ public class EgovBBSManageApiController {
 	})
 	@PostMapping(value ="/board")
 	public ResultVO insertBoardArticle(final MultipartHttpServletRequest multiRequest,
-		BoardVO boardVO,
+		@ModelAttribute BoardVO boardVO,
 		BindingResult bindingResult,
 		HttpServletRequest request)
 		throws Exception {
 		ResultVO resultVO = new ResultVO();
-
-		// step 1. request header에서 토큰을 가져온다.
-		String jwtToken = EgovStringUtil.isNullToString(request.getHeader(HEADER_STRING));
-        // step 2. 토큰에 내용이 있는지 확인해서 id값을 가져옴
-		String uniqId = jwtTokenUtil.getInfoFromToken("uniqId",jwtToken);
-		String userNm = jwtTokenUtil.getInfoFromToken("name",jwtToken);
-		// 사용자권한 처리
-		LoginVO user = new LoginVO();
-		user.setUniqId(uniqId); //고정값(USRCNFRM_00000000000)에서 로그인 시 사용자 고유ID값으로 변경
-
+		LoginVO user = extractUserFromJwt(request);
+		
 		beanValidator.validate(boardVO, bindingResult);
 		if (bindingResult.hasErrors()) {
 			resultVO.setResultCode(ResponseCode.INPUT_CHECK_ERROR.getCode());
 			resultVO.setResultMessage(ResponseCode.INPUT_CHECK_ERROR.getMessage());
 
-			return resultVO;
+			return resultVoHelper.buildFromResultVO(resultVO, ResponseCode.INPUT_CHECK_ERROR);
 		}
 	
 		List<FileVO> result = null;
@@ -461,17 +362,13 @@ public class EgovBBSManageApiController {
 		boardVO.setAtchFileId(atchFileId);
 		boardVO.setFrstRegisterId(user.getUniqId());
 		boardVO.setBbsId(boardVO.getBbsId());
-
-		boardVO.setNtcrNm(userNm); //jwt토큰값으로 추가. dummy 오류 수정 (익명이 아닌 경우 validator 처리를 위해 dummy로 지정됨)
+		boardVO.setNtcrNm(user.getName()); //jwt토큰값으로 추가. dummy 오류 수정 (익명이 아닌 경우 validator 처리를 위해 dummy로 지정됨)
 		boardVO.setPassword(EgovFileScrty.encryptPassword("", user.getUniqId())); // dummy 오류 수정 (익명이 아닌 경우 validator 처리를 위해 dummy로 지정됨)
 		// board.setNttCn(unscript(board.getNttCn())); // XSS 방지
 
 		bbsMngService.insertBoardArticle(boardVO);
-	
 
-		resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
-		resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());
-		return resultVO;
+		return resultVoHelper.buildFromMap(new HashMap<String, Object>(), ResponseCode.SUCCESS);
 	}
 
 	/**
@@ -497,27 +394,19 @@ public class EgovBBSManageApiController {
 	})
 	@PostMapping(value ="/boardReply")
 	public ResultVO replyBoardArticle(final MultipartHttpServletRequest multiRequest,
-		BoardVO boardVO,
+		@ModelAttribute BoardVO boardVO,
 		BindingResult bindingResult,
 		HttpServletRequest request)
 		throws Exception {
 		ResultVO resultVO = new ResultVO();
-
-		// step 1. request header에서 토큰을 가져온다.
-		String jwtToken = EgovStringUtil.isNullToString(request.getHeader(HEADER_STRING));
-        // step 2. 토큰에 내용이 있는지 확인해서 id값을 가져옴
-		String uniqId = jwtTokenUtil.getInfoFromToken("uniqId",jwtToken);
-		String userNm = jwtTokenUtil.getInfoFromToken("name",jwtToken);
-		// 사용자권한 처리
-		LoginVO user = new LoginVO();
-		user.setUniqId(uniqId); //고정값(USRCNFRM_00000000000)에서 로그인 시 사용자 고유ID값으로 변경
+		LoginVO user = extractUserFromJwt(request);
 
 		beanValidator.validate(boardVO, bindingResult);
 		if (bindingResult.hasErrors()) {
 			resultVO.setResultCode(ResponseCode.INPUT_CHECK_ERROR.getCode());
 			resultVO.setResultMessage(ResponseCode.INPUT_CHECK_ERROR.getMessage());
 
-			return resultVO;
+			return resultVoHelper.buildFromResultVO(resultVO, ResponseCode.INPUT_CHECK_ERROR);
 		}
 		
 		final Map<String, MultipartFile> files = multiRequest.getFileMap();
@@ -536,18 +425,14 @@ public class EgovBBSManageApiController {
 		boardVO.setSortOrdr(boardVO.getSortOrdr());
 		boardVO.setReplyLc(Integer.toString(Integer.parseInt(boardVO.getReplyLc()) + 1));
 
-		boardVO.setNtcrNm(userNm); //jwt토큰값으로 추가. dummy 오류 수정 (익명이 아닌 경우 validator 처리를 위해 dummy로 지정됨)
+		boardVO.setNtcrNm(user.getName()); //jwt토큰값으로 추가. dummy 오류 수정 (익명이 아닌 경우 validator 처리를 위해 dummy로 지정됨)
 		boardVO.setPassword(EgovFileScrty.encryptPassword("", user.getUniqId())); // dummy 오류 수정 (익명이 아닌 경우 validator 처리를 위해 dummy로 지정됨)
 
 		boardVO.setNttCn(unscript(boardVO.getNttCn())); // XSS 방지
 
 		bbsMngService.insertBoardArticle(boardVO);
-	
 
-		//return "forward:/cop/bbs/selectBoardList.do";
-		resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
-		resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());
-		return resultVO;
+		return resultVoHelper.buildFromMap(new HashMap<String, Object>(), ResponseCode.SUCCESS);
 	}
 
 	/**
@@ -575,11 +460,9 @@ public class EgovBBSManageApiController {
 		@PathVariable("bbsId") String bbsId,
 		@Parameter(name = "nttId", description = "게시글 Id", in = ParameterIn.PATH, example="1")
 		@PathVariable("nttId") String nttId,
-		@Parameter(hidden = true) @AuthenticationPrincipal LoginVO user,
-		HttpServletRequest request)
+		@Parameter(hidden = true) @AuthenticationPrincipal LoginVO user)
 
 		throws Exception {
-		ResultVO resultVO = new ResultVO();
 		BoardVO boardVO = new BoardVO();
 
 		boardVO.setBbsId(bbsId);
@@ -587,11 +470,8 @@ public class EgovBBSManageApiController {
 		boardVO.setLastUpdusrId(user.getUniqId());
 
 		bbsMngService.deleteBoardArticle(boardVO);
-		
-		resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
-		resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());
 
-		return resultVO;
+		return resultVoHelper.buildFromMap(new HashMap<String, Object>(), ResponseCode.SUCCESS);
 	}
 
 	/**
@@ -625,6 +505,28 @@ public class EgovBBSManageApiController {
 		return ret;
 	}
 	
-	
+	/**
+	 * JWT 토큰에서 사용자 정보를 추출하여 LoginVO 객체를 반환한다.
+	 * 
+	 * <p>
+	 * Authorization 헤더에 포함된 JWT 토큰에서 사용자 고유 식별자(uniqId)를 추출하여,
+	 * 인증된 사용자 정보를 LoginVO 형태로 반환한다.
+	 * 고정 값 : USRCNFRM_00000000000
+	 * </p>
+	 *
+	 * @param request HttpServletRequest 객체 (Authorization 헤더 포함)
+	 * @return LoginVO 사용자 고유 ID가 설정된 로그인 정보 객체
+	 */
+	private LoginVO extractUserFromJwt(HttpServletRequest request) {
+	    String jwtToken = EgovStringUtil.isNullToString(request.getHeader(HEADER_STRING));
+	    String uniqId = jwtTokenUtil.getInfoFromToken("uniqId", jwtToken);
+		String userNm = jwtTokenUtil.getInfoFromToken("name",jwtToken);
+
+	    LoginVO user = new LoginVO();
+	    user.setUniqId(uniqId);
+	    user.setName(userNm);
+
+	    return user;
+	}
 
 }
