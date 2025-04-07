@@ -221,7 +221,7 @@ public class EgovBBSManageApiController {
 		boardVO.setFirstIndex(paginationInfo.getFirstRecordIndex());
 		boardVO.setLastIndex(paginationInfo.getLastRecordIndex());
 		boardVO.setRecordCountPerPage(paginationInfo.getRecordCountPerPage());
-
+		System.out.println(boardVO.toString());
 		Map<String, Object> resultMap = bbsMngService.selectBoardArticles(boardVO, vo.getBbsAttrbCode());
 
 		int totCnt = Integer.parseInt((String)resultMap.get("resultCnt"));

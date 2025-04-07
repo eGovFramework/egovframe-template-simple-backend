@@ -126,12 +126,14 @@ public class EgovBBSAttributeManageApiController {
 		boardMasterVO.setPageIndex(pageIndex);
 		boardMasterVO.setSearchCnd((String)commandMap.get("searchCnd"));
 		boardMasterVO.setSearchWrd((String)commandMap.get("searchWrd"));
-		
 		boardMasterVO.setPageUnit(propertyService.getInt("Globals.pageUnit"));
 		boardMasterVO.setPageSize(propertyService.getInt("Globals.pageSize"));
 
 		PaginationInfo paginationInfo = new PaginationInfo();
-
+		System.out.println(boardMasterVO.getSearchCnd());
+		System.out.println(boardMasterVO.getSearchWrd());
+		System.out.println(boardMasterVO.getFirstIndex());
+		System.out.println(boardMasterVO.getRecordCountPerPage());
 		paginationInfo.setCurrentPageNo(boardMasterVO.getPageIndex());
 		paginationInfo.setRecordCountPerPage(boardMasterVO.getPageUnit());
 		paginationInfo.setPageSize(boardMasterVO.getPageSize());
@@ -142,7 +144,7 @@ public class EgovBBSAttributeManageApiController {
 
 		Map<String, Object> resultMap = bbsAttrbService.selectBBSMasterInfs(boardMasterVO);
 		int totCnt = Integer.parseInt((String)resultMap.get("resultCnt"));
-
+		System.out.println(totCnt);
 		paginationInfo.setTotalRecordCount(totCnt);
 
 		resultMap.put("paginationInfo", paginationInfo);
