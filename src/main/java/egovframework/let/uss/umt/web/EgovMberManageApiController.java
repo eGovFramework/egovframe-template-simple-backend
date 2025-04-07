@@ -3,6 +3,7 @@ package egovframework.let.uss.umt.web;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -121,6 +122,12 @@ public class EgovMberManageApiController {
 		throws Exception {
 		ResultVO resultVO = new ResultVO();
 		MberManageVO userSearchVO = new MberManageVO();
+		int pageIndex = Optional.ofNullable((String) commandMap.get("pageIndex"))
+			    .filter(s -> s.matches("\\d+"))
+			    .map(Integer::parseInt)
+			    .orElse(1);
+					
+		userSearchVO.setPageIndex(pageIndex);
 		userSearchVO.setSearchCondition((String)commandMap.get("searchCnd"));
 		userSearchVO.setSearchKeyword((String)commandMap.get("searchWrd"));
 		
