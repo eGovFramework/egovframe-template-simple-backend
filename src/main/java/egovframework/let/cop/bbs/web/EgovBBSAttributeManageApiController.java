@@ -25,10 +25,12 @@ import egovframework.com.cmm.service.CmmnDetailCode;
 import egovframework.com.cmm.service.EgovCmmUseService;
 import egovframework.com.cmm.service.ResultVO;
 import egovframework.com.cmm.util.ResultVoHelper;
+import egovframework.let.cop.bbs.service.BoardMasterSearchVO;
 import egovframework.let.cop.bbs.service.BoardMasterVO;
 import egovframework.let.cop.bbs.service.EgovBBSAttributeManageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -84,20 +86,22 @@ public class EgovBBSAttributeManageApiController {
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
 	})
 	@GetMapping(value = "/bbsMaster")
-	public ResultVO selectBBSMasterInfs(@ModelAttribute BoardMasterVO boardMasterVO)
+	public ResultVO selectBBSMasterInfs(@ModelAttribute BoardMasterSearchVO boardMasterSearchVO)
 		throws Exception {
 		PaginationInfo paginationInfo = new PaginationInfo();
+		BoardMasterVO boardMasterVO = new BoardMasterVO();
+		boardMasterVO.setSearchCnd(boardMasterSearchVO.getSearchCnd());
+		boardMasterVO.setSearchWrd(boardMasterSearchVO.getSearchWrd());
 		boardMasterVO.setPageUnit(propertyService.getInt("Globals.pageUnit"));
 		boardMasterVO.setPageSize(propertyService.getInt("Globals.pageSize"));
 		
-		paginationInfo.setCurrentPageNo(boardMasterVO.getPageIndex());
+		paginationInfo.setCurrentPageNo(boardMasterSearchVO.getPageIndex());
 		paginationInfo.setRecordCountPerPage(boardMasterVO.getPageUnit());
 		paginationInfo.setPageSize(boardMasterVO.getPageSize());
 		
 		boardMasterVO.setFirstIndex(paginationInfo.getFirstRecordIndex());
 		boardMasterVO.setLastIndex(paginationInfo.getLastRecordIndex());
 		boardMasterVO.setRecordCountPerPage(paginationInfo.getRecordCountPerPage());
-
 		Map<String, Object> resultMap = bbsAttrbService.selectBBSMasterInfs(boardMasterVO);
 		int totCnt = Integer.parseInt((String)resultMap.get("resultCnt"));
 

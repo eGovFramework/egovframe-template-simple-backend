@@ -32,6 +32,7 @@ import egovframework.com.cmm.service.ResultVO;
 import egovframework.com.cmm.util.ResultVoHelper;
 import egovframework.com.cmm.web.EgovFileDownloadController;
 import egovframework.com.jwt.EgovJwtTokenUtil;
+import egovframework.let.cop.bbs.service.BoardMasterSearchVO;
 import egovframework.let.cop.bbs.service.BoardMasterVO;
 import egovframework.let.cop.bbs.service.BoardVO;
 import egovframework.let.cop.bbs.service.EgovBBSAttributeManageService;
@@ -138,20 +139,23 @@ public class EgovBBSManageApiController {
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
 	})
 	@GetMapping(value = "/board")
-	public ResultVO selectBoardArticles(@ModelAttribute BoardVO boardVO, 
+	public ResultVO selectBoardArticles(@ModelAttribute BoardMasterSearchVO BoardMasterSearchVO, 
 			@Parameter(hidden = true) @AuthenticationPrincipal LoginVO user)
 		throws Exception {
 		BoardMasterVO vo = new BoardMasterVO();
-		vo.setBbsId(boardVO.getBbsId());
+		vo.setBbsId(BoardMasterSearchVO.getBbsId());
 		vo.setUniqId(user.getUniqId());
 
 		BoardMasterVO master = bbsAttrbService.selectBBSMasterInf(vo);
 
 		PaginationInfo paginationInfo = new PaginationInfo();
-		paginationInfo.setCurrentPageNo(boardVO.getPageIndex());
+		paginationInfo.setCurrentPageNo(BoardMasterSearchVO.getPageIndex());
 		paginationInfo.setRecordCountPerPage(propertyService.getInt("Globals.pageUnit"));
 		paginationInfo.setPageSize(propertyService.getInt("Globals.pageSize"));
 
+		BoardVO boardVO = new BoardVO();
+		boardVO.setSearchCnd(BoardMasterSearchVO.getSearchCnd());
+		boardVO.setSearchWrd(BoardMasterSearchVO.getSearchWrd());
 		boardVO.setFirstIndex(paginationInfo.getFirstRecordIndex());
 		boardVO.setLastIndex(paginationInfo.getLastRecordIndex());
 		boardVO.setRecordCountPerPage(paginationInfo.getRecordCountPerPage());
