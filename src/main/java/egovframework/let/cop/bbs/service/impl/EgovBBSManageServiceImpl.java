@@ -122,7 +122,6 @@ public class EgovBBSManageServiceImpl extends EgovAbstractServiceImpl implements
 	public Map<String, Object> selectBoardArticles(BoardVO boardVO, String attrbFlag) throws Exception {
 		List<BoardVO> list = bbsMngDAO.selectBoardArticleList(boardVO);
 		List<BoardVO> result = new ArrayList<BoardVO>();
-
 		if ("BBSA01".equals(attrbFlag)) {
 			// 유효게시판 임
 			String today = EgovDateUtil.getToday();

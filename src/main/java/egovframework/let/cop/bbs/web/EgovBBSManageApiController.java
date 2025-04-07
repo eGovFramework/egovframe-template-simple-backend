@@ -109,7 +109,6 @@ public class EgovBBSManageApiController {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		BoardMasterVO searchVO = new BoardMasterVO();
 		searchVO.setBbsId(bbsId);
-		
 		BoardMasterVO master = bbsAttrbService.selectBBSMasterInf(searchVO);
 		
 		// 파일 첨부 외의 다른 정보를 전달하지 않기 위해 신규 객체 생성
@@ -139,32 +138,31 @@ public class EgovBBSManageApiController {
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
 	})
 	@GetMapping(value = "/board")
-	public ResultVO selectBoardArticles(@ModelAttribute BoardMasterSearchVO BoardMasterSearchVO, 
+	public ResultVO selectBoardArticles(@ModelAttribute BoardMasterSearchVO boardMasterSearchVO, 
 			@Parameter(hidden = true) @AuthenticationPrincipal LoginVO user)
 		throws Exception {
 		BoardMasterVO vo = new BoardMasterVO();
-		vo.setBbsId(BoardMasterSearchVO.getBbsId());
+		vo.setBbsId(boardMasterSearchVO.getBbsId());
 		vo.setUniqId(user.getUniqId());
-
+		
 		BoardMasterVO master = bbsAttrbService.selectBBSMasterInf(vo);
-
 		PaginationInfo paginationInfo = new PaginationInfo();
-		paginationInfo.setCurrentPageNo(BoardMasterSearchVO.getPageIndex());
+		paginationInfo.setCurrentPageNo(boardMasterSearchVO.getPageIndex());
 		paginationInfo.setRecordCountPerPage(propertyService.getInt("Globals.pageUnit"));
 		paginationInfo.setPageSize(propertyService.getInt("Globals.pageSize"));
-
+		
 		BoardVO boardVO = new BoardVO();
-		boardVO.setSearchCnd(BoardMasterSearchVO.getSearchCnd());
-		boardVO.setSearchWrd(BoardMasterSearchVO.getSearchWrd());
+		boardVO.setPageIndex(boardMasterSearchVO.getPageIndex());
+		boardVO.setBbsId(boardMasterSearchVO.getBbsId()); 
+		boardVO.setSearchCnd(boardMasterSearchVO.getSearchCnd());
+		boardVO.setSearchWrd(boardMasterSearchVO.getSearchWrd());
+		
 		boardVO.setFirstIndex(paginationInfo.getFirstRecordIndex());
 		boardVO.setLastIndex(paginationInfo.getLastRecordIndex());
 		boardVO.setRecordCountPerPage(paginationInfo.getRecordCountPerPage());
-
 		Map<String, Object> resultMap = bbsMngService.selectBoardArticles(boardVO, vo.getBbsAttrbCode());
-
 		int totCnt = Integer.parseInt((String)resultMap.get("resultCnt"));
 		paginationInfo.setTotalRecordCount(totCnt);
-
 		resultMap.put("boardVO", boardVO);
 		resultMap.put("brdMstrVO", master);
 		resultMap.put("paginationInfo", paginationInfo);
@@ -197,7 +195,6 @@ public class EgovBBSManageApiController {
 			@PathVariable("nttId") String nttId,
 			@Parameter(hidden = true) @AuthenticationPrincipal LoginVO user)
 		throws Exception {
-
 		BoardVO boardVO = new BoardVO();
 		
 		boardVO.setBbsId(bbsId);
@@ -368,7 +365,7 @@ public class EgovBBSManageApiController {
 		// board.setNttCn(unscript(board.getNttCn())); // XSS 방지
 
 		bbsMngService.insertBoardArticle(boardVO);
-
+		
 		return resultVoHelper.buildFromMap(new HashMap<String, Object>(), ResponseCode.SUCCESS);
 	}
 
