@@ -4,6 +4,7 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -196,6 +197,12 @@ public class EgovBBSManageApiController {
 		ResultVO resultVO = new ResultVO();
 		BoardVO boardVO = new BoardVO();
 		
+		int pageIndex = Optional.ofNullable((String) commandMap.get("pageIndex"))
+                .filter(s -> s.matches("\\d+"))
+                .map(Integer::parseInt)
+                .orElse(1);
+		
+		boardVO.setPageIndex(pageIndex);
 		boardVO.setBbsId((String)commandMap.get("bbsId"));
 		boardVO.setSearchCnd((String)commandMap.get("searchCnd"));
 		boardVO.setSearchWrd((String)commandMap.get("searchWrd"));
