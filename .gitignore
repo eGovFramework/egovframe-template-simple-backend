@@ -7,6 +7,7 @@
 # files
 files/
 # Log file
+backend
 *.log
 
 # BlueJ files
