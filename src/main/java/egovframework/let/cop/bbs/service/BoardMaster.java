@@ -35,76 +35,76 @@ public class BoardMaster implements Serializable {
 	 */
 	private static final long serialVersionUID = 2821358749509367821L;
 
-	@Schema(description = "게시판 속성코드")
+	@Schema(description = "게시판 속성코드", example="")
     private String bbsAttrbCode = "";
 
-	@Schema(description = "게시판 아이디")
+	@Schema(description = "게시판 아이디", example="")
     private String bbsId = "";
 
-	@Schema(description = "게시판 소개")
+	@Schema(description = "게시판 소개", example="")
     private String bbsIntrcn = "";
 
-	@Schema(description = "게시판 명")
+	@Schema(description = "게시판 명", example="")
     private String bbsNm = "";
 
-	@Schema(description = "게시판 유형코드")
+	@Schema(description = "게시판 유형코드", example="")
     private String bbsTyCode = "";
 
-	@Schema(description = "파일첨부가능여부")
+	@Schema(description = "파일첨부가능여부", example="")
     private String fileAtchPosblAt = "";
 
-	@Schema(description = "최초등록자 아이디")
+	@Schema(description = "최초등록자 아이디", example="")
     private String frstRegisterId = "";
 
-	@Schema(description = "최초등록시점")
+	@Schema(description = "최초등록시점", example="")
     private String frstRegisterPnttm = "";
 
-	@Schema(description = "최종수정자 아이디")
+	@Schema(description = "최종수정자 아이디", example="")
     public String lastUpdusrId = "";
 
-	@Schema(description = "최종수정시점")
+	@Schema(description = "최종수정시점", example="")
     private String lastUpdusrPnttm = "";
 
-	@Schema(description = "첨부가능파일숫자")
+	@Schema(description = "첨부가능파일숫자", example="0")
     private int posblAtchFileNumber = 0;
 
-	@Schema(description = "첨부가능파일사이즈")
+	@Schema(description = "첨부가능파일사이즈", example="")
     private String posblAtchFileSize = "";
 
-	@Schema(description = "답장가능여부")
+	@Schema(description = "답장가능여부", example="")
     private String replyPosblAt = "";
 
-	@Schema(description = "템플릿 아이디")
+	@Schema(description = "템플릿 아이디", example="")
     private String tmplatId = "";
 
-	@Schema(description = "사용여부")
+	@Schema(description = "사용여부", example="")
     private String useAt = "";
 
-	@Schema(description = "사용플래그")
+	@Schema(description = "사용플래그", example="")
     private String bbsUseFlag = "";
 
-	@Schema(description = "대상 아이디")
+	@Schema(description = "대상 아이디", example="")
     private String trgetId = "";
 
-	@Schema(description = "등록구분코드")
+	@Schema(description = "등록구분코드", example="")
     private String registSeCode = "";
 
-	@Schema(description = "유일 아이디")
+	@Schema(description = "유일 아이디", example="")
     private String uniqId = "";
 
-	@Schema(description = "템플릿 명")
+	@Schema(description = "템플릿 명", example="")
     private String tmplatNm = "";
 
     //---------------------------------
     // 2009.06.26 : 2단계 기능 추가
     //---------------------------------
-	@Schema(description = "추가 option (댓글-comment, 만족도조사-stsfdg)")
+	@Schema(description = "추가 option (댓글-comment, 만족도조사-stsfdg)", example="")
     private String option = "";
 
-	@Schema(description = "댓글 여부")
+	@Schema(description = "댓글 여부", example="")
     private String commentAt = "";
 
-	@Schema(description = "만족도조사")
+	@Schema(description = "만족도조사", example="")
     private String stsfdgAt = "";
     ////-------------------------------
 
