@@ -1,4 +1,4 @@
-package egovframework.let.cop.bbs.service;
+package egovframework.let.cop.bbs.domain.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
@@ -29,7 +29,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Schema(description = "게시판 검색 조건")
-public class BoardMasterSearchVO {
+public class BbsSearchRequestDTO {
 
     @Schema(description = "게시판 Id", example = "")
     private String bbsId = "";

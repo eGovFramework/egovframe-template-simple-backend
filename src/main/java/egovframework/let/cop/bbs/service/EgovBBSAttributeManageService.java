@@ -3,6 +3,8 @@ package egovframework.let.cop.bbs.service;
 import java.util.List;
 import java.util.Map;
 
+import egovframework.let.cop.bbs.domain.response.BbsListResponseVO;
+
 /**
  * 게시판 속성관리를 위한 서비스 인터페이스 클래스
  * @author 공통 서비스 개발팀 이삼섭
@@ -80,7 +82,7 @@ public interface EgovBBSAttributeManageService {
 	 * @param searchVO
 	 * @exception Exception Exception
 	 */
-	public Map<String, Object> selectBBSMasterInfs(BoardMasterVO searchVO)
+	public BbsListResponseVO selectBBSMasterInfs(BoardMasterVO searchVO)
 	  throws Exception;
 
 	/**

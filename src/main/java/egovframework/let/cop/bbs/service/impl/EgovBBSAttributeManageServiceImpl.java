@@ -3,6 +3,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 
@@ -11,6 +12,8 @@ import org.egovframe.rte.fdl.idgnr.EgovIdGnrService;
 import org.egovframe.rte.fdl.property.EgovPropertyService;
 import org.springframework.stereotype.Service;
 
+import egovframework.let.cop.bbs.domain.response.BbsListResponseVO;
+import egovframework.let.cop.bbs.domain.response.BbsResponseVO;
 import egovframework.let.cop.bbs.service.BoardMaster;
 import egovframework.let.cop.bbs.service.BoardMasterVO;
 import egovframework.let.cop.bbs.service.EgovBBSAttributeManageService;
@@ -199,16 +202,18 @@ public class EgovBBSAttributeManageServiceImpl extends EgovAbstractServiceImpl i
      *
      * @see egovframework.let.cop.bbs.brd.service.EgovBBSAttributeManageService#selectBBSMasterInfs(egovframework.let.cop.bbs.brd.service.BoardMasterVO)
      */
-    public Map<String, Object> selectBBSMasterInfs(BoardMasterVO searchVO) throws Exception {
-	List<BoardMasterVO> result = attrbMngDAO.selectBBSMasterInfs(searchVO);
-	int cnt = attrbMngDAO.selectBBSMasterInfsCnt(searchVO);
+    public BbsListResponseVO selectBBSMasterInfs(BoardMasterVO searchVO) throws Exception {
+    	List<BoardMasterVO> voList = attrbMngDAO.selectBBSMasterInfs(searchVO);
+    	int cnt = attrbMngDAO.selectBBSMasterInfsCnt(searchVO);
+    	
+    	List<BbsResponseVO> dtoList = voList.stream()
+    		.map(BbsResponseVO::from)
+    		.collect(Collectors.toList());
 
-	Map<String, Object> map = new HashMap<String, Object>();
-
-	map.put("resultList", result);
-	map.put("resultCnt", Integer.toString(cnt));
-
-	return map;
+    	return BbsListResponseVO.builder()
+    		.resultList(dtoList)
+    		.resultCnt(cnt)
+    		.build();
     }
 
     /**
