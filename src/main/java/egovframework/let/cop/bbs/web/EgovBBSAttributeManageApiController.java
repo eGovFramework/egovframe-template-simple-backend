@@ -23,9 +23,11 @@ import egovframework.com.cmm.LoginVO;
 import egovframework.com.cmm.ResponseCode;
 import egovframework.com.cmm.service.CmmnDetailCode;
 import egovframework.com.cmm.service.EgovCmmUseService;
+import egovframework.com.cmm.service.IntermediateResultVO;
 import egovframework.com.cmm.service.ResultVO;
 import egovframework.com.cmm.util.ResultVoHelper;
-import egovframework.let.cop.bbs.service.BoardMasterSearchVO;
+import egovframework.let.cop.bbs.domain.request.BbsSearchRequestDTO;
+import egovframework.let.cop.bbs.domain.response.BbsListResponseVO;
 import egovframework.let.cop.bbs.service.BoardMasterVO;
 import egovframework.let.cop.bbs.service.EgovBBSAttributeManageService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -85,30 +87,32 @@ public class EgovBBSAttributeManageApiController {
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
 	})
 	@GetMapping(value = "/bbsMaster")
-	public ResultVO selectBBSMasterInfs(@ModelAttribute BoardMasterSearchVO boardMasterSearchVO)
+	public IntermediateResultVO<BbsListResponseVO> selectBBSMasterInfs(@ModelAttribute BbsSearchRequestDTO boardMasterSearchVO)
 		throws Exception {
-		PaginationInfo paginationInfo = new PaginationInfo();
-		BoardMasterVO boardMasterVO = new BoardMasterVO();
+		// 1. 페이지 정보 구성
+		int pageUnit = propertyService.getInt("Globals.pageUnit");
+		int pageSize = propertyService.getInt("Globals.pageSize");
 		
+		PaginationInfo paginationInfo = new PaginationInfo();
+		paginationInfo.setCurrentPageNo(boardMasterSearchVO.getPageIndex());
+		paginationInfo.setRecordCountPerPage(pageUnit);
+		paginationInfo.setPageSize(pageSize);
+		
+		// 2. 검색 VO 구성
+		BoardMasterVO boardMasterVO = new BoardMasterVO();
 		boardMasterVO.setSearchCnd(boardMasterSearchVO.getSearchCnd());
 		boardMasterVO.setSearchWrd(boardMasterSearchVO.getSearchWrd());
-		boardMasterVO.setPageUnit(propertyService.getInt("Globals.pageUnit"));
-		boardMasterVO.setPageSize(propertyService.getInt("Globals.pageSize"));
-		
-		paginationInfo.setCurrentPageNo(boardMasterSearchVO.getPageIndex());
-		paginationInfo.setRecordCountPerPage(boardMasterVO.getPageUnit());
-		paginationInfo.setPageSize(boardMasterVO.getPageSize());
-
+		boardMasterVO.setPageUnit(pageUnit);
+		boardMasterVO.setPageSize(pageSize);
 		boardMasterVO.setFirstIndex(paginationInfo.getFirstRecordIndex());
 		boardMasterVO.setLastIndex(paginationInfo.getLastRecordIndex());
 		boardMasterVO.setRecordCountPerPage(paginationInfo.getRecordCountPerPage());
-		Map<String, Object> resultMap = bbsAttrbService.selectBBSMasterInfs(boardMasterVO);
 		
-		int totCnt = Integer.parseInt((String)resultMap.get("resultCnt"));
-
-		paginationInfo.setTotalRecordCount(totCnt);
-		resultMap.put("paginationInfo", paginationInfo);
-		return resultVoHelper.buildFromMap(resultMap, ResponseCode.SUCCESS);
+		// 3. 서비스 호출 및 응답 객체 구성
+		BbsListResponseVO response = bbsAttrbService.selectBBSMasterInfs(boardMasterVO);
+		paginationInfo.setTotalRecordCount(response.getResultCnt());
+		response.setPaginationInfo(paginationInfo); 
+		return IntermediateResultVO.success(response);
 	}
 
 	/**
