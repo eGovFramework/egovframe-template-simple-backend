@@ -24,42 +24,23 @@ public class EgovJwtTokenUtil implements Serializable{
 	public static final long JWT_TOKEN_VALIDITY = (long) ((1 * 60 * 60) / 60) * 60; //토큰의 유효시간 설정, 기본 60분
 	
 	public static final String SECRET_KEY = EgovProperties.getProperty("Globals.jwt.secret");
-	
-	//retrieve username from jwt token
-    public String getUserIdFromToken(String token) {
-        Claims claims = getClaimFromToken(token);
-        return claims.get("id").toString();
-    }
-    public String getUserSeFromToken(String token) {
-        Claims claims = getClaimFromToken(token);
-        return claims.get("userSe").toString();
-    }
-    public String getInfoFromToken(String type, String token) {
-        Claims claims = getClaimFromToken(token);
-        return claims.get(type).toString();
-    }
-    public Claims getClaimFromToken(String token) {
-        final Claims claims = getAllClaimsFromToken(token);
-        return claims;
-    }
-	
-    //for retrieveing any information from token we will need the secret key
-    public Claims getAllClaimsFromToken(String token) {
-    	log.debug("===>>> secret = "+SECRET_KEY);
-        return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
-    }
+  
+	// retrieve username from jwt token
+	public String getUserIdFromToken(String token) {
+		return getInfoFromToken("id", token);
+	}
 
-    //generate token for user
-    public String generateToken(LoginVO loginVO) {
-        return doGenerateToken(loginVO, "Authorization");
-    }
+	public String getUserSeFromToken(String token) {
+		return getInfoFromToken("userSe", token);
+	}
 
-	//while creating the token -
-	//1. Define  claims of the token, like Issuer, Expiration, Subject, and the ID
-	//2. Sign the JWT using the HS512 algorithm and secret key.
-	//3. According to JWS Compact Serialization(https://tools.ietf.org/html/draft-ietf-jose-json-web-signature-41#section-3.1)
-	//   compaction of the JWT to a URL-safe string
-    private String doGenerateToken(LoginVO loginVO, String subject) {
+	public String getInfoFromToken(String type, String token) {
+		Claims claims = getClaimFromToken(token);
+		Object info = claims.get(type);
+
+		if(info == null) return null;
+		return claims.get(type).toString();
+	}
 
         Map<String, Object> claims = new HashMap<>();
         claims.put("id", loginVO.getId() );

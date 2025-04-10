@@ -50,16 +50,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         // step 2. 토큰에 내용이 있는지 확인해서 id값을 가져옴
         // Exception 핸들링 추가처리 (토큰 유효성, 토큰 변조 여부, 토큰 만료여부)
         // 내부적으로 parse하는 과정에서 해당 여부들이 검증됨
-        String id = null;
 
         try {
 
-            id = jwtTokenUtil.getUserIdFromToken(jwtToken);
-            if (id == null) {
-                logger.debug("jwtToken not validate");
-                verificationFlag =  false;
-            }
-            logger.debug("===>>> id = " + id);
         } catch (IllegalArgumentException | ExpiredJwtException | MalformedJwtException | UnsupportedJwtException | SignatureException e) {
             logger.debug("Unable to verify JWT Token: " + e.getMessage());
             verificationFlag = false;
