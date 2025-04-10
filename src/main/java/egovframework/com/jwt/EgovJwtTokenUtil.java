@@ -5,6 +5,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.SignatureException;
+import io.jsonwebtoken.UnsupportedJwtException;
 import org.springframework.stereotype.Component;
 
 import egovframework.com.cmm.LoginVO;
@@ -57,5 +61,30 @@ public class EgovJwtTokenUtil implements Serializable{
             .signWith(SignatureAlgorithm.HS512, SECRET_KEY).compact();
     }
 
+	public LoginVO getLoginVOFromToken(String token) throws InvalidJwtException{
+		LoginVO loginVO = new LoginVO();
+
+        try {
+		    loginVO.setId(getUserIdFromToken(token));
+			loginVO.setName(getInfoFromToken("name", token));
+			loginVO.setUserSe(getUserSeFromToken(token));
+			loginVO.setOrgnztId(getInfoFromToken("orgnztId", token));
+			loginVO.setUniqId(getInfoFromToken("uniqId", token));
+            loginVO.setGroupNm(getInfoFromToken("groupNm", token));
+
+            if(loginVO.getId() == null) throw new InvalidJwtException("Missing id in token");
+        } catch (IllegalArgumentException | ExpiredJwtException |
+                 MalformedJwtException | UnsupportedJwtException |
+                 SignatureException e) {
+            throw new InvalidJwtException("Unable to verify JWT Token: " + e.getMessage());
+        }
+
+		return loginVO;
+	}
+
+	// generate token for user
+	public String generateToken(LoginVO loginVO) {
+		return doGenerateToken(loginVO, "Authorization");
+	}
 
 }
