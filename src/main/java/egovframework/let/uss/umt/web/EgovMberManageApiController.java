@@ -3,20 +3,18 @@ package egovframework.let.uss.umt.web;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.egovframe.rte.fdl.property.EgovPropertyService;
 import org.egovframe.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -26,29 +24,27 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springmodules.validation.commons.DefaultBeanValidator;
 
 import egovframework.com.cmm.ComDefaultCodeVO;
-import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.LoginVO;
 import egovframework.com.cmm.ResponseCode;
 import egovframework.com.cmm.service.EgovCmmUseService;
 import egovframework.com.cmm.service.ResultVO;
+import egovframework.com.cmm.util.ResultVoHelper;
 import egovframework.com.jwt.EgovJwtTokenUtil;
+import egovframework.let.cop.bbs.service.BoardMasterSearchVO;
 import egovframework.let.uss.umt.service.EgovMberManageService;
 import egovframework.let.uss.umt.service.MberManageVO;
 import egovframework.let.uss.umt.service.UserDefaultVO;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.Explode;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
-import io.swagger.v3.oas.annotations.enums.ParameterStyle;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 
 /**
- * 회원관련 요청을  비지니스 클래스로 전달하고 처리된결과를  해당   웹 화면으로 전달하는  Controller를 정의한다
+ * 회원관련 요청을  비지니스 클래스로 전달하고 처리된 결과를 해당 웹 화면으로 전달하는  Controller를 정의한다
  * @author 공통서비스 개발팀 조재영
  * @since 2009.04.10
  * @version 1.0
@@ -65,35 +61,21 @@ import io.swagger.v3.oas.annotations.tags.Tag;
  * </pre>
  */
 @RestController
+@RequiredArgsConstructor
 @Tag(name="EgovMberManageApiController",description = "회원 관리")
 public class EgovMberManageApiController {
-
-	@Autowired
+	
     private EgovJwtTokenUtil jwtTokenUtil;
     public static final String HEADER_STRING = "Authorization";
     
-	/** mberManageService */
-	@Resource(name = "mberManageService")
-	private EgovMberManageService mberManageService;
-
-	/** cmmUseService */
-	@Resource(name = "EgovCmmUseService")
-	private EgovCmmUseService cmmUseService;
-
-	/** EgovMessageSource */
-    @Resource(name="egovMessageSource")
-    EgovMessageSource egovMessageSource;
-
-	/** EgovPropertyService */
-	@Resource(name = "propertiesService")
-	protected EgovPropertyService propertiesService;
-
-	/** DefaultBeanValidator beanValidator */
-	@Autowired
-	private DefaultBeanValidator beanValidator;
+	private final EgovMberManageService mberManageService;
+	private final EgovCmmUseService cmmUseService;
+    private final EgovPropertyService propertiesService;
+	private final DefaultBeanValidator beanValidator;
+	private final ResultVoHelper resultVoHelper;
 
 	/**
-	 * 관리자단에서 회원목록을 조회한다. (pageing)
+	 * 관리자단에서 회원목록을 조회한다. (paging)
 	 * @param request
 	 * @return resultVO
 	 * @throws Exception
@@ -110,32 +92,21 @@ public class EgovMberManageApiController {
 	})
 	@GetMapping(value = "/members")
 	public ResultVO selectMberList(
-			@Parameter(
-					in = ParameterIn.QUERY,
-					schema = @Schema(type = "object",
-							additionalProperties = Schema.AdditionalPropertiesValue.TRUE, 
-							ref = "#/components/schemas/searchMap"),
-					style = ParameterStyle.FORM,
-					explode = Explode.TRUE
-			) @RequestParam Map<String, Object> commandMap, 
+			@ModelAttribute BoardMasterSearchVO boardMasterSearchVO, 
 			@Parameter(hidden = true) @AuthenticationPrincipal LoginVO user)
 		throws Exception {
-		ResultVO resultVO = new ResultVO();
+		
 		MberManageVO userSearchVO = new MberManageVO();
-		int pageIndex = Optional.ofNullable((String) commandMap.get("pageIndex"))
-			    .filter(s -> s.matches("\\d+"))
-			    .map(Integer::parseInt)
-			    .orElse(1);
 					
-		userSearchVO.setPageIndex(pageIndex);
-		userSearchVO.setSearchCondition((String)commandMap.get("searchCnd"));
-		userSearchVO.setSearchKeyword((String)commandMap.get("searchWrd"));
+		userSearchVO.setPageIndex(boardMasterSearchVO.getPageIndex());
+		userSearchVO.setSearchCondition(boardMasterSearchVO.getSearchCnd());
+		userSearchVO.setSearchKeyword(boardMasterSearchVO.getSearchWrd());
 		
 		/** EgovPropertyService */
 		userSearchVO.setPageUnit(propertiesService.getInt("Globals.pageUnit"));
 		userSearchVO.setPageSize(propertiesService.getInt("Globals.pageSize"));
 		
-		/** pageing */
+		/** paging */
 		PaginationInfo paginationInfo = new PaginationInfo();
 		paginationInfo.setCurrentPageNo(userSearchVO.getPageIndex());
 		paginationInfo.setRecordCountPerPage(userSearchVO.getPageUnit());
@@ -171,11 +142,7 @@ public class EgovMberManageApiController {
 		*/
 		resultMap.put("resultList", resultList);
 
-		resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
-		resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());
-		resultVO.setResult(resultMap);
-
-		return resultVO;
+		return resultVoHelper.buildFromMap(resultMap, ResponseCode.SUCCESS);
 	}
 
 	/**
@@ -214,12 +181,7 @@ public class EgovMberManageApiController {
 		vo.setTableNm("LETTNORGNZTINFO");
 		resultMap.put("groupId_result", cmmUseService.selectGroupIdDetail(vo));
 		
-		ResultVO resultVO = new ResultVO();
-		resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
-		resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());
-		resultVO.setResult(resultMap);
-		
-		return resultVO;
+		return resultVoHelper.buildFromMap(resultMap, ResponseCode.SUCCESS);
 	}
 
 	/**
@@ -243,8 +205,8 @@ public class EgovMberManageApiController {
 	@PostMapping("/members/insert")
 	public ResultVO insertMber(MberManageVO mberManageVO, BindingResult bindingResult) throws Exception {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		ResultVO resultVO = new ResultVO();
 		beanValidator.validate(mberManageVO, bindingResult);
+		
 		if (bindingResult.hasErrors()) {
 			ComDefaultCodeVO vo = new ComDefaultCodeVO();
 
@@ -264,18 +226,15 @@ public class EgovMberManageApiController {
 			resultMap.put("groupId_result", cmmUseService.selectGroupIdDetail(vo));
 			
 			resultMap.put("resultMsg", "fail.common.insert");
-			resultVO.setResultCode(ResponseCode.SAVE_ERROR.getCode());
-			resultVO.setResultMessage(ResponseCode.SAVE_ERROR.getMessage());
-		} else {
-			mberManageService.insertMber(mberManageVO);
-			//Exception 없이 진행시 등록 성공메시지
-			resultMap.put("resultMsg", "success.common.insert");
-			resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
-			resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());
-		}
-		resultVO.setResult(resultMap);
+			return resultVoHelper.buildFromMap(resultMap, ResponseCode.SAVE_ERROR);
+		} 
+			
+		mberManageService.insertMber(mberManageVO);
+			
+		//Exception 없이 진행시 등록 성공메시지
+		resultMap.put("resultMsg", "success.common.insert");
 		
-		return resultVO;
+		return resultVoHelper.buildFromMap(resultMap, ResponseCode.SUCCESS);
 	}
 
 	/**
@@ -298,7 +257,6 @@ public class EgovMberManageApiController {
 	@GetMapping("/members/update/{uniqId}")
 	public ResultVO updateMberView(@PathVariable("uniqId") String uniqId, UserDefaultVO userSearchVO) throws Exception {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		ResultVO resultVO = new ResultVO();
 		ComDefaultCodeVO vo = new ComDefaultCodeVO();
 
 		//패스워드힌트목록을 코드정보로부터 조회
@@ -321,11 +279,7 @@ public class EgovMberManageApiController {
 		resultMap.put("mberManageVO", mberManageVO);
 		resultMap.put("userSearchVO", userSearchVO);
 
-		resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
-		resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());
-		resultVO.setResult(resultMap);
-		
-		return resultVO;
+		return resultVoHelper.buildFromMap(resultMap, ResponseCode.SUCCESS);
 	}
 
 	/**
@@ -349,9 +303,8 @@ public class EgovMberManageApiController {
 	@PutMapping("/members/update")
 	public ResultVO updateMber(@RequestBody MberManageVO mberManageVO, BindingResult bindingResult) throws Exception {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		ResultVO resultVO = new ResultVO();
-
 		beanValidator.validate(mberManageVO, bindingResult);
+		
 		if (bindingResult.hasErrors()) {
 			ComDefaultCodeVO vo = new ComDefaultCodeVO();
 
@@ -372,18 +325,14 @@ public class EgovMberManageApiController {
 			resultMap.put("groupId_result", cmmUseService.selectGroupIdDetail(vo));
 			
 			resultMap.put("resultMsg", "fail.common.insert");
-			resultVO.setResultCode(ResponseCode.SAVE_ERROR.getCode());
-			resultVO.setResultMessage(ResponseCode.SAVE_ERROR.getMessage());
-		} else {
-			mberManageService.updateMber(mberManageVO);
-			//Exception 없이 진행시 수정성공메시지
-			resultMap.put("resultMsg", "success.common.update");
-			resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
-			resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());
-		}
-		resultVO.setResult(resultMap);
+			return resultVoHelper.buildFromMap(resultMap, ResponseCode.SAVE_ERROR);
+		} 
+			
+		mberManageService.updateMber(mberManageVO);
 		
-		return resultVO;
+		//Exception 없이 진행시 수정성공메시지
+		resultMap.put("resultMsg", "success.common.update");
+		return resultVoHelper.buildFromMap(resultMap, ResponseCode.SUCCESS);
 	}
 
 	/**
@@ -407,15 +356,10 @@ public class EgovMberManageApiController {
 	@DeleteMapping("/members/delete/{uniqId}")
 	public ResultVO deleteMber(@PathVariable("uniqId") String uniqId, UserDefaultVO userSearchVO) throws Exception {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		ResultVO resultVO = new ResultVO();
 		mberManageService.deleteMber(uniqId);
 		//Exception 없이 진행시 삭제성공메시지
 		resultMap.put("resultMsg", "success.common.delete");
-		resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
-		resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());
-		resultVO.setResult(resultMap);
-	
-		return resultVO;
+		return resultVoHelper.buildFromMap(resultMap, ResponseCode.SUCCESS);
 	}
 
 	/**
@@ -442,17 +386,13 @@ public class EgovMberManageApiController {
 		String uniqId = jwtTokenUtil.getInfoFromToken("uniqId",jwtToken);
 		
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		ResultVO resultVO = new ResultVO();
 
 		MberManageVO mberManageVO = mberManageService.selectMber(uniqId);
 		resultMap.put("mberManageVO", mberManageVO);
 
-		resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
-		resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());
-		resultVO.setResult(resultMap);
-		
-		return resultVO;
+		return resultVoHelper.buildFromMap(resultMap, ResponseCode.SUCCESS);
 	}
+	
 	/**
 	 * 사용자단에서 회원수정 처리
 	 * @param mberManageVO 회원수정정보
@@ -474,26 +414,23 @@ public class EgovMberManageApiController {
 	@PutMapping("/mypage/update")
 	public ResultVO updateMypage(@RequestBody MberManageVO mberManageVO, BindingResult bindingResult) throws Exception {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		ResultVO resultVO = new ResultVO();
 
 		beanValidator.validate(mberManageVO, bindingResult);
 		if (bindingResult.hasErrors()) {
 			resultMap.put("resultMsg", "fail.common.insert");
-			resultVO.setResultCode(ResponseCode.SAVE_ERROR.getCode());
-			resultVO.setResultMessage(ResponseCode.SAVE_ERROR.getMessage());
-		} else {
-			mberManageVO.setMberSttus("P");//회원상태는 로그인가능상태로
-			mberManageVO.setGroupId("GROUP_00000000000001");//회원 권한그룹은 ROLE_USER상태로
-			mberManageService.updateMber(mberManageVO);
-			//Exception 없이 진행시 수정성공메시지
-			resultMap.put("resultMsg", "success.common.update");
-			resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
-			resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());
-		}
-		resultVO.setResult(resultMap);
+			return resultVoHelper.buildFromMap(resultMap, ResponseCode.SAVE_ERROR);
+		} 
+			
+		mberManageVO.setMberSttus("P");//회원상태는 로그인가능상태로
+		mberManageVO.setGroupId("GROUP_00000000000001");//회원 권한그룹은 ROLE_USER상태로
+		mberManageService.updateMber(mberManageVO);
+			
+		//Exception 없이 진행시 수정성공메시지
+		resultMap.put("resultMsg", "success.common.update");
 		
-		return resultVO;
+		return resultVoHelper.buildFromMap(resultMap, ResponseCode.SUCCESS);
 	}
+	
 	/**
 	 * 사용자단에서 회원탈퇴 처리
 	 * @param mberManageVO 회원수정정보
@@ -515,26 +452,22 @@ public class EgovMberManageApiController {
 	@PutMapping("/mypage/delete")
 	public ResultVO deleteMypage(@RequestBody MberManageVO mberManageVO, BindingResult bindingResult,HttpServletRequest request, HttpServletResponse response) throws Exception {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		ResultVO resultVO = new ResultVO();
 
 		beanValidator.validate(mberManageVO, bindingResult);
 		if (bindingResult.hasErrors()) {
 			resultMap.put("resultMsg", "fail.common.insert");
-			resultVO.setResultCode(ResponseCode.SAVE_ERROR.getCode());
-			resultVO.setResultMessage(ResponseCode.SAVE_ERROR.getMessage());
-		} else {
-			mberManageVO.setMberSttus("D");//회원상태 삭제상태로
-			mberManageService.updateMber(mberManageVO);//회원상태 탈퇴 처리
-			new SecurityContextLogoutHandler().logout(request, response, null);//로그인 토큰값 지우기
-			//Exception 없이 진행시 수정성공메시지
-			resultMap.put("resultMsg", "success.common.update");
-			resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
-			resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());
-		}
-		resultVO.setResult(resultMap);
-		
-		return resultVO;
+			return resultVoHelper.buildFromMap(resultMap, ResponseCode.SAVE_ERROR);
+		} 
+			
+		mberManageVO.setMberSttus("D");//회원상태 삭제상태로
+		mberManageService.updateMber(mberManageVO);//회원상태 탈퇴 처리
+		new SecurityContextLogoutHandler().logout(request, response, null);//로그인 토큰값 지우기
+			
+		//Exception 없이 진행시 수정성공메시지
+		resultMap.put("resultMsg", "success.common.update");
+		return resultVoHelper.buildFromMap(resultMap, ResponseCode.SUCCESS);
 	}
+	
 	/**
 	 * 사용자단에서 회원가입신청등록처리.
 	 * @param mberManageVO 회원가입신청정보
@@ -553,25 +486,21 @@ public class EgovMberManageApiController {
 	@PostMapping("/etc/member_insert")
 	public ResultVO sbscrbMber(MberManageVO mberManageVO, BindingResult bindingResult) throws Exception {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		ResultVO resultVO = new ResultVO();
 		beanValidator.validate(mberManageVO, bindingResult);
+		
 		if (bindingResult.hasErrors()) {
 			resultMap.put("resultMsg", "fail.common.insert");
-			resultVO.setResultCode(ResponseCode.SAVE_ERROR.getCode());
-			resultVO.setResultMessage(ResponseCode.SAVE_ERROR.getMessage());
-		} else {
-			mberManageVO.setMberSttus("P");//회원상태는 로그인가능상태로
-			mberManageVO.setGroupId("GROUP_00000000000001");//회원 권한그룹은 ROLE_USER상태로
-			//회원가입신청 등록시 회원등록기능을 사용하여 등록한다.
-			mberManageService.insertMber(mberManageVO);
-			//Exception 없이 진행시 수정성공메시지
-			resultMap.put("resultMsg", "success.common.insert");
-			resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
-			resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());
+			return resultVoHelper.buildFromMap(resultMap, ResponseCode.SAVE_ERROR);
 		}
-		resultVO.setResult(resultMap);
-		
-		return resultVO;
+			
+		mberManageVO.setMberSttus("P");//회원상태는 로그인가능상태로
+		mberManageVO.setGroupId("GROUP_00000000000001");//회원 권한그룹은 ROLE_USER상태로
+		//회원가입신청 등록시 회원등록기능을 사용하여 등록한다.
+		mberManageService.insertMber(mberManageVO);
+			
+		//Exception 없이 진행시 수정성공메시지
+		resultMap.put("resultMsg", "success.common.insert");
+		return resultVoHelper.buildFromMap(resultMap, ResponseCode.SUCCESS);
 	}
 	
 	/**
@@ -616,15 +545,9 @@ public class EgovMberManageApiController {
 		mberManageVO.setGroupId("DEFAULT");
 		mberManageVO.setMberSttus("DEFAULT");
 		
-		ResultVO resultVO = new ResultVO();
-		resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
-		resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());
-		resultVO.setResult(resultMap);
-		
-		return resultVO;
+		return resultVoHelper.buildFromMap(resultMap, ResponseCode.SUCCESS);
 	}
 	
-
 	/**
 	 * 회원 약관확인
 	 * @return resultVO
@@ -641,7 +564,6 @@ public class EgovMberManageApiController {
 	@GetMapping("/etc/member_agreement")
 	public ResultVO sbscrbEntrprsMber() throws Exception {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		ResultVO resultVO = new ResultVO();
 		//회원용 약관 아이디 설정
 		String stplatId = "STPLAT_0000000000001";
 		//회원가입유형 설정-회원
@@ -650,11 +572,7 @@ public class EgovMberManageApiController {
 		resultMap.put("stplatList", mberManageService.selectStplat(stplatId));
 		resultMap.put("sbscrbTy", sbscrbTy); //회원가입유형 포함
 
-		resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
-		resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());
-		resultVO.setResult(resultMap);
-		
-		return resultVO;
+		return resultVoHelper.buildFromMap(resultMap, ResponseCode.SUCCESS);
 	}
 
 	/**
@@ -675,21 +593,16 @@ public class EgovMberManageApiController {
 	@GetMapping("/etc/member_checkid/{checkid}")
 	public ResultVO checkIdDplct(@PathVariable("checkid") String checkId) throws Exception {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		ResultVO resultVO = new ResultVO();
 		checkId = new String(checkId.getBytes("ISO-8859-1"), "UTF-8");
 
 		if (checkId == null || checkId.equals("")) {
-			resultVO.setResultCode(ResponseCode.INPUT_CHECK_ERROR.getCode());
-			resultVO.setResultMessage(ResponseCode.INPUT_CHECK_ERROR.getMessage());
-		}else {
-			int usedCnt = mberManageService.checkIdDplct(checkId);
-			resultMap.put("usedCnt", usedCnt);
-			resultMap.put("checkId", checkId);
-		
-			resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
-			resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());
-			resultVO.setResult(resultMap);
+			return resultVoHelper.buildFromMap(resultMap, ResponseCode.INPUT_CHECK_ERROR);
 		}
-		return resultVO;
+			
+		int usedCnt = mberManageService.checkIdDplct(checkId);
+		resultMap.put("usedCnt", usedCnt);
+		resultMap.put("checkId", checkId);
+		
+		return resultVoHelper.buildFromMap(resultMap, ResponseCode.SUCCESS);
 	}
 }

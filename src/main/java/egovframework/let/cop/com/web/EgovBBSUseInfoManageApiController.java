@@ -2,43 +2,39 @@ package egovframework.let.cop.com.web;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.egovframe.rte.fdl.property.EgovPropertyService;
 import org.egovframe.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springmodules.validation.commons.DefaultBeanValidator;
 
-import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.LoginVO;
 import egovframework.com.cmm.ResponseCode;
 import egovframework.com.cmm.service.ResultVO;
+import egovframework.com.cmm.util.ResultVoHelper;
+import egovframework.let.cop.bbs.service.BoardMasterSearchVO;
 import egovframework.let.cop.bbs.service.BoardMasterVO;
 import egovframework.let.cop.bbs.service.EgovBBSAttributeManageService;
 import egovframework.let.cop.com.service.BoardUseInfVO;
 import egovframework.let.cop.com.service.EgovBBSUseInfoManageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.Explode;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
-import io.swagger.v3.oas.annotations.enums.ParameterStyle;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 게시판의 이용정보를 관리하기 위한 컨트롤러 클래스
@@ -58,29 +54,15 @@ import io.swagger.v3.oas.annotations.tags.Tag;
  * </pre>
  */
 @RestController
+@RequiredArgsConstructor
 @Tag(name="EgovBBSUseInfoManageApiController",description = "게시판 이용정보 관리")
 public class EgovBBSUseInfoManageApiController {
 	
-
-	/** EgovBBSUseInfoManageService */
-	@Resource(name = "EgovBBSUseInfoManageService")
-	private EgovBBSUseInfoManageService bbsUseService;
-
-	/** EgovPropertyService */
-	@Resource(name = "propertiesService")
-	protected EgovPropertyService propertyService;
-
-	/** EgovBBSAttributeManageService */
-	@Resource(name = "EgovBBSAttributeManageService")
-	private EgovBBSAttributeManageService bbsAttrbService;
-
-	/** DefaultBeanValidator */
-	@Autowired
-	private DefaultBeanValidator beanValidator;
-
-	/** EgovMessageSource */
-	@Resource(name = "egovMessageSource")
-	EgovMessageSource egovMessageSource;
+	private final EgovBBSUseInfoManageService bbsUseService;
+	private final EgovPropertyService propertyService;
+	private final EgovBBSAttributeManageService bbsAttrbService;
+	private final DefaultBeanValidator beanValidator;
+	private final ResultVoHelper resultVoHelper;
 
 	/**
 	 * 게시판 사용정보 목록을 조회한다.
@@ -102,52 +84,35 @@ public class EgovBBSUseInfoManageApiController {
 	})
 	@GetMapping(value ="/bbsUseInf")
 	public ResultVO selectBBSUseInfs(HttpServletRequest request,
-			@Parameter(
-					in = ParameterIn.QUERY,
-					schema = @Schema(type = "object",
-					additionalProperties = Schema.AdditionalPropertiesValue.TRUE, 
-					ref = "#/components/schemas/searchMap"),
-					style = ParameterStyle.FORM,
-					explode = Explode.TRUE
-					) @RequestParam Map<String, Object> commandMap) throws Exception {
-		ResultVO resultVO = new ResultVO();
+			@ModelAttribute BoardMasterSearchVO searchVO) throws Exception {
 		BoardUseInfVO bdUseVO = new BoardUseInfVO();
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		
-		int pageIndex = Optional.ofNullable((String) commandMap.get("pageIndex"))
-                .filter(s -> s.matches("\\d+"))
-                .map(Integer::parseInt)
-                .orElse(1);
-		
-		bdUseVO.setPageIndex(pageIndex);
-		bdUseVO.setSearchWrd((String)commandMap.get("searchWrd"));
+		bdUseVO.setPageIndex(searchVO.getPageIndex());
+		bdUseVO.setSearchWrd(searchVO.getSearchWrd());
 		bdUseVO.setPageUnit(propertyService.getInt("Globals.pageUnit"));
 		bdUseVO.setPageSize(propertyService.getInt("Globals.pageSize"));
 
 		PaginationInfo paginationInfo = new PaginationInfo();
 
 		paginationInfo.setCurrentPageNo(bdUseVO.getPageIndex());
-		paginationInfo.setRecordCountPerPage(bdUseVO.getPageUnit());
-		paginationInfo.setPageSize(bdUseVO.getPageSize());
+	    paginationInfo.setRecordCountPerPage(bdUseVO.getPageUnit());
+	    paginationInfo.setPageSize(bdUseVO.getPageSize());
 
-		bdUseVO.setFirstIndex(paginationInfo.getFirstRecordIndex());
-		bdUseVO.setLastIndex(paginationInfo.getLastRecordIndex());
-		bdUseVO.setRecordCountPerPage(paginationInfo.getRecordCountPerPage());
+	    bdUseVO.setFirstIndex(paginationInfo.getFirstRecordIndex());
+	    bdUseVO.setLastIndex(paginationInfo.getLastRecordIndex());
+	    bdUseVO.setRecordCountPerPage(paginationInfo.getRecordCountPerPage());
 
 		Map<String, Object> map = bbsUseService.selectBBSUseInfs(bdUseVO);
 		int totCnt = Integer.parseInt((String)map.get("resultCnt"));
 
 		paginationInfo.setTotalRecordCount(totCnt);
 
-		resultMap.put("resultList", map.get("resultList"));
-		resultMap.put("resultCnt", map.get("resultCnt"));
-		resultMap.put("paginationInfo", paginationInfo);
+	    resultMap.put("resultList", map.get("resultList"));
+	    resultMap.put("resultCnt", map.get("resultCnt"));
+	    resultMap.put("paginationInfo", paginationInfo);
 
-		resultVO.setResult(resultMap);
-		resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
-		resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());
-
-		return resultVO;
+	    return resultVoHelper.buildFromMap(resultMap, ResponseCode.SUCCESS);
 	}
 
 	/**
@@ -167,17 +132,12 @@ public class EgovBBSUseInfoManageApiController {
 	@GetMapping(value ="/notUsedBbsMaster")
 	public ResultVO selectNotUsedBdMstrList() throws Exception {
 		
-		ResultVO resultVO = new ResultVO();
 		BoardMasterVO boardMasterVO = new BoardMasterVO();
 		
 		boardMasterVO.setFirstIndex(0);
 		Map<String, Object> resultMap = bbsAttrbService.selectNotUsedBdMstrList(boardMasterVO);
 
-		resultVO.setResult(resultMap);
-		resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
-		resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());
-
-		return resultVO;
+		return resultVoHelper.buildFromMap(resultMap, ResponseCode.SUCCESS);
 	}
 
 	/**
@@ -205,8 +165,7 @@ public class EgovBBSUseInfoManageApiController {
 			@Parameter(name = "bbsId", description = "게시판 Id", in = ParameterIn.PATH, example="BBSMSTR_AAAAAAAAAAAA")
 			@PathVariable("bbsId") String bbsId
 				)throws Exception {
-
-		ResultVO resultVO = new ResultVO();
+		
 		BoardUseInfVO bdUseVO = new BoardUseInfVO();
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		
@@ -228,11 +187,7 @@ public class EgovBBSUseInfoManageApiController {
 
 		resultMap.put("bdUseVO", vo);
 
-		resultVO.setResult(resultMap);
-		resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
-		resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());
-
-		return resultVO;
+		return resultVoHelper.buildFromMap(resultMap, ResponseCode.SUCCESS);
 	}
 
 	/**
@@ -262,14 +217,10 @@ public class EgovBBSUseInfoManageApiController {
 		@Parameter(hidden = true) @AuthenticationPrincipal LoginVO loginVO
 	) throws Exception {
 
-		ResultVO resultVO = new ResultVO();
-
 		beanValidator.validate(bdUseVO, bindingResult);
 
 		if (bindingResult.hasErrors()) {
-			resultVO.setResultCode(ResponseCode.INPUT_CHECK_ERROR.getCode());
-			resultVO.setResultMessage(ResponseCode.INPUT_CHECK_ERROR.getMessage());
-			return resultVO;
+			return resultVoHelper.buildFromResultVO(new ResultVO(), ResponseCode.INPUT_CHECK_ERROR);
 		}
 
 		if ("CMMNTY".equals(bdUseVO.getTrgetType())) {
@@ -285,10 +236,7 @@ public class EgovBBSUseInfoManageApiController {
 
 		bbsUseService.insertBBSUseInf(bdUseVO);
 
-		resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
-		resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());
-
-		return resultVO;
+		return resultVoHelper.buildFromMap(new HashMap<String, Object>(), ResponseCode.SUCCESS);
 	}
 
 	/**
@@ -318,15 +266,11 @@ public class EgovBBSUseInfoManageApiController {
 		@PathVariable("bbsId") String bbsId,
 		@Parameter(hidden = true) @AuthenticationPrincipal LoginVO loginVO
 	) throws Exception {
-
-		ResultVO resultVO = new ResultVO();
+		
 		bdUseVO.setBbsId(bbsId);
 		bbsUseService.updateBBSUseInf(bdUseVO);
 
-		resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
-		resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());
-
-		return resultVO;
+		return resultVoHelper.buildFromMap(new HashMap<String, Object>(), ResponseCode.SUCCESS);
 	}
 
 }
