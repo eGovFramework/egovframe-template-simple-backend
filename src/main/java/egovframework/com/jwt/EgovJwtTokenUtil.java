@@ -46,6 +46,29 @@ public class EgovJwtTokenUtil implements Serializable{
 		return claims.get(type).toString();
 	}
 
+	public Claims getClaimFromToken(String token) {
+		final Claims claims = getAllClaimsFromToken(token);
+		return claims;
+	}
+
+	//for retrieveing any information from token we will need the secret key
+	public Claims getAllClaimsFromToken(String token) {
+		log.debug("===>>> secret = "+SECRET_KEY);
+		return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
+	}
+
+	//generate token for user
+    public String generateToken(LoginVO loginVO) {
+        return doGenerateToken(loginVO, "Authorization");
+    }
+
+	//while creating the token -
+	//1. Define  claims of the token, like Issuer, Expiration, Subject, and the ID
+	//2. Sign the JWT using the HS512 algorithm and secret key.
+	//3. According to JWS Compact Serialization(https://tools.ietf.org/html/draft-ietf-jose-json-web-signature-41#section-3.1)
+	//   compaction of the JWT to a URL-safe string
+	private String doGenerateToken(LoginVO loginVO, String subject) {
+		
         Map<String, Object> claims = new HashMap<>();
         claims.put("id", loginVO.getId() );
         claims.put("name", loginVO.getName() );
@@ -81,10 +104,4 @@ public class EgovJwtTokenUtil implements Serializable{
 
 		return loginVO;
 	}
-
-	// generate token for user
-	public String generateToken(LoginVO loginVO) {
-		return doGenerateToken(loginVO, "Authorization");
-	}
-
 }
