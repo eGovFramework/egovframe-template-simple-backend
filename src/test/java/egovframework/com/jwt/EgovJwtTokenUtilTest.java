@@ -7,14 +7,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
 class EgovJwtTokenUtilTest {
 
-    @Autowired
-    private EgovJwtTokenUtil jwtTokenUtil;
+    private final EgovJwtTokenUtil jwtTokenUtil = new EgovJwtTokenUtil();
 
     @DisplayName("올바른 토큰을 입력했을 때, LoginVO 객체를 반환한다.")
     @Test
