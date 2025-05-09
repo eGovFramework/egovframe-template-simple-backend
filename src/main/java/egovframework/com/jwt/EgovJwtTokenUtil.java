@@ -5,6 +5,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.SignatureException;
+import io.jsonwebtoken.UnsupportedJwtException;
 import org.springframework.stereotype.Component;
 
 import egovframework.com.cmm.LoginVO;
@@ -24,32 +28,36 @@ public class EgovJwtTokenUtil implements Serializable{
 	public static final long JWT_TOKEN_VALIDITY = (long) ((1 * 60 * 60) / 60) * 60; //토큰의 유효시간 설정, 기본 60분
 	
 	public static final String SECRET_KEY = EgovProperties.getProperty("Globals.jwt.secret");
-	
-	//retrieve username from jwt token
-    public String getUserIdFromToken(String token) {
-        Claims claims = getClaimFromToken(token);
-        return claims.get("id").toString();
-    }
-    public String getUserSeFromToken(String token) {
-        Claims claims = getClaimFromToken(token);
-        return claims.get("userSe").toString();
-    }
-    public String getInfoFromToken(String type, String token) {
-        Claims claims = getClaimFromToken(token);
-        return claims.get(type).toString();
-    }
-    public Claims getClaimFromToken(String token) {
-        final Claims claims = getAllClaimsFromToken(token);
-        return claims;
-    }
-	
-    //for retrieveing any information from token we will need the secret key
-    public Claims getAllClaimsFromToken(String token) {
-    	log.debug("===>>> secret = "+SECRET_KEY);
-        return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
-    }
+  
+	// retrieve username from jwt token
+	public String getUserIdFromToken(String token) {
+		return getInfoFromToken("id", token);
+	}
 
-    //generate token for user
+	public String getUserSeFromToken(String token) {
+		return getInfoFromToken("userSe", token);
+	}
+
+	public String getInfoFromToken(String type, String token) {
+		Claims claims = getClaimFromToken(token);
+		Object info = claims.get(type);
+
+		if(info == null) return null;
+		return claims.get(type).toString();
+	}
+
+	public Claims getClaimFromToken(String token) {
+		final Claims claims = getAllClaimsFromToken(token);
+		return claims;
+	}
+
+	//for retrieveing any information from token we will need the secret key
+	public Claims getAllClaimsFromToken(String token) {
+		log.debug("===>>> secret = "+SECRET_KEY);
+		return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
+	}
+
+	//generate token for user
     public String generateToken(LoginVO loginVO) {
         return doGenerateToken(loginVO, "Authorization");
     }
@@ -59,8 +67,8 @@ public class EgovJwtTokenUtil implements Serializable{
 	//2. Sign the JWT using the HS512 algorithm and secret key.
 	//3. According to JWS Compact Serialization(https://tools.ietf.org/html/draft-ietf-jose-json-web-signature-41#section-3.1)
 	//   compaction of the JWT to a URL-safe string
-    private String doGenerateToken(LoginVO loginVO, String subject) {
-
+	private String doGenerateToken(LoginVO loginVO, String subject) {
+		
         Map<String, Object> claims = new HashMap<>();
         claims.put("id", loginVO.getId() );
         claims.put("name", loginVO.getName() );
@@ -76,5 +84,24 @@ public class EgovJwtTokenUtil implements Serializable{
             .signWith(SignatureAlgorithm.HS512, SECRET_KEY).compact();
     }
 
+	public LoginVO getLoginVOFromToken(String token) throws InvalidJwtException{
+		LoginVO loginVO = new LoginVO();
 
+        try {
+		    loginVO.setId(getUserIdFromToken(token));
+			loginVO.setName(getInfoFromToken("name", token));
+			loginVO.setUserSe(getUserSeFromToken(token));
+			loginVO.setOrgnztId(getInfoFromToken("orgnztId", token));
+			loginVO.setUniqId(getInfoFromToken("uniqId", token));
+            loginVO.setGroupNm(getInfoFromToken("groupNm", token));
+
+            if(loginVO.getId() == null) throw new InvalidJwtException("Missing id in token");
+        } catch (IllegalArgumentException | ExpiredJwtException |
+                 MalformedJwtException | UnsupportedJwtException |
+                 SignatureException e) {
+            throw new InvalidJwtException("Unable to verify JWT Token: " + e.getMessage());
+        }
+
+		return loginVO;
+	}
 }
