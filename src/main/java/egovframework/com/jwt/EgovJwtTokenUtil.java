@@ -40,10 +40,9 @@ public class EgovJwtTokenUtil implements Serializable{
 
 	public String getInfoFromToken(String type, String token) {
 		Claims claims = getClaimFromToken(token);
-		Object info = claims.get(type);
+	    Object info = claims.get(type);
 
-		if(info == null) return null;
-		return claims.get(type).toString();
+	    return info != null ? info.toString() : null;
 	}
 
 	public Claims getClaimFromToken(String token) {
