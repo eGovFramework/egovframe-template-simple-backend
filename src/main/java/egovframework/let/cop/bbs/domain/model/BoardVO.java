@@ -1,4 +1,4 @@
-package egovframework.let.cop.bbs.service;
+package egovframework.let.cop.bbs.domain.model;
 
 import java.io.Serializable;
 

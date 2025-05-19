@@ -2,6 +2,8 @@ package egovframework.let.cop.bbs.service;
 
 import org.junit.Test;
 
+import egovframework.let.cop.bbs.domain.model.BoardVO;
+
 /**
  * fileName       : BoardVOTest
  * author         : crlee

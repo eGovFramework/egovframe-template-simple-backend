@@ -4,7 +4,7 @@
 <mapper namespace="BBSAttributeManageDAO">
 
 
-	<resultMap id="boardMasterList" type="egovframework.let.cop.bbs.service.BoardMasterVO">
+	<resultMap id="boardMasterList" type="egovframework.let.cop.bbs.domain.model.BoardMasterVO">
 		<result property="bbsId" column="BBS_ID"/>
 		<result property="bbsTyCode" column="BBS_TY_CODE"/>
 		<result property="bbsTyCodeNm" column="BBS_TY_CODE_NM"/>
@@ -16,7 +16,7 @@
 		<result property="frstRegisterPnttm" column="FRST_REGIST_PNTTM"/>
 	</resultMap>
 
-	<resultMap id="boardMasterDetail" type="egovframework.let.cop.bbs.service.BoardMasterVO">
+	<resultMap id="boardMasterDetail" type="egovframework.let.cop.bbs.domain.model.BoardMasterVO">
 		<result property="bbsId" column="BBS_ID"/>
 		<result property="bbsTyCode" column="BBS_TY_CODE"/>
 		<result property="bbsAttrbCode" column="BBS_ATTRB_CODE"/>
@@ -35,7 +35,7 @@
 		<result property="authFlag" column="AUTH_FLAG"/>
 	</resultMap>
 
-	<resultMap id="boardMasterAll" type="egovframework.let.cop.bbs.service.BoardMasterVO">
+	<resultMap id="boardMasterAll" type="egovframework.let.cop.bbs.domain.model.BoardMasterVO">
 		<result property="bbsId" column="BBS_ID"/>
 		<result property="bbsTyCode" column="BBS_TY_CODE"/>
 		<result property="bbsAttrbCode" column="BBS_ATTRB_CODE"/>
@@ -43,7 +43,7 @@
 		<result property="tmplatId" column="TMPLAT_ID"/>
 	</resultMap>
 
-	<insert id="insertBBSMasterInf" parameterType="egovframework.let.cop.bbs.service.BoardMaster">
+	<insert id="insertBBSMasterInf" parameterType="egovframework.let.cop.bbs.domain.model.BoardMaster">
 		
 			INSERT INTO LETTNBBSMASTER
 			(BBS_ID, BBS_TY_CODE, BBS_ATTRB_CODE, BBS_NM, BBS_INTRCN, 
@@ -58,7 +58,7 @@
 		
 	</insert>
 	
-	<select id="selectBBSMasterInfs" parameterType="egovframework.let.cop.bbs.service.BoardMasterVO" resultMap="boardMasterList">
+	<select id="selectBBSMasterInfs" parameterType="egovframework.let.cop.bbs.domain.model.BoardMasterVO" resultMap="boardMasterList">
 		
 			SELECT 
 				a.BBS_ID, a.BBS_TY_CODE, b.CODE_NM as BBS_TY_CODE_NM,
@@ -92,7 +92,7 @@
 						
 	</select>	
 	
-	<select id="selectBBSMasterInfsCnt" parameterType="egovframework.let.cop.bbs.service.BoardMasterVO" resultType="java.lang.Integer">
+	<select id="selectBBSMasterInfsCnt" parameterType="egovframework.let.cop.bbs.domain.model.BoardMasterVO" resultType="java.lang.Integer">
 		
 			SELECT 
 				COUNT(a.BBS_ID)
@@ -119,7 +119,7 @@
 			</if>	
 	</select>	
  
-	<select id="selectBBSMasterInf" parameterType="egovframework.let.cop.bbs.service.BoardMaster" resultMap="boardMasterDetail">
+	<select id="selectBBSMasterInf" parameterType="egovframework.let.cop.bbs.domain.model.BoardMaster" resultMap="boardMasterDetail">
 		
 			SELECT 
 				a.BBS_ID, a.BBS_TY_CODE, b.CODE_NM as BBS_TY_CODE_NM, a.BBS_INTRCN, 
@@ -147,7 +147,7 @@
 						
 	</select> 
  
- 	<update id="updateBBSMasterInf" parameterType="egovframework.let.cop.bbs.service.BoardMaster">
+ 	<update id="updateBBSMasterInf" parameterType="egovframework.let.cop.bbs.domain.model.BoardMaster">
  		
 			UPDATE LETTNBBSMASTER SET 
 				BBS_NM = #{bbsNm},
@@ -162,7 +162,7 @@
  		
  	</update>
 
- 	<update id="deleteBBSMasterInf" parameterType="egovframework.let.cop.bbs.service.BoardMaster">
+ 	<update id="deleteBBSMasterInf" parameterType="egovframework.let.cop.bbs.domain.model.BoardMaster">
  		
 			UPDATE LETTNBBSMASTER SET 
 				USE_AT = 'N',
@@ -172,7 +172,7 @@
  		
  	</update>
 
-	<select id="selectAllBBSMaster" parameterType="egovframework.let.cop.bbs.service.BoardMasterVO" resultMap="boardMasterAll">
+	<select id="selectAllBBSMaster" parameterType="egovframework.let.cop.bbs.domain.model.BoardMasterVO" resultMap="boardMasterAll">
 		
 			SELECT 
 				BBS_ID, BBS_TY_CODE, BBS_ATTRB_CODE, BBS_NM, TMPLAT_ID
@@ -182,7 +182,7 @@
  						
 	</select>
 	
-	<select id="selectAllBdMstrByTrget" parameterType="egovframework.let.cop.bbs.service.BoardMasterVO" resultMap="boardMasterAll">
+	<select id="selectAllBdMstrByTrget" parameterType="egovframework.let.cop.bbs.domain.model.BoardMasterVO" resultMap="boardMasterAll">
 		
 			SELECT 
 				a.BBS_ID, a.BBS_TY_CODE, a.BBS_ATTRB_CODE, a.BBS_NM, a.TMPLAT_ID
@@ -198,7 +198,7 @@
  						
 	</select>	
 
-	<select id="selectBdMstrListByTrget" parameterType="egovframework.let.cop.bbs.service.BoardMasterVO" resultMap="boardMasterList">
+	<select id="selectBdMstrListByTrget" parameterType="egovframework.let.cop.bbs.domain.model.BoardMasterVO" resultMap="boardMasterList">
 		
 			SELECT 
 				a.BBS_ID, a.BBS_TY_CODE, b.CODE_NM as BBS_TY_CODE_NM,
@@ -233,7 +233,7 @@
 					
 	</select>
 
-	<select id="selectBdMstrListCntByTrget" parameterType="egovframework.let.cop.bbs.service.BoardMasterVO" resultType="java.lang.Integer">
+	<select id="selectBdMstrListCntByTrget" parameterType="egovframework.let.cop.bbs.domain.model.BoardMasterVO" resultType="java.lang.Integer">
 		
 			SELECT 
 				COUNT(a.BBS_ID)
@@ -261,7 +261,7 @@
 			</if>	
 	</select>
 
-	<select id="selectNotUsedBdMstrList" parameterType="egovframework.let.cop.bbs.service.BoardMasterVO" resultMap="boardMasterList">
+	<select id="selectNotUsedBdMstrList" parameterType="egovframework.let.cop.bbs.domain.model.BoardMasterVO" resultMap="boardMasterList">
 		
 			SELECT 
 				a.BBS_ID, a.BBS_TY_CODE, b.CODE_NM as BBS_TY_CODE_NM,
@@ -293,7 +293,7 @@
 						
 	</select>	
 	
-	<select id="selectNotUsedBdMstrListCnt" parameterType="egovframework.let.cop.bbs.service.BoardMasterVO" resultType="java.lang.Integer">
+	<select id="selectNotUsedBdMstrListCnt" parameterType="egovframework.let.cop.bbs.domain.model.BoardMasterVO" resultType="java.lang.Integer">
 		
 			SELECT 
 				COUNT(a.BBS_ID)

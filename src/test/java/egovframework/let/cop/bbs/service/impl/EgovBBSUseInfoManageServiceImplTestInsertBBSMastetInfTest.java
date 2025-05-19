@@ -9,8 +9,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import egovframework.let.cop.bbs.service.BoardMaster;
-import egovframework.let.cop.bbs.service.BoardMasterVO;
+import egovframework.let.cop.bbs.domain.model.BoardMaster;
+import egovframework.let.cop.bbs.domain.model.BoardMasterVO;
 import egovframework.let.cop.bbs.service.EgovBBSAttributeManageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

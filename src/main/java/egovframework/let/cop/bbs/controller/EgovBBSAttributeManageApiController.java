@@ -1,4 +1,4 @@
-package egovframework.let.cop.bbs.web;
+package egovframework.let.cop.bbs.controller;
 
 import java.util.HashMap;
 import java.util.List;
@@ -26,9 +26,9 @@ import egovframework.com.cmm.service.EgovCmmUseService;
 import egovframework.com.cmm.service.IntermediateResultVO;
 import egovframework.com.cmm.service.ResultVO;
 import egovframework.com.cmm.util.ResultVoHelper;
+import egovframework.let.cop.bbs.domain.model.BoardMasterVO;
 import egovframework.let.cop.bbs.domain.request.BbsSearchRequestDTO;
 import egovframework.let.cop.bbs.domain.response.BbsListResponseVO;
-import egovframework.let.cop.bbs.service.BoardMasterVO;
 import egovframework.let.cop.bbs.service.EgovBBSAttributeManageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

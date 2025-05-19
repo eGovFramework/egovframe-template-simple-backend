@@ -3,6 +3,8 @@ package egovframework.let.cop.bbs.service;
 import java.util.List;
 import java.util.Map;
 
+import egovframework.let.cop.bbs.domain.model.BoardMaster;
+import egovframework.let.cop.bbs.domain.model.BoardMasterVO;
 import egovframework.let.cop.bbs.domain.response.BbsListResponseVO;
 
 /**

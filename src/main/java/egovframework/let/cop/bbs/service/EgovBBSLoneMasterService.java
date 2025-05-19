@@ -2,6 +2,9 @@ package egovframework.let.cop.bbs.service;
 
 import java.util.Map;
 
+import egovframework.let.cop.bbs.domain.model.BoardMaster;
+import egovframework.let.cop.bbs.domain.model.BoardMasterVO;
+
 /**
  * 게시판 속성관리를 위한 서비스 인터페이스 클래스
  * @author 공통 서비스 개발팀 한성곤

@@ -20,7 +20,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import egovframework.let.cop.bbs.service.BoardMaster;
+import egovframework.let.cop.bbs.domain.model.BoardMaster;
 import egovframework.let.cop.bbs.service.EgovBBSAttributeManageService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
