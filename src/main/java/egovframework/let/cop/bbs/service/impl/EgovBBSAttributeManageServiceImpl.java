@@ -10,10 +10,12 @@ import javax.annotation.Resource;
 import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import org.egovframe.rte.fdl.idgnr.EgovIdGnrService;
 import org.egovframe.rte.fdl.property.EgovPropertyService;
+import org.egovframe.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 import org.springframework.stereotype.Service;
 
 import egovframework.let.cop.bbs.domain.model.BoardMaster;
 import egovframework.let.cop.bbs.domain.model.BoardMasterVO;
+import egovframework.let.cop.bbs.domain.request.BbsSearchRequestDTO;
 import egovframework.let.cop.bbs.domain.response.BbsListResponseVO;
 import egovframework.let.cop.bbs.domain.response.BbsResponseVO;
 import egovframework.let.cop.bbs.repository.BBSAddedOptionsDAO;
@@ -204,9 +206,19 @@ public class EgovBBSAttributeManageServiceImpl extends EgovAbstractServiceImpl i
      *
      * @see egovframework.let.cop.bbs.brd.service.EgovBBSAttributeManageService#selectBBSMasterInfs(egovframework.let.cop.bbs.domain.model.brd.service.BoardMasterVO)
      */
-    public BbsListResponseVO selectBBSMasterInfs(BoardMasterVO searchVO) throws Exception {
-    	List<BoardMasterVO> voList = attrbMngDAO.selectBBSMasterInfs(searchVO);
-    	int cnt = attrbMngDAO.selectBBSMasterInfsCnt(searchVO);
+    public BbsListResponseVO selectBBSMasterInfs(BbsSearchRequestDTO bbsSearchRequestDTO, PaginationInfo paginationInfo) throws Exception {
+		// 도메인 모델(BoardMasterVO) 구성
+    	BoardMasterVO boardMasterVO = new BoardMasterVO();
+		boardMasterVO.setSearchCnd(bbsSearchRequestDTO.getSearchCnd());
+		boardMasterVO.setSearchWrd(bbsSearchRequestDTO.getSearchWrd());
+		boardMasterVO.setPageUnit(paginationInfo.getRecordCountPerPage());
+		boardMasterVO.setPageSize(paginationInfo.getPageSize());
+		boardMasterVO.setFirstIndex(paginationInfo.getFirstRecordIndex());
+		boardMasterVO.setLastIndex(paginationInfo.getLastRecordIndex());
+		boardMasterVO.setRecordCountPerPage(paginationInfo.getRecordCountPerPage());
+		
+    	List<BoardMasterVO> voList = attrbMngDAO.selectBBSMasterInfs(boardMasterVO);
+    	int cnt = attrbMngDAO.selectBBSMasterInfsCnt(boardMasterVO);
     	
     	List<BbsResponseVO> dtoList = voList.stream()
     		.map(BbsResponseVO::from)
