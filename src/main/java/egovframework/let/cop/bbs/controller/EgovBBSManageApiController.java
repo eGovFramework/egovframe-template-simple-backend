@@ -1,4 +1,4 @@
-package egovframework.let.cop.bbs.web;
+package egovframework.let.cop.bbs.controller;
 
 import java.util.Base64;
 import java.util.HashMap;
@@ -32,9 +32,9 @@ import egovframework.com.cmm.service.ResultVO;
 import egovframework.com.cmm.util.ResultVoHelper;
 import egovframework.com.cmm.web.EgovFileDownloadController;
 import egovframework.com.jwt.EgovJwtTokenUtil;
+import egovframework.let.cop.bbs.domain.model.BoardMasterVO;
+import egovframework.let.cop.bbs.domain.model.BoardVO;
 import egovframework.let.cop.bbs.domain.request.BbsSearchRequestDTO;
-import egovframework.let.cop.bbs.service.BoardMasterVO;
-import egovframework.let.cop.bbs.service.BoardVO;
 import egovframework.let.cop.bbs.service.EgovBBSAttributeManageService;
 import egovframework.let.cop.bbs.service.EgovBBSManageService;
 import egovframework.let.utl.fcc.service.EgovStringUtil;

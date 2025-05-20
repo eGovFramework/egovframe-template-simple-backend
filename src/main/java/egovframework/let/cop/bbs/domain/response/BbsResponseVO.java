@@ -1,6 +1,6 @@
 package egovframework.let.cop.bbs.domain.response;
 
-import egovframework.let.cop.bbs.service.BoardMasterVO;
+import egovframework.let.cop.bbs.domain.model.BoardMasterVO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;

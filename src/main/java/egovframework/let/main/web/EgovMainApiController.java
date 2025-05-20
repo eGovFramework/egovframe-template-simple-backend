@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import egovframework.com.cmm.ComDefaultVO;
 import egovframework.com.cmm.ResponseCode;
 import egovframework.com.cmm.service.ResultVO;
-import egovframework.let.cop.bbs.service.BoardVO;
+import egovframework.let.cop.bbs.domain.model.BoardVO;
 import egovframework.let.cop.bbs.service.EgovBBSManageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
