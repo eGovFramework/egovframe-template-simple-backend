@@ -1,4 +1,4 @@
-package egovframework.let.cop.bbs.domain.response;
+package egovframework.let.cop.bbs.dto.response;
 
 import egovframework.let.cop.bbs.domain.model.BoardMasterVO;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -8,7 +8,7 @@ import lombok.ToString;
 
 
 /**
- * 게시글 정보를 반환하는 응답 VO 클래스 입니다.
+ * 게시글 정보를 반환하는 응답 DTO 클래스 입니다.
  * 
  * @author 김재섭(nirsa)
  * @since 2025.04.10
@@ -28,8 +28,8 @@ import lombok.ToString;
 @Getter
 @Builder
 @ToString
-@Schema(description = "게시판 정보 응답 VO")
-public class BbsDetailResponseVO {
+@Schema(description = "게시판 정보 응답 DTO")
+public class BbsDetailResponseDTO {
     @Schema(description = "게시판 ID", example = "BBSMSTR_AAAAAAAAAAAA")
     private String bbsId;
 
@@ -69,8 +69,8 @@ public class BbsDetailResponseVO {
 	 * @param vo
 	 * @return BoardMasterResponse
 	 */
-    public static BbsDetailResponseVO from(BoardMasterVO vo) {
-        return BbsDetailResponseVO.builder()
+    public static BbsDetailResponseDTO from(BoardMasterVO vo) {
+        return BbsDetailResponseDTO.builder()
             .bbsId(vo.getBbsId())
             .bbsNm(vo.getBbsNm())
             .bbsTyCode(vo.getBbsTyCode())

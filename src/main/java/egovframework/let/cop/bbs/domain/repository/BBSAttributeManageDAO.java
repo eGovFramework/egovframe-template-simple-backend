@@ -1,4 +1,4 @@
-package egovframework.let.cop.bbs.repository;
+package egovframework.let.cop.bbs.domain.repository;
 import java.util.List;
 
 import org.egovframe.rte.psl.dataaccess.EgovAbstractMapper;
@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import egovframework.let.cop.bbs.domain.model.BoardMaster;
 import egovframework.let.cop.bbs.domain.model.BoardMasterVO;
-import egovframework.let.cop.bbs.domain.response.BbsDetailResponseVO;
+import egovframework.let.cop.bbs.dto.response.BbsDetailResponseDTO;
 
 /**
  * 게시판 속성정보 관리를 위한 데이터 접근 클래스

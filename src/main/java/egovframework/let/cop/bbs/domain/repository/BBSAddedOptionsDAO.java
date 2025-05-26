@@ -1,4 +1,4 @@
-package egovframework.let.cop.bbs.repository;
+package egovframework.let.cop.bbs.domain.repository;
 import org.egovframe.rte.psl.dataaccess.EgovAbstractMapper;
 import org.springframework.stereotype.Repository;
 

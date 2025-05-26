@@ -29,11 +29,11 @@ import egovframework.com.cmm.service.IntermediateResultVO;
 import egovframework.com.cmm.service.ResultVO;
 import egovframework.com.cmm.util.ResultVoHelper;
 import egovframework.let.cop.bbs.domain.model.BoardMasterVO;
-import egovframework.let.cop.bbs.domain.request.BbsInsertRequestDTO;
-import egovframework.let.cop.bbs.domain.request.BbsSearchRequestDTO;
-import egovframework.let.cop.bbs.domain.response.BbsDetailResponseVO;
-import egovframework.let.cop.bbs.domain.response.BbsInsertResponseVO;
-import egovframework.let.cop.bbs.domain.response.BbsListResponseVO;
+import egovframework.let.cop.bbs.dto.request.BbsInsertRequestDTO;
+import egovframework.let.cop.bbs.dto.request.BbsSearchRequestDTO;
+import egovframework.let.cop.bbs.dto.response.BbsDetailResponseDTO;
+import egovframework.let.cop.bbs.dto.response.BbsInsertResponseDTO;
+import egovframework.let.cop.bbs.dto.response.BbsListResponseDTO;
 import egovframework.let.cop.bbs.service.EgovBBSAttributeManageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -92,7 +92,7 @@ public class EgovBBSAttributeManageApiController {
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
 	})
 	@GetMapping(value = "/bbsMaster")
-	public IntermediateResultVO<BbsListResponseVO> selectBBSMasterInfs(@ModelAttribute BbsSearchRequestDTO bbsSearchRequestDTO)
+	public IntermediateResultVO<BbsListResponseDTO> selectBBSMasterInfs(@ModelAttribute BbsSearchRequestDTO bbsSearchRequestDTO)
 		throws Exception {
 		// 1. 페이지 정보 구성
 		int pageUnit = propertyService.getInt("Globals.pageUnit");
@@ -104,7 +104,7 @@ public class EgovBBSAttributeManageApiController {
 		paginationInfo.setPageSize(pageSize);
 		
 		// 2. 서비스 호출 및 응답 객체 구성
-		BbsListResponseVO response = bbsAttrbService.selectBBSMasterInfs(bbsSearchRequestDTO, paginationInfo);
+		BbsListResponseDTO response = bbsAttrbService.selectBBSMasterInfs(bbsSearchRequestDTO, paginationInfo);
 		paginationInfo.setTotalRecordCount(response.getResultCnt());
 		response.setPaginationInfo(paginationInfo); 
 		return IntermediateResultVO.success(response);
@@ -172,7 +172,7 @@ public class EgovBBSAttributeManageApiController {
 			@ApiResponse(responseCode = "900", description = "입력값 무결성 오류")
 	})
 	@PostMapping(value ="/bbsMaster")
-	public IntermediateResultVO<BbsInsertResponseVO> insertBBSMasterInf(@Valid @ModelAttribute BbsInsertRequestDTO bbsInsertRequestDTO,
+	public IntermediateResultVO<BbsInsertResponseDTO> insertBBSMasterInf(@Valid @ModelAttribute BbsInsertRequestDTO bbsInsertRequestDTO,
 									   BindingResult bindingResult,
 									   @Parameter(hidden = true) @AuthenticationPrincipal LoginVO loginVO
 	)
@@ -180,7 +180,7 @@ public class EgovBBSAttributeManageApiController {
 
 		beanValidator.validate(bbsInsertRequestDTO, bindingResult);
 		
-		BbsInsertResponseVO response = new BbsInsertResponseVO();
+		BbsInsertResponseDTO response = new BbsInsertResponseDTO();
 		
 		if (bindingResult.hasErrors()) {
 			ComDefaultCodeVO vo = new ComDefaultCodeVO();

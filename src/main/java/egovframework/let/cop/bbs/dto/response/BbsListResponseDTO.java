@@ -1,4 +1,4 @@
-package egovframework.let.cop.bbs.domain.response;
+package egovframework.let.cop.bbs.dto.response;
 
 import java.util.List;
 
@@ -10,7 +10,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * 게시판 리스트를 반환하는 응답 VO 클래스 입니다.
+ * 게시판 리스트를 반환하는 응답 DTO 클래스 입니다.
  * 
  * @author 김재섭(nirsa)
  * @since 2025.04.10
@@ -29,8 +29,9 @@ import lombok.Setter;
 
 @Getter
 @Builder
-public class BbsListResponseVO {
-    private List<BbsDetailResponseVO> resultList;
+@Schema(description = "게시판 리스트 조회 응답 DTO")
+public class BbsListResponseDTO {
+    private List<BbsDetailResponseDTO> resultList;
     private int resultCnt;
     
     @Setter

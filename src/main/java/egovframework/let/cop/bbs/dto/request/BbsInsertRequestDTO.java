@@ -1,4 +1,4 @@
-package egovframework.let.cop.bbs.domain.request;
+package egovframework.let.cop.bbs.dto.request;
 
 import javax.validation.constraints.NotBlank;
 

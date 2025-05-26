@@ -15,12 +15,12 @@ import org.springframework.stereotype.Service;
 
 import egovframework.let.cop.bbs.domain.model.BoardMaster;
 import egovframework.let.cop.bbs.domain.model.BoardMasterVO;
-import egovframework.let.cop.bbs.domain.request.BbsInsertRequestDTO;
-import egovframework.let.cop.bbs.domain.request.BbsSearchRequestDTO;
-import egovframework.let.cop.bbs.domain.response.BbsDetailResponseVO;
-import egovframework.let.cop.bbs.domain.response.BbsListResponseVO;
-import egovframework.let.cop.bbs.repository.BBSAddedOptionsDAO;
-import egovframework.let.cop.bbs.repository.BBSAttributeManageDAO;
+import egovframework.let.cop.bbs.domain.repository.BBSAddedOptionsDAO;
+import egovframework.let.cop.bbs.domain.repository.BBSAttributeManageDAO;
+import egovframework.let.cop.bbs.dto.request.BbsInsertRequestDTO;
+import egovframework.let.cop.bbs.dto.request.BbsSearchRequestDTO;
+import egovframework.let.cop.bbs.dto.response.BbsDetailResponseDTO;
+import egovframework.let.cop.bbs.dto.response.BbsListResponseDTO;
 import egovframework.let.cop.bbs.service.EgovBBSAttributeManageService;
 import egovframework.let.cop.com.service.BoardUseInf;
 import egovframework.let.cop.com.service.EgovUserInfManageService;
@@ -206,7 +206,7 @@ public class EgovBBSAttributeManageServiceImpl extends EgovAbstractServiceImpl i
      *
      * @see egovframework.let.cop.bbs.brd.service.EgovBBSAttributeManageService#selectBBSMasterInfs(egovframework.let.cop.bbs.domain.model.brd.service.BoardMasterVO)
      */
-    public BbsListResponseVO selectBBSMasterInfs(BbsSearchRequestDTO bbsSearchRequestDTO, PaginationInfo paginationInfo) throws Exception {
+    public BbsListResponseDTO selectBBSMasterInfs(BbsSearchRequestDTO bbsSearchRequestDTO, PaginationInfo paginationInfo) throws Exception {
 		// 도메인 모델(BoardMasterVO) 구성
     	BoardMasterVO boardMasterVO = new BoardMasterVO();
 		boardMasterVO.setSearchCnd(bbsSearchRequestDTO.getSearchCnd());
@@ -220,11 +220,11 @@ public class EgovBBSAttributeManageServiceImpl extends EgovAbstractServiceImpl i
     	List<BoardMasterVO> voList = attrbMngDAO.selectBBSMasterInfs(boardMasterVO);
     	int cnt = attrbMngDAO.selectBBSMasterInfsCnt(boardMasterVO);
     	
-    	List<BbsDetailResponseVO> dtoList = voList.stream()
-    		.map(BbsDetailResponseVO::from)
+    	List<BbsDetailResponseDTO> dtoList = voList.stream()
+    		.map(BbsDetailResponseDTO::from)
     		.collect(Collectors.toList());
 
-    	return BbsListResponseVO.builder()
+    	return BbsListResponseDTO.builder()
     		.resultList(dtoList)
     		.resultCnt(cnt)
     		.build();

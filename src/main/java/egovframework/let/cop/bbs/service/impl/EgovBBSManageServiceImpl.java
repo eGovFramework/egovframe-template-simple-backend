@@ -14,7 +14,7 @@ import egovframework.com.cmm.service.EgovFileMngService;
 import egovframework.com.cmm.service.FileVO;
 import egovframework.let.cop.bbs.domain.model.Board;
 import egovframework.let.cop.bbs.domain.model.BoardVO;
-import egovframework.let.cop.bbs.repository.BBSManageDAO;
+import egovframework.let.cop.bbs.domain.repository.BBSManageDAO;
 import egovframework.let.cop.bbs.service.EgovBBSManageService;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 

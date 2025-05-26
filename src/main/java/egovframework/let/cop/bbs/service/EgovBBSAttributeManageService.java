@@ -7,10 +7,10 @@ import org.egovframe.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 
 import egovframework.let.cop.bbs.domain.model.BoardMaster;
 import egovframework.let.cop.bbs.domain.model.BoardMasterVO;
-import egovframework.let.cop.bbs.domain.request.BbsInsertRequestDTO;
-import egovframework.let.cop.bbs.domain.request.BbsSearchRequestDTO;
-import egovframework.let.cop.bbs.domain.response.BbsDetailResponseVO;
-import egovframework.let.cop.bbs.domain.response.BbsListResponseVO;
+import egovframework.let.cop.bbs.dto.request.BbsInsertRequestDTO;
+import egovframework.let.cop.bbs.dto.request.BbsSearchRequestDTO;
+import egovframework.let.cop.bbs.dto.response.BbsDetailResponseDTO;
+import egovframework.let.cop.bbs.dto.response.BbsListResponseDTO;
 
 /**
  * 게시판 속성관리를 위한 서비스 인터페이스 클래스
@@ -87,7 +87,7 @@ public interface EgovBBSAttributeManageService {
 	 * @param searchVO
 	 * @exception Exception Exception
 	 */
-	public BbsListResponseVO selectBBSMasterInfs(BbsSearchRequestDTO bbsSearchRequestDTO, PaginationInfo paginationInfo)
+	public BbsListResponseDTO selectBBSMasterInfs(BbsSearchRequestDTO bbsSearchRequestDTO, PaginationInfo paginationInfo)
 	  throws Exception;
 
 	/**

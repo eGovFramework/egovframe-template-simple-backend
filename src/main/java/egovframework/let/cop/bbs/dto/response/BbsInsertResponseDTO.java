@@ -1,4 +1,4 @@
-package egovframework.let.cop.bbs.domain.response;
+package egovframework.let.cop.bbs.dto.response;
 
 import java.util.List;
 
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * 게시판 마스터 등록을 반환하는 응답 VO 클래스 입니다.
+ * 게시판 마스터 등록을 반환하는 응답 DTO 클래스 입니다.
  * 
  * @author 김재섭(nirsa)
  * @since 2025.05.26
@@ -29,8 +29,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@Schema(description = "게시판 마스터 등록 응답 VO")
-public class BbsInsertResponseVO {
+@Schema(description = "게시판 마스터 등록 응답 DTO")
+public class BbsInsertResponseDTO {
 	private List<CmmnDetailCode> typeList;
 	private List<CmmnDetailCode> attrbList;
 	

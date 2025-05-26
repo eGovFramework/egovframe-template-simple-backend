@@ -1,4 +1,4 @@
-package egovframework.let.cop.bbs.domain.request;
+package egovframework.let.cop.bbs.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
