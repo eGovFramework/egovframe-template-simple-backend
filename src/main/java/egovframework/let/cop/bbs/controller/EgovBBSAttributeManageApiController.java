@@ -136,6 +136,7 @@ public class EgovBBSAttributeManageApiController {
 		throws Exception {
 		BoardMasterVO searchVO = new BoardMasterVO();
 		searchVO.setBbsId(bbsId);
+		searchVO.setUseAt("Y");
 		
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 
