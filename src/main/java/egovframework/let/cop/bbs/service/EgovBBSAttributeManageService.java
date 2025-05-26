@@ -7,7 +7,9 @@ import org.egovframe.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 
 import egovframework.let.cop.bbs.domain.model.BoardMaster;
 import egovframework.let.cop.bbs.domain.model.BoardMasterVO;
+import egovframework.let.cop.bbs.domain.request.BbsInsertRequestDTO;
 import egovframework.let.cop.bbs.domain.request.BbsSearchRequestDTO;
+import egovframework.let.cop.bbs.domain.response.BbsDetailResponseVO;
 import egovframework.let.cop.bbs.domain.response.BbsListResponseVO;
 
 /**
@@ -46,7 +48,7 @@ public interface EgovBBSAttributeManageService {
 	 * @param boardMaster
 	 * @exception Exception Exception
 	 */
-	public String insertBBSMastetInf(BoardMaster boardMaster)
+	public void insertBBSMastetInf(BbsInsertRequestDTO bbsInsertRequestDTO)
 	  throws Exception;
 
 	/**
@@ -72,9 +74,7 @@ public interface EgovBBSAttributeManageService {
 
 	/**
 	 * 게시판 속성정보 한 건을 상세조회한다.
-	 * @param BoardMasterVO
-	 * 
-	 * @param searchVO
+	 * @param String bbsId
 	 * @exception Exception Exception
 	 */
 	public BoardMasterVO selectBBSMasterInf(BoardMaster searchVO)

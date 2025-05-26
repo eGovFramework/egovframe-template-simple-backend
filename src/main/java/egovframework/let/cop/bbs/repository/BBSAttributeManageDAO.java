@@ -2,11 +2,11 @@ package egovframework.let.cop.bbs.repository;
 import java.util.List;
 
 import org.egovframe.rte.psl.dataaccess.EgovAbstractMapper;
-
 import org.springframework.stereotype.Repository;
 
 import egovframework.let.cop.bbs.domain.model.BoardMaster;
 import egovframework.let.cop.bbs.domain.model.BoardMasterVO;
+import egovframework.let.cop.bbs.domain.response.BbsDetailResponseVO;
 
 /**
  * 게시판 속성정보 관리를 위한 데이터 접근 클래스
@@ -51,8 +51,8 @@ public class BBSAttributeManageDAO extends EgovAbstractMapper {
      *
      * @param BoardMasterVO
      */
-    public BoardMasterVO selectBBSMasterInf(BoardMaster vo) throws Exception {
-    	return (BoardMasterVO)selectOne("BBSAttributeManageDAO.selectBBSMasterInf", vo);
+    public BoardMasterVO selectBBSMasterInf(BoardMaster searchVO) throws Exception {
+    	return (BoardMasterVO)selectOne("BBSAttributeManageDAO.selectBBSMasterInf", searchVO);
     }
 
     /**

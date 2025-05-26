@@ -58,7 +58,7 @@
 		
 	</insert>
 	
-	<select id="selectBBSMasterInfs" parameterType="egovframework.let.cop.bbs.domain.model.BoardMasterVO" resultMap="boardMasterList">
+	<select id="selectBBSMasterInfs" parameterType="egovframework.let.cop.bbs.domain.model.BoardMaster" resultMap="boardMasterList">
 		
 		SELECT * FROM ( SELECT rownum rn, TB.* FROM (
 			SELECT 
@@ -120,7 +120,7 @@
 			</if>	
 	</select>	
  
-	<select id="selectBBSMasterInf" parameterType="egovframework.let.cop.bbs.domain.model.BoardMaster" resultMap="boardMasterDetail">
+	<select id="selectBBSMasterInf" resultMap="boardMasterDetail">
 		
 			SELECT 
 				a.BBS_ID, a.BBS_TY_CODE, b.CODE_NM as BBS_TY_CODE_NM, a.BBS_INTRCN, 
@@ -145,7 +145,6 @@
 			LEFT OUTER JOIN LETTNBBSUSE f
 				ON a.BBS_ID = f.BBS_ID		
 			WHERE a.BBS_ID = #{bbsId}
-						
 	</select> 
  
  	<update id="updateBBSMasterInf" parameterType="egovframework.let.cop.bbs.domain.model.BoardMaster">

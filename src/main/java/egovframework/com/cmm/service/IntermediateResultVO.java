@@ -47,4 +47,12 @@ public class IntermediateResultVO<T> {
 		result.setResult(data);
 		return result;
 	}
+	
+	public static <T> IntermediateResultVO<T> inputCheckError(T data) {
+		IntermediateResultVO<T> result = new IntermediateResultVO<>();
+		result.setResultCode(ResponseCode.INPUT_CHECK_ERROR.getCode());
+		result.setResultMessage(ResponseCode.INPUT_CHECK_ERROR.getMessage());
+		result.setResult(data);
+		return result;
+	}
 }

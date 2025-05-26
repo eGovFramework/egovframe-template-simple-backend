@@ -30,7 +30,7 @@ import lombok.Setter;
 @Getter
 @Builder
 public class BbsListResponseVO {
-    private List<BbsResponseVO> resultList;
+    private List<BbsDetailResponseVO> resultList;
     private int resultCnt;
     
     @Setter

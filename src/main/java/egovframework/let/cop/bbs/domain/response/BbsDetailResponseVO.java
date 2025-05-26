@@ -4,6 +4,7 @@ import egovframework.let.cop.bbs.domain.model.BoardMasterVO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 
 
 /**
@@ -26,8 +27,9 @@ import lombok.Getter;
 
 @Getter
 @Builder
+@ToString
 @Schema(description = "게시판 정보 응답 VO")
-public class BbsResponseVO {
+public class BbsDetailResponseVO {
     @Schema(description = "게시판 ID", example = "BBSMSTR_AAAAAAAAAAAA")
     private String bbsId;
 
@@ -58,13 +60,17 @@ public class BbsResponseVO {
     @Schema(description = "등록일", example = "2011-08-31")
     private String frstRegisterPnttm;
     
+    @Builder.Default
+	@Schema(description = "추가 option (댓글-comment, 만족도조사-stsfdg)", example="")
+    private String option = "";
+    
 	/**
 	 *  BoardMasterVO → BoardMasterResponse 변환 메서드 입니다.
 	 * @param vo
 	 * @return BoardMasterResponse
 	 */
-    public static BbsResponseVO from(BoardMasterVO vo) {
-        return BbsResponseVO.builder()
+    public static BbsDetailResponseVO from(BoardMasterVO vo) {
+        return BbsDetailResponseVO.builder()
             .bbsId(vo.getBbsId())
             .bbsNm(vo.getBbsNm())
             .bbsTyCode(vo.getBbsTyCode())
@@ -75,6 +81,7 @@ public class BbsResponseVO {
             .tmplatId(vo.getTmplatId())
             .useAt(vo.getUseAt())
             .frstRegisterPnttm(vo.getFrstRegisterPnttm())
+            .option(vo.getOption())
             .build();
     }
 }

@@ -15,9 +15,10 @@ import org.springframework.stereotype.Service;
 
 import egovframework.let.cop.bbs.domain.model.BoardMaster;
 import egovframework.let.cop.bbs.domain.model.BoardMasterVO;
+import egovframework.let.cop.bbs.domain.request.BbsInsertRequestDTO;
 import egovframework.let.cop.bbs.domain.request.BbsSearchRequestDTO;
+import egovframework.let.cop.bbs.domain.response.BbsDetailResponseVO;
 import egovframework.let.cop.bbs.domain.response.BbsListResponseVO;
-import egovframework.let.cop.bbs.domain.response.BbsResponseVO;
 import egovframework.let.cop.bbs.repository.BBSAddedOptionsDAO;
 import egovframework.let.cop.bbs.repository.BBSAttributeManageDAO;
 import egovframework.let.cop.bbs.service.EgovBBSAttributeManageService;
@@ -92,10 +93,9 @@ public class EgovBBSAttributeManageServiceImpl extends EgovAbstractServiceImpl i
      *
      * @see egovframework.let.cop.bbs.brd.service.EgovBBSAttributeManageService#insertBBSMastetInf(egovframework.let.cop.bbs.domain.model.brd.service.BoardMaster)
      */
-    public String insertBBSMastetInf(BoardMaster boardMaster) throws Exception {
+    public void insertBBSMastetInf(BbsInsertRequestDTO bbsInsertRequestDTO) throws Exception {
 		String bbsId = idgenService.getNextStringId();
-	
-		boardMaster.setBbsId(bbsId);
+		BoardMaster boardMaster = bbsInsertRequestDTO.toBoardMaster(bbsId);
 	
 		attrbMngDAO.insertBBSMasterInf(boardMaster);
 	
@@ -156,7 +156,6 @@ public class EgovBBSAttributeManageServiceImpl extends EgovAbstractServiceImpl i
 				}
 		    }
 		}
-		return bbsId;
     }
 
     /**
@@ -177,7 +176,7 @@ public class EgovBBSAttributeManageServiceImpl extends EgovAbstractServiceImpl i
 		//---------------------------------
 		// 2009.06.26 : 2단계 기능 추가
 		//---------------------------------
-		//return attrbMngDAO.selectBBSMasterInf(searchVO);
+		//return attrbMngDAO.selectBBSMasterInf(searchVO); 
 	
 		BoardMasterVO result = attrbMngDAO.selectBBSMasterInf(searchVO);
 	
@@ -221,8 +220,8 @@ public class EgovBBSAttributeManageServiceImpl extends EgovAbstractServiceImpl i
     	List<BoardMasterVO> voList = attrbMngDAO.selectBBSMasterInfs(boardMasterVO);
     	int cnt = attrbMngDAO.selectBBSMasterInfsCnt(boardMasterVO);
     	
-    	List<BbsResponseVO> dtoList = voList.stream()
-    		.map(BbsResponseVO::from)
+    	List<BbsDetailResponseVO> dtoList = voList.stream()
+    		.map(BbsDetailResponseVO::from)
     		.collect(Collectors.toList());
 
     	return BbsListResponseVO.builder()

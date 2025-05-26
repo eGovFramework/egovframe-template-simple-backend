@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.validation.Valid;
+
 import org.egovframe.rte.fdl.property.EgovPropertyService;
 import org.egovframe.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -27,7 +29,10 @@ import egovframework.com.cmm.service.IntermediateResultVO;
 import egovframework.com.cmm.service.ResultVO;
 import egovframework.com.cmm.util.ResultVoHelper;
 import egovframework.let.cop.bbs.domain.model.BoardMasterVO;
+import egovframework.let.cop.bbs.domain.request.BbsInsertRequestDTO;
 import egovframework.let.cop.bbs.domain.request.BbsSearchRequestDTO;
+import egovframework.let.cop.bbs.domain.response.BbsDetailResponseVO;
+import egovframework.let.cop.bbs.domain.response.BbsInsertResponseVO;
 import egovframework.let.cop.bbs.domain.response.BbsListResponseVO;
 import egovframework.let.cop.bbs.service.EgovBBSAttributeManageService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -124,7 +129,7 @@ public class EgovBBSAttributeManageApiController {
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
 	})
 	@GetMapping(value ="/bbsMaster/{bbsId}")
-	public ResultVO selectBBSMasterInf(@Parameter(name = "bbsId", description = "게시판 Id", in = ParameterIn.PATH, example="BBSMSTR_AAAAAAAAAAAA") 
+	public ResultVO  selectBBSMasterInf(@Parameter(name = "bbsId", description = "게시판 Id", in = ParameterIn.PATH, example="BBSMSTR_AAAAAAAAAAAA") 
 			@PathVariable("bbsId") String bbsId)
 		throws Exception {
 		BoardMasterVO searchVO = new BoardMasterVO();
@@ -136,6 +141,14 @@ public class EgovBBSAttributeManageApiController {
 		resultMap.put("boardMasterVO", vo);
 
 		return resultVoHelper.buildFromMap(resultMap, ResponseCode.SUCCESS);
+		
+//		* HashMap으로 인해 result 안에 boardMasterVO key가 하나 더 생겨서 들어가는 구조로써
+//		  아래와 같이 변환 작업 시 리엑트에서 수정이 필요하므로 보류
+		
+//		BbsDetailResponseVO response = bbsAttrbService.selectBBSMasterInf(bbsId);
+//
+//		System.out.println(response.toString());
+//		return IntermediateResultVO.success(response);
 	}
 
 	/**
@@ -159,35 +172,38 @@ public class EgovBBSAttributeManageApiController {
 			@ApiResponse(responseCode = "900", description = "입력값 무결성 오류")
 	})
 	@PostMapping(value ="/bbsMaster")
-	public ResultVO insertBBSMasterInf(BoardMasterVO boardMasterVO,
+	public IntermediateResultVO<BbsInsertResponseVO> insertBBSMasterInf(@Valid @ModelAttribute BbsInsertRequestDTO bbsInsertRequestDTO,
 									   BindingResult bindingResult,
 									   @Parameter(hidden = true) @AuthenticationPrincipal LoginVO loginVO
 	)
 		throws Exception {
-		Map<String, Object> resultMap = new HashMap<String, Object>();
 
-		beanValidator.validate(boardMasterVO, bindingResult);
+		beanValidator.validate(bbsInsertRequestDTO, bindingResult);
+		
+		BbsInsertResponseVO response = new BbsInsertResponseVO();
+		
 		if (bindingResult.hasErrors()) {
 			ComDefaultCodeVO vo = new ComDefaultCodeVO();
+			
 			vo.setCodeId("COM004");
 			List<CmmnDetailCode> codeResult = cmmUseService.selectCmmCodeDetail(vo);
-			resultMap.put("typeList", codeResult);
-
+			response.setTypeList(codeResult);
+			
 			vo.setCodeId("COM009");
 			codeResult = cmmUseService.selectCmmCodeDetail(vo);
-			resultMap.put("attrbList", codeResult);
-
-			return resultVoHelper.buildFromMap(resultMap, ResponseCode.INPUT_CHECK_ERROR);
+			response.setAttrbList(codeResult);
+			
+			return IntermediateResultVO.inputCheckError(response);
 		}
 
-		boardMasterVO.setFrstRegisterId(loginVO.getUniqId());
-		boardMasterVO.setUseAt("Y");
-		boardMasterVO.setTrgetId("SYSTEMDEFAULT_REGIST");
-		boardMasterVO.setPosblAtchFileSize(propertyService.getString("posblAtchFileSize"));
+		bbsInsertRequestDTO.setFrstRegisterId(loginVO.getUniqId());
+		bbsInsertRequestDTO.setUseAt("Y");
+		bbsInsertRequestDTO.setTrgetId("SYSTEMDEFAULT_REGIST");
+		bbsInsertRequestDTO.setPosblAtchFileSize(propertyService.getString("posblAtchFileSize"));
 
-		bbsAttrbService.insertBBSMastetInf(boardMasterVO);
+		bbsAttrbService.insertBBSMastetInf(bbsInsertRequestDTO);
 
-		return resultVoHelper.buildFromMap(resultMap, ResponseCode.SUCCESS);
+		return IntermediateResultVO.success(response);
 	}
 
 	/**

@@ -2,11 +2,12 @@ package egovframework.let.cop.bbs.domain.model;
 
 import java.io.Serializable;
 
-import lombok.Getter;
-import lombok.Setter;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 게시판 속성 정보를 관리하기 위한 VO  클래스
