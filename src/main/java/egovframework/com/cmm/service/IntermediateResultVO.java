@@ -1,5 +1,7 @@
 package egovframework.com.cmm.service;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import egovframework.com.cmm.ResponseCode;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
@@ -37,6 +39,7 @@ public class IntermediateResultVO<T> {
 	@Schema(description = "응답 메시지")
 	private String resultMessage = "OK";
 	
+    @JsonInclude(JsonInclude.Include.NON_NULL)
 	@Schema(description = "응답 객체")
 	private T result;
 	

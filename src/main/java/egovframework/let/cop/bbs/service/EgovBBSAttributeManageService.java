@@ -39,7 +39,7 @@ public interface EgovBBSAttributeManageService {
 	 * @param boardMaster
 	 * @exception Exception Exception
 	 */
-	public void deleteBBSMasterInf(BoardMaster boardMaster)
+	public void deleteBBSMasterInf(String UniqId, String bbsId)
 	  throws Exception;
 
 	/**

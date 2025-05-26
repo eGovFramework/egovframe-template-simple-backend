@@ -271,18 +271,13 @@ public class EgovBBSAttributeManageApiController {
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
 	})
 	@PatchMapping(value ="/bbsMaster/{bbsId}")
-	public ResultVO deleteBBSMasterInf(@Parameter(hidden = true) @AuthenticationPrincipal LoginVO loginVO,
+	public IntermediateResultVO<Object> deleteBBSMasterInf(@Parameter(hidden = true) @AuthenticationPrincipal LoginVO loginVO,
 		@Parameter(name = "bbsId", description = "게시판 Id", in = ParameterIn.PATH, example="BBSMSTR_AAAAAAAAAAAA")
 		@PathVariable("bbsId") String bbsId
 		) throws Exception {
-			BoardMasterVO boardMasterVO = new BoardMasterVO();
-			
-			boardMasterVO.setLastUpdusrId(loginVO.getUniqId());
-			boardMasterVO.setBbsId(bbsId);
-			
-			bbsAttrbService.deleteBBSMasterInf(boardMasterVO);
+			bbsAttrbService.deleteBBSMasterInf(loginVO.getUniqId(), bbsId);
 
-			return resultVoHelper.buildFromMap(new HashMap<String, Object>(), ResponseCode.SUCCESS);
+			return IntermediateResultVO.success(null);
 	}
 
 }

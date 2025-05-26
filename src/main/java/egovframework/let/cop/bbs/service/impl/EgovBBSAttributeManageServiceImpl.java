@@ -78,11 +78,14 @@ public class EgovBBSAttributeManageServiceImpl extends EgovAbstractServiceImpl i
      *
      * @see egovframework.let.cop.bbs.brd.service.EgovBBSAttributeManageService#deleteBBSMasterInf(egovframework.let.cop.bbs.domain.model.brd.service.BoardMaster)
      */
-    public void deleteBBSMasterInf(BoardMaster boardMaster) throws Exception {
+    public void deleteBBSMasterInf(String UniqId, String bbsId) throws Exception {
+    	BoardMaster boardMaster = new BoardMaster();
+    	boardMaster.setUniqId(UniqId);
+    	boardMaster.setBbsId(bbsId);
+    	
 		attrbMngDAO.deleteBBSMasterInf(boardMaster);
 	
 		BoardUseInf bdUseInf = new BoardUseInf();
-	
 		bdUseInf.setBbsId(boardMaster.getBbsId());
 		bdUseInf.setLastUpdusrId(boardMaster.getLastUpdusrId());
 	
