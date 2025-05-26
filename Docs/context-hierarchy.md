@@ -7,7 +7,7 @@
 
 아래 처럼 Servlet Context 가 Root Context를 참조한다고 생각하면 되겠다.
 
-![Context Hierarchy](https://docs.spring.io/spring-framework/docs/current/reference/html/images/mvc-context-hierarchy.png)
+![Context Hierarchy](https://docs.spring.io/spring-framework/reference/_images/mvc-context-hierarchy.png)
 
 ## Root WebApplicationContext
 
