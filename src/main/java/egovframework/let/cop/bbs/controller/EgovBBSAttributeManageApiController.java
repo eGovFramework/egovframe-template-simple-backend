@@ -8,6 +8,7 @@ import javax.validation.Valid;
 
 import org.egovframe.rte.fdl.property.EgovPropertyService;
 import org.egovframe.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
+import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -173,7 +174,7 @@ public class EgovBBSAttributeManageApiController {
 			@ApiResponse(responseCode = "900", description = "입력값 무결성 오류")
 	})
 	@PostMapping(value ="/bbsMaster")
-	public IntermediateResultVO<BbsInsertResponseDTO> insertBBSMasterInf(@Valid @ModelAttribute BbsInsertRequestDTO bbsInsertRequestDTO,
+	public IntermediateResultVO<BbsInsertResponseDTO> insertBBSMasterInf(@Valid @ParameterObject BbsInsertRequestDTO bbsInsertRequestDTO,
 									   BindingResult bindingResult,
 									   @Parameter(hidden = true) @AuthenticationPrincipal LoginVO loginVO
 	)
