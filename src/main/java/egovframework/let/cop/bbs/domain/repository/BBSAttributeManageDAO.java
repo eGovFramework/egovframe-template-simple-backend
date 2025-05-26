@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import egovframework.let.cop.bbs.domain.model.BoardMaster;
 import egovframework.let.cop.bbs.domain.model.BoardMasterVO;
+import egovframework.let.cop.bbs.dto.request.BbsUpdateRequestDTO;
 import egovframework.let.cop.bbs.dto.response.BbsDetailResponseDTO;
 
 /**
@@ -104,6 +105,9 @@ public class BBSAttributeManageDAO extends EgovAbstractMapper {
 		// 커뮤니티, 동호회의 게시판이 나오지 않도록 LETTNBBSUSE 테이블과 Join 필요
 		return selectList("BBSAttributeManageDAO.selectAllBBSMaster", vo);
 	}
+    public List<BoardMasterVO> selectAllBBSMasteInf(BbsUpdateRequestDTO bbsUpdateRequestDTO) throws Exception {
+    	return selectList("BBSAttributeManageDAO.selectAllBBSMaster", bbsUpdateRequestDTO);
+    }
 
     /**
      * 사용중인 게시판 속성정보 목록을 조회한다.

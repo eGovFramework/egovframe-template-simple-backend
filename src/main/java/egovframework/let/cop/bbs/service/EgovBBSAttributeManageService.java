@@ -9,6 +9,7 @@ import egovframework.let.cop.bbs.domain.model.BoardMaster;
 import egovframework.let.cop.bbs.domain.model.BoardMasterVO;
 import egovframework.let.cop.bbs.dto.request.BbsInsertRequestDTO;
 import egovframework.let.cop.bbs.dto.request.BbsSearchRequestDTO;
+import egovframework.let.cop.bbs.dto.request.BbsUpdateRequestDTO;
 import egovframework.let.cop.bbs.dto.response.BbsDetailResponseDTO;
 import egovframework.let.cop.bbs.dto.response.BbsListResponseDTO;
 
@@ -117,7 +118,7 @@ public interface EgovBBSAttributeManageService {
 	 * @param boardMaster
 	 * @exception Exception Exception
 	 */
-	public void updateBBSMasterInf(BoardMaster boardMaster)
+	public void updateBBSMasterInf(BbsUpdateRequestDTO bbsUpdateRequestDTO)
 	  throws Exception;
 
 	/**

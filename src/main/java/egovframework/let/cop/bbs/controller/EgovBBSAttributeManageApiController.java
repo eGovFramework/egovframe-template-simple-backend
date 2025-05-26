@@ -28,10 +28,11 @@ import egovframework.com.cmm.service.EgovCmmUseService;
 import egovframework.com.cmm.service.IntermediateResultVO;
 import egovframework.com.cmm.service.ResultVO;
 import egovframework.com.cmm.util.ResultVoHelper;
+import egovframework.let.cop.bbs.domain.model.BoardMaster;
 import egovframework.let.cop.bbs.domain.model.BoardMasterVO;
 import egovframework.let.cop.bbs.dto.request.BbsInsertRequestDTO;
 import egovframework.let.cop.bbs.dto.request.BbsSearchRequestDTO;
-import egovframework.let.cop.bbs.dto.response.BbsDetailResponseDTO;
+import egovframework.let.cop.bbs.dto.request.BbsUpdateRequestDTO;
 import egovframework.let.cop.bbs.dto.response.BbsInsertResponseDTO;
 import egovframework.let.cop.bbs.dto.response.BbsListResponseDTO;
 import egovframework.let.cop.bbs.service.EgovBBSAttributeManageService;
@@ -143,7 +144,7 @@ public class EgovBBSAttributeManageApiController {
 		return resultVoHelper.buildFromMap(resultMap, ResponseCode.SUCCESS);
 		
 //		* HashMap으로 인해 result 안에 boardMasterVO key가 하나 더 생겨서 들어가는 구조로써
-//		  아래와 같이 변환 작업 시 리엑트에서 수정이 필요하므로 보류
+//		  아래와 같이 변환 작업 시 리엑트에서 수정이 필요하므로 보류합니다.
 		
 //		BbsDetailResponseVO response = bbsAttrbService.selectBBSMasterInf(bbsId);
 //
@@ -228,28 +229,26 @@ public class EgovBBSAttributeManageApiController {
 			@ApiResponse(responseCode = "900", description = "입력값 무결성 오류")
 	})
 	@PutMapping(value ="/bbsMaster/{bbsId}")
-	public ResultVO updateBBSMasterInf(@Parameter(name = "bbsId", description = "게시판 Id", in = ParameterIn.PATH, example="BBSMSTR_AAAAAAAAAAAA")
-										@PathVariable("bbsId") String bbsId,
-										@RequestBody BoardMasterVO boardMasterVO,
+	public IntermediateResultVO<Object> updateBBSMasterInf(@RequestBody BbsUpdateRequestDTO bbsUpdateRequestDTO,
 										BindingResult bindingResult,
 										@Parameter(hidden = true) @AuthenticationPrincipal LoginVO loginVO
 										) throws Exception {
-		Map<String, Object> resultMap = new HashMap<String, Object>();
-
-		beanValidator.validate(boardMasterVO, bindingResult);
+		beanValidator.validate(bbsUpdateRequestDTO, bindingResult);
 
 		if (bindingResult.hasErrors()) {
-			BoardMasterVO vo = bbsAttrbService.selectBBSMasterInf(boardMasterVO);
-			resultMap.put("BoardMasterVO", vo);
+			// selectBBSMasterInf 메서드는 리액트에서의 코드 수정이 필요하여 보류하였습니다.
+			// 이로 인해 해당 라인의 코드 또한 보류되었습니다.
+			BoardMaster boardMaster = bbsUpdateRequestDTO.toBoardMaster();
+			BoardMasterVO vo = bbsAttrbService.selectBBSMasterInf(boardMaster);
 
-			return resultVoHelper.buildFromMap(resultMap, ResponseCode.INPUT_CHECK_ERROR);
+			return IntermediateResultVO.inputCheckError(vo);
 		}
 
-		boardMasterVO.setLastUpdusrId(loginVO.getUniqId());
-		boardMasterVO.setPosblAtchFileSize(propertyService.getString("posblAtchFileSize"));
-		bbsAttrbService.updateBBSMasterInf(boardMasterVO);
+		bbsUpdateRequestDTO.setLastUpdusrId(loginVO.getUniqId());
+		bbsUpdateRequestDTO.setPosblAtchFileSize(propertyService.getString("posblAtchFileSize"));
+		bbsAttrbService.updateBBSMasterInf(bbsUpdateRequestDTO);
 
-		return resultVoHelper.buildFromMap(resultMap, ResponseCode.SUCCESS);
+		return IntermediateResultVO.success(null);
 	}
 
 	/**

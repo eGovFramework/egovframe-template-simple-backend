@@ -19,6 +19,7 @@ import egovframework.let.cop.bbs.domain.repository.BBSAddedOptionsDAO;
 import egovframework.let.cop.bbs.domain.repository.BBSAttributeManageDAO;
 import egovframework.let.cop.bbs.dto.request.BbsInsertRequestDTO;
 import egovframework.let.cop.bbs.dto.request.BbsSearchRequestDTO;
+import egovframework.let.cop.bbs.dto.request.BbsUpdateRequestDTO;
 import egovframework.let.cop.bbs.dto.response.BbsDetailResponseDTO;
 import egovframework.let.cop.bbs.dto.response.BbsListResponseDTO;
 import egovframework.let.cop.bbs.service.EgovBBSAttributeManageService;
@@ -235,7 +236,13 @@ public class EgovBBSAttributeManageServiceImpl extends EgovAbstractServiceImpl i
      *
      * @see egovframework.let.cop.bbs.brd.service.EgovBBSAttributeManageService#updateBBSMasterInf(egovframework.let.cop.bbs.domain.model.brd.service.BoardMaster)
      */
-    public void updateBBSMasterInf(BoardMaster boardMaster) throws Exception {
+    public void updateBBSMasterInf(BbsUpdateRequestDTO bbsUpdateRequestDTO) throws Exception {
+        /**
+         * BbsUpdateRequestDTO → BoardMaster 변환 메서드
+         * 
+         * @return BoardMaster 도메인 객체
+         */
+    	BoardMaster boardMaster = bbsUpdateRequestDTO.toBoardMaster(); 
 		attrbMngDAO.updateBBSMasterInf(boardMaster);
 	
 		//---------------------------------
@@ -250,7 +257,7 @@ public class EgovBBSAttributeManageServiceImpl extends EgovAbstractServiceImpl i
 		    BoardMasterVO options = addedOptionsDAO.selectAddedOptionsInf(boardMaster);
 	
 		    if (options == null) {
-				boardMaster.setFrstRegisterId(boardMaster.getLastUpdusrId());
+		    	boardMaster.setFrstRegisterId(boardMaster.getLastUpdusrId());
 				addedOptionsDAO.insertAddedOptionsInf(boardMaster);
 		    } else {
 				//수정 기능 제외 (새롭게 선택사항을 지정한 insert만 처리함)

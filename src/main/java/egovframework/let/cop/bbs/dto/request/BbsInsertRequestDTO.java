@@ -73,6 +73,11 @@ public class BbsInsertRequestDTO {
 	@Schema(description = "첨부가능파일사이즈", example="")
     private String posblAtchFileSize;
 	
+    /**
+     * BbsUpdateRequestDTO → BoardMaster 변환 메서드
+     * 
+     * @return BoardMaster 도메인 객체
+     */
 	public BoardMaster toBoardMaster(String bbsId) {
 	    BoardMaster vo = new BoardMaster();
 	    vo.setBbsId(bbsId);
