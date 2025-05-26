@@ -238,7 +238,7 @@ public class EgovBBSAttributeManageApiController {
 				                summary = "Forbidden",
 				                value = "{\n" +
 				                        "  \"resultCode\": 200,\n" +
-				                        "  \"resultMessage\": \"수정 성공\"\n" +
+				                        "  \"resultMessage\": \"성공했습니다.\"\n" +
 				                        "}"
 				            )
 				        )),
@@ -320,7 +320,7 @@ public class EgovBBSAttributeManageApiController {
 			                summary = "Forbidden",
 			                value = "{\n" +
 			                        "  \"resultCode\": 200,\n" +
-			                        "  \"resultMessage\": \"삭제 성공\"\n" +
+			                        "  \"resultMessage\": \"성공했습니다.\"\n" +
 			                        "}"
 			            )
 			        )),
