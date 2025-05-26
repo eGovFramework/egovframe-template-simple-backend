@@ -38,10 +38,10 @@ public class BbsListResponseDTO {
     private PaginationInfo paginationInfo;
     
     @Builder.Default
-	@Schema(description = "응답 코드")
+	@Schema(description = "응답 코드", example="")
 	private int resultCode = 0;
 	
     @Builder.Default
-	@Schema(description = "응답 메시지")
+	@Schema(description = "응답 메시지", example="")
 	private String resultMessage = "OK";
 }

@@ -2,6 +2,8 @@ package egovframework.let.cop.bbs.dto.response;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import egovframework.com.cmm.service.CmmnDetailCode;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
@@ -31,7 +33,12 @@ import lombok.Setter;
 @NoArgsConstructor
 @Schema(description = "게시판 마스터 등록 응답 DTO")
 public class BbsInsertResponseDTO {
+	@JsonInclude(JsonInclude.Include.NON_NULL)
+    @Schema(description = "게시판 타입 리스트", example = "")
 	private List<CmmnDetailCode> typeList;
+    
+	@JsonInclude(JsonInclude.Include.NON_NULL)
+    @Schema(description = "게시판 속성 리스트", example = "")
 	private List<CmmnDetailCode> attrbList;
 	
 }

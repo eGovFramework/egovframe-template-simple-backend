@@ -33,11 +33,11 @@ import lombok.Setter;
 @Setter
 public class IntermediateResultVO<T> {
 
-	@Schema(description = "응답 코드")
-	private int resultCode = 0;
+	@Schema(description = "응답 코드", example = "0")
+	private int resultCode;
 	
-	@Schema(description = "응답 메시지")
-	private String resultMessage = "OK";
+	@Schema(description = "응답 메시지", example = "OK")
+	private String resultMessage;
 	
     @JsonInclude(JsonInclude.Include.NON_NULL)
 	@Schema(description = "응답 객체")

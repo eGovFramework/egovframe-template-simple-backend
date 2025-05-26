@@ -40,6 +40,8 @@ import egovframework.let.cop.bbs.service.EgovBBSAttributeManageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -226,10 +228,49 @@ public class EgovBBSAttributeManageApiController {
 			tags = {"EgovBBSAttributeManageApiController"}
 	)
 	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "수정 성공"),
-			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님"),
-			@ApiResponse(responseCode = "900", description = "입력값 무결성 오류")
-	})
+			@ApiResponse(
+					responseCode = "200", 
+					description = "수정 성공",
+			        content = @Content(
+				            mediaType = "application/json",
+				            examples = @ExampleObject(
+				                name = "200 응답 예시",
+				                summary = "Forbidden",
+				                value = "{\n" +
+				                        "  \"resultCode\": 200,\n" +
+				                        "  \"resultMessage\": \"수정 성공\"\n" +
+				                        "}"
+				            )
+				        )),
+			@ApiResponse(
+					responseCode = "403",
+					description = "인가된 사용자가 아님",
+			        content = @Content(
+				            mediaType = "application/json",
+				            examples = @ExampleObject(
+				                name = "403 응답 예시",
+				                summary = "Forbidden",
+				                value = "{\n" +
+				                        "  \"resultCode\": 403,\n" +
+				                        "  \"resultMessage\": \"인가된 사용자가 아님\"\n" +
+				                        "}"
+				            )
+				        )),
+			@ApiResponse(
+					responseCode = "900",
+					description = "입력값 무결성 오류",
+					content = @Content(
+				            mediaType = "application/json",
+				            examples = @ExampleObject(
+				                name = "900 응답 예시",
+				                summary = "Forbidden",
+				                value = "{\n" +
+				                        "  \"resultCode\": 900,\n" +
+				                        "  \"resultMessage\": \"입력값 무결성 오류\"\n" +
+				                        "}"
+				            )
+				        )),
+				})
 	@PutMapping(value ="/bbsMaster/{bbsId}")
 	public IntermediateResultVO<Object> updateBBSMasterInf(@RequestBody BbsUpdateRequestDTO bbsUpdateRequestDTO,
 										BindingResult bindingResult,
@@ -269,9 +310,35 @@ public class EgovBBSAttributeManageApiController {
 			tags = {"EgovBBSAttributeManageApiController"}
 	)
 	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "삭제 성공"),
-			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
-	})
+		    @ApiResponse(
+		        responseCode = "200",
+		        description = "삭제 성공",
+		        content = @Content(
+			            mediaType = "application/json",
+			            examples = @ExampleObject(
+			                name = "200 응답 예시",
+			                summary = "Forbidden",
+			                value = "{\n" +
+			                        "  \"resultCode\": 200,\n" +
+			                        "  \"resultMessage\": \"삭제 성공\"\n" +
+			                        "}"
+			            )
+			        )),
+		    @ApiResponse(
+		        responseCode = "403",
+		        description = "인가된 사용자가 아님",
+		        content = @Content(
+		            mediaType = "application/json",
+		            examples = @ExampleObject(
+		                name = "403 응답 예시",
+		                summary = "Forbidden",
+		                value = "{\n" +
+		                        "  \"resultCode\": 403,\n" +
+		                        "  \"resultMessage\": \"인가된 사용자가 아님\"\n" +
+		                        "}"
+		            )
+		        ))
+			}) 
 	@PatchMapping(value ="/bbsMaster/{bbsId}")
 	public IntermediateResultVO<Object> deleteBBSMasterInf(@Parameter(hidden = true) @AuthenticationPrincipal LoginVO loginVO,
 		@Parameter(name = "bbsId", description = "게시판 Id", in = ParameterIn.PATH, example="BBSMSTR_AAAAAAAAAAAA")
