@@ -82,13 +82,11 @@ public class EgovBBSAttributeManageServiceImpl extends EgovAbstractServiceImpl i
     	BoardMaster boardMaster = new BoardMaster();
     	boardMaster.setUniqId(UniqId);
     	boardMaster.setBbsId(bbsId);
-    	
 		attrbMngDAO.deleteBBSMasterInf(boardMaster);
 	
 		BoardUseInf bdUseInf = new BoardUseInf();
 		bdUseInf.setBbsId(boardMaster.getBbsId());
 		bdUseInf.setLastUpdusrId(boardMaster.getLastUpdusrId());
-	
 		bbsUseDAO.deleteBBSUseInfByBoardId(bdUseInf);
     }
 
@@ -220,6 +218,7 @@ public class EgovBBSAttributeManageServiceImpl extends EgovAbstractServiceImpl i
 		boardMasterVO.setFirstIndex(paginationInfo.getFirstRecordIndex());
 		boardMasterVO.setLastIndex(paginationInfo.getLastRecordIndex());
 		boardMasterVO.setRecordCountPerPage(paginationInfo.getRecordCountPerPage());
+		boardMasterVO.setUseAt("Y");
 		
     	List<BoardMasterVO> voList = attrbMngDAO.selectBBSMasterInfs(boardMasterVO);
     	int cnt = attrbMngDAO.selectBBSMasterInfsCnt(boardMasterVO);
