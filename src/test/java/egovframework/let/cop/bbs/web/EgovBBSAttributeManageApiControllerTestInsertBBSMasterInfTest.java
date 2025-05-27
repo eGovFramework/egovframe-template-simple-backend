@@ -65,7 +65,6 @@ class EgovBBSAttributeManageApiControllerTestInsertBBSMasterInfTest {
 	@Test
 	void test() throws Exception {
 		// testData
-//		final BoardMaster boardMaster = new BoardMaster();
 		final BbsInsertRequestDTO bbsInsertRequestDTO = new BbsInsertRequestDTO();
 		
 		final String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("uuuu-MM-dd'T'HH:mm:ss.SSSSSSSSS"));
