@@ -49,7 +49,7 @@ public interface EgovBBSAttributeManageService {
 	 * @param boardMaster
 	 * @exception Exception Exception
 	 */
-	public void insertBBSMastetInf(BbsInsertRequestDTO bbsInsertRequestDTO)
+	public String insertBBSMastetInf(BbsInsertRequestDTO bbsInsertRequestDTO)
 	  throws Exception;
 
 	/**

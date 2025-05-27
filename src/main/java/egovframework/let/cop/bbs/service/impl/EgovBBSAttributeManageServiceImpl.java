@@ -95,7 +95,7 @@ public class EgovBBSAttributeManageServiceImpl extends EgovAbstractServiceImpl i
      *
      * @see egovframework.let.cop.bbs.brd.service.EgovBBSAttributeManageService#insertBBSMastetInf(egovframework.let.cop.bbs.domain.model.brd.service.BoardMaster)
      */
-    public void insertBBSMastetInf(BbsInsertRequestDTO bbsInsertRequestDTO) throws Exception {
+    public String insertBBSMastetInf(BbsInsertRequestDTO bbsInsertRequestDTO) throws Exception {
 		String bbsId = idgenService.getNextStringId();
 		BoardMaster boardMaster = bbsInsertRequestDTO.toBoardMaster(bbsId);
 	
@@ -158,6 +158,8 @@ public class EgovBBSAttributeManageServiceImpl extends EgovAbstractServiceImpl i
 				}
 		    }
 		}
+		
+		return bbsId;
     }
 
     /**

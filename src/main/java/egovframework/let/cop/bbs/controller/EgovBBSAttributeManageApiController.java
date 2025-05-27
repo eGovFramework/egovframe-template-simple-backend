@@ -186,6 +186,7 @@ public class EgovBBSAttributeManageApiController {
 		beanValidator.validate(bbsInsertRequestDTO, bindingResult);
 		
 		BbsInsertResponseDTO response = new BbsInsertResponseDTO();
+		System.out.println(bbsInsertRequestDTO.getFrstRegisterId());
 		
 		if (bindingResult.hasErrors()) {
 			ComDefaultCodeVO vo = new ComDefaultCodeVO();
