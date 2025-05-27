@@ -55,7 +55,7 @@ public class BbsInsertRequestDTO {
     @Schema(description = "첨부파일 가능 여부", example = "Y")
     private String fileAtchPosblAt;
 
-    @Schema(description = "첨부파일 가능한 파일 숫자", example = "1")
+    @Schema(description = "첨부파일 가능한 파일 숫자", example = "1", type = "int")
     private int posblAtchFileNumber;
 
     @Schema(description = "답장 기능 여부", example = "N")
