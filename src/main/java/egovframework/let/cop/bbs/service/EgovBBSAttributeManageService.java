@@ -7,8 +7,11 @@ import org.egovframe.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 
 import egovframework.let.cop.bbs.domain.model.BoardMaster;
 import egovframework.let.cop.bbs.domain.model.BoardMasterVO;
-import egovframework.let.cop.bbs.domain.request.BbsSearchRequestDTO;
-import egovframework.let.cop.bbs.domain.response.BbsListResponseVO;
+import egovframework.let.cop.bbs.dto.request.BbsInsertRequestDTO;
+import egovframework.let.cop.bbs.dto.request.BbsSearchRequestDTO;
+import egovframework.let.cop.bbs.dto.request.BbsUpdateRequestDTO;
+import egovframework.let.cop.bbs.dto.response.BbsDetailResponseDTO;
+import egovframework.let.cop.bbs.dto.response.BbsListResponseDTO;
 
 /**
  * 게시판 속성관리를 위한 서비스 인터페이스 클래스
@@ -36,7 +39,7 @@ public interface EgovBBSAttributeManageService {
 	 * @param boardMaster
 	 * @exception Exception Exception
 	 */
-	public void deleteBBSMasterInf(BoardMaster boardMaster)
+	public void deleteBBSMasterInf(String UniqId, String bbsId)
 	  throws Exception;
 
 	/**
@@ -46,7 +49,7 @@ public interface EgovBBSAttributeManageService {
 	 * @param boardMaster
 	 * @exception Exception Exception
 	 */
-	public String insertBBSMastetInf(BoardMaster boardMaster)
+	public String insertBBSMastetInf(BbsInsertRequestDTO bbsInsertRequestDTO)
 	  throws Exception;
 
 	/**
@@ -72,9 +75,7 @@ public interface EgovBBSAttributeManageService {
 
 	/**
 	 * 게시판 속성정보 한 건을 상세조회한다.
-	 * @param BoardMasterVO
-	 * 
-	 * @param searchVO
+	 * @param String bbsId
 	 * @exception Exception Exception
 	 */
 	public BoardMasterVO selectBBSMasterInf(BoardMaster searchVO)
@@ -87,7 +88,7 @@ public interface EgovBBSAttributeManageService {
 	 * @param searchVO
 	 * @exception Exception Exception
 	 */
-	public BbsListResponseVO selectBBSMasterInfs(BbsSearchRequestDTO bbsSearchRequestDTO, PaginationInfo paginationInfo)
+	public BbsListResponseDTO selectBBSMasterInfs(BbsSearchRequestDTO bbsSearchRequestDTO, PaginationInfo paginationInfo)
 	  throws Exception;
 
 	/**
@@ -117,7 +118,7 @@ public interface EgovBBSAttributeManageService {
 	 * @param boardMaster
 	 * @exception Exception Exception
 	 */
-	public void updateBBSMasterInf(BoardMaster boardMaster)
+	public void updateBBSMasterInf(BbsUpdateRequestDTO bbsUpdateRequestDTO)
 	  throws Exception;
 
 	/**

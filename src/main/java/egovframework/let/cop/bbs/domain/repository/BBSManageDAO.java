@@ -1,4 +1,4 @@
-package egovframework.let.cop.bbs.repository;
+package egovframework.let.cop.bbs.domain.repository;
 import java.util.Iterator;
 import java.util.List;
 

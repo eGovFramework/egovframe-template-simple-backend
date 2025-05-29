@@ -58,7 +58,7 @@
 		
 	</insert>
 	
-	<select id="selectBBSMasterInfs" parameterType="egovframework.let.cop.bbs.domain.model.BoardMasterVO" resultMap="boardMasterList">
+	<select id="selectBBSMasterInfs" parameterType="egovframework.let.cop.bbs.domain.response.BbsDetailResponseVO" resultMap="boardMasterList">
 		
 			SELECT 
 				a.BBS_ID, a.BBS_TY_CODE, b.CODE_NM as BBS_TY_CODE_NM,
@@ -119,7 +119,7 @@
 			</if>	
 	</select>	
  
-	<select id="selectBBSMasterInf" parameterType="egovframework.let.cop.bbs.domain.model.BoardMaster" resultMap="boardMasterDetail">
+	<select id="selectBBSMasterInf" resultMap="boardMasterDetail">
 		
 			SELECT 
 				a.BBS_ID, a.BBS_TY_CODE, b.CODE_NM as BBS_TY_CODE_NM, a.BBS_INTRCN, 

@@ -1,6 +1,5 @@
-package egovframework.let.cop.bbs.repository;
+package egovframework.let.cop.bbs.domain.repository;
 import org.egovframe.rte.psl.dataaccess.EgovAbstractMapper;
-
 import org.springframework.stereotype.Repository;
 
 import egovframework.let.cop.bbs.domain.model.BoardMaster;
@@ -40,8 +39,8 @@ public class BBSAddedOptionsDAO extends EgovAbstractMapper {
      * 
      * @param BoardMasterVO
      */
-    public BoardMasterVO selectAddedOptionsInf(BoardMaster vo) throws Exception {
-	return (BoardMasterVO)selectOne("BBSAddedOptionsDAO.selectAddedOptionsInf", vo);
+    public BoardMasterVO selectAddedOptionsInf(BoardMaster searchVO) throws Exception {
+	return (BoardMasterVO)selectOne("BBSAddedOptionsDAO.selectAddedOptionsInf", searchVO);
     }
     
     /**

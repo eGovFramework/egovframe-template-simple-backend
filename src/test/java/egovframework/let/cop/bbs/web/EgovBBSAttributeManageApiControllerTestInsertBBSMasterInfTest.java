@@ -21,6 +21,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import egovframework.let.cop.bbs.domain.model.BoardMaster;
+import egovframework.let.cop.bbs.dto.request.BbsInsertRequestDTO;
 import egovframework.let.cop.bbs.service.EgovBBSAttributeManageService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -64,15 +65,18 @@ class EgovBBSAttributeManageApiControllerTestInsertBBSMasterInfTest {
 	@Test
 	void test() throws Exception {
 		// testData
-		final BoardMaster boardMaster = new BoardMaster();
-
+		final BbsInsertRequestDTO bbsInsertRequestDTO = new BbsInsertRequestDTO();
+		
 		final String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("uuuu-MM-dd'T'HH:mm:ss.SSSSSSSSS"));
+		bbsInsertRequestDTO.setBbsNm("test 이백행 게시판명 " + now);
+		bbsInsertRequestDTO.setPosblAtchFileSize("0");
+		bbsInsertRequestDTO.setBbsAttrbCode("BBSA02");
+		bbsInsertRequestDTO.setBbsTyCode("BBST01");
+		bbsInsertRequestDTO.setFileAtchPosblAt("Y");
+		bbsInsertRequestDTO.setUseAt("Y");
+		bbsInsertRequestDTO.setFrstRegisterId("admin");
 
-		boardMaster.setBbsNm("test 이백행 게시판명 " + now);
-
-		boardMaster.setPosblAtchFileSize("0");
-
-		final String resultBbsId = egovBBSAttributeManageService.insertBBSMastetInf(boardMaster);
+		final String resultBbsId = egovBBSAttributeManageService.insertBBSMastetInf(bbsInsertRequestDTO);
 
 		// given
 
@@ -85,7 +89,7 @@ class EgovBBSAttributeManageApiControllerTestInsertBBSMasterInfTest {
 
 						.param("searchCnd", "0")
 
-						.param("searchWrd", boardMaster.getBbsNm())
+						.param("searchWrd", bbsInsertRequestDTO.getBbsNm())
 
 						.header("Authorization", jwtResponse.getJToken())
 
@@ -106,14 +110,14 @@ class EgovBBSAttributeManageApiControllerTestInsertBBSMasterInfTest {
 				.andExpect(jsonPath("$.resultMessage").value(equalTo("성공했습니다.")))
 
 				// resultCnt
-				.andExpect(jsonPath("$.result.resultCnt").value("1"))
+				.andExpect(jsonPath("$.result.resultCnt").value(1))
 
-				.andExpect(jsonPath("$.result.resultCnt").value(equalTo("1")))
+				.andExpect(jsonPath("$.result.resultCnt").value(equalTo(1)))
 
 				// bbsNm
-				.andExpect(jsonPath("$.result.resultList[0].bbsNm").value(boardMaster.getBbsNm()))
+				.andExpect(jsonPath("$.result.resultList[0].bbsNm").value(bbsInsertRequestDTO.getBbsNm()))
 
-				.andExpect(jsonPath("$.result.resultList[0].bbsNm").value(equalTo(boardMaster.getBbsNm())))
+				.andExpect(jsonPath("$.result.resultList[0].bbsNm").value(equalTo(bbsInsertRequestDTO.getBbsNm())))
 
 				// bbsId
 				.andExpect(jsonPath("$.result.resultList[0].bbsId").value(resultBbsId))

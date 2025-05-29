@@ -5,7 +5,7 @@ import java.util.Map;
 
 import egovframework.let.cop.bbs.domain.model.BoardMaster;
 import egovframework.let.cop.bbs.domain.model.BoardMasterVO;
-import egovframework.let.cop.bbs.repository.BBSLoneMasterDAO;
+import egovframework.let.cop.bbs.domain.repository.BBSLoneMasterDAO;
 import egovframework.let.cop.bbs.service.EgovBBSLoneMasterService;
 import egovframework.let.cop.com.service.BoardUseInf;
 import egovframework.let.cop.com.service.impl.BBSUseInfoManageDAO;

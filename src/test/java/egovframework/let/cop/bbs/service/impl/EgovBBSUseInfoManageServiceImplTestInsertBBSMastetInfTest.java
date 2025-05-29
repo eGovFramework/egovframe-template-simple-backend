@@ -11,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import egovframework.let.cop.bbs.domain.model.BoardMaster;
 import egovframework.let.cop.bbs.domain.model.BoardMasterVO;
+import egovframework.let.cop.bbs.dto.request.BbsInsertRequestDTO;
 import egovframework.let.cop.bbs.service.EgovBBSAttributeManageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,20 +38,30 @@ class EgovBBSUseInfoManageServiceImplTestInsertBBSMastetInfTest {
 	@Test
 	void test() throws Exception {
 		// given
-		final BoardMaster boardMaster = new BoardMaster();
-
 		final String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("uuuu-MM-dd'T'HH:mm:ss.SSSSSSSSS"));
-
+		
+		final BbsInsertRequestDTO bbsInsertRequestDTO = new BbsInsertRequestDTO();
+		bbsInsertRequestDTO.setBbsNm("test 이백행 게시판명 " + now);
+		bbsInsertRequestDTO.setPosblAtchFileSize("0");
+		bbsInsertRequestDTO.setBbsAttrbCode("BBSA02");
+		bbsInsertRequestDTO.setBbsTyCode("BBST01");
+		bbsInsertRequestDTO.setFileAtchPosblAt("Y");
+		bbsInsertRequestDTO.setUseAt("Y");
+		bbsInsertRequestDTO.setFrstRegisterId("admin");
+		
+		// selectBBSMasterInf의 코드는 리액트 변경이 필요하여 리펙토링 보류 상태이므로
+		// 테스트를 위해 임시로 BoardMaster를 사용합니다.
+		final BoardMaster boardMaster = new BoardMaster();
 		boardMaster.setBbsNm("test 이백행 게시판명 " + now);
-
 		boardMaster.setPosblAtchFileSize("0");
-
+		
 		// when
-		final String result = egovBBSAttributeManageService.insertBBSMastetInf(boardMaster);
+		final String result = egovBBSAttributeManageService.insertBBSMastetInf(bbsInsertRequestDTO);
+		boardMaster.setBbsId(result);
 
 		// then
 		final BoardMasterVO resultBoardMasterVO = egovBBSAttributeManageService.selectBBSMasterInf(boardMaster);
-
+		
 		if (log.isDebugEnabled()) {
 			log.debug("result={}", result);
 			log.debug("resultBoardMasterVO={}", resultBoardMasterVO);

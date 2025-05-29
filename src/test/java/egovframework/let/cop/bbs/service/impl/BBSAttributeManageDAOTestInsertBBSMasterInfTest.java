@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import egovframework.let.cop.bbs.domain.model.BoardMaster;
-import egovframework.let.cop.bbs.repository.BBSAttributeManageDAO;
+import egovframework.let.cop.bbs.domain.repository.BBSAttributeManageDAO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

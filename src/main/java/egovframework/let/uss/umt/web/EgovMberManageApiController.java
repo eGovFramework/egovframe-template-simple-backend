@@ -30,7 +30,7 @@ import egovframework.com.cmm.service.EgovCmmUseService;
 import egovframework.com.cmm.service.ResultVO;
 import egovframework.com.cmm.util.ResultVoHelper;
 import egovframework.com.jwt.EgovJwtTokenUtil;
-import egovframework.let.cop.bbs.domain.request.BbsSearchRequestDTO;
+import egovframework.let.cop.bbs.dto.request.BbsSearchRequestDTO;
 import egovframework.let.uss.umt.service.EgovMberManageService;
 import egovframework.let.uss.umt.service.MberManageVO;
 import egovframework.let.uss.umt.service.UserDefaultVO;

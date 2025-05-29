@@ -1,5 +1,7 @@
 package egovframework.com.cmm.service;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import egovframework.com.cmm.ResponseCode;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
@@ -31,12 +33,13 @@ import lombok.Setter;
 @Setter
 public class IntermediateResultVO<T> {
 
-	@Schema(description = "응답 코드")
-	private int resultCode = 0;
+	@Schema(description = "응답 코드", example = "0")
+	private int resultCode;
 	
-	@Schema(description = "응답 메시지")
-	private String resultMessage = "OK";
+	@Schema(description = "응답 메시지", example = "OK")
+	private String resultMessage;
 	
+    @JsonInclude(JsonInclude.Include.NON_NULL)
 	@Schema(description = "응답 객체")
 	private T result;
 	
@@ -44,6 +47,14 @@ public class IntermediateResultVO<T> {
 		IntermediateResultVO<T> result = new IntermediateResultVO<>();
 		result.setResultCode(ResponseCode.SUCCESS.getCode());
 		result.setResultMessage(ResponseCode.SUCCESS.getMessage());
+		result.setResult(data);
+		return result;
+	}
+	
+	public static <T> IntermediateResultVO<T> inputCheckError(T data) {
+		IntermediateResultVO<T> result = new IntermediateResultVO<>();
+		result.setResultCode(ResponseCode.INPUT_CHECK_ERROR.getCode());
+		result.setResultMessage(ResponseCode.INPUT_CHECK_ERROR.getMessage());
 		result.setResult(data);
 		return result;
 	}

@@ -4,8 +4,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.validation.Valid;
+
 import org.egovframe.rte.fdl.property.EgovPropertyService;
 import org.egovframe.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
+import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,13 +29,19 @@ import egovframework.com.cmm.service.EgovCmmUseService;
 import egovframework.com.cmm.service.IntermediateResultVO;
 import egovframework.com.cmm.service.ResultVO;
 import egovframework.com.cmm.util.ResultVoHelper;
+import egovframework.let.cop.bbs.domain.model.BoardMaster;
 import egovframework.let.cop.bbs.domain.model.BoardMasterVO;
-import egovframework.let.cop.bbs.domain.request.BbsSearchRequestDTO;
-import egovframework.let.cop.bbs.domain.response.BbsListResponseVO;
+import egovframework.let.cop.bbs.dto.request.BbsInsertRequestDTO;
+import egovframework.let.cop.bbs.dto.request.BbsSearchRequestDTO;
+import egovframework.let.cop.bbs.dto.request.BbsUpdateRequestDTO;
+import egovframework.let.cop.bbs.dto.response.BbsInsertResponseDTO;
+import egovframework.let.cop.bbs.dto.response.BbsListResponseDTO;
 import egovframework.let.cop.bbs.service.EgovBBSAttributeManageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -87,7 +96,7 @@ public class EgovBBSAttributeManageApiController {
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
 	})
 	@GetMapping(value = "/bbsMaster")
-	public IntermediateResultVO<BbsListResponseVO> selectBBSMasterInfs(@ModelAttribute BbsSearchRequestDTO bbsSearchRequestDTO)
+	public IntermediateResultVO<BbsListResponseDTO> selectBBSMasterInfs(@ModelAttribute BbsSearchRequestDTO bbsSearchRequestDTO)
 		throws Exception {
 		// 1. 페이지 정보 구성
 		int pageUnit = propertyService.getInt("Globals.pageUnit");
@@ -99,7 +108,7 @@ public class EgovBBSAttributeManageApiController {
 		paginationInfo.setPageSize(pageSize);
 		
 		// 2. 서비스 호출 및 응답 객체 구성
-		BbsListResponseVO response = bbsAttrbService.selectBBSMasterInfs(bbsSearchRequestDTO, paginationInfo);
+		BbsListResponseDTO response = bbsAttrbService.selectBBSMasterInfs(bbsSearchRequestDTO, paginationInfo);
 		paginationInfo.setTotalRecordCount(response.getResultCnt());
 		response.setPaginationInfo(paginationInfo); 
 		return IntermediateResultVO.success(response);
@@ -124,11 +133,12 @@ public class EgovBBSAttributeManageApiController {
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
 	})
 	@GetMapping(value ="/bbsMaster/{bbsId}")
-	public ResultVO selectBBSMasterInf(@Parameter(name = "bbsId", description = "게시판 Id", in = ParameterIn.PATH, example="BBSMSTR_AAAAAAAAAAAA") 
+	public ResultVO  selectBBSMasterInf(@Parameter(name = "bbsId", description = "게시판 Id", in = ParameterIn.PATH, example="BBSMSTR_AAAAAAAAAAAA") 
 			@PathVariable("bbsId") String bbsId)
 		throws Exception {
 		BoardMasterVO searchVO = new BoardMasterVO();
 		searchVO.setBbsId(bbsId);
+		searchVO.setUseAt("Y");
 		
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 
@@ -136,6 +146,14 @@ public class EgovBBSAttributeManageApiController {
 		resultMap.put("boardMasterVO", vo);
 
 		return resultVoHelper.buildFromMap(resultMap, ResponseCode.SUCCESS);
+		
+//		* HashMap으로 인해 result 안에 boardMasterVO key가 하나 더 생겨서 들어가는 구조로써
+//		  아래와 같이 변환 작업 시 리엑트에서 수정이 필요하므로 보류합니다.
+		
+//		BbsDetailResponseVO response = bbsAttrbService.selectBBSMasterInf(bbsId);
+//
+//		System.out.println(response.toString());
+//		return IntermediateResultVO.success(response);
 	}
 
 	/**
@@ -159,35 +177,39 @@ public class EgovBBSAttributeManageApiController {
 			@ApiResponse(responseCode = "900", description = "입력값 무결성 오류")
 	})
 	@PostMapping(value ="/bbsMaster")
-	public ResultVO insertBBSMasterInf(BoardMasterVO boardMasterVO,
+	public IntermediateResultVO<BbsInsertResponseDTO> insertBBSMasterInf(@Valid @ParameterObject BbsInsertRequestDTO bbsInsertRequestDTO,
 									   BindingResult bindingResult,
 									   @Parameter(hidden = true) @AuthenticationPrincipal LoginVO loginVO
 	)
 		throws Exception {
-		Map<String, Object> resultMap = new HashMap<String, Object>();
 
-		beanValidator.validate(boardMasterVO, bindingResult);
+		beanValidator.validate(bbsInsertRequestDTO, bindingResult);
+		
+		BbsInsertResponseDTO response = new BbsInsertResponseDTO();
+		System.out.println(bbsInsertRequestDTO.getFrstRegisterId());
+		
 		if (bindingResult.hasErrors()) {
 			ComDefaultCodeVO vo = new ComDefaultCodeVO();
+			
 			vo.setCodeId("COM004");
 			List<CmmnDetailCode> codeResult = cmmUseService.selectCmmCodeDetail(vo);
-			resultMap.put("typeList", codeResult);
-
+			response.setTypeList(codeResult);
+			
 			vo.setCodeId("COM009");
 			codeResult = cmmUseService.selectCmmCodeDetail(vo);
-			resultMap.put("attrbList", codeResult);
-
-			return resultVoHelper.buildFromMap(resultMap, ResponseCode.INPUT_CHECK_ERROR);
+			response.setAttrbList(codeResult);
+			
+			return IntermediateResultVO.inputCheckError(response);
 		}
 
-		boardMasterVO.setFrstRegisterId(loginVO.getUniqId());
-		boardMasterVO.setUseAt("Y");
-		boardMasterVO.setTrgetId("SYSTEMDEFAULT_REGIST");
-		boardMasterVO.setPosblAtchFileSize(propertyService.getString("posblAtchFileSize"));
+		bbsInsertRequestDTO.setFrstRegisterId(loginVO.getUniqId());
+		bbsInsertRequestDTO.setUseAt("Y");
+		bbsInsertRequestDTO.setTrgetId("SYSTEMDEFAULT_REGIST");
+		bbsInsertRequestDTO.setPosblAtchFileSize(propertyService.getString("posblAtchFileSize"));
 
-		bbsAttrbService.insertBBSMastetInf(boardMasterVO);
+		bbsAttrbService.insertBBSMastetInf(bbsInsertRequestDTO);
 
-		return resultVoHelper.buildFromMap(resultMap, ResponseCode.SUCCESS);
+		return IntermediateResultVO.success(response);
 	}
 
 	/**
@@ -207,33 +229,70 @@ public class EgovBBSAttributeManageApiController {
 			tags = {"EgovBBSAttributeManageApiController"}
 	)
 	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "수정 성공"),
-			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님"),
-			@ApiResponse(responseCode = "900", description = "입력값 무결성 오류")
-	})
+			@ApiResponse(
+					responseCode = "200", 
+					description = "수정 성공",
+			        content = @Content(
+				            mediaType = "application/json",
+				            examples = @ExampleObject(
+				                name = "200 응답 예시",
+				                summary = "Forbidden",
+				                value = "{\n" +
+				                        "  \"resultCode\": 200,\n" +
+				                        "  \"resultMessage\": \"성공했습니다.\"\n" +
+				                        "}"
+				            )
+				        )),
+			@ApiResponse(
+					responseCode = "403",
+					description = "인가된 사용자가 아님",
+			        content = @Content(
+				            mediaType = "application/json",
+				            examples = @ExampleObject(
+				                name = "403 응답 예시",
+				                summary = "Forbidden",
+				                value = "{\n" +
+				                        "  \"resultCode\": 403,\n" +
+				                        "  \"resultMessage\": \"인가된 사용자가 아님\"\n" +
+				                        "}"
+				            )
+				        )),
+			@ApiResponse(
+					responseCode = "900",
+					description = "입력값 무결성 오류",
+					content = @Content(
+				            mediaType = "application/json",
+				            examples = @ExampleObject(
+				                name = "900 응답 예시",
+				                summary = "Forbidden",
+				                value = "{\n" +
+				                        "  \"resultCode\": 900,\n" +
+				                        "  \"resultMessage\": \"입력값 무결성 오류\"\n" +
+				                        "}"
+				            )
+				        )),
+				})
 	@PutMapping(value ="/bbsMaster/{bbsId}")
-	public ResultVO updateBBSMasterInf(@Parameter(name = "bbsId", description = "게시판 Id", in = ParameterIn.PATH, example="BBSMSTR_AAAAAAAAAAAA")
-										@PathVariable("bbsId") String bbsId,
-										@RequestBody BoardMasterVO boardMasterVO,
+	public IntermediateResultVO<Object> updateBBSMasterInf(@RequestBody BbsUpdateRequestDTO bbsUpdateRequestDTO,
 										BindingResult bindingResult,
 										@Parameter(hidden = true) @AuthenticationPrincipal LoginVO loginVO
 										) throws Exception {
-		Map<String, Object> resultMap = new HashMap<String, Object>();
-
-		beanValidator.validate(boardMasterVO, bindingResult);
+		beanValidator.validate(bbsUpdateRequestDTO, bindingResult);
 
 		if (bindingResult.hasErrors()) {
-			BoardMasterVO vo = bbsAttrbService.selectBBSMasterInf(boardMasterVO);
-			resultMap.put("BoardMasterVO", vo);
+			// selectBBSMasterInf 메서드는 리액트에서의 코드 수정이 필요하여 보류하였습니다.
+			// 이로 인해 해당 라인의 코드 또한 보류되었습니다.
+			BoardMaster boardMaster = bbsUpdateRequestDTO.toBoardMaster();
+			BoardMasterVO vo = bbsAttrbService.selectBBSMasterInf(boardMaster);
 
-			return resultVoHelper.buildFromMap(resultMap, ResponseCode.INPUT_CHECK_ERROR);
+			return IntermediateResultVO.inputCheckError(vo);
 		}
 
-		boardMasterVO.setLastUpdusrId(loginVO.getUniqId());
-		boardMasterVO.setPosblAtchFileSize(propertyService.getString("posblAtchFileSize"));
-		bbsAttrbService.updateBBSMasterInf(boardMasterVO);
+		bbsUpdateRequestDTO.setLastUpdusrId(loginVO.getUniqId());
+		bbsUpdateRequestDTO.setPosblAtchFileSize(propertyService.getString("posblAtchFileSize"));
+		bbsAttrbService.updateBBSMasterInf(bbsUpdateRequestDTO);
 
-		return resultVoHelper.buildFromMap(resultMap, ResponseCode.SUCCESS);
+		return IntermediateResultVO.success(null);
 	}
 
 	/**
@@ -252,22 +311,43 @@ public class EgovBBSAttributeManageApiController {
 			tags = {"EgovBBSAttributeManageApiController"}
 	)
 	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "삭제 성공"),
-			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
-	})
+		    @ApiResponse(
+		        responseCode = "200",
+		        description = "삭제 성공",
+		        content = @Content(
+			            mediaType = "application/json",
+			            examples = @ExampleObject(
+			                name = "200 응답 예시",
+			                summary = "Forbidden",
+			                value = "{\n" +
+			                        "  \"resultCode\": 200,\n" +
+			                        "  \"resultMessage\": \"성공했습니다.\"\n" +
+			                        "}"
+			            )
+			        )),
+		    @ApiResponse(
+		        responseCode = "403",
+		        description = "인가된 사용자가 아님",
+		        content = @Content(
+		            mediaType = "application/json",
+		            examples = @ExampleObject(
+		                name = "403 응답 예시",
+		                summary = "Forbidden",
+		                value = "{\n" +
+		                        "  \"resultCode\": 403,\n" +
+		                        "  \"resultMessage\": \"인가된 사용자가 아님\"\n" +
+		                        "}"
+		            )
+		        ))
+			}) 
 	@PatchMapping(value ="/bbsMaster/{bbsId}")
-	public ResultVO deleteBBSMasterInf(@Parameter(hidden = true) @AuthenticationPrincipal LoginVO loginVO,
+	public IntermediateResultVO<Object> deleteBBSMasterInf(@Parameter(hidden = true) @AuthenticationPrincipal LoginVO loginVO,
 		@Parameter(name = "bbsId", description = "게시판 Id", in = ParameterIn.PATH, example="BBSMSTR_AAAAAAAAAAAA")
 		@PathVariable("bbsId") String bbsId
 		) throws Exception {
-			BoardMasterVO boardMasterVO = new BoardMasterVO();
-			
-			boardMasterVO.setLastUpdusrId(loginVO.getUniqId());
-			boardMasterVO.setBbsId(bbsId);
-			
-			bbsAttrbService.deleteBBSMasterInf(boardMasterVO);
+			bbsAttrbService.deleteBBSMasterInf(loginVO.getUniqId(), bbsId);
 
-			return resultVoHelper.buildFromMap(new HashMap<String, Object>(), ResponseCode.SUCCESS);
+			return IntermediateResultVO.success(null);
 	}
 
 }
