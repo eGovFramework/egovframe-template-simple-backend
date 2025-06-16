@@ -2,8 +2,10 @@ package egovframework.let.cop.bbs.service;
 
 import java.util.Map;
 
+import egovframework.com.cmm.LoginVO;
 import egovframework.let.cop.bbs.domain.model.Board;
 import egovframework.let.cop.bbs.domain.model.BoardVO;
+import egovframework.let.cop.bbs.dto.request.BBSManageDeleteRequestDTO;
 
 /**
  * 게시물 관리를 위한 서비스 인터페이스  클래스
@@ -30,7 +32,7 @@ public interface EgovBBSManageService {
 	 * @param Board
 	 * @exception Exception Exception
 	 */
-	public void deleteBoardArticle(Board Board)
+	public void deleteBoardArticle(BBSManageDeleteRequestDTO bbsManageDeleteRequestDTO, LoginVO user)
 	  throws Exception;
 
 	/**
