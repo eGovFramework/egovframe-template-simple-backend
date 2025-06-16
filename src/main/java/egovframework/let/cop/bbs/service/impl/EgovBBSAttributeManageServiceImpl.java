@@ -45,7 +45,7 @@ import lombok.extern.slf4j.Slf4j;
  *  2009.03.24  이삼섭          최초 생성
  *  2009.06.26	한성곤		   2단계 기능 추가 (댓글관리, 만족도조사)
  *  2011.08.31  JJY            경량환경 템플릿 커스터마이징버전 생성
- *
+ *  2025.06.16  김재섭(nirsa)   서비스 로직 이동 및 생성자 주입 방식 변경
  *  </pre>
  */
 @Slf4j
@@ -65,8 +65,6 @@ public class EgovBBSAttributeManageServiceImpl extends EgovAbstractServiceImpl i
 
     @Resource(name = "egovBBSMstrIdGnrService")
     private EgovIdGnrService idgenService;
-
-
 
     /**
      * 등록된 게시판 속성정보를 삭제한다.
