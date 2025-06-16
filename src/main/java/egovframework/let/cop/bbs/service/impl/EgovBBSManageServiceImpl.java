@@ -6,19 +6,16 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Resource;
-
 import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
-import org.egovframe.rte.fdl.property.EgovPropertyService;
 import org.springframework.stereotype.Service;
 
 import egovframework.com.cmm.LoginVO;
-import egovframework.com.cmm.service.EgovFileMngService;
 import egovframework.let.cop.bbs.domain.model.Board;
 import egovframework.let.cop.bbs.domain.model.BoardVO;
 import egovframework.let.cop.bbs.domain.repository.BBSManageDAO;
 import egovframework.let.cop.bbs.service.EgovBBSManageService;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 게시물 관리를 위한 서비스 구현 클래스
@@ -38,16 +35,9 @@ import egovframework.let.utl.fcc.service.EgovDateUtil;
  *  </pre>
  */
 @Service("EgovBBSManageService")
+@RequiredArgsConstructor
 public class EgovBBSManageServiceImpl extends EgovAbstractServiceImpl implements EgovBBSManageService {
-
-	@Resource(name = "BBSManageDAO")
-	private BBSManageDAO bbsMngDAO;
-
-	@Resource(name = "EgovFileMngService")
-	private EgovFileMngService fileService;
-
-	@Resource(name = "propertiesService")
-	protected EgovPropertyService propertyService;
+	private final BBSManageDAO bbsMngDAO;
 
 	/**
 	 * 게시물 한 건을 삭제 한다.

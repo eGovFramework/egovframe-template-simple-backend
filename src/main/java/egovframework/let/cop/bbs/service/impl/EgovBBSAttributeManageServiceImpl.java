@@ -27,6 +27,7 @@ import egovframework.let.cop.com.service.BoardUseInf;
 import egovframework.let.cop.com.service.EgovUserInfManageService;
 import egovframework.let.cop.com.service.UserInfVO;
 import egovframework.let.cop.com.service.impl.BBSUseInfoManageDAO;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -49,29 +50,23 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @Service("EgovBBSAttributeManageService")
+@RequiredArgsConstructor
 public class EgovBBSAttributeManageServiceImpl extends EgovAbstractServiceImpl implements EgovBBSAttributeManageService {
-
-    @Resource(name = "BBSAttributeManageDAO")
-    private BBSAttributeManageDAO attrbMngDAO;
-
-    @Resource(name = "BBSUseInfoManageDAO")
-    private BBSUseInfoManageDAO bbsUseDAO;
-
-    @Resource(name = "EgovUserInfManageService")
-    private EgovUserInfManageService userService;
-
-    @Resource(name = "egovBBSMstrIdGnrService")
-    private EgovIdGnrService idgenService;
-
-    @Resource(name = "propertiesService")
-    protected EgovPropertyService propertyService;
+    private final BBSAttributeManageDAO attrbMngDAO;
+    private final BBSUseInfoManageDAO bbsUseDAO;
+    private final EgovUserInfManageService userService;
+    private final EgovPropertyService propertyService;
 
     //---------------------------------
     // 2009.06.26 : 2단계 기능 추가
     //---------------------------------
-    @Resource(name = "BBSAddedOptionsDAO")
-    private BBSAddedOptionsDAO addedOptionsDAO;
+    private final BBSAddedOptionsDAO addedOptionsDAO;
     ////-------------------------------
+
+    @Resource(name = "egovBBSMstrIdGnrService")
+    private EgovIdGnrService idgenService;
+
+
 
     /**
      * 등록된 게시판 속성정보를 삭제한다.
