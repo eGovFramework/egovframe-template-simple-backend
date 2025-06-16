@@ -8,6 +8,8 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
+import org.egovframe.rte.fdl.property.EgovPropertyService;
 import org.springframework.stereotype.Service;
 
 import egovframework.com.cmm.LoginVO;
@@ -15,12 +17,8 @@ import egovframework.com.cmm.service.EgovFileMngService;
 import egovframework.let.cop.bbs.domain.model.Board;
 import egovframework.let.cop.bbs.domain.model.BoardVO;
 import egovframework.let.cop.bbs.domain.repository.BBSManageDAO;
-import egovframework.let.cop.bbs.dto.request.BbsDeleteRequestDTO;
 import egovframework.let.cop.bbs.service.EgovBBSManageService;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
-
-import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
-import org.egovframe.rte.fdl.property.EgovPropertyService;
 
 /**
  * 게시물 관리를 위한 서비스 구현 클래스
@@ -57,13 +55,17 @@ public class EgovBBSManageServiceImpl extends EgovAbstractServiceImpl implements
 	 * @see egovframework.let.cop.bbs.brd.service.EgovBBSManageService#deleteBoardArticle(egovframework.let.cop.bbs.domain.model.brd.service.Board)
 	 */
 	@Override
-	public void deleteBoardArticle(BbsDeleteRequestDTO bbsManageDeleteRequestDTO, LoginVO user) throws Exception {
-//		FileVO fvo = new FileVO();
-
-//		fvo.setAtchFileId(board.getAtchFileId());
+	public void deleteBoardArticle(String bbsId, String nttId, LoginVO user) throws Exception {
+		BoardVO vo = new BoardVO();
+		vo.setBbsId(bbsId);
+		vo.setNttId(Long.parseLong(nttId));
+		vo.setNttSj("이 글은 작성자에 의해서 삭제되었습니다.");
+		vo.setLastUpdusrId(user.getUniqId());
 		
-		bbsMngDAO.deleteBoardArticle(bbsManageDeleteRequestDTO.toBoardVO(user.getUniqId()));
+		bbsMngDAO.deleteBoardArticle(vo);
 
+//		FileVO fvo = new FileVO();
+//		fvo.setAtchFileId(vo.getAtchFileId());
 //		if (!"".equals(fvo.getAtchFileId()) || fvo.getAtchFileId() != null) {
 //			fileService.deleteAllFileInf(fvo);
 //		}

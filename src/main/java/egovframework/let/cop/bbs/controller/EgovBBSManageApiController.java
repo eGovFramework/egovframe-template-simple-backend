@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -35,7 +36,6 @@ import egovframework.com.cmm.web.EgovFileDownloadController;
 import egovframework.com.jwt.EgovJwtTokenUtil;
 import egovframework.let.cop.bbs.domain.model.BoardMasterVO;
 import egovframework.let.cop.bbs.domain.model.BoardVO;
-import egovframework.let.cop.bbs.dto.request.BbsDeleteRequestDTO;
 import egovframework.let.cop.bbs.dto.request.BbsAttributeSearchRequestDTO;
 import egovframework.let.cop.bbs.service.EgovBBSAttributeManageService;
 import egovframework.let.cop.bbs.service.EgovBBSManageService;
@@ -484,12 +484,15 @@ public class EgovBBSManageApiController {
 		        ))
 			}) 
 	@PatchMapping(value = "/board/{bbsId}/{nttId}")
-	public IntermediateResultVO<Object> deleteBoardArticle(@ModelAttribute BbsDeleteRequestDTO bbsManageDeleteRequestDTO,
+	public IntermediateResultVO<Object> deleteBoardArticle(
+		@Parameter(name = "bbsId", description = "게시판 Id", in = ParameterIn.PATH, example="BBSMSTR_AAAAAAAAAAAA")	
+		@PathVariable("bbsId") String bbsId,
+		@Parameter(name = "nttId", description = "게시글 Id", in = ParameterIn.PATH, example="1")
+		@PathVariable("nttId") String nttId,
 		@Parameter(hidden = true) @AuthenticationPrincipal LoginVO user)
-
 		throws Exception {
 
-		bbsMngService.deleteBoardArticle(bbsManageDeleteRequestDTO, user);
+		bbsMngService.deleteBoardArticle(bbsId, nttId, user);
 
 		return IntermediateResultVO.success(null);
 	}

@@ -32,7 +32,7 @@ public interface EgovBBSManageService {
 	 * @param Board
 	 * @exception Exception Exception
 	 */
-	public void deleteBoardArticle(BbsDeleteRequestDTO bbsManageDeleteRequestDTO, LoginVO user)
+	public void deleteBoardArticle(String bbsId, String nttId, LoginVO user)
 	  throws Exception;
 
 	/**
