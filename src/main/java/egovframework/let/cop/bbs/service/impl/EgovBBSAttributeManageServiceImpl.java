@@ -17,11 +17,11 @@ import egovframework.let.cop.bbs.domain.model.BoardMaster;
 import egovframework.let.cop.bbs.domain.model.BoardMasterVO;
 import egovframework.let.cop.bbs.domain.repository.BBSAddedOptionsDAO;
 import egovframework.let.cop.bbs.domain.repository.BBSAttributeManageDAO;
-import egovframework.let.cop.bbs.dto.request.BbsInsertRequestDTO;
-import egovframework.let.cop.bbs.dto.request.BbsSearchRequestDTO;
-import egovframework.let.cop.bbs.dto.request.BbsUpdateRequestDTO;
-import egovframework.let.cop.bbs.dto.response.BbsDetailResponseDTO;
-import egovframework.let.cop.bbs.dto.response.BbsListResponseDTO;
+import egovframework.let.cop.bbs.dto.request.BbsAttributeInsertRequestDTO;
+import egovframework.let.cop.bbs.dto.request.BbsAttributeSearchRequestDTO;
+import egovframework.let.cop.bbs.dto.request.BbsAttributeUpdateRequestDTO;
+import egovframework.let.cop.bbs.dto.response.BbsAttributeDetailResponseDTO;
+import egovframework.let.cop.bbs.dto.response.BbsAttributeListResponseDTO;
 import egovframework.let.cop.bbs.service.EgovBBSAttributeManageService;
 import egovframework.let.cop.com.service.BoardUseInf;
 import egovframework.let.cop.com.service.EgovUserInfManageService;
@@ -95,7 +95,7 @@ public class EgovBBSAttributeManageServiceImpl extends EgovAbstractServiceImpl i
      *
      * @see egovframework.let.cop.bbs.brd.service.EgovBBSAttributeManageService#insertBBSMastetInf(egovframework.let.cop.bbs.domain.model.brd.service.BoardMaster)
      */
-    public String insertBBSMastetInf(BbsInsertRequestDTO bbsInsertRequestDTO) throws Exception {
+    public String insertBBSMastetInf(BbsAttributeInsertRequestDTO bbsInsertRequestDTO) throws Exception {
 		String bbsId = idgenService.getNextStringId();
 		BoardMaster boardMaster = bbsInsertRequestDTO.toBoardMaster(bbsId);
 	
@@ -210,7 +210,7 @@ public class EgovBBSAttributeManageServiceImpl extends EgovAbstractServiceImpl i
      *
      * @see egovframework.let.cop.bbs.brd.service.EgovBBSAttributeManageService#selectBBSMasterInfs(egovframework.let.cop.bbs.domain.model.brd.service.BoardMasterVO)
      */
-    public BbsListResponseDTO selectBBSMasterInfs(BbsSearchRequestDTO bbsSearchRequestDTO, PaginationInfo paginationInfo) throws Exception {
+    public BbsAttributeListResponseDTO selectBBSMasterInfs(BbsAttributeSearchRequestDTO bbsSearchRequestDTO, PaginationInfo paginationInfo) throws Exception {
 		// 도메인 모델(BoardMasterVO) 구성
     	BoardMasterVO boardMasterVO = new BoardMasterVO();
 		boardMasterVO.setSearchCnd(bbsSearchRequestDTO.getSearchCnd());
@@ -225,11 +225,11 @@ public class EgovBBSAttributeManageServiceImpl extends EgovAbstractServiceImpl i
     	List<BoardMasterVO> voList = attrbMngDAO.selectBBSMasterInfs(boardMasterVO);
     	int cnt = attrbMngDAO.selectBBSMasterInfsCnt(boardMasterVO);
     	
-    	List<BbsDetailResponseDTO> dtoList = voList.stream()
-    		.map(BbsDetailResponseDTO::from)
+    	List<BbsAttributeDetailResponseDTO> dtoList = voList.stream()
+    		.map(BbsAttributeDetailResponseDTO::from)
     		.collect(Collectors.toList());
 
-    	return BbsListResponseDTO.builder()
+    	return BbsAttributeListResponseDTO.builder()
     		.resultList(dtoList)
     		.resultCnt(cnt)
     		.build();
@@ -240,7 +240,7 @@ public class EgovBBSAttributeManageServiceImpl extends EgovAbstractServiceImpl i
      *
      * @see egovframework.let.cop.bbs.brd.service.EgovBBSAttributeManageService#updateBBSMasterInf(egovframework.let.cop.bbs.domain.model.brd.service.BoardMaster)
      */
-    public void updateBBSMasterInf(BbsUpdateRequestDTO bbsUpdateRequestDTO) throws Exception {
+    public void updateBBSMasterInf(BbsAttributeUpdateRequestDTO bbsUpdateRequestDTO) throws Exception {
         /**
          * BbsUpdateRequestDTO → BoardMaster 변환 메서드
          * 

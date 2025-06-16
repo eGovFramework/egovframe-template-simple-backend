@@ -30,8 +30,8 @@ import lombok.Setter;
 @Getter
 @Builder
 @Schema(description = "게시판 리스트 조회 응답 DTO")
-public class BbsListResponseDTO {
-    private List<BbsDetailResponseDTO> resultList;
+public class BbsAttributeListResponseDTO {
+    private List<BbsAttributeDetailResponseDTO> resultList;
     private int resultCnt;
     
     @Setter

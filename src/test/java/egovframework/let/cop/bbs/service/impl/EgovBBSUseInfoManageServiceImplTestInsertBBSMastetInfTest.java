@@ -11,7 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import egovframework.let.cop.bbs.domain.model.BoardMaster;
 import egovframework.let.cop.bbs.domain.model.BoardMasterVO;
-import egovframework.let.cop.bbs.dto.request.BbsInsertRequestDTO;
+import egovframework.let.cop.bbs.dto.request.BbsAttributeInsertRequestDTO;
 import egovframework.let.cop.bbs.service.EgovBBSAttributeManageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,7 +40,7 @@ class EgovBBSUseInfoManageServiceImplTestInsertBBSMastetInfTest {
 		// given
 		final String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("uuuu-MM-dd'T'HH:mm:ss.SSSSSSSSS"));
 		
-		final BbsInsertRequestDTO bbsInsertRequestDTO = new BbsInsertRequestDTO();
+		final BbsAttributeInsertRequestDTO bbsInsertRequestDTO = new BbsAttributeInsertRequestDTO();
 		bbsInsertRequestDTO.setBbsNm("test 이백행 게시판명 " + now);
 		bbsInsertRequestDTO.setPosblAtchFileSize("0");
 		bbsInsertRequestDTO.setBbsAttrbCode("BBSA02");

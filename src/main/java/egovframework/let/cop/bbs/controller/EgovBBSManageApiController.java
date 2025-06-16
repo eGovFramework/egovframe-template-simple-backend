@@ -35,8 +35,8 @@ import egovframework.com.cmm.web.EgovFileDownloadController;
 import egovframework.com.jwt.EgovJwtTokenUtil;
 import egovframework.let.cop.bbs.domain.model.BoardMasterVO;
 import egovframework.let.cop.bbs.domain.model.BoardVO;
-import egovframework.let.cop.bbs.dto.request.BBSManageDeleteRequestDTO;
-import egovframework.let.cop.bbs.dto.request.BbsSearchRequestDTO;
+import egovframework.let.cop.bbs.dto.request.BbsDeleteRequestDTO;
+import egovframework.let.cop.bbs.dto.request.BbsAttributeSearchRequestDTO;
 import egovframework.let.cop.bbs.service.EgovBBSAttributeManageService;
 import egovframework.let.cop.bbs.service.EgovBBSManageService;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
@@ -142,7 +142,7 @@ public class EgovBBSManageApiController {
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
 	})
 	@GetMapping(value = "/board")
-	public ResultVO selectBoardArticles(@ModelAttribute BbsSearchRequestDTO boardMasterSearchVO, 
+	public ResultVO selectBoardArticles(@ModelAttribute BbsAttributeSearchRequestDTO boardMasterSearchVO, 
 			@Parameter(hidden = true) @AuthenticationPrincipal LoginVO user)
 		throws Exception {
 		BoardMasterVO vo = new BoardMasterVO();
@@ -484,7 +484,7 @@ public class EgovBBSManageApiController {
 		        ))
 			}) 
 	@PatchMapping(value = "/board/{bbsId}/{nttId}")
-	public IntermediateResultVO<Object> deleteBoardArticle(@ModelAttribute BBSManageDeleteRequestDTO bbsManageDeleteRequestDTO,
+	public IntermediateResultVO<Object> deleteBoardArticle(@ModelAttribute BbsDeleteRequestDTO bbsManageDeleteRequestDTO,
 		@Parameter(hidden = true) @AuthenticationPrincipal LoginVO user)
 
 		throws Exception {

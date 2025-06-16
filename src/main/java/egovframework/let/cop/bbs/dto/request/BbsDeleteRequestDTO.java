@@ -28,7 +28,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Schema(description = "게시글 마스터 수정 요청 DTO")
-public class BBSManageDeleteRequestDTO {
+public class BbsDeleteRequestDTO {
     @Schema(description = "게시판 Id", example="BBSMSTR_AAAAAAAAAAAA")
     private String bbsId;
 
