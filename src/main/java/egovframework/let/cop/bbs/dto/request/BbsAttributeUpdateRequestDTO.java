@@ -92,7 +92,7 @@ public class BbsAttributeUpdateRequestDTO {
     private String option = "";
 	
     /**
-     * BbsUpdateRequestDTO → BoardMaster 변환 메서드
+     * BbsAttributeUpdateRequestDTO → BoardMaster 변환 메서드
      * 
      * @return BoardMaster 도메인 객체
      */

@@ -65,7 +65,7 @@ public class BbsAttributeDetailResponseDTO {
     private String option = "";
     
 	/**
-	 *  BoardMasterVO → BoardMasterResponse 변환 메서드 입니다.
+	 *  BbsAttributeDetailResponseDTO → BoardMasterResponse 변환 메서드 입니다.
 	 * @param vo
 	 * @return BoardMasterResponse
 	 */

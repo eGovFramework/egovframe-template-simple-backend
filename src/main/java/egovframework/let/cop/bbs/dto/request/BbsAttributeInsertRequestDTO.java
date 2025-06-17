@@ -74,7 +74,7 @@ public class BbsAttributeInsertRequestDTO {
     private String posblAtchFileSize;
 	
     /**
-     * BbsUpdateRequestDTO → BoardMaster 변환 메서드
+     * BbsAttributeInsertRequestDTO → BoardMaster 변환 메서드
      * 
      * @return BoardMaster 도메인 객체
      */

@@ -88,9 +88,9 @@ public class EgovBBSAttributeManageServiceImpl extends EgovAbstractServiceImpl i
      *
      * @see egovframework.let.cop.bbs.brd.service.EgovBBSAttributeManageService#insertBBSMastetInf(egovframework.let.cop.bbs.domain.model.brd.service.BoardMaster)
      */
-    public String insertBBSMastetInf(BbsAttributeInsertRequestDTO bbsInsertRequestDTO) throws Exception {
+    public String insertBBSMastetInf(BbsAttributeInsertRequestDTO bbsAttributeInsertRequestDTO) throws Exception {
 		String bbsId = idgenService.getNextStringId();
-		BoardMaster boardMaster = bbsInsertRequestDTO.toBoardMaster(bbsId);
+		BoardMaster boardMaster = bbsAttributeInsertRequestDTO.toBoardMaster(bbsId);
 	
 		attrbMngDAO.insertBBSMasterInf(boardMaster);
 	
@@ -203,11 +203,11 @@ public class EgovBBSAttributeManageServiceImpl extends EgovAbstractServiceImpl i
      *
      * @see egovframework.let.cop.bbs.brd.service.EgovBBSAttributeManageService#selectBBSMasterInfs(egovframework.let.cop.bbs.domain.model.brd.service.BoardMasterVO)
      */
-    public BbsAttributeListResponseDTO selectBBSMasterInfs(BbsAttributeSearchRequestDTO bbsSearchRequestDTO, PaginationInfo paginationInfo) throws Exception {
+    public BbsAttributeListResponseDTO selectBBSMasterInfs(BbsAttributeSearchRequestDTO bbsAttributeSearchRequestDTO, PaginationInfo paginationInfo) throws Exception {
 		// 도메인 모델(BoardMasterVO) 구성
     	BoardMasterVO boardMasterVO = new BoardMasterVO();
-		boardMasterVO.setSearchCnd(bbsSearchRequestDTO.getSearchCnd());
-		boardMasterVO.setSearchWrd(bbsSearchRequestDTO.getSearchWrd());
+		boardMasterVO.setSearchCnd(bbsAttributeSearchRequestDTO.getSearchCnd());
+		boardMasterVO.setSearchWrd(bbsAttributeSearchRequestDTO.getSearchWrd());
 		boardMasterVO.setPageUnit(paginationInfo.getRecordCountPerPage());
 		boardMasterVO.setPageSize(paginationInfo.getPageSize());
 		boardMasterVO.setFirstIndex(paginationInfo.getFirstRecordIndex());
@@ -233,13 +233,13 @@ public class EgovBBSAttributeManageServiceImpl extends EgovAbstractServiceImpl i
      *
      * @see egovframework.let.cop.bbs.brd.service.EgovBBSAttributeManageService#updateBBSMasterInf(egovframework.let.cop.bbs.domain.model.brd.service.BoardMaster)
      */
-    public void updateBBSMasterInf(BbsAttributeUpdateRequestDTO bbsUpdateRequestDTO) throws Exception {
+    public void updateBBSMasterInf(BbsAttributeUpdateRequestDTO bbsAttributeUpdateRequestDTO) throws Exception {
         /**
          * BbsUpdateRequestDTO → BoardMaster 변환 메서드
          * 
          * @return BoardMaster 도메인 객체
          */
-    	BoardMaster boardMaster = bbsUpdateRequestDTO.toBoardMaster(); 
+    	BoardMaster boardMaster = bbsAttributeUpdateRequestDTO.toBoardMaster(); 
 		attrbMngDAO.updateBBSMasterInf(boardMaster);
 	
 		//---------------------------------

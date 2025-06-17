@@ -49,7 +49,7 @@ public interface EgovBBSAttributeManageService {
 	 * @param boardMaster
 	 * @exception Exception Exception
 	 */
-	public String insertBBSMastetInf(BbsAttributeInsertRequestDTO bbsInsertRequestDTO)
+	public String insertBBSMastetInf(BbsAttributeInsertRequestDTO bbsAttributeInsertRequestDTO)
 	  throws Exception;
 
 	/**
@@ -88,7 +88,7 @@ public interface EgovBBSAttributeManageService {
 	 * @param searchVO
 	 * @exception Exception Exception
 	 */
-	public BbsAttributeListResponseDTO selectBBSMasterInfs(BbsAttributeSearchRequestDTO bbsSearchRequestDTO, PaginationInfo paginationInfo)
+	public BbsAttributeListResponseDTO selectBBSMasterInfs(BbsAttributeSearchRequestDTO bbsAttributeSearchRequestDTO, PaginationInfo paginationInfo)
 	  throws Exception;
 
 	/**
@@ -118,7 +118,7 @@ public interface EgovBBSAttributeManageService {
 	 * @param boardMaster
 	 * @exception Exception Exception
 	 */
-	public void updateBBSMasterInf(BbsAttributeUpdateRequestDTO bbsUpdateRequestDTO)
+	public void updateBBSMasterInf(BbsAttributeUpdateRequestDTO bbsAttributeUpdateRequestDTO)
 	  throws Exception;
 
 	/**
