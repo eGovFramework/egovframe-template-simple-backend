@@ -31,7 +31,7 @@ public interface EgovBBSManageService {
 	 * @param Board
 	 * @exception Exception Exception
 	 */
-	public void deleteBoardArticle(String bbsId, String nttId, LoginVO user)
+	public void deleteBoardArticle(String bbsId, String nttId, String atchFileId, LoginVO user)
 	  throws Exception;
 
 	/**

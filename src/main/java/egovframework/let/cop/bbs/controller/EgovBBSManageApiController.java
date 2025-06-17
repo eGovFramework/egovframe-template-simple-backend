@@ -483,16 +483,18 @@ public class EgovBBSManageApiController {
 		            )
 		        ))
 			}) 
-	@PatchMapping(value = "/board/{bbsId}/{nttId}")
+	@PatchMapping(value = "/board/{bbsId}/{nttId}/{atchFileId}")
 	public IntermediateResultVO<Object> deleteBoardArticle(
 		@Parameter(name = "bbsId", description = "게시판 Id", in = ParameterIn.PATH, example="BBSMSTR_AAAAAAAAAAAA")	
 		@PathVariable("bbsId") String bbsId,
 		@Parameter(name = "nttId", description = "게시글 Id", in = ParameterIn.PATH, example="1")
 		@PathVariable("nttId") String nttId,
+		@Parameter(name = "atchFileId", description = "첨부파일 Id", in = ParameterIn.PATH, example="FILE_000000000000001")
+		@PathVariable("atchFileId") String atchFileId,
 		@Parameter(hidden = true) @AuthenticationPrincipal LoginVO user)
 		throws Exception {
 
-		bbsMngService.deleteBoardArticle(bbsId, nttId, user);
+		bbsMngService.deleteBoardArticle(bbsId, nttId, atchFileId, user);
 
 		return IntermediateResultVO.success(null);
 	}

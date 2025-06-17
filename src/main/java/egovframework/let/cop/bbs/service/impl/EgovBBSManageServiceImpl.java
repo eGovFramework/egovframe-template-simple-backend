@@ -10,6 +10,8 @@ import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import org.springframework.stereotype.Service;
 
 import egovframework.com.cmm.LoginVO;
+import egovframework.com.cmm.service.EgovFileMngService;
+import egovframework.com.cmm.service.FileVO;
 import egovframework.let.cop.bbs.domain.model.Board;
 import egovframework.let.cop.bbs.domain.model.BoardVO;
 import egovframework.let.cop.bbs.domain.repository.BBSManageDAO;
@@ -39,27 +41,30 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class EgovBBSManageServiceImpl extends EgovAbstractServiceImpl implements EgovBBSManageService {
 	private final BBSManageDAO bbsMngDAO;
-
+	private final EgovFileMngService fileService;
+	
 	/**
 	 * 게시물 한 건을 삭제 한다.
 	 *
 	 * @see egovframework.let.cop.bbs.brd.service.EgovBBSManageService#deleteBoardArticle(egovframework.let.cop.bbs.domain.model.brd.service.Board)
 	 */
 	@Override
-	public void deleteBoardArticle(String bbsId, String nttId, LoginVO user) throws Exception {
+	public void deleteBoardArticle(String bbsId, String nttId, String atchFileId, LoginVO user) throws Exception {
 		BoardVO vo = new BoardVO();
 		vo.setBbsId(bbsId);
+		vo.setAtchFileId(atchFileId);
 		vo.setNttId(Long.parseLong(nttId));
 		vo.setNttSj("이 글은 작성자에 의해서 삭제되었습니다.");
 		vo.setLastUpdusrId(user.getUniqId());
 		
 		bbsMngDAO.deleteBoardArticle(vo);
-
-//		FileVO fvo = new FileVO();
-//		fvo.setAtchFileId(vo.getAtchFileId());
-//		if (!"".equals(fvo.getAtchFileId()) || fvo.getAtchFileId() != null) {
-//			fileService.deleteAllFileInf(fvo);
-//		}
+		
+		// 작성자 외 삭제 불가능하도록 기능 개선 필요
+		FileVO fvo = new FileVO();
+		fvo.setAtchFileId(vo.getAtchFileId());
+		if (!"".equals(fvo.getAtchFileId()) || fvo.getAtchFileId() != null) {
+			fileService.deleteAllFileInf(fvo);
+		}
 	}
 
 	/**
