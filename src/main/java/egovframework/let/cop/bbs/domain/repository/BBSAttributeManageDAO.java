@@ -105,8 +105,8 @@ public class BBSAttributeManageDAO extends EgovAbstractMapper {
 		// 커뮤니티, 동호회의 게시판이 나오지 않도록 LETTNBBSUSE 테이블과 Join 필요
 		return selectList("BBSAttributeManageDAO.selectAllBBSMaster", vo);
 	}
-    public List<BoardMasterVO> selectAllBBSMasteInf(BbsAttributeUpdateRequestDTO bbsUpdateRequestDTO) throws Exception {
-    	return selectList("BBSAttributeManageDAO.selectAllBBSMaster", bbsUpdateRequestDTO);
+    public List<BoardMasterVO> selectAllBBSMasteInf(BbsAttributeUpdateRequestDTO bbsAttributeUpdateRequestDTO) throws Exception {
+    	return selectList("BBSAttributeManageDAO.selectAllBBSMaster", bbsAttributeUpdateRequestDTO);
     }
 
     /**
