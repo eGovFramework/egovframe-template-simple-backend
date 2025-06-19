@@ -37,6 +37,7 @@ import egovframework.com.jwt.EgovJwtTokenUtil;
 import egovframework.let.cop.bbs.domain.model.BoardMasterVO;
 import egovframework.let.cop.bbs.domain.model.BoardVO;
 import egovframework.let.cop.bbs.dto.request.BbsAttributeSearchRequestDTO;
+import egovframework.let.cop.bbs.dto.request.BbsDeleteBoardRequestDTO;
 import egovframework.let.cop.bbs.service.EgovBBSAttributeManageService;
 import egovframework.let.cop.bbs.service.EgovBBSManageService;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
@@ -483,18 +484,19 @@ public class EgovBBSManageApiController {
 		            )
 		        ))
 			}) 
-	@PatchMapping(value = "/board/{bbsId}/{nttId}/{atchFileId}")
+	@PatchMapping(value = "/board/{bbsId}/{nttId}")
 	public IntermediateResultVO<Object> deleteBoardArticle(
 		@Parameter(name = "bbsId", description = "게시판 Id", in = ParameterIn.PATH, example="BBSMSTR_AAAAAAAAAAAA")	
 		@PathVariable("bbsId") String bbsId,
 		@Parameter(name = "nttId", description = "게시글 Id", in = ParameterIn.PATH, example="1")
 		@PathVariable("nttId") String nttId,
-		@Parameter(name = "atchFileId", description = "첨부파일 Id", in = ParameterIn.PATH, example="FILE_000000000000001")
-		@PathVariable("atchFileId") String atchFileId,
+		@RequestBody BbsDeleteBoardRequestDTO bbsDeleteBoardRequestDTO,
 		@Parameter(hidden = true) @AuthenticationPrincipal LoginVO user)
 		throws Exception {
-
-		bbsMngService.deleteBoardArticle(bbsId, nttId, atchFileId, user);
+		bbsDeleteBoardRequestDTO.setBbsId(bbsId);
+		bbsDeleteBoardRequestDTO.setNttId(Long.parseLong(nttId));
+		bbsDeleteBoardRequestDTO.setNttSj("이 글은 작성자에 의해서 삭제되었습니다.");
+		bbsMngService.deleteBoardArticle(bbsDeleteBoardRequestDTO, user);
 
 		return IntermediateResultVO.success(null);
 	}

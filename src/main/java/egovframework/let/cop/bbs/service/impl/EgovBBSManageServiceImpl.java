@@ -15,6 +15,7 @@ import egovframework.com.cmm.service.FileVO;
 import egovframework.let.cop.bbs.domain.model.Board;
 import egovframework.let.cop.bbs.domain.model.BoardVO;
 import egovframework.let.cop.bbs.domain.repository.BBSManageDAO;
+import egovframework.let.cop.bbs.dto.request.BbsDeleteBoardRequestDTO;
 import egovframework.let.cop.bbs.service.EgovBBSManageService;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 import lombok.RequiredArgsConstructor;
@@ -49,14 +50,9 @@ public class EgovBBSManageServiceImpl extends EgovAbstractServiceImpl implements
 	 * @see egovframework.let.cop.bbs.brd.service.EgovBBSManageService#deleteBoardArticle(egovframework.let.cop.bbs.domain.model.brd.service.Board)
 	 */
 	@Override
-	public void deleteBoardArticle(String bbsId, String nttId, String atchFileId, LoginVO user) throws Exception {
-		BoardVO vo = new BoardVO();
-		vo.setBbsId(bbsId);
-		vo.setAtchFileId(atchFileId);
-		vo.setNttId(Long.parseLong(nttId));
-		vo.setNttSj("이 글은 작성자에 의해서 삭제되었습니다.");
-		vo.setLastUpdusrId(user.getUniqId());
-		
+	public void deleteBoardArticle(BbsDeleteBoardRequestDTO bbsDeleteBoardRequestDTO, LoginVO user) throws Exception {
+		BoardVO vo = bbsDeleteBoardRequestDTO.toBoardMaster(bbsDeleteBoardRequestDTO, user.getUniqId());
+
 		bbsMngDAO.deleteBoardArticle(vo);
 		
 		// 작성자 외 삭제 불가능하도록 기능 개선 필요
