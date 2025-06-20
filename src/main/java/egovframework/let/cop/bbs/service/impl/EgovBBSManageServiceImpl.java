@@ -6,20 +6,19 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Resource;
-
+import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import org.springframework.stereotype.Service;
 
+import egovframework.com.cmm.LoginVO;
 import egovframework.com.cmm.service.EgovFileMngService;
 import egovframework.com.cmm.service.FileVO;
 import egovframework.let.cop.bbs.domain.model.Board;
 import egovframework.let.cop.bbs.domain.model.BoardVO;
 import egovframework.let.cop.bbs.domain.repository.BBSManageDAO;
+import egovframework.let.cop.bbs.dto.request.BbsDeleteBoardRequestDTO;
 import egovframework.let.cop.bbs.service.EgovBBSManageService;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
-
-import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
-import org.egovframe.rte.fdl.property.EgovPropertyService;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 게시물 관리를 위한 서비스 구현 클래스
@@ -35,39 +34,33 @@ import org.egovframe.rte.fdl.property.EgovPropertyService;
  *  -------    --------    ---------------------------
  *  2009.03.19  이삼섭          최초 생성
  *  2011.08.31  JJY            경량환경 템플릿 커스터마이징버전 생성
+ *  2025.06.16  김재섭(nirsa)   서비스 로직 이동 및 생성자 주입 방식 변경
  *
  *  </pre>
  */
 @Service("EgovBBSManageService")
+@RequiredArgsConstructor
 public class EgovBBSManageServiceImpl extends EgovAbstractServiceImpl implements EgovBBSManageService {
-
-	@Resource(name = "BBSManageDAO")
-	private BBSManageDAO bbsMngDAO;
-
-	@Resource(name = "EgovFileMngService")
-	private EgovFileMngService fileService;
-
-	@Resource(name = "propertiesService")
-	protected EgovPropertyService propertyService;
-
+	private final BBSManageDAO bbsMngDAO;
+	private final EgovFileMngService fileService;
+	
 	/**
 	 * 게시물 한 건을 삭제 한다.
 	 *
 	 * @see egovframework.let.cop.bbs.brd.service.EgovBBSManageService#deleteBoardArticle(egovframework.let.cop.bbs.domain.model.brd.service.Board)
 	 */
 	@Override
-	public void deleteBoardArticle(Board board) throws Exception {
-		FileVO fvo = new FileVO();
-
-		fvo.setAtchFileId(board.getAtchFileId());
-
-		board.setNttSj("이 글은 작성자에 의해서 삭제되었습니다.");
-
-		bbsMngDAO.deleteBoardArticle(board);
-
-		if (!"".equals(fvo.getAtchFileId()) || fvo.getAtchFileId() != null) {
-			fileService.deleteAllFileInf(fvo);
-		}
+	public void deleteBoardArticle(BbsDeleteBoardRequestDTO bbsDeleteBoardRequestDTO, LoginVO user) throws Exception {
+		String atchFileId = bbsDeleteBoardRequestDTO.getAtchFileId();
+		BoardVO vo = bbsDeleteBoardRequestDTO.toBoardMaster(bbsDeleteBoardRequestDTO, user.getUniqId());
+		bbsMngDAO.deleteBoardArticle(vo);
+		
+		// 작성자 외 삭제 불가능하도록 기능 개선 필요
+		if (atchFileId != null && !atchFileId.trim().isEmpty()) {
+	        FileVO fvo = new FileVO();
+	        fvo.setAtchFileId(atchFileId);
+	        fileService.deleteAllFileInf(fvo);
+	    }
 	}
 
 	/**

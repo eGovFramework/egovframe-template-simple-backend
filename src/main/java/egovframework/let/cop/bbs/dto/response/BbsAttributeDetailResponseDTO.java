@@ -29,7 +29,7 @@ import lombok.ToString;
 @Builder
 @ToString
 @Schema(description = "게시판 정보 응답 DTO")
-public class BbsDetailResponseDTO {
+public class BbsAttributeDetailResponseDTO {
     @Schema(description = "게시판 ID", example = "BBSMSTR_AAAAAAAAAAAA")
     private String bbsId;
 
@@ -65,12 +65,12 @@ public class BbsDetailResponseDTO {
     private String option = "";
     
 	/**
-	 *  BoardMasterVO → BoardMasterResponse 변환 메서드 입니다.
+	 *  BbsAttributeDetailResponseDTO → BoardMasterResponse 변환 메서드 입니다.
 	 * @param vo
 	 * @return BoardMasterResponse
 	 */
-    public static BbsDetailResponseDTO from(BoardMasterVO vo) {
-        return BbsDetailResponseDTO.builder()
+    public static BbsAttributeDetailResponseDTO from(BoardMasterVO vo) {
+        return BbsAttributeDetailResponseDTO.builder()
             .bbsId(vo.getBbsId())
             .bbsNm(vo.getBbsNm())
             .bbsTyCode(vo.getBbsTyCode())

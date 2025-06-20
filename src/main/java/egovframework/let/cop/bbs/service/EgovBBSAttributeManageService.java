@@ -7,11 +7,11 @@ import org.egovframe.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 
 import egovframework.let.cop.bbs.domain.model.BoardMaster;
 import egovframework.let.cop.bbs.domain.model.BoardMasterVO;
-import egovframework.let.cop.bbs.dto.request.BbsInsertRequestDTO;
-import egovframework.let.cop.bbs.dto.request.BbsSearchRequestDTO;
-import egovframework.let.cop.bbs.dto.request.BbsUpdateRequestDTO;
-import egovframework.let.cop.bbs.dto.response.BbsDetailResponseDTO;
-import egovframework.let.cop.bbs.dto.response.BbsListResponseDTO;
+import egovframework.let.cop.bbs.dto.request.BbsAttributeInsertRequestDTO;
+import egovframework.let.cop.bbs.dto.request.BbsAttributeSearchRequestDTO;
+import egovframework.let.cop.bbs.dto.request.BbsAttributeUpdateRequestDTO;
+import egovframework.let.cop.bbs.dto.response.BbsAttributeDetailResponseDTO;
+import egovframework.let.cop.bbs.dto.response.BbsAttributeListResponseDTO;
 
 /**
  * 게시판 속성관리를 위한 서비스 인터페이스 클래스
@@ -49,7 +49,7 @@ public interface EgovBBSAttributeManageService {
 	 * @param boardMaster
 	 * @exception Exception Exception
 	 */
-	public String insertBBSMastetInf(BbsInsertRequestDTO bbsInsertRequestDTO)
+	public String insertBBSMastetInf(BbsAttributeInsertRequestDTO bbsAttributeInsertRequestDTO)
 	  throws Exception;
 
 	/**
@@ -88,7 +88,7 @@ public interface EgovBBSAttributeManageService {
 	 * @param searchVO
 	 * @exception Exception Exception
 	 */
-	public BbsListResponseDTO selectBBSMasterInfs(BbsSearchRequestDTO bbsSearchRequestDTO, PaginationInfo paginationInfo)
+	public BbsAttributeListResponseDTO selectBBSMasterInfs(BbsAttributeSearchRequestDTO bbsAttributeSearchRequestDTO, PaginationInfo paginationInfo)
 	  throws Exception;
 
 	/**
@@ -118,7 +118,7 @@ public interface EgovBBSAttributeManageService {
 	 * @param boardMaster
 	 * @exception Exception Exception
 	 */
-	public void updateBBSMasterInf(BbsUpdateRequestDTO bbsUpdateRequestDTO)
+	public void updateBBSMasterInf(BbsAttributeUpdateRequestDTO bbsAttributeUpdateRequestDTO)
 	  throws Exception;
 
 	/**

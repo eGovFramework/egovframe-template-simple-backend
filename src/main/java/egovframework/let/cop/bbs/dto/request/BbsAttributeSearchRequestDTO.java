@@ -29,7 +29,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Schema(description = "게시판 검색 조건")
-public class BbsSearchRequestDTO {
+public class BbsAttributeSearchRequestDTO {
 
     @Schema(description = "게시판 Id", example = "")
     private String bbsId = "";

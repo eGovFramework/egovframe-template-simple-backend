@@ -21,7 +21,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import egovframework.let.cop.bbs.domain.model.BoardMaster;
-import egovframework.let.cop.bbs.dto.request.BbsInsertRequestDTO;
+import egovframework.let.cop.bbs.dto.request.BbsAttributeInsertRequestDTO;
 import egovframework.let.cop.bbs.service.EgovBBSAttributeManageService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -65,7 +65,7 @@ class EgovBBSAttributeManageApiControllerTestInsertBBSMasterInfTest {
 	@Test
 	void test() throws Exception {
 		// testData
-		final BbsInsertRequestDTO bbsInsertRequestDTO = new BbsInsertRequestDTO();
+		final BbsAttributeInsertRequestDTO bbsInsertRequestDTO = new BbsAttributeInsertRequestDTO();
 		
 		final String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("uuuu-MM-dd'T'HH:mm:ss.SSSSSSSSS"));
 		bbsInsertRequestDTO.setBbsNm("test 이백행 게시판명 " + now);

@@ -31,11 +31,11 @@ import egovframework.com.cmm.service.ResultVO;
 import egovframework.com.cmm.util.ResultVoHelper;
 import egovframework.let.cop.bbs.domain.model.BoardMaster;
 import egovframework.let.cop.bbs.domain.model.BoardMasterVO;
-import egovframework.let.cop.bbs.dto.request.BbsInsertRequestDTO;
-import egovframework.let.cop.bbs.dto.request.BbsSearchRequestDTO;
-import egovframework.let.cop.bbs.dto.request.BbsUpdateRequestDTO;
-import egovframework.let.cop.bbs.dto.response.BbsInsertResponseDTO;
-import egovframework.let.cop.bbs.dto.response.BbsListResponseDTO;
+import egovframework.let.cop.bbs.dto.request.BbsAttributeInsertRequestDTO;
+import egovframework.let.cop.bbs.dto.request.BbsAttributeSearchRequestDTO;
+import egovframework.let.cop.bbs.dto.request.BbsAttributeUpdateRequestDTO;
+import egovframework.let.cop.bbs.dto.response.BbsAttributeResponseDTO;
+import egovframework.let.cop.bbs.dto.response.BbsAttributeListResponseDTO;
 import egovframework.let.cop.bbs.service.EgovBBSAttributeManageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -96,19 +96,19 @@ public class EgovBBSAttributeManageApiController {
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
 	})
 	@GetMapping(value = "/bbsMaster")
-	public IntermediateResultVO<BbsListResponseDTO> selectBBSMasterInfs(@ModelAttribute BbsSearchRequestDTO bbsSearchRequestDTO)
+	public IntermediateResultVO<BbsAttributeListResponseDTO> selectBBSMasterInfs(@ModelAttribute BbsAttributeSearchRequestDTO bbsAttributeSearchRequestDTO)
 		throws Exception {
 		// 1. 페이지 정보 구성
 		int pageUnit = propertyService.getInt("Globals.pageUnit");
 		int pageSize = propertyService.getInt("Globals.pageSize");
 		
 		PaginationInfo paginationInfo = new PaginationInfo();
-		paginationInfo.setCurrentPageNo(bbsSearchRequestDTO.getPageIndex());
+		paginationInfo.setCurrentPageNo(bbsAttributeSearchRequestDTO.getPageIndex());
 		paginationInfo.setRecordCountPerPage(pageUnit);
 		paginationInfo.setPageSize(pageSize);
 		
 		// 2. 서비스 호출 및 응답 객체 구성
-		BbsListResponseDTO response = bbsAttrbService.selectBBSMasterInfs(bbsSearchRequestDTO, paginationInfo);
+		BbsAttributeListResponseDTO response = bbsAttrbService.selectBBSMasterInfs(bbsAttributeSearchRequestDTO, paginationInfo);
 		paginationInfo.setTotalRecordCount(response.getResultCnt());
 		response.setPaginationInfo(paginationInfo); 
 		return IntermediateResultVO.success(response);
@@ -177,16 +177,15 @@ public class EgovBBSAttributeManageApiController {
 			@ApiResponse(responseCode = "900", description = "입력값 무결성 오류")
 	})
 	@PostMapping(value ="/bbsMaster")
-	public IntermediateResultVO<BbsInsertResponseDTO> insertBBSMasterInf(@Valid @ParameterObject BbsInsertRequestDTO bbsInsertRequestDTO,
+	public IntermediateResultVO<BbsAttributeResponseDTO> insertBBSMasterInf(@Valid @ParameterObject BbsAttributeInsertRequestDTO bbsAttributeInsertRequestDTO,
 									   BindingResult bindingResult,
 									   @Parameter(hidden = true) @AuthenticationPrincipal LoginVO loginVO
 	)
 		throws Exception {
 
-		beanValidator.validate(bbsInsertRequestDTO, bindingResult);
+		beanValidator.validate(bbsAttributeInsertRequestDTO, bindingResult);
 		
-		BbsInsertResponseDTO response = new BbsInsertResponseDTO();
-		System.out.println(bbsInsertRequestDTO.getFrstRegisterId());
+		BbsAttributeResponseDTO response = new BbsAttributeResponseDTO();
 		
 		if (bindingResult.hasErrors()) {
 			ComDefaultCodeVO vo = new ComDefaultCodeVO();
@@ -202,12 +201,12 @@ public class EgovBBSAttributeManageApiController {
 			return IntermediateResultVO.inputCheckError(response);
 		}
 
-		bbsInsertRequestDTO.setFrstRegisterId(loginVO.getUniqId());
-		bbsInsertRequestDTO.setUseAt("Y");
-		bbsInsertRequestDTO.setTrgetId("SYSTEMDEFAULT_REGIST");
-		bbsInsertRequestDTO.setPosblAtchFileSize(propertyService.getString("posblAtchFileSize"));
+		bbsAttributeInsertRequestDTO.setFrstRegisterId(loginVO.getUniqId());
+		bbsAttributeInsertRequestDTO.setUseAt("Y");
+		bbsAttributeInsertRequestDTO.setTrgetId("SYSTEMDEFAULT_REGIST");
+		bbsAttributeInsertRequestDTO.setPosblAtchFileSize(propertyService.getString("posblAtchFileSize"));
 
-		bbsAttrbService.insertBBSMastetInf(bbsInsertRequestDTO);
+		bbsAttrbService.insertBBSMastetInf(bbsAttributeInsertRequestDTO);
 
 		return IntermediateResultVO.success(response);
 	}
@@ -273,24 +272,24 @@ public class EgovBBSAttributeManageApiController {
 				        )),
 				})
 	@PutMapping(value ="/bbsMaster/{bbsId}")
-	public IntermediateResultVO<Object> updateBBSMasterInf(@RequestBody BbsUpdateRequestDTO bbsUpdateRequestDTO,
+	public IntermediateResultVO<Object> updateBBSMasterInf(@RequestBody BbsAttributeUpdateRequestDTO bbsAttributeUpdateRequestDTO,
 										BindingResult bindingResult,
 										@Parameter(hidden = true) @AuthenticationPrincipal LoginVO loginVO
 										) throws Exception {
-		beanValidator.validate(bbsUpdateRequestDTO, bindingResult);
+		beanValidator.validate(bbsAttributeUpdateRequestDTO, bindingResult);
 
 		if (bindingResult.hasErrors()) {
 			// selectBBSMasterInf 메서드는 리액트에서의 코드 수정이 필요하여 보류하였습니다.
 			// 이로 인해 해당 라인의 코드 또한 보류되었습니다.
-			BoardMaster boardMaster = bbsUpdateRequestDTO.toBoardMaster();
+			BoardMaster boardMaster = bbsAttributeUpdateRequestDTO.toBoardMaster();
 			BoardMasterVO vo = bbsAttrbService.selectBBSMasterInf(boardMaster);
 
 			return IntermediateResultVO.inputCheckError(vo);
 		}
 
-		bbsUpdateRequestDTO.setLastUpdusrId(loginVO.getUniqId());
-		bbsUpdateRequestDTO.setPosblAtchFileSize(propertyService.getString("posblAtchFileSize"));
-		bbsAttrbService.updateBBSMasterInf(bbsUpdateRequestDTO);
+		bbsAttributeUpdateRequestDTO.setLastUpdusrId(loginVO.getUniqId());
+		bbsAttributeUpdateRequestDTO.setPosblAtchFileSize(propertyService.getString("posblAtchFileSize"));
+		bbsAttrbService.updateBBSMasterInf(bbsAttributeUpdateRequestDTO);
 
 		return IntermediateResultVO.success(null);
 	}

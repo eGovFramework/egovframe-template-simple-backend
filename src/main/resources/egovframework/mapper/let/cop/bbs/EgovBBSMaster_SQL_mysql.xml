@@ -58,7 +58,7 @@
 		
 	</insert>
 	
-	<select id="selectBBSMasterInfs" parameterType="egovframework.let.cop.bbs.domain.response.BbsDetailResponseVO" resultMap="boardMasterList">
+	<select id="selectBBSMasterInfs" parameterType="egovframework.let.cop.bbs.domain.model.BoardMasterVO" resultMap="boardMasterList">
 		
 			SELECT 
 				a.BBS_ID, a.BBS_TY_CODE, b.CODE_NM as BBS_TY_CODE_NM,

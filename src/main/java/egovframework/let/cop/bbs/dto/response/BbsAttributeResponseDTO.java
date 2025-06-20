@@ -32,7 +32,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Schema(description = "게시판 마스터 등록 응답 DTO")
-public class BbsInsertResponseDTO {
+public class BbsAttributeResponseDTO {
 	@JsonInclude(JsonInclude.Include.NON_NULL)
     @Schema(description = "게시판 타입 리스트", example = "")
 	private List<CmmnDetailCode> typeList;

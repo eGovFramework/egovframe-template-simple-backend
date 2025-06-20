@@ -32,7 +32,7 @@ import lombok.ToString;
 @Setter
 @Schema(description = "신규 게시판 마스터 등록 요청 DTO")
 @ToString
-public class BbsInsertRequestDTO {
+public class BbsAttributeInsertRequestDTO {
     @Schema(description = "게시판명", example = "asdf")
     @NotBlank
     private String bbsNm;
@@ -74,7 +74,7 @@ public class BbsInsertRequestDTO {
     private String posblAtchFileSize;
 	
     /**
-     * BbsUpdateRequestDTO → BoardMaster 변환 메서드
+     * BbsAttributeInsertRequestDTO → BoardMaster 변환 메서드
      * 
      * @return BoardMaster 도메인 객체
      */

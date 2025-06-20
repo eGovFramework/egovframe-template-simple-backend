@@ -27,7 +27,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Schema(description = "게시판 마스터 수정 요청 DTO")
-public class BbsUpdateRequestDTO {
+public class BbsAttributeUpdateRequestDTO {
     @Schema(description = "게시판 ID", example = "BBSMSTR_AAAAAAAAAAAA")
     private String bbsId;
 
@@ -92,7 +92,7 @@ public class BbsUpdateRequestDTO {
     private String option = "";
 	
     /**
-     * BbsUpdateRequestDTO → BoardMaster 변환 메서드
+     * BbsAttributeUpdateRequestDTO → BoardMaster 변환 메서드
      * 
      * @return BoardMaster 도메인 객체
      */
