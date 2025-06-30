@@ -7,7 +7,6 @@ import org.springframework.stereotype.Repository;
 import egovframework.let.cop.bbs.domain.model.BoardMaster;
 import egovframework.let.cop.bbs.domain.model.BoardMasterVO;
 import egovframework.let.cop.bbs.dto.request.BbsAttributeUpdateRequestDTO;
-import egovframework.let.cop.bbs.dto.response.BbsAttributeDetailResponseDTO;
 
 /**
  * 게시판 속성정보 관리를 위한 데이터 접근 클래스

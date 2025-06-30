@@ -24,11 +24,6 @@ import egovframework.com.cmm.LoginVO;
 import egovframework.com.cmm.service.CmmnDetailCode;
 import egovframework.com.cmm.service.EgovCmmUseService;
 import egovframework.com.cmm.service.IntermediateResultVO;
-import egovframework.com.cmm.service.ResultVO;
-import egovframework.com.cmm.util.ResultVoHelper;
-import egovframework.let.cop.bbs.domain.model.BoardMaster;
-import egovframework.let.cop.bbs.domain.model.BoardMasterVO;
-import egovframework.let.cop.bbs.dto.request.BbsAttributeDetailRequestDTO;
 import egovframework.let.cop.bbs.dto.request.BbsAttributeInsertRequestDTO;
 import egovframework.let.cop.bbs.dto.request.BbsAttributeSearchRequestDTO;
 import egovframework.let.cop.bbs.dto.request.BbsAttributeUpdateRequestDTO;
@@ -74,7 +69,6 @@ public class EgovBBSAttributeManageApiController {
 	private final EgovCmmUseService cmmUseService;
 	private final EgovPropertyService propertyService;
 	private final DefaultBeanValidator beanValidator;
-	private final ResultVoHelper resultVoHelper;
 
 	/**
 	 * 게시판 마스터 목록을 조회한다.

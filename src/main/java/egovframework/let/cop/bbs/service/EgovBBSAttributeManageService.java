@@ -5,7 +5,6 @@ import java.util.Map;
 
 import org.egovframe.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 
-import egovframework.let.cop.bbs.domain.model.BoardMaster;
 import egovframework.let.cop.bbs.domain.model.BoardMasterVO;
 import egovframework.let.cop.bbs.dto.request.BbsAttributeInsertRequestDTO;
 import egovframework.let.cop.bbs.dto.request.BbsAttributeSearchRequestDTO;

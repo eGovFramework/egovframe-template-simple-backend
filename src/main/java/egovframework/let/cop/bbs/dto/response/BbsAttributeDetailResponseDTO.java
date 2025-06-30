@@ -69,7 +69,6 @@ public class BbsAttributeDetailResponseDTO {
     @Schema(description = "답장가능여부", example="Y")
     private String replyPosblAt;
     
-    @Builder.Default
 	@Schema(description = "추가 option (댓글-comment, 만족도조사-stsfdg)", example="")
     private String option;
     
