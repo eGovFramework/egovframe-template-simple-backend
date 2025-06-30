@@ -177,30 +177,30 @@ public class EgovBBSAttributeManageServiceImpl extends EgovAbstractServiceImpl i
     	BoardMasterVO searchVO = new BoardMasterVO();
     	searchVO.setBbsId(bbsId);
     	searchVO.setUniqId(uniqId);
-    	
+		
 		BoardMasterVO result = attrbMngDAO.selectBBSMasterInf(searchVO);
 		
 		String flag = propertyService.getString("Globals.addedOptions");
 		if (flag != null && flag.trim().equalsIgnoreCase("true")) {
-		    BoardMasterVO options = addedOptionsDAO.selectAddedOptionsInf(searchVO);
+			BoardMasterVO options = addedOptionsDAO.selectAddedOptionsInf(searchVO);
 	
-		    if (options != null) {
+			if (options != null) {
 				if (options.getCommentAt().equals("Y")) {
-				    result.setOption("comment");
+					result.setOption("comment");
 				}
-		
+				
 				if (options.getStsfdgAt().equals("Y")) {
-				    result.setOption("stsfdg");
+					result.setOption("stsfdg");
 				}
-		    } else {
-		    	result.setOption("na");	// 미지정 상태로 수정 가능 (이미 지정된 경우는 수정 불가로 처리)
-		    }
+			} else {
+				result.setOption("na");	// 미지정 상태로 수정 가능 (이미 지정된 경우는 수정 불가로 처리)
+			}
 		}
-	
+		
 		return BbsAttributeDetailResponseDTO.from(result);
-
+		
     }
-
+    
     /**
      * 게시판 속성 정보의 목록을 조회 한다.
      *
