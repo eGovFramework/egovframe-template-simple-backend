@@ -57,7 +57,7 @@ public class BbsAttributeDetailResponseDTO {
     @Schema(description = "첨부파일 허용 개수", example = "3")
     private int posblAtchFileNumber;
     
-    @Schema(description = "첨부파일 허용 크기 (/boardFileAtch/{bbsId} 요청 시 사용)", example = "10485760", nullable = true)
+    @Schema(description = "첨부파일 허용 크기 (/boardFileAtch/{bbsId} 요청 시 사용)", example = "5242880")
     private String posblAtchFileSize;
 
     @Schema(description = "템플릿 ID", example = "TMPLAT_BOARD_DEFAULT")
@@ -65,6 +65,9 @@ public class BbsAttributeDetailResponseDTO {
 
     @Schema(description = "사용 여부", example = "Y")
     private String useAt;
+    
+	@Schema(description = "사용플래그 (/boardFileAtch/{bbsId} 요청 시 사용)", example="")
+    private String bbsUseFlag;
 
     @Schema(description = "등록일", example = "2011-08-31")
     private String frstRegisterPnttm;
@@ -94,6 +97,7 @@ public class BbsAttributeDetailResponseDTO {
             .posblAtchFileSize(vo.getPosblAtchFileSize())
             .tmplatId(vo.getTmplatId())
             .useAt(vo.getUseAt())
+            .bbsUseFlag(vo.getBbsUseFlag())
             .replyPosblAt(vo.getReplyPosblAt())
             .frstRegisterPnttm(vo.getFrstRegisterPnttm())
             .option(vo.getOption())

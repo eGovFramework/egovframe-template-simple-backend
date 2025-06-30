@@ -124,7 +124,6 @@ public class EgovBBSManageApiController {
 		masterFileAtchInfo.setFileAtchPosblAt(response.getFileAtchPosblAt());
 		masterFileAtchInfo.setPosblAtchFileNumber(response.getPosblAtchFileNumber());
 		masterFileAtchInfo.setPosblAtchFileSize(response.getPosblAtchFileSize());
-		System.out.println(response.getPosblAtchFileSize());
 		
 		resultMap.put("brdMstrVO", masterFileAtchInfo);
 		return resultVoHelper.buildFromMap(resultMap, ResponseCode.SUCCESS);
@@ -490,6 +489,7 @@ public class EgovBBSManageApiController {
 		bbsDeleteBoardRequestDTO.setBbsId(bbsId);
 		bbsDeleteBoardRequestDTO.setNttId(Long.parseLong(nttId));
 		bbsDeleteBoardRequestDTO.setNttSj("이 글은 작성자에 의해서 삭제되었습니다.");
+		
 		bbsMngService.deleteBoardArticle(bbsDeleteBoardRequestDTO, user);
 
 		return IntermediateResultVO.success(null);
