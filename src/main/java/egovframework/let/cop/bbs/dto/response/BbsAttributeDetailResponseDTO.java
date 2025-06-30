@@ -56,6 +56,9 @@ public class BbsAttributeDetailResponseDTO {
 
     @Schema(description = "첨부파일 허용 개수", example = "3")
     private int posblAtchFileNumber;
+    
+    @Schema(description = "첨부파일 허용 크기 (/boardFileAtch/{bbsId} 요청 시 사용)", example = "10485760", nullable = true)
+    private String posblAtchFileSize;
 
     @Schema(description = "템플릿 ID", example = "TMPLAT_BOARD_DEFAULT")
     private String tmplatId;
@@ -88,6 +91,7 @@ public class BbsAttributeDetailResponseDTO {
             .bbsIntrcn(vo.getBbsIntrcn())
             .fileAtchPosblAt(vo.getFileAtchPosblAt())
             .posblAtchFileNumber(vo.getPosblAtchFileNumber())
+            .posblAtchFileSize(vo.getPosblAtchFileSize())
             .tmplatId(vo.getTmplatId())
             .useAt(vo.getUseAt())
             .replyPosblAt(vo.getReplyPosblAt())

@@ -38,6 +38,7 @@ import egovframework.let.cop.bbs.domain.model.BoardMasterVO;
 import egovframework.let.cop.bbs.domain.model.BoardVO;
 import egovframework.let.cop.bbs.dto.request.BbsAttributeSearchRequestDTO;
 import egovframework.let.cop.bbs.dto.request.BbsDeleteBoardRequestDTO;
+import egovframework.let.cop.bbs.dto.response.BbsAttributeDetailResponseDTO;
 import egovframework.let.cop.bbs.service.EgovBBSAttributeManageService;
 import egovframework.let.cop.bbs.service.EgovBBSManageService;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
@@ -114,14 +115,16 @@ public class EgovBBSManageApiController {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		BoardMasterVO searchVO = new BoardMasterVO();
 		searchVO.setBbsId(bbsId);
-		BoardMasterVO master = bbsAttrbService.selectBBSMasterInf(searchVO);
+		
+		BbsAttributeDetailResponseDTO response = bbsAttrbService.selectBBSMasterInf(bbsId, null);
 		
 		// 파일 첨부 외의 다른 정보를 전달하지 않기 위해 신규 객체 생성
 		BoardMasterVO masterFileAtchInfo = new BoardMasterVO();
 		
-		masterFileAtchInfo.setFileAtchPosblAt(master.getFileAtchPosblAt());
-		masterFileAtchInfo.setPosblAtchFileNumber(master.getPosblAtchFileNumber());
-		masterFileAtchInfo.setPosblAtchFileSize(master.getPosblAtchFileSize());
+		masterFileAtchInfo.setFileAtchPosblAt(response.getFileAtchPosblAt());
+		masterFileAtchInfo.setPosblAtchFileNumber(response.getPosblAtchFileNumber());
+		masterFileAtchInfo.setPosblAtchFileSize(response.getPosblAtchFileSize());
+		System.out.println(response.getPosblAtchFileSize());
 		
 		resultMap.put("brdMstrVO", masterFileAtchInfo);
 		return resultVoHelper.buildFromMap(resultMap, ResponseCode.SUCCESS);
@@ -146,11 +149,7 @@ public class EgovBBSManageApiController {
 	public ResultVO selectBoardArticles(@ModelAttribute BbsAttributeSearchRequestDTO boardMasterSearchVO, 
 			@Parameter(hidden = true) @AuthenticationPrincipal LoginVO user)
 		throws Exception {
-		BoardMasterVO vo = new BoardMasterVO();
-		vo.setBbsId(boardMasterSearchVO.getBbsId());
-		vo.setUniqId(user.getUniqId());
-		
-		BoardMasterVO master = bbsAttrbService.selectBBSMasterInf(vo);
+		BbsAttributeDetailResponseDTO response = bbsAttrbService.selectBBSMasterInf(boardMasterSearchVO.getBbsId(), user.getUniqId());
 		PaginationInfo paginationInfo = new PaginationInfo();
 		paginationInfo.setCurrentPageNo(boardMasterSearchVO.getPageIndex());
 		paginationInfo.setRecordCountPerPage(propertyService.getInt("Globals.pageUnit"));
@@ -166,11 +165,11 @@ public class EgovBBSManageApiController {
 		boardVO.setLastIndex(paginationInfo.getLastRecordIndex());
 		boardVO.setRecordCountPerPage(paginationInfo.getRecordCountPerPage());
 
-		Map<String, Object> resultMap = bbsMngService.selectBoardArticles(boardVO, vo.getBbsAttrbCode());
+		Map<String, Object> resultMap = bbsMngService.selectBoardArticles(boardVO, "");
 		int totCnt = Integer.parseInt((String)resultMap.get("resultCnt"));
 		paginationInfo.setTotalRecordCount(totCnt);
 		resultMap.put("boardVO", boardVO);
-		resultMap.put("brdMstrVO", master);
+		resultMap.put("brdMstrVO", response);
 		resultMap.put("paginationInfo", paginationInfo);
 		resultMap.put("user", user);
  
@@ -223,19 +222,14 @@ public class EgovBBSManageApiController {
 		//----------------------------
 		// template 처리 (기본 BBS template 지정  포함)
 		//----------------------------
-		BoardMasterVO master = new BoardMasterVO();
-
-		master.setBbsId(boardVO.getBbsId());
-		master.setUniqId(user.getUniqId());
-
-		BoardMasterVO masterVo = bbsAttrbService.selectBBSMasterInf(master);
+		BbsAttributeDetailResponseDTO response = bbsAttrbService.selectBBSMasterInf(boardVO.getBbsId(), user.getUniqId());
 		
 		//model.addAttribute("brdMstrVO", masterVo);
 
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("boardVO", vo);
 		resultMap.put("sessionUniqId", user.getUniqId());
-		resultMap.put("brdMstrVO", masterVo);
+		resultMap.put("brdMstrVO", response);
 		resultMap.put("user", user);
 
 		// 2021-06-01 신용호 추가
