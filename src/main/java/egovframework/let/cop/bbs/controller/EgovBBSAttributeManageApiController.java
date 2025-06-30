@@ -1,8 +1,6 @@
 package egovframework.let.cop.bbs.controller;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -23,7 +21,6 @@ import org.springmodules.validation.commons.DefaultBeanValidator;
 
 import egovframework.com.cmm.ComDefaultCodeVO;
 import egovframework.com.cmm.LoginVO;
-import egovframework.com.cmm.ResponseCode;
 import egovframework.com.cmm.service.CmmnDetailCode;
 import egovframework.com.cmm.service.EgovCmmUseService;
 import egovframework.com.cmm.service.IntermediateResultVO;
@@ -31,11 +28,13 @@ import egovframework.com.cmm.service.ResultVO;
 import egovframework.com.cmm.util.ResultVoHelper;
 import egovframework.let.cop.bbs.domain.model.BoardMaster;
 import egovframework.let.cop.bbs.domain.model.BoardMasterVO;
+import egovframework.let.cop.bbs.dto.request.BbsAttributeDetailRequestDTO;
 import egovframework.let.cop.bbs.dto.request.BbsAttributeInsertRequestDTO;
 import egovframework.let.cop.bbs.dto.request.BbsAttributeSearchRequestDTO;
 import egovframework.let.cop.bbs.dto.request.BbsAttributeUpdateRequestDTO;
-import egovframework.let.cop.bbs.dto.response.BbsAttributeResponseDTO;
+import egovframework.let.cop.bbs.dto.response.BbsAttributeDetailResponseDTO;
 import egovframework.let.cop.bbs.dto.response.BbsAttributeListResponseDTO;
+import egovframework.let.cop.bbs.dto.response.BbsAttributeResponseDTO;
 import egovframework.let.cop.bbs.service.EgovBBSAttributeManageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -133,27 +132,13 @@ public class EgovBBSAttributeManageApiController {
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
 	})
 	@GetMapping(value ="/bbsMaster/{bbsId}")
-	public ResultVO  selectBBSMasterInf(@Parameter(name = "bbsId", description = "게시판 Id", in = ParameterIn.PATH, example="BBSMSTR_AAAAAAAAAAAA") 
+	public IntermediateResultVO<BbsAttributeDetailResponseDTO>  selectBBSMasterInf(@Parameter(name = "bbsId", description = "게시판 Id", in = ParameterIn.PATH, example="BBSMSTR_AAAAAAAAAAAA") 
 			@PathVariable("bbsId") String bbsId)
 		throws Exception {
-		BoardMasterVO searchVO = new BoardMasterVO();
-		searchVO.setBbsId(bbsId);
-		searchVO.setUseAt("Y");
 		
-		Map<String, Object> resultMap = new HashMap<String, Object>();
-
-		BoardMasterVO vo = bbsAttrbService.selectBBSMasterInf(searchVO);
-		resultMap.put("boardMasterVO", vo);
-
-		return resultVoHelper.buildFromMap(resultMap, ResponseCode.SUCCESS);
+		BbsAttributeDetailResponseDTO response = bbsAttrbService.selectBBSMasterInf(bbsId, null);
 		
-//		* HashMap으로 인해 result 안에 boardMasterVO key가 하나 더 생겨서 들어가는 구조로써
-//		  아래와 같이 변환 작업 시 리엑트에서 수정이 필요하므로 보류합니다.
-		
-//		BbsDetailResponseVO response = bbsAttrbService.selectBBSMasterInf(bbsId);
-//
-//		System.out.println(response.toString());
-//		return IntermediateResultVO.success(response);
+		return IntermediateResultVO.success(response);
 	}
 
 	/**
@@ -279,12 +264,10 @@ public class EgovBBSAttributeManageApiController {
 		beanValidator.validate(bbsAttributeUpdateRequestDTO, bindingResult);
 
 		if (bindingResult.hasErrors()) {
-			// selectBBSMasterInf 메서드는 리액트에서의 코드 수정이 필요하여 보류하였습니다.
-			// 이로 인해 해당 라인의 코드 또한 보류되었습니다.
-			BoardMaster boardMaster = bbsAttributeUpdateRequestDTO.toBoardMaster();
-			BoardMasterVO vo = bbsAttrbService.selectBBSMasterInf(boardMaster);
+			String bbsId = bbsAttributeUpdateRequestDTO.getBbsId();
+			BbsAttributeDetailResponseDTO result = bbsAttrbService.selectBBSMasterInf(bbsId, null);
 
-			return IntermediateResultVO.inputCheckError(vo);
+			return IntermediateResultVO.inputCheckError(result);
 		}
 
 		bbsAttributeUpdateRequestDTO.setLastUpdusrId(loginVO.getUniqId());

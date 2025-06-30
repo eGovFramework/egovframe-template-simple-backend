@@ -47,6 +47,12 @@ public class BbsAttributeDetailResponseDTO {
 
     @Schema(description = "게시판 속성 이름", example = "일반게시판")
     private String bbsAttrbCodeNm;
+    
+	@Schema(description = "게시판 소개", example="게시판 소개입니다.")
+    private String bbsIntrcn;
+    
+	@Schema(description = "파일첨부가능여부", example="Y")
+    private String fileAtchPosblAt;
 
     @Schema(description = "첨부파일 허용 개수", example = "3")
     private int posblAtchFileNumber;
@@ -60,14 +66,17 @@ public class BbsAttributeDetailResponseDTO {
     @Schema(description = "등록일", example = "2011-08-31")
     private String frstRegisterPnttm;
     
+    @Schema(description = "답장가능여부", example="Y")
+    private String replyPosblAt;
+    
     @Builder.Default
 	@Schema(description = "추가 option (댓글-comment, 만족도조사-stsfdg)", example="")
-    private String option = "";
+    private String option;
     
 	/**
-	 *  BbsAttributeDetailResponseDTO → BoardMasterResponse 변환 메서드 입니다.
-	 * @param vo
-	 * @return BoardMasterResponse
+	 *  BoardMasterVO vo → BbsAttributeDetailResponseDTO 변환 메서드 입니다.
+	 * @param BoardMasterVO
+	 * @return BbsAttributeDetailResponseDTO
 	 */
     public static BbsAttributeDetailResponseDTO from(BoardMasterVO vo) {
         return BbsAttributeDetailResponseDTO.builder()
@@ -77,9 +86,12 @@ public class BbsAttributeDetailResponseDTO {
             .bbsTyCodeNm(vo.getBbsTyCodeNm())
             .bbsAttrbCode(vo.getBbsAttrbCode())
             .bbsAttrbCodeNm(vo.getBbsAttrbCodeNm())
+            .bbsIntrcn(vo.getBbsIntrcn())
+            .fileAtchPosblAt(vo.getFileAtchPosblAt())
             .posblAtchFileNumber(vo.getPosblAtchFileNumber())
             .tmplatId(vo.getTmplatId())
             .useAt(vo.getUseAt())
+            .replyPosblAt(vo.getReplyPosblAt())
             .frstRegisterPnttm(vo.getFrstRegisterPnttm())
             .option(vo.getOption())
             .build();

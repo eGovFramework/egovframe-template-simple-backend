@@ -78,7 +78,7 @@ public interface EgovBBSAttributeManageService {
 	 * @param String bbsId
 	 * @exception Exception Exception
 	 */
-	public BoardMasterVO selectBBSMasterInf(BoardMaster searchVO)
+	public BbsAttributeDetailResponseDTO selectBBSMasterInf(String bbsId, String uniqId)
 	  throws Exception;
 
 	/**

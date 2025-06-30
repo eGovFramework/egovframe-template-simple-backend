@@ -169,14 +169,17 @@ public class EgovBBSAttributeManageServiceImpl extends EgovAbstractServiceImpl i
      *
      * @see egovframework.let.cop.bbs.brd.service.EgovBBSAttributeManageService#selectBBSMasterInf(egovframework.let.cop.bbs.domain.model.brd.service.BoardMasterVO)
      */
-    public BoardMasterVO selectBBSMasterInf(BoardMaster searchVO) throws Exception {
+    public BbsAttributeDetailResponseDTO selectBBSMasterInf(String bbsId, String uniqId) throws Exception {
 		//---------------------------------
 		// 2009.06.26 : 2단계 기능 추가
 		//---------------------------------
-		//return attrbMngDAO.selectBBSMasterInf(searchVO); 
-	
+		//return attrbMngDAO.selectBBSMasterInf(searchVO);
+    	BoardMasterVO searchVO = new BoardMasterVO();
+    	searchVO.setBbsId(bbsId);
+    	searchVO.setUniqId(uniqId);
+    	
 		BoardMasterVO result = attrbMngDAO.selectBBSMasterInf(searchVO);
-	
+		
 		String flag = propertyService.getString("Globals.addedOptions");
 		if (flag != null && flag.trim().equalsIgnoreCase("true")) {
 		    BoardMasterVO options = addedOptionsDAO.selectAddedOptionsInf(searchVO);
@@ -194,7 +197,7 @@ public class EgovBBSAttributeManageServiceImpl extends EgovAbstractServiceImpl i
 		    }
 		}
 	
-		return result;
+		return BbsAttributeDetailResponseDTO.from(result);
 
     }
 
