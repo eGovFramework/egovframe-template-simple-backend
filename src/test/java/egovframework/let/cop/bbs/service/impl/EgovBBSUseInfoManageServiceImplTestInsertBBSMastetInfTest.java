@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import egovframework.let.cop.bbs.domain.model.BoardMaster;
 import egovframework.let.cop.bbs.dto.request.BbsAttributeInsertRequestDTO;
 import egovframework.let.cop.bbs.dto.response.BbsAttributeDetailResponseDTO;
 import egovframework.let.cop.bbs.service.EgovBBSAttributeManageService;
