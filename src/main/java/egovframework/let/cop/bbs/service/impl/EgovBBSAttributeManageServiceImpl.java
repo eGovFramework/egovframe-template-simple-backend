@@ -169,35 +169,38 @@ public class EgovBBSAttributeManageServiceImpl extends EgovAbstractServiceImpl i
      *
      * @see egovframework.let.cop.bbs.brd.service.EgovBBSAttributeManageService#selectBBSMasterInf(egovframework.let.cop.bbs.domain.model.brd.service.BoardMasterVO)
      */
-    public BoardMasterVO selectBBSMasterInf(BoardMaster searchVO) throws Exception {
+    public BbsAttributeDetailResponseDTO selectBBSMasterInf(String bbsId, String uniqId) throws Exception {
 		//---------------------------------
 		// 2009.06.26 : 2단계 기능 추가
 		//---------------------------------
-		//return attrbMngDAO.selectBBSMasterInf(searchVO); 
-	
+		//return attrbMngDAO.selectBBSMasterInf(searchVO);
+    	BoardMasterVO searchVO = new BoardMasterVO();
+    	searchVO.setBbsId(bbsId);
+    	searchVO.setUniqId(uniqId);
+		
 		BoardMasterVO result = attrbMngDAO.selectBBSMasterInf(searchVO);
-	
+		
 		String flag = propertyService.getString("Globals.addedOptions");
 		if (flag != null && flag.trim().equalsIgnoreCase("true")) {
-		    BoardMasterVO options = addedOptionsDAO.selectAddedOptionsInf(searchVO);
+			BoardMasterVO options = addedOptionsDAO.selectAddedOptionsInf(searchVO);
 	
-		    if (options != null) {
+			if (options != null) {
 				if (options.getCommentAt().equals("Y")) {
-				    result.setOption("comment");
+					result.setOption("comment");
 				}
-		
+				
 				if (options.getStsfdgAt().equals("Y")) {
-				    result.setOption("stsfdg");
+					result.setOption("stsfdg");
 				}
-		    } else {
-		    	result.setOption("na");	// 미지정 상태로 수정 가능 (이미 지정된 경우는 수정 불가로 처리)
-		    }
+			} else {
+				result.setOption("na");	// 미지정 상태로 수정 가능 (이미 지정된 경우는 수정 불가로 처리)
+			}
 		}
-	
-		return result;
-
+		
+		return BbsAttributeDetailResponseDTO.from(result);
+		
     }
-
+    
     /**
      * 게시판 속성 정보의 목록을 조회 한다.
      *

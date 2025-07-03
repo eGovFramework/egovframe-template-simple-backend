@@ -9,9 +9,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import egovframework.let.cop.bbs.domain.model.BoardMaster;
-import egovframework.let.cop.bbs.domain.model.BoardMasterVO;
 import egovframework.let.cop.bbs.dto.request.BbsAttributeInsertRequestDTO;
+import egovframework.let.cop.bbs.dto.response.BbsAttributeDetailResponseDTO;
 import egovframework.let.cop.bbs.service.EgovBBSAttributeManageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -49,26 +48,18 @@ class EgovBBSUseInfoManageServiceImplTestInsertBBSMastetInfTest {
 		bbsInsertRequestDTO.setUseAt("Y");
 		bbsInsertRequestDTO.setFrstRegisterId("admin");
 		
-		// selectBBSMasterInf의 코드는 리액트 변경이 필요하여 리펙토링 보류 상태이므로
-		// 테스트를 위해 임시로 BoardMaster를 사용합니다.
-		final BoardMaster boardMaster = new BoardMaster();
-		boardMaster.setBbsNm("test 이백행 게시판명 " + now);
-		boardMaster.setPosblAtchFileSize("0");
-		
 		// when
-		final String result = egovBBSAttributeManageService.insertBBSMastetInf(bbsInsertRequestDTO);
-		boardMaster.setBbsId(result);
+		final String resultBbsId = egovBBSAttributeManageService.insertBBSMastetInf(bbsInsertRequestDTO);
 
 		// then
-		final BoardMasterVO resultBoardMasterVO = egovBBSAttributeManageService.selectBBSMasterInf(boardMaster);
-		
+		final BbsAttributeDetailResponseDTO response = egovBBSAttributeManageService.selectBBSMasterInf(resultBbsId, null);
 		if (log.isDebugEnabled()) {
-			log.debug("result={}", result);
-			log.debug("resultBoardMasterVO={}", resultBoardMasterVO);
-			log.debug("getBbsId={}", resultBoardMasterVO.getBbsId());
+			log.debug("result={}", resultBbsId);
+			log.debug("resultBoardMasterVO={}", response);
+			log.debug("getBbsId={}", response.getBbsId());
 		}
 
-		assertEquals(result, resultBoardMasterVO.getBbsId(), "신규 게시판 속성정보를 생성한다.");
+		assertEquals(resultBbsId, response.getBbsId(), "신규 게시판 속성정보를 생성한다.");
 	}
 
 }
