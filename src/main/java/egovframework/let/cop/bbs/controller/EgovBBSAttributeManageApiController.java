@@ -27,6 +27,7 @@ import egovframework.com.cmm.service.IntermediateResultVO;
 import egovframework.let.cop.bbs.dto.request.BbsAttributeInsertRequestDTO;
 import egovframework.let.cop.bbs.dto.request.BbsAttributeSearchRequestDTO;
 import egovframework.let.cop.bbs.dto.request.BbsAttributeUpdateRequestDTO;
+import egovframework.let.cop.bbs.dto.response.BbsAttributeDetailResponseDTO;
 import egovframework.let.cop.bbs.dto.response.BbsAttributeListResponseDTO;
 import egovframework.let.cop.bbs.dto.response.BbsAttributeResponseDTO;
 import egovframework.let.cop.bbs.dto.response.BbsDetailResponse;
@@ -37,6 +38,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -111,9 +113,8 @@ public class EgovBBSAttributeManageApiController {
 	/**
 	 * 게시판 마스터 상세내용을 조회한다.
 	 *
-	 * @param request
-	 * @param searchVO
-	 * @return resultVO
+	 * @param bbsId
+	 * @return BbsDetailResponse
 	 * @throws Exception
 	 */
 	@Operation(
@@ -123,7 +124,11 @@ public class EgovBBSAttributeManageApiController {
 			tags = {"EgovBBSAttributeManageApiController"}
 	)
 	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "조회 성공"),
+			@ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(
+				    schema = @Schema(oneOf = {
+				            BbsAttributeDetailResponseDTO.class,
+				        })
+				    )),
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
 	})
 	@GetMapping(value ="/bbsMaster/{bbsId}")

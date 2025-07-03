@@ -6,7 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
  * 게시판 상세 조회 요청 타입을 정의한 열거형입니다.
  * 
  * <p>
- * 게시판 마스터 정보를 조회할 때, 요청 목적에 따라 다음과 같은 유형으로 구분됩니다:
+ * 게시판 마스터 정보를 조회할 때, 요청 목적에 따라 다음과 같은 유형으로 구분됩니다.
  * </p>
  * <ul>
  *   <li>{@code DETAIL} - 게시판 상세 설정 정보 조회</li>
@@ -22,6 +22,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
  *
  * @see egovframework.let.cop.bbs.service.EgovBBSAttributeManageService#selectBBSMasterInf
  */
+
 @Schema(description = "요청 타입", example = "DETAIL", allowableValues = {"DETAIL", "LIST", "FILE_ATCH"})
 public enum BbsDetailRequestType {
     DETAIL,

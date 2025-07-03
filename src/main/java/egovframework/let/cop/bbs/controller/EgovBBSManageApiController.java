@@ -38,6 +38,7 @@ import egovframework.let.cop.bbs.domain.model.BoardVO;
 import egovframework.let.cop.bbs.dto.request.BbsAttributeSearchRequestDTO;
 import egovframework.let.cop.bbs.dto.request.BbsDeleteBoardRequestDTO;
 import egovframework.let.cop.bbs.dto.response.BbsDetailResponse;
+import egovframework.let.cop.bbs.dto.response.BbsManageFileAtchResponseDTO;
 import egovframework.let.cop.bbs.enums.BbsDetailRequestType;
 import egovframework.let.cop.bbs.service.EgovBBSAttributeManageService;
 import egovframework.let.cop.bbs.service.EgovBBSManageService;
@@ -48,6 +49,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -93,9 +95,8 @@ public class EgovBBSManageApiController {
 	 * 게시판 마스터 상세내용을 조회한다.
 	 * 파일 첨부 가능 여부 조회용
 	 *
-	 * @param request
-	 * @param searchVO
-	 * @return resultVO
+	 * @param bbsId
+	 * @return BbsDetailResponse
 	 * @throws Exception
 	 */
 	@Operation(
@@ -104,7 +105,11 @@ public class EgovBBSManageApiController {
 			tags = {"EgovBBSManageApiController"}
 	)
 	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "조회 성공"),
+			@ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(
+				    schema = @Schema(oneOf = {
+				            BbsManageFileAtchResponseDTO.class
+				        })
+				    )),
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
 	})
 	@GetMapping(value = "/boardFileAtch/{bbsId}")
