@@ -11,6 +11,9 @@ import egovframework.let.cop.bbs.dto.request.BbsAttributeSearchRequestDTO;
 import egovframework.let.cop.bbs.dto.request.BbsAttributeUpdateRequestDTO;
 import egovframework.let.cop.bbs.dto.response.BbsAttributeDetailResponseDTO;
 import egovframework.let.cop.bbs.dto.response.BbsAttributeListResponseDTO;
+import egovframework.let.cop.bbs.dto.response.BbsDetailResponse;
+import egovframework.let.cop.bbs.dto.response.BbsManageFileAtchResponseDTO;
+import egovframework.let.cop.bbs.enums.BbsDetailRequestType;
 
 /**
  * 게시판 속성관리를 위한 서비스 인터페이스 클래스
@@ -74,10 +77,16 @@ public interface EgovBBSAttributeManageService {
 
 	/**
 	 * 게시판 속성정보 한 건을 상세조회한다.
+	 * 
+	 * 요청 유형에 따라 서로 다른 응답 DTO를 반환합니다.
+	 * 예: "detail"은 {@link BbsAttributeDetailResponseDTO}, "fileAtch"는 {@link BbsManageFileAtchResponseDTO} 반환
+	 *
 	 * @param String bbsId
+	 * @param String uniqId
+	 * @param requestType 요청 유형 ("detail" 또는 "fileAtch")
 	 * @exception Exception Exception
 	 */
-	public BbsAttributeDetailResponseDTO selectBBSMasterInf(String bbsId, String uniqId)
+	public BbsDetailResponse selectBBSMasterInf(String bbsId, String uniqId, BbsDetailRequestType requestType)
 	  throws Exception;
 
 	/**

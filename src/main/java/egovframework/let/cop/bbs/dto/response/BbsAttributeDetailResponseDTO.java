@@ -29,7 +29,7 @@ import lombok.ToString;
 @Builder
 @ToString
 @Schema(description = "게시판 정보 응답 DTO")
-public class BbsAttributeDetailResponseDTO {
+public class BbsAttributeDetailResponseDTO implements BbsDetailResponse {
     @Schema(description = "게시판 ID", example = "BBSMSTR_AAAAAAAAAAAA")
     private String bbsId;
 

@@ -27,9 +27,10 @@ import egovframework.com.cmm.service.IntermediateResultVO;
 import egovframework.let.cop.bbs.dto.request.BbsAttributeInsertRequestDTO;
 import egovframework.let.cop.bbs.dto.request.BbsAttributeSearchRequestDTO;
 import egovframework.let.cop.bbs.dto.request.BbsAttributeUpdateRequestDTO;
-import egovframework.let.cop.bbs.dto.response.BbsAttributeDetailResponseDTO;
 import egovframework.let.cop.bbs.dto.response.BbsAttributeListResponseDTO;
 import egovframework.let.cop.bbs.dto.response.BbsAttributeResponseDTO;
+import egovframework.let.cop.bbs.dto.response.BbsDetailResponse;
+import egovframework.let.cop.bbs.enums.BbsDetailRequestType;
 import egovframework.let.cop.bbs.service.EgovBBSAttributeManageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -126,11 +127,10 @@ public class EgovBBSAttributeManageApiController {
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
 	})
 	@GetMapping(value ="/bbsMaster/{bbsId}")
-	public IntermediateResultVO<BbsAttributeDetailResponseDTO>  selectBBSMasterInf(@Parameter(name = "bbsId", description = "게시판 Id", in = ParameterIn.PATH, example="BBSMSTR_AAAAAAAAAAAA") 
+	public IntermediateResultVO<BbsDetailResponse>  selectBBSMasterInf(@Parameter(name = "bbsId", description = "게시판 Id", in = ParameterIn.PATH, example="BBSMSTR_AAAAAAAAAAAA") 
 			@PathVariable("bbsId") String bbsId)
 		throws Exception {
-		
-		BbsAttributeDetailResponseDTO response = bbsAttrbService.selectBBSMasterInf(bbsId, null);
+		BbsDetailResponse response = bbsAttrbService.selectBBSMasterInf(bbsId, null, BbsDetailRequestType.DETAIL);
 		
 		return IntermediateResultVO.success(response);
 	}
@@ -259,7 +259,7 @@ public class EgovBBSAttributeManageApiController {
 
 		if (bindingResult.hasErrors()) {
 			String bbsId = bbsAttributeUpdateRequestDTO.getBbsId();
-			BbsAttributeDetailResponseDTO result = bbsAttrbService.selectBBSMasterInf(bbsId, null);
+			BbsDetailResponse result = bbsAttrbService.selectBBSMasterInf(bbsId, null, BbsDetailRequestType.DETAIL);
 
 			return IntermediateResultVO.inputCheckError(result);
 		}

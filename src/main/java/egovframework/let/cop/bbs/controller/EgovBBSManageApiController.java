@@ -34,11 +34,11 @@ import egovframework.com.cmm.service.ResultVO;
 import egovframework.com.cmm.util.ResultVoHelper;
 import egovframework.com.cmm.web.EgovFileDownloadController;
 import egovframework.com.jwt.EgovJwtTokenUtil;
-import egovframework.let.cop.bbs.domain.model.BoardMasterVO;
 import egovframework.let.cop.bbs.domain.model.BoardVO;
 import egovframework.let.cop.bbs.dto.request.BbsAttributeSearchRequestDTO;
 import egovframework.let.cop.bbs.dto.request.BbsDeleteBoardRequestDTO;
-import egovframework.let.cop.bbs.dto.response.BbsAttributeDetailResponseDTO;
+import egovframework.let.cop.bbs.dto.response.BbsDetailResponse;
+import egovframework.let.cop.bbs.enums.BbsDetailRequestType;
 import egovframework.let.cop.bbs.service.EgovBBSAttributeManageService;
 import egovframework.let.cop.bbs.service.EgovBBSManageService;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
@@ -108,25 +108,14 @@ public class EgovBBSManageApiController {
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
 	})
 	@GetMapping(value = "/boardFileAtch/{bbsId}")
-	public ResultVO selectUserBBSMasterInf(
+	public IntermediateResultVO<BbsDetailResponse> selectUserBBSMasterInf(
 			@Parameter(name = "bbsId", description = "게시판 Id", in = ParameterIn.PATH, example="BBSMSTR_AAAAAAAAAAAA")
 			@PathVariable("bbsId") String bbsId)
 		throws Exception {
-		Map<String, Object> resultMap = new HashMap<String, Object>();
-		BoardMasterVO searchVO = new BoardMasterVO();
-		searchVO.setBbsId(bbsId);
 		
-		BbsAttributeDetailResponseDTO response = bbsAttrbService.selectBBSMasterInf(bbsId, null);
-		
-		// 파일 첨부 외의 다른 정보를 전달하지 않기 위해 신규 객체 생성
-		BoardMasterVO masterFileAtchInfo = new BoardMasterVO();
-		
-		masterFileAtchInfo.setFileAtchPosblAt(response.getFileAtchPosblAt());
-		masterFileAtchInfo.setPosblAtchFileNumber(response.getPosblAtchFileNumber());
-		masterFileAtchInfo.setPosblAtchFileSize(response.getPosblAtchFileSize());
-		
-		resultMap.put("brdMstrVO", masterFileAtchInfo);
-		return resultVoHelper.buildFromMap(resultMap, ResponseCode.SUCCESS);
+		BbsDetailResponse response = bbsAttrbService.selectBBSMasterInf(bbsId, null, BbsDetailRequestType.FILE_ATCH);
+
+		return IntermediateResultVO.success(response);
 	}
 	/**
 	 * 게시물에 대한 목록을 조회한다.
@@ -148,7 +137,7 @@ public class EgovBBSManageApiController {
 	public ResultVO selectBoardArticles(@ModelAttribute BbsAttributeSearchRequestDTO boardMasterSearchVO, 
 			@Parameter(hidden = true) @AuthenticationPrincipal LoginVO user)
 		throws Exception {
-		BbsAttributeDetailResponseDTO response = bbsAttrbService.selectBBSMasterInf(boardMasterSearchVO.getBbsId(), user.getUniqId());
+		BbsDetailResponse response = bbsAttrbService.selectBBSMasterInf(boardMasterSearchVO.getBbsId(), user.getUniqId(), BbsDetailRequestType.DETAIL);
 		PaginationInfo paginationInfo = new PaginationInfo();
 		paginationInfo.setCurrentPageNo(boardMasterSearchVO.getPageIndex());
 		paginationInfo.setRecordCountPerPage(propertyService.getInt("Globals.pageUnit"));
@@ -206,7 +195,7 @@ public class EgovBBSManageApiController {
 
 		// 조회수 증가 여부 지정
 		boardVO.setPlusCount(true);
-
+		
 		//---------------------------------
 		// 2009.06.29 : 2단계 기능 추가
 		//---------------------------------
@@ -221,7 +210,7 @@ public class EgovBBSManageApiController {
 		//----------------------------
 		// template 처리 (기본 BBS template 지정  포함)
 		//----------------------------
-		BbsAttributeDetailResponseDTO response = bbsAttrbService.selectBBSMasterInf(boardVO.getBbsId(), user.getUniqId());
+		BbsDetailResponse response = bbsAttrbService.selectBBSMasterInf(boardVO.getBbsId(), user.getUniqId(), BbsDetailRequestType.LIST);
 		
 		//model.addAttribute("brdMstrVO", masterVo);
 
