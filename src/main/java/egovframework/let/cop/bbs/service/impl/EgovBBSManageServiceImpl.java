@@ -15,7 +15,7 @@ import egovframework.com.cmm.service.FileVO;
 import egovframework.let.cop.bbs.domain.model.Board;
 import egovframework.let.cop.bbs.domain.model.BoardVO;
 import egovframework.let.cop.bbs.domain.repository.BBSManageDAO;
-import egovframework.let.cop.bbs.dto.request.BbsDeleteBoardRequestDTO;
+import egovframework.let.cop.bbs.dto.request.BbsManageDeleteBoardRequestDTO;
 import egovframework.let.cop.bbs.service.EgovBBSManageService;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 import lombok.RequiredArgsConstructor;
@@ -50,7 +50,7 @@ public class EgovBBSManageServiceImpl extends EgovAbstractServiceImpl implements
 	 * @see egovframework.let.cop.bbs.brd.service.EgovBBSManageService#deleteBoardArticle(egovframework.let.cop.bbs.domain.model.brd.service.Board)
 	 */
 	@Override
-	public void deleteBoardArticle(BbsDeleteBoardRequestDTO bbsDeleteBoardRequestDTO, LoginVO user) throws Exception {
+	public void deleteBoardArticle(BbsManageDeleteBoardRequestDTO bbsDeleteBoardRequestDTO, LoginVO user) throws Exception {
 		String atchFileId = bbsDeleteBoardRequestDTO.getAtchFileId();
 		BoardVO vo = bbsDeleteBoardRequestDTO.toBoardMaster(bbsDeleteBoardRequestDTO, user.getUniqId());
 		bbsMngDAO.deleteBoardArticle(vo);

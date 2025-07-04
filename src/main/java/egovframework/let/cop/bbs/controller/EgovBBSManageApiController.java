@@ -36,7 +36,7 @@ import egovframework.com.cmm.web.EgovFileDownloadController;
 import egovframework.com.jwt.EgovJwtTokenUtil;
 import egovframework.let.cop.bbs.domain.model.BoardVO;
 import egovframework.let.cop.bbs.dto.request.BbsAttributeSearchRequestDTO;
-import egovframework.let.cop.bbs.dto.request.BbsDeleteBoardRequestDTO;
+import egovframework.let.cop.bbs.dto.request.BbsManageDeleteBoardRequestDTO;
 import egovframework.let.cop.bbs.dto.response.BbsDetailResponse;
 import egovframework.let.cop.bbs.dto.response.BbsManageFileAtchResponseDTO;
 import egovframework.let.cop.bbs.enums.BbsDetailRequestType;
@@ -477,7 +477,7 @@ public class EgovBBSManageApiController {
 		@PathVariable("bbsId") String bbsId,
 		@Parameter(name = "nttId", description = "게시글 Id", in = ParameterIn.PATH, example="1")
 		@PathVariable("nttId") String nttId,
-		@RequestBody BbsDeleteBoardRequestDTO bbsDeleteBoardRequestDTO,
+		@RequestBody BbsManageDeleteBoardRequestDTO bbsDeleteBoardRequestDTO,
 		@Parameter(hidden = true) @AuthenticationPrincipal LoginVO user)
 		throws Exception {
 		bbsDeleteBoardRequestDTO.setBbsId(bbsId);
