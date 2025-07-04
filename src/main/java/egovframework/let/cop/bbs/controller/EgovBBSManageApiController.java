@@ -110,7 +110,20 @@ public class EgovBBSManageApiController {
 				            BbsManageFileAtchResponseDTO.class
 				        })
 				    )),
-			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
+			@ApiResponse(
+					responseCode = "403",
+					description = "인가된 사용자가 아님",
+			        content = @Content(
+				            mediaType = "application/json",
+				            examples = @ExampleObject(
+				                name = "403 응답 예시",
+				                summary = "Forbidden",
+				                value = "{\n" +
+				                        "  \"resultCode\": 403,\n" +
+				                        "  \"resultMessage\": \"인가된 사용자가 아님\"\n" +
+				                        "}"
+				            )
+				        )),
 	})
 	@GetMapping(value = "/boardFileAtch/{bbsId}")
 	public IntermediateResultVO<BbsDetailResponse> selectUserBBSMasterInf(
