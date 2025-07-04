@@ -18,7 +18,7 @@ import egovframework.let.cop.bbs.domain.model.BoardMasterVO;
 import egovframework.let.cop.bbs.domain.repository.BBSAddedOptionsDAO;
 import egovframework.let.cop.bbs.domain.repository.BBSAttributeManageDAO;
 import egovframework.let.cop.bbs.dto.request.BbsAttributeInsertRequestDTO;
-import egovframework.let.cop.bbs.dto.request.BbsAttributeSearchRequestDTO;
+import egovframework.let.cop.bbs.dto.request.BbsSearchRequestDTO;
 import egovframework.let.cop.bbs.dto.request.BbsAttributeUpdateRequestDTO;
 import egovframework.let.cop.bbs.dto.response.BbsAttributeDetailResponseDTO;
 import egovframework.let.cop.bbs.dto.response.BbsAttributeListResponseDTO;
@@ -215,7 +215,7 @@ public class EgovBBSAttributeManageServiceImpl extends EgovAbstractServiceImpl i
      *
      * @see egovframework.let.cop.bbs.brd.service.EgovBBSAttributeManageService#selectBBSMasterInfs(egovframework.let.cop.bbs.domain.model.brd.service.BoardMasterVO)
      */
-    public BbsAttributeListResponseDTO selectBBSMasterInfs(BbsAttributeSearchRequestDTO bbsAttributeSearchRequestDTO, PaginationInfo paginationInfo) throws Exception {
+    public BbsAttributeListResponseDTO selectBBSMasterInfs(BbsSearchRequestDTO bbsAttributeSearchRequestDTO, PaginationInfo paginationInfo) throws Exception {
 		// 도메인 모델(BoardMasterVO) 구성
     	BoardMasterVO boardMasterVO = new BoardMasterVO();
 		boardMasterVO.setSearchCnd(bbsAttributeSearchRequestDTO.getSearchCnd());

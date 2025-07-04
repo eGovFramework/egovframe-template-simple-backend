@@ -35,7 +35,7 @@ import egovframework.com.cmm.util.ResultVoHelper;
 import egovframework.com.cmm.web.EgovFileDownloadController;
 import egovframework.com.jwt.EgovJwtTokenUtil;
 import egovframework.let.cop.bbs.domain.model.BoardVO;
-import egovframework.let.cop.bbs.dto.request.BbsAttributeSearchRequestDTO;
+import egovframework.let.cop.bbs.dto.request.BbsSearchRequestDTO;
 import egovframework.let.cop.bbs.dto.request.BbsManageDeleteBoardRequestDTO;
 import egovframework.let.cop.bbs.dto.response.BbsDetailResponse;
 import egovframework.let.cop.bbs.dto.response.BbsManageFileAtchResponseDTO;
@@ -139,7 +139,7 @@ public class EgovBBSManageApiController {
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
 	})
 	@GetMapping(value = "/board")
-	public ResultVO selectBoardArticles(@ModelAttribute BbsAttributeSearchRequestDTO boardMasterSearchVO, 
+	public ResultVO selectBoardArticles(@ModelAttribute BbsSearchRequestDTO boardMasterSearchVO, 
 			@Parameter(hidden = true) @AuthenticationPrincipal LoginVO user)
 		throws Exception {
 		BbsDetailResponse response = bbsAttrbService.selectBBSMasterInf(boardMasterSearchVO.getBbsId(), user.getUniqId(), BbsDetailRequestType.DETAIL);

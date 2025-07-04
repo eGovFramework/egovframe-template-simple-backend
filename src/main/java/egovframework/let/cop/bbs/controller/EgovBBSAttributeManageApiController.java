@@ -25,7 +25,7 @@ import egovframework.com.cmm.service.CmmnDetailCode;
 import egovframework.com.cmm.service.EgovCmmUseService;
 import egovframework.com.cmm.service.IntermediateResultVO;
 import egovframework.let.cop.bbs.dto.request.BbsAttributeInsertRequestDTO;
-import egovframework.let.cop.bbs.dto.request.BbsAttributeSearchRequestDTO;
+import egovframework.let.cop.bbs.dto.request.BbsSearchRequestDTO;
 import egovframework.let.cop.bbs.dto.request.BbsAttributeUpdateRequestDTO;
 import egovframework.let.cop.bbs.dto.response.BbsAttributeDetailResponseDTO;
 import egovframework.let.cop.bbs.dto.response.BbsAttributeListResponseDTO;
@@ -92,7 +92,7 @@ public class EgovBBSAttributeManageApiController {
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
 	})
 	@GetMapping(value = "/bbsMaster")
-	public IntermediateResultVO<BbsAttributeListResponseDTO> selectBBSMasterInfs(@ModelAttribute BbsAttributeSearchRequestDTO bbsAttributeSearchRequestDTO)
+	public IntermediateResultVO<BbsAttributeListResponseDTO> selectBBSMasterInfs(@ModelAttribute BbsSearchRequestDTO bbsAttributeSearchRequestDTO)
 		throws Exception {
 		// 1. 페이지 정보 구성
 		int pageUnit = propertyService.getInt("Globals.pageUnit");

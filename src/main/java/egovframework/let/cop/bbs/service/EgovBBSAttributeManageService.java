@@ -7,7 +7,7 @@ import org.egovframe.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 
 import egovframework.let.cop.bbs.domain.model.BoardMasterVO;
 import egovframework.let.cop.bbs.dto.request.BbsAttributeInsertRequestDTO;
-import egovframework.let.cop.bbs.dto.request.BbsAttributeSearchRequestDTO;
+import egovframework.let.cop.bbs.dto.request.BbsSearchRequestDTO;
 import egovframework.let.cop.bbs.dto.request.BbsAttributeUpdateRequestDTO;
 import egovframework.let.cop.bbs.dto.response.BbsAttributeDetailResponseDTO;
 import egovframework.let.cop.bbs.dto.response.BbsAttributeListResponseDTO;
@@ -96,7 +96,7 @@ public interface EgovBBSAttributeManageService {
 	 * @param searchVO
 	 * @exception Exception Exception
 	 */
-	public BbsAttributeListResponseDTO selectBBSMasterInfs(BbsAttributeSearchRequestDTO bbsAttributeSearchRequestDTO, PaginationInfo paginationInfo)
+	public BbsAttributeListResponseDTO selectBBSMasterInfs(BbsSearchRequestDTO bbsAttributeSearchRequestDTO, PaginationInfo paginationInfo)
 	  throws Exception;
 
 	/**
