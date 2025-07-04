@@ -92,19 +92,19 @@ public class EgovBBSAttributeManageApiController {
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
 	})
 	@GetMapping(value = "/bbsMaster")
-	public IntermediateResultVO<BbsAttributeListResponseDTO> selectBBSMasterInfs(@ModelAttribute BbsSearchRequestDTO bbsAttributeSearchRequestDTO)
+	public IntermediateResultVO<BbsAttributeListResponseDTO> selectBBSMasterInfs(@ModelAttribute BbsSearchRequestDTO bbsSearchRequestDTO)
 		throws Exception {
 		// 1. 페이지 정보 구성
 		int pageUnit = propertyService.getInt("Globals.pageUnit");
 		int pageSize = propertyService.getInt("Globals.pageSize");
 		
 		PaginationInfo paginationInfo = new PaginationInfo();
-		paginationInfo.setCurrentPageNo(bbsAttributeSearchRequestDTO.getPageIndex());
+		paginationInfo.setCurrentPageNo(bbsSearchRequestDTO.getPageIndex());
 		paginationInfo.setRecordCountPerPage(pageUnit);
 		paginationInfo.setPageSize(pageSize);
 		
 		// 2. 서비스 호출 및 응답 객체 구성
-		BbsAttributeListResponseDTO response = bbsAttrbService.selectBBSMasterInfs(bbsAttributeSearchRequestDTO, paginationInfo);
+		BbsAttributeListResponseDTO response = bbsAttrbService.selectBBSMasterInfs(bbsSearchRequestDTO, paginationInfo);
 		paginationInfo.setTotalRecordCount(response.getResultCnt());
 		response.setPaginationInfo(paginationInfo); 
 		return IntermediateResultVO.success(response);
