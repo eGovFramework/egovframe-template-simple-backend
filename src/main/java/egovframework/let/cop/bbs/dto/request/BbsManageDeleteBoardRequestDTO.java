@@ -34,7 +34,7 @@ import lombok.ToString;
 @Getter
 @ToString
 @Schema(description = "게시글 삭제 요청")
-public class BbsDeleteBoardRequestDTO {
+public class BbsManageDeleteBoardRequestDTO {
     @Schema(description = "게시판 ID", example = "BBSMSTR_AAAAAAAAAAAA", hidden=true)
 	private String bbsId;
 	 
@@ -52,7 +52,7 @@ public class BbsDeleteBoardRequestDTO {
      * 
      * @return BoardMaster 도메인 객체
      */
-	public BoardVO toBoardMaster(BbsDeleteBoardRequestDTO bbsDeleteBoardRequestDTO, String lastUpdusrId) {
+	public BoardVO toBoardMaster(BbsManageDeleteBoardRequestDTO bbsDeleteBoardRequestDTO, String lastUpdusrId) {
 		BoardVO vo = new BoardVO();
 	    vo.setBbsId(bbsDeleteBoardRequestDTO.getBbsId());
 	    vo.setAtchFileId(bbsDeleteBoardRequestDTO.getAtchFileId());

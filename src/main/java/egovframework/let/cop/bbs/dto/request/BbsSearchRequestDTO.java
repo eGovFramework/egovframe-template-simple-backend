@@ -29,9 +29,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @Schema(description = "게시판 검색 조건")
-public class BbsAttributeSearchRequestDTO {
-
-    @Schema(description = "게시판 Id", example = "")
+public class BbsSearchRequestDTO {
+    @Schema(description = "게시판 Id", example = "BBSMSTR_AAAAAAAAAAAA")
     private String bbsId = "";
 
     @Schema(description = "페이지 번호", example = "1")
