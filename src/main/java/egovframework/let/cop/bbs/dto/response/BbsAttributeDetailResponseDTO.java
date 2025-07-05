@@ -2,9 +2,9 @@ package egovframework.let.cop.bbs.dto.response;
 
 import egovframework.let.cop.bbs.domain.model.BoardMasterVO;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 
 /**
@@ -26,10 +26,9 @@ import lombok.ToString;
  */
 
 @Getter
-@Builder
-@ToString
+@SuperBuilder
 @Schema(description = "게시판 정보 응답 DTO")
-public class BbsAttributeDetailResponseDTO implements BbsDetailResponse {
+public class BbsAttributeDetailResponseDTO extends BbsDetailResponse {
     @Schema(description = "게시판 ID", example = "BBSMSTR_AAAAAAAAAAAA")
     private String bbsId;
 
@@ -50,15 +49,6 @@ public class BbsAttributeDetailResponseDTO implements BbsDetailResponse {
     
 	@Schema(description = "게시판 소개", example="게시판 소개입니다.")
     private String bbsIntrcn;
-    
-	@Schema(description = "파일첨부가능여부", example="Y")
-    private String fileAtchPosblAt;
-
-    @Schema(description = "첨부파일 허용 개수", example = "3")
-    private int posblAtchFileNumber;
-    
-    @Schema(description = "첨부파일 허용 크기 (/boardFileAtch/{bbsId} 요청 시 사용)", example = "5242880")
-    private String posblAtchFileSize;
 
     @Schema(description = "템플릿 ID", example = "TMPLAT_BOARD_DEFAULT")
     private String tmplatId;
