@@ -1,8 +1,8 @@
 package egovframework.com.security;
 
-import egovframework.com.cmm.filter.HTMLTagFilter;
-import egovframework.com.jwt.JwtAuthenticationEntryPoint;
-import egovframework.com.jwt.JwtAuthenticationFilter;
+import java.util.Arrays;
+
+import javax.servlet.MultipartConfigElement;
 
 import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.context.annotation.Bean;
@@ -23,9 +23,9 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.multipart.support.MultipartFilter;
 
-import java.util.Arrays;
-
-import javax.servlet.MultipartConfigElement;
+import egovframework.com.cmm.filter.HTMLTagFilter;
+import egovframework.com.jwt.JwtAuthenticationEntryPoint;
+import egovframework.com.jwt.JwtAuthenticationFilter;
 
 /**
  * fileName       : SecurityConfig
@@ -130,6 +130,11 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
                 		.antMatchers("/members/**").hasRole("ADMIN") //ROLE_생략=자동으로 입력됨
+                		.antMatchers("/schedule/month").hasRole("ADMIN")
+                		.antMatchers("/bbsMaster/**").hasRole("ADMIN")
+                		.antMatchers("/bbsUseInf/**").hasRole("ADMIN")
+                		.antMatchers("/admin/**").hasRole("ADMIN")
+                		.antMatchers("/admin/password").hasRole("ADMIN")
                         .antMatchers(AUTH_WHITELIST).permitAll()
                         .antMatchers(HttpMethod.GET,AUTH_GET_WHITELIST).permitAll()
                         .anyRequest().authenticated()

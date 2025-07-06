@@ -55,9 +55,15 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
 /**
- * 게시물 관리를 위한 컨트롤러 클래스
- * @author 공통 서비스 개발팀 이삼섭
- * @since 2009.03.19
+ * 사용자 전용(알림마당) 컨트롤러 클래스
+ * 
+ * 일반 유저와 어드민의 요청을 나누기 위해 만들어진 클래스이며,
+ * 생성일자 기준 EgovBBSManageApiController와 동일한 로직을 가진 클래스 입니다.
+ * 
+ * "알림마당-사이트갤러리"에서는 등록/수정/삭제/답글 등 모든 동작을 보장해야 하므로 동일한 로직을 가지고 있습니다.
+ * 
+ * @author 김재섭(nirsa)
+ * @since 2025.07.05
  * @version 1.0
  * @see
  *
@@ -66,17 +72,14 @@ import lombok.RequiredArgsConstructor;
  *
  *   수정일      수정자             수정내용
  *  -------    --------        ---------------------------
- *  2009.03.19  이삼섭            최초 생성
- *  2009.06.29  한성곤	         2단계 기능 추가 (댓글관리, 만족도조사)
- *  2011.08.31  JJY              경량환경 템플릿 커스터마이징버전 생성
- *  2024.04.06  김재섭(nirsa)     생성자 주입 전환, 불필요한 필드 제거, ResultVoHelper 적용 및 1차 코드 리팩토링
+ *  2024.07.06  김재섭(nirsa)    사용자 전용 API Controller
  *
  *  </pre>
  */
 @RestController
 @RequiredArgsConstructor
-@Tag(name="EgovBBSManageApiController",description = "게시물 관리")
-public class EgovBBSManageApiController {
+@Tag(name="EgovBBSManageApiController",description = "사용자 전용 관리")
+public class EgovBBSUserApiController {
 	public static final String HEADER_STRING = "Authorization";
     private final EgovJwtTokenUtil jwtTokenUtil;
     private final EgovFileMngUtil fileUtil;
@@ -107,7 +110,7 @@ public class EgovBBSManageApiController {
 			@ApiResponse(responseCode = "200", description = "조회 성공"),
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
 	})
-	@GetMapping(value = "/admin/boardFileAtch/{bbsId}")
+	@GetMapping(value = "/boardFileAtch/{bbsId}")
 	public ResultVO selectUserBBSMasterInf(
 			@Parameter(name = "bbsId", description = "게시판 Id", in = ParameterIn.PATH, example="BBSMSTR_AAAAAAAAAAAA")
 			@PathVariable("bbsId") String bbsId)
@@ -128,6 +131,7 @@ public class EgovBBSManageApiController {
 		resultMap.put("brdMstrVO", masterFileAtchInfo);
 		return resultVoHelper.buildFromMap(resultMap, ResponseCode.SUCCESS);
 	}
+	
 	/**
 	 * 게시물에 대한 목록을 조회한다.
 	 *
@@ -144,7 +148,7 @@ public class EgovBBSManageApiController {
 			@ApiResponse(responseCode = "200", description = "조회 성공"),
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
 	})
-	@GetMapping(value = "/admin/board")
+	@GetMapping(value = "/board")
 	public ResultVO selectBoardArticles(@ModelAttribute BbsAttributeSearchRequestDTO boardMasterSearchVO, 
 			@Parameter(hidden = true) @AuthenticationPrincipal LoginVO user)
 		throws Exception {
@@ -191,7 +195,7 @@ public class EgovBBSManageApiController {
 			@ApiResponse(responseCode = "200", description = "조회 성공"),
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
 	})
-	@GetMapping(value = "/admin/board/{bbsId}/{nttId}")
+	@GetMapping(value = "/board/{bbsId}/{nttId}")
 	public ResultVO selectBoardArticle(
 			@Parameter(name = "bbsId", description = "게시판 Id", in = ParameterIn.PATH, example="BBSMSTR_AAAAAAAAAAAA")
 			@PathVariable("bbsId") String bbsId,
@@ -271,7 +275,7 @@ public class EgovBBSManageApiController {
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님"),
 			@ApiResponse(responseCode = "900", description = "입력값 무결성 오류")
 	})
-	@PutMapping(value ="/admin/board/{nttId}")
+	@PutMapping(value ="/board/{nttId}")
 	public ResultVO updateBoardArticle(final MultipartHttpServletRequest multiRequest,
 		HttpServletRequest request,
 		@ModelAttribute BoardVO boardVO,
@@ -334,7 +338,7 @@ public class EgovBBSManageApiController {
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님"),
 			@ApiResponse(responseCode = "900", description = "입력값 무결성 오류")
 	})
-	@PostMapping(value ="/admin/board")
+	@PostMapping(value ="/board")
 	public ResultVO insertBoardArticle(final MultipartHttpServletRequest multiRequest,
 		@ModelAttribute BoardVO boardVO,
 		BindingResult bindingResult,
@@ -389,7 +393,7 @@ public class EgovBBSManageApiController {
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님"),
 			@ApiResponse(responseCode = "900", description = "입력값 무결성 오류")
 	})
-	@PostMapping(value ="/admin/boardReply")
+	@PostMapping(value ="/boardReply")
 	public ResultVO replyBoardArticle(final MultipartHttpServletRequest multiRequest,
 		@ModelAttribute BoardVO boardVO,
 		BindingResult bindingResult,
@@ -477,7 +481,7 @@ public class EgovBBSManageApiController {
 		            )
 		        ))
 			}) 
-	@PatchMapping(value = "/admin/board/{bbsId}/{nttId}")
+	@PatchMapping(value = "/board/{bbsId}/{nttId}")
 	public IntermediateResultVO<Object> deleteBoardArticle(
 		@Parameter(name = "bbsId", description = "게시판 Id", in = ParameterIn.PATH, example="BBSMSTR_AAAAAAAAAAAA")	
 		@PathVariable("bbsId") String bbsId,
