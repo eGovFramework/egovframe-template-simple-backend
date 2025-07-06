@@ -8,6 +8,7 @@ import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -129,19 +130,19 @@ public class SecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
-                		.antMatchers("/members/**").hasRole("ADMIN") //ROLE_생략=자동으로 입력됨
-                		.antMatchers("/schedule/month").hasRole("ADMIN")
-                		.antMatchers("/bbsMaster/**").hasRole("ADMIN")
-                		.antMatchers("/bbsUseInf/**").hasRole("ADMIN")
-                		.antMatchers("/admin/**").hasRole("ADMIN")
-                		.antMatchers("/admin/password").hasRole("ADMIN")
-                        .antMatchers(AUTH_WHITELIST).permitAll()
-                        .antMatchers(HttpMethod.GET,AUTH_GET_WHITELIST).permitAll()
+                		.requestMatchers("/members/**").hasRole("ADMIN") //ROLE_생략=자동으로 입력됨
+                		.requestMatchers("/bbsMaster/**").hasRole("ADMIN")
+                		.requestMatchers("/bbsMaster/**").hasRole("ADMIN")
+                		.requestMatchers("/bbsUseInf/**").hasRole("ADMIN")
+                		.requestMatchers("/admin/**").hasRole("ADMIN")
+                		.requestMatchers("/admin/password").hasRole("ADMIN")
+                        .requestMatchers(AUTH_WHITELIST).permitAll()
+                        .requestMatchers(HttpMethod.GET,AUTH_GET_WHITELIST).permitAll()
                         .anyRequest().authenticated()
                 ).sessionManagement((sessionManagement) ->
                     sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
-                .cors().and()
+                .cors(Customizer.withDefaults())
                 .addFilterBefore(characterEncodingFilter(), ChannelProcessingFilter.class)
                 .addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(multipartFilter(), CsrfFilter.class)
