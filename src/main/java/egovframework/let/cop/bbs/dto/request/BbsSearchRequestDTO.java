@@ -18,7 +18,7 @@ import lombok.Setter;
  *
  * <pre>
  * << 개정이력(Modification Information) >>
- *   
+ *    
  *   수정일          수정자         수정내용
  *   ----------    ------------     -------------------
  *   2025.04.06    김재섭(nirsa)      최초 생성 
