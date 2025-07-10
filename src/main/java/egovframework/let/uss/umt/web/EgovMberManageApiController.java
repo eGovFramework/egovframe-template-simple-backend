@@ -34,7 +34,6 @@ import egovframework.let.cop.bbs.dto.request.BbsSearchRequestDTO;
 import egovframework.let.uss.umt.service.EgovMberManageService;
 import egovframework.let.uss.umt.service.MberManageVO;
 import egovframework.let.uss.umt.service.UserDefaultVO;
-import egovframework.let.utl.fcc.service.EgovStringUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -90,7 +89,7 @@ public class EgovMberManageApiController {
 	})
 	@GetMapping(value = "/members")
 	public ResultVO selectMberList(
-			@ModelAttribute BbsAttributeSearchRequestDTO boardMasterSearchVO,
+			@ModelAttribute BbsSearchRequestDTO boardMasterSearchVO,
 			@Parameter(hidden = true) @AuthenticationPrincipal LoginVO user)
 			throws Exception {
 
