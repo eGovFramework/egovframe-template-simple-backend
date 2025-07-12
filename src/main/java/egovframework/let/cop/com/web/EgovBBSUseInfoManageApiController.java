@@ -23,7 +23,7 @@ import egovframework.com.cmm.ResponseCode;
 import egovframework.com.cmm.service.ResultVO;
 import egovframework.com.cmm.util.ResultVoHelper;
 import egovframework.let.cop.bbs.domain.model.BoardMasterVO;
-import egovframework.let.cop.bbs.dto.request.BbsAttributeSearchRequestDTO;
+import egovframework.let.cop.bbs.dto.request.BbsSearchRequestDTO;
 import egovframework.let.cop.bbs.service.EgovBBSAttributeManageService;
 import egovframework.let.cop.com.service.BoardUseInfVO;
 import egovframework.let.cop.com.service.EgovBBSUseInfoManageService;
@@ -84,7 +84,7 @@ public class EgovBBSUseInfoManageApiController {
 	})
 	@GetMapping(value ="/bbsUseInf")
 	public ResultVO selectBBSUseInfs(HttpServletRequest request,
-			@ModelAttribute BbsAttributeSearchRequestDTO searchVO) throws Exception {
+			@ModelAttribute BbsSearchRequestDTO searchVO) throws Exception {
 		BoardUseInfVO bdUseVO = new BoardUseInfVO();
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		

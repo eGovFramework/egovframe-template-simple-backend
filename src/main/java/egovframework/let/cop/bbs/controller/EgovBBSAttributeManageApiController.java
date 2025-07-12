@@ -25,17 +25,20 @@ import egovframework.com.cmm.service.CmmnDetailCode;
 import egovframework.com.cmm.service.EgovCmmUseService;
 import egovframework.com.cmm.service.IntermediateResultVO;
 import egovframework.let.cop.bbs.dto.request.BbsAttributeInsertRequestDTO;
-import egovframework.let.cop.bbs.dto.request.BbsAttributeSearchRequestDTO;
+import egovframework.let.cop.bbs.dto.request.BbsSearchRequestDTO;
 import egovframework.let.cop.bbs.dto.request.BbsAttributeUpdateRequestDTO;
 import egovframework.let.cop.bbs.dto.response.BbsAttributeDetailResponseDTO;
 import egovframework.let.cop.bbs.dto.response.BbsAttributeListResponseDTO;
 import egovframework.let.cop.bbs.dto.response.BbsAttributeResponseDTO;
+import egovframework.let.cop.bbs.dto.response.BbsDetailResponse;
+import egovframework.let.cop.bbs.enums.BbsDetailRequestType;
 import egovframework.let.cop.bbs.service.EgovBBSAttributeManageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -89,19 +92,19 @@ public class EgovBBSAttributeManageApiController {
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
 	})
 	@GetMapping(value = "/bbsMaster")
-	public IntermediateResultVO<BbsAttributeListResponseDTO> selectBBSMasterInfs(@ModelAttribute BbsAttributeSearchRequestDTO bbsAttributeSearchRequestDTO)
+	public IntermediateResultVO<BbsAttributeListResponseDTO> selectBBSMasterInfs(@ModelAttribute BbsSearchRequestDTO bbsSearchRequestDTO)
 		throws Exception {
 		// 1. 페이지 정보 구성
 		int pageUnit = propertyService.getInt("Globals.pageUnit");
 		int pageSize = propertyService.getInt("Globals.pageSize");
 		
 		PaginationInfo paginationInfo = new PaginationInfo();
-		paginationInfo.setCurrentPageNo(bbsAttributeSearchRequestDTO.getPageIndex());
+		paginationInfo.setCurrentPageNo(bbsSearchRequestDTO.getPageIndex());
 		paginationInfo.setRecordCountPerPage(pageUnit);
 		paginationInfo.setPageSize(pageSize);
 		
 		// 2. 서비스 호출 및 응답 객체 구성
-		BbsAttributeListResponseDTO response = bbsAttrbService.selectBBSMasterInfs(bbsAttributeSearchRequestDTO, paginationInfo);
+		BbsAttributeListResponseDTO response = bbsAttrbService.selectBBSMasterInfs(bbsSearchRequestDTO, paginationInfo);
 		paginationInfo.setTotalRecordCount(response.getResultCnt());
 		response.setPaginationInfo(paginationInfo); 
 		return IntermediateResultVO.success(response);
@@ -110,9 +113,8 @@ public class EgovBBSAttributeManageApiController {
 	/**
 	 * 게시판 마스터 상세내용을 조회한다.
 	 *
-	 * @param request
-	 * @param searchVO
-	 * @return resultVO
+	 * @param bbsId
+	 * @return BbsDetailResponse
 	 * @throws Exception
 	 */
 	@Operation(
@@ -122,15 +124,18 @@ public class EgovBBSAttributeManageApiController {
 			tags = {"EgovBBSAttributeManageApiController"}
 	)
 	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "조회 성공"),
+			@ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(
+				    schema = @Schema(oneOf = {
+				            BbsAttributeDetailResponseDTO.class,
+				        })
+				    )),
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
 	})
 	@GetMapping(value ="/bbsMaster/{bbsId}")
-	public IntermediateResultVO<BbsAttributeDetailResponseDTO>  selectBBSMasterInf(@Parameter(name = "bbsId", description = "게시판 Id", in = ParameterIn.PATH, example="BBSMSTR_AAAAAAAAAAAA") 
+	public IntermediateResultVO<BbsDetailResponse>  selectBBSMasterInf(@Parameter(name = "bbsId", description = "게시판 Id", in = ParameterIn.PATH, example="BBSMSTR_AAAAAAAAAAAA") 
 			@PathVariable("bbsId") String bbsId)
 		throws Exception {
-		
-		BbsAttributeDetailResponseDTO response = bbsAttrbService.selectBBSMasterInf(bbsId, null);
+		BbsDetailResponse response = bbsAttrbService.selectBBSMasterInf(bbsId, null, BbsDetailRequestType.DETAIL);
 		
 		return IntermediateResultVO.success(response);
 	}
@@ -259,7 +264,7 @@ public class EgovBBSAttributeManageApiController {
 
 		if (bindingResult.hasErrors()) {
 			String bbsId = bbsAttributeUpdateRequestDTO.getBbsId();
-			BbsAttributeDetailResponseDTO result = bbsAttrbService.selectBBSMasterInf(bbsId, null);
+			BbsDetailResponse result = bbsAttrbService.selectBBSMasterInf(bbsId, null, BbsDetailRequestType.DETAIL);
 
 			return IntermediateResultVO.inputCheckError(result);
 		}
