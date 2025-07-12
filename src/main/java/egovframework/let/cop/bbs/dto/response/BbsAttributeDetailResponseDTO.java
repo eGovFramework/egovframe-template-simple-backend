@@ -3,7 +3,6 @@ package egovframework.let.cop.bbs.dto.response;
 import egovframework.let.cop.bbs.domain.model.BoardMasterVO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
-import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 
