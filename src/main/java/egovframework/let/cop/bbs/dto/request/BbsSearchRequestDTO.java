@@ -18,7 +18,7 @@ import lombok.Setter;
  *
  * <pre>
  * << 개정이력(Modification Information) >>
- *   
+ *    
  *   수정일          수정자         수정내용
  *   ----------    ------------     -------------------
  *   2025.04.06    김재섭(nirsa)      최초 생성 
@@ -29,9 +29,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @Schema(description = "게시판 검색 조건")
-public class BbsAttributeSearchRequestDTO {
-
-    @Schema(description = "게시판 Id", example = "")
+public class BbsSearchRequestDTO {
+    @Schema(description = "게시판 Id", example = "BBSMSTR_AAAAAAAAAAAA")
     private String bbsId = "";
 
     @Schema(description = "페이지 번호", example = "1")

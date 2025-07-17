@@ -11,6 +11,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import egovframework.let.cop.bbs.dto.request.BbsAttributeInsertRequestDTO;
 import egovframework.let.cop.bbs.dto.response.BbsAttributeDetailResponseDTO;
+import egovframework.let.cop.bbs.dto.response.BbsDetailResponse;
+import egovframework.let.cop.bbs.enums.BbsDetailRequestType;
 import egovframework.let.cop.bbs.service.EgovBBSAttributeManageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -52,14 +54,15 @@ class EgovBBSUseInfoManageServiceImplTestInsertBBSMastetInfTest {
 		final String resultBbsId = egovBBSAttributeManageService.insertBBSMastetInf(bbsInsertRequestDTO);
 
 		// then
-		final BbsAttributeDetailResponseDTO response = egovBBSAttributeManageService.selectBBSMasterInf(resultBbsId, null);
+		final BbsDetailResponse response = egovBBSAttributeManageService.selectBBSMasterInf(resultBbsId, null, BbsDetailRequestType.DETAIL);
+		String responseBbsId = ((BbsAttributeDetailResponseDTO) response).getBbsId();
 		if (log.isDebugEnabled()) {
 			log.debug("result={}", resultBbsId);
 			log.debug("resultBoardMasterVO={}", response);
-			log.debug("getBbsId={}", response.getBbsId());
+			log.debug("getBbsId={}", responseBbsId);
 		}
 
-		assertEquals(resultBbsId, response.getBbsId(), "신규 게시판 속성정보를 생성한다.");
+		assertEquals(resultBbsId, responseBbsId, "신규 게시판 속성정보를 생성한다.");
 	}
 
 }

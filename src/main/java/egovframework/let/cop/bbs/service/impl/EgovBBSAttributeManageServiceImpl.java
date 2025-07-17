@@ -18,10 +18,13 @@ import egovframework.let.cop.bbs.domain.model.BoardMasterVO;
 import egovframework.let.cop.bbs.domain.repository.BBSAddedOptionsDAO;
 import egovframework.let.cop.bbs.domain.repository.BBSAttributeManageDAO;
 import egovframework.let.cop.bbs.dto.request.BbsAttributeInsertRequestDTO;
-import egovframework.let.cop.bbs.dto.request.BbsAttributeSearchRequestDTO;
+import egovframework.let.cop.bbs.dto.request.BbsSearchRequestDTO;
 import egovframework.let.cop.bbs.dto.request.BbsAttributeUpdateRequestDTO;
 import egovframework.let.cop.bbs.dto.response.BbsAttributeDetailResponseDTO;
 import egovframework.let.cop.bbs.dto.response.BbsAttributeListResponseDTO;
+import egovframework.let.cop.bbs.dto.response.BbsDetailResponse;
+import egovframework.let.cop.bbs.dto.response.BbsManageFileAtchResponseDTO;
+import egovframework.let.cop.bbs.enums.BbsDetailRequestType;
 import egovframework.let.cop.bbs.service.EgovBBSAttributeManageService;
 import egovframework.let.cop.com.service.BoardUseInf;
 import egovframework.let.cop.com.service.EgovUserInfManageService;
@@ -169,7 +172,7 @@ public class EgovBBSAttributeManageServiceImpl extends EgovAbstractServiceImpl i
      *
      * @see egovframework.let.cop.bbs.brd.service.EgovBBSAttributeManageService#selectBBSMasterInf(egovframework.let.cop.bbs.domain.model.brd.service.BoardMasterVO)
      */
-    public BbsAttributeDetailResponseDTO selectBBSMasterInf(String bbsId, String uniqId) throws Exception {
+    public BbsDetailResponse selectBBSMasterInf(String bbsId, String uniqId, BbsDetailRequestType requestType) throws Exception {
 		//---------------------------------
 		// 2009.06.26 : 2단계 기능 추가
 		//---------------------------------
@@ -197,7 +200,13 @@ public class EgovBBSAttributeManageServiceImpl extends EgovAbstractServiceImpl i
 			}
 		}
 		
-		return BbsAttributeDetailResponseDTO.from(result);
+	    if (requestType == BbsDetailRequestType.DETAIL || requestType == BbsDetailRequestType.LIST) {
+	        return BbsAttributeDetailResponseDTO.from(result);
+	    } else if (requestType == BbsDetailRequestType.FILE_ATCH) {
+	        return BbsManageFileAtchResponseDTO.from(result);
+	    }
+
+	    throw new IllegalArgumentException("지원하지 않는 requestType입니다.");
 		
     }
     
@@ -206,7 +215,7 @@ public class EgovBBSAttributeManageServiceImpl extends EgovAbstractServiceImpl i
      *
      * @see egovframework.let.cop.bbs.brd.service.EgovBBSAttributeManageService#selectBBSMasterInfs(egovframework.let.cop.bbs.domain.model.brd.service.BoardMasterVO)
      */
-    public BbsAttributeListResponseDTO selectBBSMasterInfs(BbsAttributeSearchRequestDTO bbsAttributeSearchRequestDTO, PaginationInfo paginationInfo) throws Exception {
+    public BbsAttributeListResponseDTO selectBBSMasterInfs(BbsSearchRequestDTO bbsAttributeSearchRequestDTO, PaginationInfo paginationInfo) throws Exception {
 		// 도메인 모델(BoardMasterVO) 구성
     	BoardMasterVO boardMasterVO = new BoardMasterVO();
 		boardMasterVO.setSearchCnd(bbsAttributeSearchRequestDTO.getSearchCnd());

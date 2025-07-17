@@ -34,11 +34,12 @@ import egovframework.com.cmm.service.ResultVO;
 import egovframework.com.cmm.util.ResultVoHelper;
 import egovframework.com.cmm.web.EgovFileDownloadController;
 import egovframework.com.jwt.EgovJwtTokenUtil;
-import egovframework.let.cop.bbs.domain.model.BoardMasterVO;
 import egovframework.let.cop.bbs.domain.model.BoardVO;
-import egovframework.let.cop.bbs.dto.request.BbsAttributeSearchRequestDTO;
-import egovframework.let.cop.bbs.dto.request.BbsDeleteBoardRequestDTO;
-import egovframework.let.cop.bbs.dto.response.BbsAttributeDetailResponseDTO;
+import egovframework.let.cop.bbs.dto.request.BbsSearchRequestDTO;
+import egovframework.let.cop.bbs.dto.request.BbsManageDeleteBoardRequestDTO;
+import egovframework.let.cop.bbs.dto.response.BbsDetailResponse;
+import egovframework.let.cop.bbs.dto.response.BbsManageFileAtchResponseDTO;
+import egovframework.let.cop.bbs.enums.BbsDetailRequestType;
 import egovframework.let.cop.bbs.service.EgovBBSAttributeManageService;
 import egovframework.let.cop.bbs.service.EgovBBSManageService;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
@@ -48,6 +49,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -93,9 +95,8 @@ public class EgovBBSManageApiController {
 	 * 게시판 마스터 상세내용을 조회한다.
 	 * 파일 첨부 가능 여부 조회용
 	 *
-	 * @param request
-	 * @param searchVO
-	 * @return resultVO
+	 * @param bbsId
+	 * @return BbsDetailResponse
 	 * @throws Exception
 	 */
 	@Operation(
@@ -104,29 +105,35 @@ public class EgovBBSManageApiController {
 			tags = {"EgovBBSManageApiController"}
 	)
 	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "조회 성공"),
-			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
+			@ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(
+				    schema = @Schema(oneOf = {
+				            BbsManageFileAtchResponseDTO.class
+				        })
+				    )),
+			@ApiResponse(
+					responseCode = "403",
+					description = "인가된 사용자가 아님",
+			        content = @Content(
+				            mediaType = "application/json",
+				            examples = @ExampleObject(
+				                name = "403 응답 예시",
+				                summary = "Forbidden",
+				                value = "{\n" +
+				                        "  \"resultCode\": 403,\n" +
+				                        "  \"resultMessage\": \"인가된 사용자가 아님\"\n" +
+				                        "}"
+				            )
+				        )),
 	})
 	@GetMapping(value = "/boardFileAtch/{bbsId}")
-	public ResultVO selectUserBBSMasterInf(
+	public IntermediateResultVO<BbsDetailResponse> selectUserBBSMasterInf(
 			@Parameter(name = "bbsId", description = "게시판 Id", in = ParameterIn.PATH, example="BBSMSTR_AAAAAAAAAAAA")
 			@PathVariable("bbsId") String bbsId)
 		throws Exception {
-		Map<String, Object> resultMap = new HashMap<String, Object>();
-		BoardMasterVO searchVO = new BoardMasterVO();
-		searchVO.setBbsId(bbsId);
 		
-		BbsAttributeDetailResponseDTO response = bbsAttrbService.selectBBSMasterInf(bbsId, null);
-		
-		// 파일 첨부 외의 다른 정보를 전달하지 않기 위해 신규 객체 생성
-		BoardMasterVO masterFileAtchInfo = new BoardMasterVO();
-		
-		masterFileAtchInfo.setFileAtchPosblAt(response.getFileAtchPosblAt());
-		masterFileAtchInfo.setPosblAtchFileNumber(response.getPosblAtchFileNumber());
-		masterFileAtchInfo.setPosblAtchFileSize(response.getPosblAtchFileSize());
-		
-		resultMap.put("brdMstrVO", masterFileAtchInfo);
-		return resultVoHelper.buildFromMap(resultMap, ResponseCode.SUCCESS);
+		BbsDetailResponse response = bbsAttrbService.selectBBSMasterInf(bbsId, null, BbsDetailRequestType.FILE_ATCH);
+
+		return IntermediateResultVO.success(response);
 	}
 	/**
 	 * 게시물에 대한 목록을 조회한다.
@@ -145,10 +152,10 @@ public class EgovBBSManageApiController {
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
 	})
 	@GetMapping(value = "/board")
-	public ResultVO selectBoardArticles(@ModelAttribute BbsAttributeSearchRequestDTO boardMasterSearchVO, 
+	public ResultVO selectBoardArticles(@ModelAttribute BbsSearchRequestDTO boardMasterSearchVO, 
 			@Parameter(hidden = true) @AuthenticationPrincipal LoginVO user)
 		throws Exception {
-		BbsAttributeDetailResponseDTO response = bbsAttrbService.selectBBSMasterInf(boardMasterSearchVO.getBbsId(), user.getUniqId());
+		BbsDetailResponse response = bbsAttrbService.selectBBSMasterInf(boardMasterSearchVO.getBbsId(), user.getUniqId(), BbsDetailRequestType.DETAIL);
 		PaginationInfo paginationInfo = new PaginationInfo();
 		paginationInfo.setCurrentPageNo(boardMasterSearchVO.getPageIndex());
 		paginationInfo.setRecordCountPerPage(propertyService.getInt("Globals.pageUnit"));
@@ -206,7 +213,7 @@ public class EgovBBSManageApiController {
 
 		// 조회수 증가 여부 지정
 		boardVO.setPlusCount(true);
-
+		
 		//---------------------------------
 		// 2009.06.29 : 2단계 기능 추가
 		//---------------------------------
@@ -221,7 +228,7 @@ public class EgovBBSManageApiController {
 		//----------------------------
 		// template 처리 (기본 BBS template 지정  포함)
 		//----------------------------
-		BbsAttributeDetailResponseDTO response = bbsAttrbService.selectBBSMasterInf(boardVO.getBbsId(), user.getUniqId());
+		BbsDetailResponse response = bbsAttrbService.selectBBSMasterInf(boardVO.getBbsId(), user.getUniqId(), BbsDetailRequestType.LIST);
 		
 		//model.addAttribute("brdMstrVO", masterVo);
 
@@ -483,7 +490,7 @@ public class EgovBBSManageApiController {
 		@PathVariable("bbsId") String bbsId,
 		@Parameter(name = "nttId", description = "게시글 Id", in = ParameterIn.PATH, example="1")
 		@PathVariable("nttId") String nttId,
-		@RequestBody BbsDeleteBoardRequestDTO bbsDeleteBoardRequestDTO,
+		@RequestBody BbsManageDeleteBoardRequestDTO bbsDeleteBoardRequestDTO,
 		@Parameter(hidden = true) @AuthenticationPrincipal LoginVO user)
 		throws Exception {
 		bbsDeleteBoardRequestDTO.setBbsId(bbsId);
