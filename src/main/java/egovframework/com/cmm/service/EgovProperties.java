@@ -18,9 +18,6 @@ import org.springframework.core.io.support.ResourcePatternUtils;
 import egovframework.com.cmm.EgovWebUtil;
 import lombok.extern.slf4j.Slf4j;
 
-//import java.io.FileNotFoundException;
-//import java.io.IOException;
-//import java.util.Properties;
 /**
  *  Class Name : EgovProperties.java
  *  Description : properties값들을 파일로부터 읽어와   Globals클래스의 정적변수로 로드시켜주는 클래스로
