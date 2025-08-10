@@ -34,6 +34,10 @@ public class BbsManageListResponseDTO {
     private List<BbsManageDetailResponseDTO> resultList;
     private int resultCnt;
 
+    @Schema(
+            description = "게시판 마스터 상세",
+            implementation = BbsAttributeDetailResponseDTO.class
+    )
     @Setter
     private BbsDetailResponse brdMstrVO;
 
