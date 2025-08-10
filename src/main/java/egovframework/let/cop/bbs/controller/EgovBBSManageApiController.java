@@ -7,6 +7,9 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import egovframework.let.cop.bbs.dto.response.BbsAttributeDetailResponseDTO;
+import egovframework.let.cop.bbs.dto.response.BbsAttributeListResponseDTO;
+import egovframework.let.cop.bbs.dto.response.BbsManageListResponseDTO;
 import org.egovframe.rte.fdl.cryptography.EgovCryptoService;
 import org.egovframe.rte.fdl.property.EgovPropertyService;
 import org.egovframe.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
@@ -152,34 +155,23 @@ public class EgovBBSManageApiController {
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
 	})
 	@GetMapping(value = "/board")
-	public ResultVO selectBoardArticles(@ModelAttribute BbsSearchRequestDTO boardMasterSearchVO, 
-			@Parameter(hidden = true) @AuthenticationPrincipal LoginVO user)
+	public IntermediateResultVO<BbsManageListResponseDTO> selectBoardArticles(@ModelAttribute BbsSearchRequestDTO bbsSearchRequestDTO,
+																				 @Parameter(hidden = true) @AuthenticationPrincipal LoginVO user)
 		throws Exception {
-		BbsDetailResponse response = bbsAttrbService.selectBBSMasterInf(boardMasterSearchVO.getBbsId(), user.getUniqId(), BbsDetailRequestType.DETAIL);
+		BbsDetailResponse attributeDetailResponse = bbsAttrbService.selectBBSMasterInf(bbsSearchRequestDTO.getBbsId(), user.getUniqId(), BbsDetailRequestType.DETAIL);
+
 		PaginationInfo paginationInfo = new PaginationInfo();
-		paginationInfo.setCurrentPageNo(boardMasterSearchVO.getPageIndex());
+		paginationInfo.setCurrentPageNo(bbsSearchRequestDTO.getPageIndex());
 		paginationInfo.setRecordCountPerPage(propertyService.getInt("Globals.pageUnit"));
 		paginationInfo.setPageSize(propertyService.getInt("Globals.pageSize"));
-		
-		BoardVO boardVO = new BoardVO();
-		boardVO.setPageIndex(boardMasterSearchVO.getPageIndex());
-		boardVO.setBbsId(boardMasterSearchVO.getBbsId()); 
-		boardVO.setSearchCnd(boardMasterSearchVO.getSearchCnd());
-		boardVO.setSearchWrd(boardMasterSearchVO.getSearchWrd());
-		
-		boardVO.setFirstIndex(paginationInfo.getFirstRecordIndex());
-		boardVO.setLastIndex(paginationInfo.getLastRecordIndex());
-		boardVO.setRecordCountPerPage(paginationInfo.getRecordCountPerPage());
 
-		Map<String, Object> resultMap = bbsMngService.selectBoardArticles(boardVO, "");
-		int totCnt = Integer.parseInt((String)resultMap.get("resultCnt"));
-		paginationInfo.setTotalRecordCount(totCnt);
-		resultMap.put("boardVO", boardVO);
-		resultMap.put("brdMstrVO", response);
-		resultMap.put("paginationInfo", paginationInfo);
-		resultMap.put("user", user);
- 
-		return resultVoHelper.buildFromMap(resultMap, ResponseCode.SUCCESS);
+		BbsManageListResponseDTO response = bbsMngService.selectBoardArticles(bbsSearchRequestDTO, paginationInfo, "");
+		paginationInfo.setTotalRecordCount(response.getResultCnt());
+		response.setPaginationInfo(paginationInfo);
+		response.setUser(user);
+		response.setBrdMstrVO(attributeDetailResponse);
+
+		return IntermediateResultVO.success(response);
 	}
 
 	/**

@@ -6,6 +6,9 @@ import egovframework.com.cmm.LoginVO;
 import egovframework.let.cop.bbs.domain.model.Board;
 import egovframework.let.cop.bbs.domain.model.BoardVO;
 import egovframework.let.cop.bbs.dto.request.BbsManageDeleteBoardRequestDTO;
+import egovframework.let.cop.bbs.dto.request.BbsSearchRequestDTO;
+import egovframework.let.cop.bbs.dto.response.BbsManageListResponseDTO;
+import org.egovframe.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 
 /**
  * 게시물 관리를 위한 서비스 인터페이스  클래스
@@ -77,11 +80,12 @@ public interface EgovBBSManageService {
 	 * 조건에 맞는 게시물 목록을 조회 한다.
 	 * @return
 	 * 
-	 * @param boardVO
+	 * @param bbsSearchRequestDTO
+	 * @param paginationInfo
 	 * @param attrbFlag
 	 * @exception Exception Exception
 	 */
-	public Map<String, Object> selectBoardArticles(BoardVO boardVO, String attrbFlag)
+	public BbsManageListResponseDTO selectBoardArticles(BbsSearchRequestDTO bbsSearchRequestDTO, PaginationInfo paginationInfo, String attrbFlag)
 	  throws Exception;
 
 	/**

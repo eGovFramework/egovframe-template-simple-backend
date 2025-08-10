@@ -5,6 +5,8 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import egovframework.let.cop.bbs.dto.request.BbsSearchRequestDTO;
+import egovframework.let.cop.bbs.dto.response.BbsManageListResponseDTO;
 import org.egovframe.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -69,27 +71,21 @@ public class EgovMainApiController {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 
 		// 공지사항 메인 컨텐츠 조회 시작 ---------------------------------
-		BoardVO boardVO = new BoardVO();
-		boardVO.setPageUnit(5);
-		boardVO.setPageSize(10);
-		boardVO.setBbsId("BBSMSTR_AAAAAAAAAAAA");
-
 		PaginationInfo paginationInfo = new PaginationInfo();
 
-		paginationInfo.setCurrentPageNo(boardVO.getPageIndex());
-		paginationInfo.setRecordCountPerPage(boardVO.getPageUnit());
-		paginationInfo.setPageSize(boardVO.getPageSize());
+		paginationInfo.setCurrentPageNo(1);
+		paginationInfo.setRecordCountPerPage(5);
+		paginationInfo.setPageSize(10);
 
-		boardVO.setFirstIndex(paginationInfo.getFirstRecordIndex());
-		boardVO.setLastIndex(paginationInfo.getLastRecordIndex());
-		boardVO.setRecordCountPerPage(paginationInfo.getRecordCountPerPage());
+		BbsSearchRequestDTO bbsSearchRequestDTO = new BbsSearchRequestDTO();
+		bbsSearchRequestDTO.setBbsId("BBSMSTR_AAAAAAAAAAAA");
 
-		Map<String, Object> map = bbsMngService.selectBoardArticles(boardVO, "BBSA02");
-		resultMap.put("notiList", map.get("resultList"));
+		BbsManageListResponseDTO notiList = bbsMngService.selectBoardArticles(bbsSearchRequestDTO, paginationInfo,"BBSA02");
+		resultMap.put("notiList", notiList.getResultList());
 
-		boardVO.setBbsId("BBSMSTR_BBBBBBBBBBBB");
-		map = bbsMngService.selectBoardArticles(boardVO, "BBSA02");
-		resultMap.put("galList", map.get("resultList"));
+		bbsSearchRequestDTO.setBbsId("BBSMSTR_BBBBBBBBBBBB");
+		BbsManageListResponseDTO galList = bbsMngService.selectBoardArticles(bbsSearchRequestDTO, paginationInfo,"BBSA02");
+		resultMap.put("galList", galList.getResultList());
 
 		resultVO.setResult(resultMap);
 		resultVO.setResultCode(ResponseCode.SUCCESS.getCode());

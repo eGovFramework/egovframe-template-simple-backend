@@ -5,8 +5,15 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
+import egovframework.let.cop.bbs.dto.request.BbsSearchRequestDTO;
+import egovframework.let.cop.bbs.dto.response.BbsAttributeDetailResponseDTO;
+import egovframework.let.cop.bbs.dto.response.BbsAttributeListResponseDTO;
+import egovframework.let.cop.bbs.dto.response.BbsManageDetailResponseDTO;
+import egovframework.let.cop.bbs.dto.response.BbsManageListResponseDTO;
 import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
+import org.egovframe.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 import org.springframework.stereotype.Service;
 
 import egovframework.com.cmm.LoginVO;
@@ -113,7 +120,17 @@ public class EgovBBSManageServiceImpl extends EgovAbstractServiceImpl implements
 	 * @see egovframework.let.cop.bbs.brd.service.EgovBBSManageService#selectBoardArticles(egovframework.let.cop.bbs.domain.model.brd.service.BoardVO)
 	 */
 	@Override
-	public Map<String, Object> selectBoardArticles(BoardVO boardVO, String attrbFlag) throws Exception {
+	public BbsManageListResponseDTO selectBoardArticles(BbsSearchRequestDTO bbsSearchRequestDTO, PaginationInfo paginationInfo, String attrbFlag) throws Exception {
+		BoardVO boardVO = new BoardVO();
+		boardVO.setPageIndex(bbsSearchRequestDTO.getPageIndex());
+		boardVO.setBbsId(bbsSearchRequestDTO.getBbsId());
+		boardVO.setSearchCnd(bbsSearchRequestDTO.getSearchCnd());
+		boardVO.setSearchWrd(bbsSearchRequestDTO.getSearchWrd());
+
+		boardVO.setFirstIndex(paginationInfo.getFirstRecordIndex());
+		boardVO.setLastIndex(paginationInfo.getLastRecordIndex());
+		boardVO.setRecordCountPerPage(paginationInfo.getRecordCountPerPage());
+
 		List<BoardVO> list = bbsMngDAO.selectBoardArticleList(boardVO);
 		List<BoardVO> result = new ArrayList<BoardVO>();
 		if ("BBSA01".equals(attrbFlag)) {
@@ -140,12 +157,14 @@ public class EgovBBSManageServiceImpl extends EgovAbstractServiceImpl implements
 
 		int cnt = bbsMngDAO.selectBoardArticleListCnt(boardVO);
 
-		Map<String, Object> map = new HashMap<String, Object>();
+		List<BbsManageDetailResponseDTO> dtoList = result.stream()
+				.map(BbsManageDetailResponseDTO::from)
+				.collect(Collectors.toList());
 
-		map.put("resultList", result);
-		map.put("resultCnt", Integer.toString(cnt));
-
-		return map;
+		return BbsManageListResponseDTO.builder()
+				.resultList(dtoList)
+				.resultCnt(cnt)
+				.build();
 	}
 
 	/**
