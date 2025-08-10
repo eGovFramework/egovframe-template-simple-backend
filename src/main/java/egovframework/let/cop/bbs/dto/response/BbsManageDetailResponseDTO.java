@@ -1,6 +1,5 @@
 package egovframework.let.cop.bbs.dto.response;
 
-import egovframework.let.cop.bbs.domain.model.BoardMasterVO;
 import egovframework.let.cop.bbs.domain.model.BoardVO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
@@ -23,7 +22,6 @@ import lombok.experimental.SuperBuilder;
  *
  * </pre>
  */
-
 @Getter
 @SuperBuilder
 @Schema(description = "게시물 정보 응답 DTO")
