@@ -6,7 +6,10 @@ import egovframework.com.cmm.LoginVO;
 import egovframework.let.cop.bbs.domain.model.Board;
 import egovframework.let.cop.bbs.domain.model.BoardVO;
 import egovframework.let.cop.bbs.dto.request.BbsManageDeleteBoardRequestDTO;
+import egovframework.let.cop.bbs.dto.request.BbsManageDetailBoardRequestDTO;
 import egovframework.let.cop.bbs.dto.request.BbsSearchRequestDTO;
+import egovframework.let.cop.bbs.dto.response.BbsManageDetailItemResponseDTO;
+import egovframework.let.cop.bbs.dto.response.BbsManageDetailResponseDTO;
 import egovframework.let.cop.bbs.dto.response.BbsManageListResponseDTO;
 import org.egovframe.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 
@@ -70,10 +73,10 @@ public interface EgovBBSManageService {
 	 * 게시물 대하여 상세 내용을 조회 한다.
 	 * @return
 	 * 
-	 * @param boardVO
+	 * @param bbsManageDetailBoardRequestDTO
 	 * @exception Exception Exception
 	 */
-	public BoardVO selectBoardArticle(BoardVO boardVO)
+	public BbsManageDetailResponseDTO selectBoardArticle(BbsManageDetailBoardRequestDTO bbsManageDetailBoardRequestDTO)
 	  throws Exception;
 
 	/**

@@ -1,14 +1,15 @@
 package egovframework.let.cop.bbs.controller;
 
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import egovframework.let.cop.bbs.dto.request.BbsManageDetailBoardRequestDTO;
+import egovframework.let.cop.bbs.dto.response.BbsManageDetailItemResponseDTO;
+import egovframework.let.cop.bbs.dto.response.BbsManageDetailResponseDTO;
 import egovframework.let.cop.bbs.dto.response.BbsManageListResponseDTO;
-import org.egovframe.rte.fdl.cryptography.EgovCryptoService;
 import org.egovframe.rte.fdl.property.EgovPropertyService;
 import org.egovframe.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -33,7 +34,6 @@ import egovframework.com.cmm.service.FileVO;
 import egovframework.com.cmm.service.IntermediateResultVO;
 import egovframework.com.cmm.service.ResultVO;
 import egovframework.com.cmm.util.ResultVoHelper;
-import egovframework.com.cmm.web.EgovFileDownloadController;
 import egovframework.com.jwt.EgovJwtTokenUtil;
 import egovframework.let.cop.bbs.domain.model.BoardVO;
 import egovframework.let.cop.bbs.dto.request.BbsSearchRequestDTO;
@@ -82,10 +82,8 @@ public class EgovBBSManageApiController {
 	public static final String HEADER_STRING = "Authorization";
     private final EgovJwtTokenUtil jwtTokenUtil;
     private final EgovFileMngUtil fileUtil;
-    private final EgovFileMngService fileService;
     private final ResultVoHelper resultVoHelper;
     private final EgovBBSManageService bbsMngService;
-    private final EgovCryptoService cryptoService;
     private final EgovFileMngService fileMngService;
     private final EgovPropertyService propertyService;
     private final EgovBBSAttributeManageService bbsAttrbService;
@@ -188,62 +186,41 @@ public class EgovBBSManageApiController {
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
 	})
 	@GetMapping(value = "/board/{bbsId}/{nttId}")
-	public ResultVO selectBoardArticle(
+	public IntermediateResultVO<BbsManageDetailResponseDTO> selectBoardArticle(
 			@Parameter(name = "bbsId", description = "게시판 Id", in = ParameterIn.PATH, example="BBSMSTR_AAAAAAAAAAAA")
 			@PathVariable("bbsId") String bbsId,
 			@Parameter(name = "nttId", description = "게시글 Id", in = ParameterIn.PATH, example="1")
 			@PathVariable("nttId") String nttId,
 			@Parameter(hidden = true) @AuthenticationPrincipal LoginVO user)
 		throws Exception {
-		BoardVO boardVO = new BoardVO();
-		
-		boardVO.setBbsId(bbsId);
-		boardVO.setNttId(Long.parseLong(nttId));
-
-		// 조회수 증가 여부 지정
-		boardVO.setPlusCount(true);
+		BbsManageDetailBoardRequestDTO bbsManageDetailBoardRequestDTO = BbsManageDetailBoardRequestDTO.builder()
+				.bbsId(bbsId)
+				.nttId(Long.parseLong(nttId))
+				.plusCount(true)
+				.lastUpdusrId(user.getUniqId())
+				.build();
 		
 		//---------------------------------
 		// 2009.06.29 : 2단계 기능 추가
 		//---------------------------------
-		if (!boardVO.getSubPageIndex().equals("")) {
-			boardVO.setPlusCount(false);
+		if (bbsManageDetailBoardRequestDTO.getSubPageIndex() != null && !bbsManageDetailBoardRequestDTO.getSubPageIndex().isEmpty()) {
+			bbsManageDetailBoardRequestDTO.setPlusCount(false);
 		}
 		////-------------------------------
-
-		boardVO.setLastUpdusrId(user.getUniqId());
-		BoardVO vo = bbsMngService.selectBoardArticle(boardVO);
 
 		//----------------------------
 		// template 처리 (기본 BBS template 지정  포함)
 		//----------------------------
-		BbsFileAtchResponseDTO response = bbsAttrbService.selectBBSMasterInf(boardVO.getBbsId(), user.getUniqId(), BbsDetailRequestType.LIST);
-		
-		//model.addAttribute("brdMstrVO", masterVo);
+		BbsFileAtchResponseDTO bbsFileAtchResponseDTO = bbsAttrbService.selectBBSMasterInf(bbsManageDetailBoardRequestDTO.getBbsId(), user.getUniqId(), BbsDetailRequestType.LIST);
 
-		Map<String, Object> resultMap = new HashMap<String, Object>();
-		resultMap.put("boardVO", vo);
-		resultMap.put("sessionUniqId", user.getUniqId());
-		resultMap.put("brdMstrVO", response);
-		resultMap.put("user", user);
+		BbsManageDetailResponseDTO bbsManageDetailResponseDTO = bbsMngService.selectBoardArticle(bbsManageDetailBoardRequestDTO)
+				.toBuilder()
+				.brdMstrVO(bbsFileAtchResponseDTO)
+				.sessionUniqId(user.getUniqId())
+				.user(user)
+				.build();
 
-		// 2021-06-01 신용호 추가
-		// 첨부파일 확인
-		if (vo != null && vo.getAtchFileId() != null && !vo.getAtchFileId().isEmpty()) {
-			FileVO fileVO = new FileVO();
-			fileVO.setAtchFileId(vo.getAtchFileId());
-			List<FileVO> resultFiles = fileService.selectFileInfs(fileVO);
-			
-			// FileId를 유추하지 못하도록 암호화하여 표시한다. (2022.12.06 추가) - 파일아이디가 유추 불가능하도록 조치
-			for (FileVO file : resultFiles) {
-				String toEncrypt = file.atchFileId;
-				file.setAtchFileId(Base64.getEncoder().encodeToString(cryptoService.encrypt(toEncrypt.getBytes(),EgovFileDownloadController.ALGORITM_KEY)));
-			}
-						
-			resultMap.put("resultFiles", resultFiles);
-		}
-
-		return resultVoHelper.buildFromMap(resultMap, ResponseCode.SUCCESS);
+		return IntermediateResultVO.success(bbsManageDetailResponseDTO);
 	}
 
 	/**

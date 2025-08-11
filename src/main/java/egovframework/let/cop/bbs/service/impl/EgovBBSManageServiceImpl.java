@@ -1,16 +1,21 @@
 package egovframework.let.cop.bbs.service.impl;
 
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import egovframework.com.cmm.web.EgovFileDownloadController;
+import egovframework.let.cop.bbs.dto.request.BbsManageDetailBoardRequestDTO;
 import egovframework.let.cop.bbs.dto.request.BbsSearchRequestDTO;
 import egovframework.let.cop.bbs.dto.response.BbsManageDetailResponseDTO;
+import egovframework.let.cop.bbs.dto.response.BbsManageListItemResponseDTO;
 import egovframework.let.cop.bbs.dto.response.BbsManageListResponseDTO;
 import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
+import org.egovframe.rte.fdl.cryptography.EgovCryptoService;
 import org.egovframe.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 import org.springframework.stereotype.Service;
 
@@ -48,7 +53,9 @@ import lombok.RequiredArgsConstructor;
 public class EgovBBSManageServiceImpl extends EgovAbstractServiceImpl implements EgovBBSManageService {
 	private final BBSManageDAO bbsMngDAO;
 	private final EgovFileMngService fileService;
-	
+	private final EgovCryptoService cryptoService;
+
+
 	/**
 	 * 게시물 한 건을 삭제 한다.
 	 *
@@ -101,7 +108,9 @@ public class EgovBBSManageServiceImpl extends EgovAbstractServiceImpl implements
 	 * @see egovframework.let.cop.bbs.brd.service.EgovBBSManageService#selectBoardArticle(egovframework.let.cop.bbs.domain.model.brd.service.BoardVO)
 	 */
 	@Override
-	public BoardVO selectBoardArticle(BoardVO boardVO) throws Exception {
+	public BbsManageDetailResponseDTO selectBoardArticle(BbsManageDetailBoardRequestDTO bbsManageDetailBoardRequestDTO) throws Exception {
+		BoardVO boardVO = bbsManageDetailBoardRequestDTO.toBoardVO();
+
 		if (boardVO.isPlusCount()) {
 			int iniqireCo = bbsMngDAO.selectMaxInqireCo(boardVO);
 
@@ -109,7 +118,27 @@ public class EgovBBSManageServiceImpl extends EgovAbstractServiceImpl implements
 			bbsMngDAO.updateInqireCo(boardVO);
 		}
 
-		return bbsMngDAO.selectBoardArticle(boardVO);
+		BoardVO vo = bbsMngDAO.selectBoardArticle(boardVO);
+		BbsManageDetailResponseDTO bbsManageDetailResponseDTO;
+
+		// 2021-06-01 신용호 추가
+		// 첨부파일 확인
+		if (vo != null && vo.getAtchFileId() != null && !vo.getAtchFileId().isEmpty()) {
+			FileVO fileVO = new FileVO();
+			fileVO.setAtchFileId(vo.getAtchFileId());
+			List<FileVO> resultFiles = fileService.selectFileInfs(fileVO);
+
+			// FileId를 유추하지 못하도록 암호화하여 표시한다. (2022.12.06 추가) - 파일아이디가 유추 불가능하도록 조치
+			for (FileVO file : resultFiles) {
+				String toEncrypt = file.atchFileId;
+				file.setAtchFileId(Base64.getEncoder().encodeToString(cryptoService.encrypt(toEncrypt.getBytes(), EgovFileDownloadController.ALGORITM_KEY)));
+			}
+			bbsManageDetailResponseDTO = BbsManageDetailResponseDTO.from(vo, resultFiles);
+		} else {
+			bbsManageDetailResponseDTO = BbsManageDetailResponseDTO.from(vo);
+		}
+
+		return bbsManageDetailResponseDTO;
 	}
 
 	/**
@@ -155,8 +184,8 @@ public class EgovBBSManageServiceImpl extends EgovAbstractServiceImpl implements
 
 		int cnt = bbsMngDAO.selectBoardArticleListCnt(boardVO);
 
-		List<BbsManageDetailResponseDTO> dtoList = result.stream()
-				.map(BbsManageDetailResponseDTO::from)
+		List<BbsManageListItemResponseDTO> dtoList = result.stream()
+				.map(BbsManageListItemResponseDTO::from)
 				.collect(Collectors.toList());
 
 		return BbsManageListResponseDTO.builder()
