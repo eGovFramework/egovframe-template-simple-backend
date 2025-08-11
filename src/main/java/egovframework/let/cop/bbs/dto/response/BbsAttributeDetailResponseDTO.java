@@ -27,7 +27,7 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @SuperBuilder
 @Schema(description = "게시판 정보 응답 DTO")
-public class BbsAttributeDetailResponseDTO extends BbsDetailResponse {
+public class BbsAttributeDetailResponseDTO extends BbsFileAtchResponseDTO {
     @Schema(description = "게시판 ID", example = "BBSMSTR_AAAAAAAAAAAA")
     private String bbsId;
 

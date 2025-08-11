@@ -38,8 +38,7 @@ import egovframework.com.jwt.EgovJwtTokenUtil;
 import egovframework.let.cop.bbs.domain.model.BoardVO;
 import egovframework.let.cop.bbs.dto.request.BbsSearchRequestDTO;
 import egovframework.let.cop.bbs.dto.request.BbsManageDeleteBoardRequestDTO;
-import egovframework.let.cop.bbs.dto.response.BbsDetailResponse;
-import egovframework.let.cop.bbs.dto.response.BbsManageFileAtchResponseDTO;
+import egovframework.let.cop.bbs.dto.response.BbsFileAtchResponseDTO;
 import egovframework.let.cop.bbs.enums.BbsDetailRequestType;
 import egovframework.let.cop.bbs.service.EgovBBSAttributeManageService;
 import egovframework.let.cop.bbs.service.EgovBBSManageService;
@@ -108,7 +107,7 @@ public class EgovBBSManageApiController {
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(
 				    schema = @Schema(oneOf = {
-				            BbsManageFileAtchResponseDTO.class
+							BbsFileAtchResponseDTO.class
 				        })
 				    )),
 			@ApiResponse(
@@ -127,12 +126,12 @@ public class EgovBBSManageApiController {
 				        )),
 	})
 	@GetMapping(value = "/boardFileAtch/{bbsId}")
-	public IntermediateResultVO<BbsDetailResponse> selectUserBBSMasterInf(
+	public IntermediateResultVO<BbsFileAtchResponseDTO> selectUserBBSMasterInf(
 			@Parameter(name = "bbsId", description = "게시판 Id", in = ParameterIn.PATH, example="BBSMSTR_AAAAAAAAAAAA")
 			@PathVariable("bbsId") String bbsId)
 		throws Exception {
 		
-		BbsDetailResponse response = bbsAttrbService.selectBBSMasterInf(bbsId, null, BbsDetailRequestType.FILE_ATCH);
+		BbsFileAtchResponseDTO response = bbsAttrbService.selectBBSMasterInf(bbsId, null, BbsDetailRequestType.FILE_ATCH);
 
 		return IntermediateResultVO.success(response);
 	}
@@ -156,7 +155,7 @@ public class EgovBBSManageApiController {
 	public IntermediateResultVO<BbsManageListResponseDTO> selectBoardArticles(@ModelAttribute BbsSearchRequestDTO bbsSearchRequestDTO,
 																				 @Parameter(hidden = true) @AuthenticationPrincipal LoginVO user)
 		throws Exception {
-		BbsDetailResponse attributeDetailResponse = bbsAttrbService.selectBBSMasterInf(bbsSearchRequestDTO.getBbsId(), user.getUniqId(), BbsDetailRequestType.DETAIL);
+		BbsFileAtchResponseDTO attributeDetailResponse = bbsAttrbService.selectBBSMasterInf(bbsSearchRequestDTO.getBbsId(), user.getUniqId(), BbsDetailRequestType.DETAIL);
 
 		PaginationInfo paginationInfo = new PaginationInfo();
 		paginationInfo.setCurrentPageNo(bbsSearchRequestDTO.getPageIndex());
@@ -218,7 +217,7 @@ public class EgovBBSManageApiController {
 		//----------------------------
 		// template 처리 (기본 BBS template 지정  포함)
 		//----------------------------
-		BbsDetailResponse response = bbsAttrbService.selectBBSMasterInf(boardVO.getBbsId(), user.getUniqId(), BbsDetailRequestType.LIST);
+		BbsFileAtchResponseDTO response = bbsAttrbService.selectBBSMasterInf(boardVO.getBbsId(), user.getUniqId(), BbsDetailRequestType.LIST);
 		
 		//model.addAttribute("brdMstrVO", masterVo);
 

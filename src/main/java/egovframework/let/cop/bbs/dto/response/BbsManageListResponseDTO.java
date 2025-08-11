@@ -39,7 +39,7 @@ public class BbsManageListResponseDTO {
             implementation = BbsAttributeDetailResponseDTO.class
     )
     @Setter
-    private BbsDetailResponse brdMstrVO;
+    private BbsFileAtchResponseDTO brdMstrVO;
 
     @Setter
     private PaginationInfo paginationInfo;
