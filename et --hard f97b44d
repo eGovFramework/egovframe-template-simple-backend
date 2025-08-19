@@ -1,0 +1,41 @@
+[33ma188abe[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mFeature/selectBoardArticle[m[33m)[m HEAD@{0}: reset: moving to HEAD@{14}
+[33mf365630[m[33m ([m[1;31mupstream/main[m[33m, [m[1;31mupstream/HEAD[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;31morigin/Feature/selectBoardArticle[m[33m, [m[1;32mmain[m[33m)[m HEAD@{1}: reset: moving to HEAD@{2}
+[33m684115b[m HEAD@{2}: reset: moving to HEAD@{3}
+[33ma94e165[m HEAD@{3}: reset: moving to HEAD@{1}
+[33mf365630[m[33m ([m[1;31mupstream/main[m[33m, [m[1;31mupstream/HEAD[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;31morigin/Feature/selectBoardArticle[m[33m, [m[1;32mmain[m[33m)[m HEAD@{4}: reset: moving to f365630e503f71ac5d8ee62eca4fc4ef163f8cd6
+[33ma94e165[m HEAD@{5}: reset: moving to HEAD@{1}
+[33m684115b[m HEAD@{6}: reset: moving to 684115b
+[33ma94e165[m HEAD@{7}: reset: moving to a94e16586ea86d51a5999c7646e213e202ab9d38
+[33ma94e165[m HEAD@{8}: reset: moving to a94e16586ea86d51a5999c7646e213e202ab9d38
+[33m52ed6db[m HEAD@{9}: reset: moving to 52ed6db1c027df8943bd2382e1c1a0872a716021
+[33m52ed6db[m HEAD@{10}: revert: Revert "Merge remote-tracking branch 'upstream/main' into Feature/selectBoardArticle"
+[33ma94e165[m HEAD@{11}: reset: moving to HEAD@{1}
+[33mf97b44d[m HEAD@{12}: reset: moving to HEAD~1
+[33ma94e165[m HEAD@{13}: checkout: moving from main to Feature/selectBoardArticle
+[33mf365630[m[33m ([m[1;31mupstream/main[m[33m, [m[1;31mupstream/HEAD[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;31morigin/Feature/selectBoardArticle[m[33m, [m[1;32mmain[m[33m)[m HEAD@{14}: merge upstream/main: Fast-forward
+[33ma188abe[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mFeature/selectBoardArticle[m[33m)[m HEAD@{15}: checkout: moving from Feature/selectBoardArticle to main
+[33ma94e165[m HEAD@{16}: merge upstream/main: Merge made by the 'ort' strategy.
+[33mf97b44d[m HEAD@{17}: commit: Refactor(bbs): 게시물 상세 목록 조회 구조 개선
+[33m58001a1[m[33m ([m[1;31morigin/Feature/selectBoardArticles[m[33m, [m[1;32mFeature/selectBoardArticles[m[33m)[m HEAD@{18}: checkout: moving from Feature/selectBoardArticles to Feature/selectBoardArticle
+[33m58001a1[m[33m ([m[1;31morigin/Feature/selectBoardArticles[m[33m, [m[1;32mFeature/selectBoardArticles[m[33m)[m HEAD@{19}: commit: Chore(Test): 테스트 시 주석처리 된 내용 주석 해제
+[33mea6b9ad[m[33m ([m[1;31morigin/refactor/bbsDetail-to-fileAtchDTO[m[33m, [m[1;32mrefactor/bbsDetail-to-fileAtchDTO[m[33m)[m HEAD@{20}: checkout: moving from Feature/selectBoardArticle to Feature/selectBoardArticles
+[33m0fbd766[m HEAD@{21}: commit: Chore(Test): ì 테스트 시 주석처리 된 내용 í주석 해제
+[33mea6b9ad[m[33m ([m[1;31morigin/refactor/bbsDetail-to-fileAtchDTO[m[33m, [m[1;32mrefactor/bbsDetail-to-fileAtchDTO[m[33m)[m HEAD@{22}: checkout: moving from Feature/selectBoardARticles to Feature/selectBoardArticle
+[33mea6b9ad[m[33m ([m[1;31morigin/refactor/bbsDetail-to-fileAtchDTO[m[33m, [m[1;32mrefactor/bbsDetail-to-fileAtchDTO[m[33m)[m HEAD@{23}: checkout: moving from Feature/selectBoardARticle to Feature/selectBoardARticles
+[33ma188abe[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mFeature/selectBoardArticle[m[33m)[m HEAD@{24}: checkout: moving from Feature/selectBoardARticles to Feature/selectBoardARticle
+[33mea6b9ad[m[33m ([m[1;31morigin/refactor/bbsDetail-to-fileAtchDTO[m[33m, [m[1;32mrefactor/bbsDetail-to-fileAtchDTO[m[33m)[m HEAD@{25}: checkout: moving from Feature/selectBoardArticles to Feature/selectBoardARticles
+[33mea6b9ad[m[33m ([m[1;31morigin/refactor/bbsDetail-to-fileAtchDTO[m[33m, [m[1;32mrefactor/bbsDetail-to-fileAtchDTO[m[33m)[m HEAD@{26}: checkout: moving from refactor/bbsDetail-to-fileAtchDTO to Feature/selectBoardArticles
+[33mea6b9ad[m[33m ([m[1;31morigin/refactor/bbsDetail-to-fileAtchDTO[m[33m, [m[1;32mrefactor/bbsDetail-to-fileAtchDTO[m[33m)[m HEAD@{27}: checkout: moving from Feature/selectBoardArticles to refactor/bbsDetail-to-fileAtchDTO
+[33mea6b9ad[m[33m ([m[1;31morigin/refactor/bbsDetail-to-fileAtchDTO[m[33m, [m[1;32mrefactor/bbsDetail-to-fileAtchDTO[m[33m)[m HEAD@{28}: commit: Refactor(bbs): BbsDetailREspoese를 BbsFileAtchResponseDTO로 변ê²
+[33m5c101fb[m HEAD@{29}: checkout: moving from main to Feature/selectBoardArticles
+[33ma188abe[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mFeature/selectBoardArticle[m[33m)[m HEAD@{30}: checkout: moving from Feature/selectBoardArticle to main
+[33ma188abe[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mFeature/selectBoardArticle[m[33m)[m HEAD@{31}: checkout: moving from main to Feature/selectBoardArticle
+[33ma188abe[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mFeature/selectBoardArticle[m[33m)[m HEAD@{32}: checkout: moving from Feature/selectBoardArticles to main
+[33m5c101fb[m HEAD@{33}: commit: Fix(bbs): 스웨거에서 brdMstrVO 필드 스키마 미출력 문제 해결
+[33mf411ad7[m HEAD@{34}: commit: Chore(bbs): 사용되지 않는 import 제거
+[33m0edd368[m HEAD@{35}: commit: Refactor(bbs): selectBoardArticles 응답 구조 정리
+[33ma188abe[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mFeature/selectBoardArticle[m[33m)[m HEAD@{36}: checkout: moving from main to Feature/selectBoardArticles
+[33ma188abe[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mFeature/selectBoardArticle[m[33m)[m HEAD@{37}: checkout: moving from selectBoardArticles to main
+[33ma188abe[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mFeature/selectBoardArticle[m[33m)[m HEAD@{38}: checkout: moving from main to selectBoardArticles
+[33ma188abe[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mFeature/selectBoardArticle[m[33m)[m HEAD@{39}: merge upstream/main: Fast-forward
+[33mccc1978[m HEAD@{40}: clone: from https://github.com/KoreaNirsa/egovframe-template-simple-backend.git
