@@ -146,8 +146,7 @@ public class EgovBBSManageApiController {
 			tags = {"EgovBBSManageApiController"}
 	)
 	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "조회 성공"),
-			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
+			@ApiResponse(responseCode = "200", description = "조회 성공")
 	})
 	@GetMapping(value = "/board")
 	public IntermediateResultVO<BbsManageListResponseDTO> selectBoardArticles(@ModelAttribute BbsSearchRequestDTO bbsSearchRequestDTO,
@@ -182,8 +181,7 @@ public class EgovBBSManageApiController {
 			tags = {"EgovBBSManageApiController"}
 	)
 	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "조회 성공"),
-			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
+			@ApiResponse(responseCode = "200", description = "조회 성공")
 	})
 	@GetMapping(value = "/board/{bbsId}/{nttId}")
 	public IntermediateResultVO<BbsManageDetailResponseDTO> selectBoardArticle(
