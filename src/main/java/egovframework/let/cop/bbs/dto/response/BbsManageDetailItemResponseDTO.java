@@ -45,6 +45,9 @@ public class BbsManageDetailItemResponseDTO extends BbsFileAtchResponseDTO {
     @Schema(description = "게시물 제목", example = "게시물 제목입니다.")
     private String nttSj;
 
+    @Schema(description = "최초 등록자 아이디", example = "USRCNFRM_00000000000")
+    private String frstRegisterId;
+
     @Schema(description = "최초 등록자명", example = "관리자")
     private String frstRegisterNm;
 
@@ -73,6 +76,7 @@ public class BbsManageDetailItemResponseDTO extends BbsFileAtchResponseDTO {
                 .nttCn(vo.getNttCn())
                 .nttId(vo.getNttId())
                 .nttSj(vo.getNttSj())
+                .frstRegisterId(vo.getFrstRegisterId())
                 .frstRegisterNm(vo.getFrstRegisterNm())
                 .frstRegisterPnttm(vo.getFrstRegisterPnttm())
                 .inqireCo(vo.getInqireCo())
