@@ -1,6 +1,5 @@
 package egovframework.let.cop.bbs.dto.request;
 
-import egovframework.let.cop.bbs.domain.model.BoardMaster;
 import egovframework.let.cop.bbs.domain.model.BoardVO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
