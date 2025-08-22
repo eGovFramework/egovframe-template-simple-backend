@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.experimental.SuperBuilder;
 
 /**
- * 게시글 리스트 아이템을 반환하는 응답 DTO 클래스 입니다.
+ * BbsManage 게시물 리스트 아이템을 반환하는 응답 DTO 클래스 입니다.
  *
  * @author 김재섭(nirsa)
  * @since 2025.08.10
@@ -24,7 +24,7 @@ import lombok.experimental.SuperBuilder;
  */
 @Getter
 @SuperBuilder
-@Schema(description = "게시글 리스트 아이템 응답 DTO")
+@Schema(description = "게시물 리스트 아이템 응답 DTO")
 public class BbsManageListItemResponseDTO {
     @Schema(description = "게시판 아이디", example="BBSMSTR_AAAAAAAAAAAA")
     private String bbsId;

@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.experimental.SuperBuilder;
 
 /**
- * 게시물 정보를 반환하는 응답 DTO 클래스 입니다.
+ * BbsManage 게시물 정보를 반환하는 응답 DTO 클래스 입니다.
  *
  * @author 김재섭(nirsa)
  * @since 2025.08.11
