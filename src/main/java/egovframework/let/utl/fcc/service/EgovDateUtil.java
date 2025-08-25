@@ -243,6 +243,7 @@ public class EgovDateUtil {
 			else
 				return false;
 		} catch (ParseException e) {
+			log.warn("Invalid date provided: year={}, month={}, day={}", year, month, day);
 			return false;
 		}
 	}
@@ -278,7 +279,8 @@ public class EgovDateUtil {
 			}
 			simpledateformat = new SimpleDateFormat(_toDateFormat, Locale.getDefault());
 		} catch (ParseException exception) {
-			log.debug("{}", exception);
+			log.error("Failed to parse date string: {}", strSource, exception);
+			return "";
 		}
 		if (simpledateformat.format(date) != null) {
 			return simpledateformat.format(date);
