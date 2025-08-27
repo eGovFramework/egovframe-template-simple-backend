@@ -39,13 +39,15 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
+import org.springframework.lang.Nullable;
+
 public class EgovStringUtil {
 
 	/**
 	 * 빈 문자열 <code>""</code>.
 	 */
 	public static final String EMPTY = "";
-	
+
 	/**
 	 * 랜덤 객체
 	 */
@@ -121,8 +123,77 @@ public class EgovStringUtil {
 	 * @param str - 체크 대상 스트링오브젝트이며 null을 허용함
 	 * @return <code>true</code> - 입력받은 String 이 빈 문자열 또는 null인 경우
 	 */
-	public static boolean isEmpty(String str) {
-		return str == null || str.length() == 0;
+	public static boolean isEmpty(@Nullable String str) {
+		return str == null || str.isEmpty();
+	}
+
+	/**
+	 * <p>
+	 * String이 비었거나("") 혹은 null 이 아닌지 검증한다.
+	 * </p>
+	 *
+	 * <pre>
+	 *  StringUtil.isNotEmpty(null)      = false
+	 *  StringUtil.isNotEmpty("")        = false
+	 *  StringUtil.isNotEmpty(" ")       = true
+	 *  StringUtil.isNotEmpty("bob")     = true
+	 *  StringUtil.isNotEmpty("  bob  ") = true
+	 * </pre>
+	 *
+	 * @param str - 체크 대상 스트링오브젝트이며 null을 허용함
+	 * @return <code>true</code> - 입력받은 String 이 빈 문자열 또는 null이 아닌 경우
+	 */
+	public static boolean isNotEmpty(@Nullable String str) {
+		return !isEmpty(str);
+	}
+
+	/**
+	 * <p>
+	 * 문자열이 비었거나(null 또는 "") 또는 공백(whitespace)으로만 이루어져 있는지 검증합니다.
+	 * </p>
+	 *
+	 * <pre>
+	 * StringUtil.isBlank(null)      = true
+	 * StringUtil.isBlank("")        = true
+	 * StringUtil.isBlank(" ")       = true
+	 * StringUtil.isBlank("bob")     = false
+	 * StringUtil.isBlank("  bob  ") = false
+	 * </pre>
+	 *
+	 * @param string - 검사할 문자열, null을 허용합니다.
+	 * @return <code>true</code> - 문자열이 null이거나, 비어있거나, 공백으로만 이루어진 경우
+	 */
+	public static boolean isBlank(@Nullable String string) {
+		if (isEmpty(string)) {
+			return true;
+		} else {
+			for(int i = 0; i < string.length(); ++i) {
+				if (!Character.isWhitespace(string.charAt(i))) {
+					return false;
+				}
+			}
+			return true;
+		}
+	}
+
+	/**
+	 * <p>
+	 * 문자열이 비어있거나(null 또는 "") 또는 공백(whitespace)으로만 이루어져 있지 않은지 검증합니다.
+	 * </p>
+	 *
+	 * <pre>
+	 * tringUtil.isNotBlank(null)      = false
+	 * tringUtil.isNotBlank("")        = false
+	 * tringUtil.isNotBlank(" ")       = false
+	 * tringUtil.isNotBlank("bob")     = true
+	 * tringUtil.isNotBlank("  bob  ") = true
+	 * </pre>
+	 *
+	 * @param string - 검사할 문자열, null을 허용합니다.
+	 * @return <code>true</code> - 문자열이 null이 아니고, 비어있지 않으며, 공백으로만 이루어져 있지 않은 경우
+	 */
+	public static boolean isNotBlank(@Nullable String string) {
+		return !isBlank(string);
 	}
 
 	/**
