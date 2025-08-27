@@ -7,7 +7,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import egovframework.let.cop.bbs.dto.request.BbsManageDetailBoardRequestDTO;
-import egovframework.let.cop.bbs.dto.response.BbsManageDetailItemResponseDTO;
 import egovframework.let.cop.bbs.dto.response.BbsManageDetailResponseDTO;
 import egovframework.let.cop.bbs.dto.response.BbsManageListResponseDTO;
 import org.egovframe.rte.fdl.property.EgovPropertyService;
