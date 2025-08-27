@@ -3,7 +3,7 @@ package egovframework.study.jpa;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import egovframework.study.jpa.domain.Member;
-import egovframework.study.jpa.domain.QMember;
+import egovframework.study.jpa.domain.QMember; 
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;

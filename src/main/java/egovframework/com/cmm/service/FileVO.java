@@ -33,31 +33,31 @@ public class FileVO implements Serializable {
 	 */
 	private static final long serialVersionUID = -287950405903719128L;
 	
-	@Schema(description = "첨부파일 아이디")
+	@Schema(description = "첨부파일 아이디", example = "oO3rGEfD8twsMG5pYVeQOpaMm04hc+uWqx2u6s44KzA=")
     public String atchFileId = "";
 	
-	@Schema(description = "생성일자")
+	@Schema(description = "생성일자", example = "2025-08-19 09:56:29.520356")
     public String creatDt = "";
 	
-	@Schema(description = "파일내용")
+	@Schema(description = "파일내용", example = "")
     public String fileCn = "";
 	
-	@Schema(description = "파일확장자")
+	@Schema(description = "파일확장자", example = "png")
     public String fileExtsn = "";
 	
-	@Schema(description = "파일크기")
+	@Schema(description = "파일크기", example = "6367")
     public String fileMg = "";
 	
-	@Schema(description = "파일연번")
+	@Schema(description = "파일연번", example = "0")
     public String fileSn = "";
     
-	@Schema(description = "파일저장경로")
+	@Schema(description = "파일저장경로", example = "./files")
     public String fileStreCours = "";
     
-	@Schema(description = "원파일명")
+	@Schema(description = "원파일명", example = "2025-08-19.png")
     public String orignlFileNm = "";
 	
-	@Schema(description = "저장파일명")
+	@Schema(description = "저장파일명", example = "BBS_202508190956295130")
     public String streFileNm = "";
 
     /**
