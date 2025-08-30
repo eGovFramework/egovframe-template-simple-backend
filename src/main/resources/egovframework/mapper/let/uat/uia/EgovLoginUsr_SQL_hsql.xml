@@ -6,14 +6,14 @@
 
 	<!-- 로그인 처리를 위한 resultMap -->
 	<resultMap id="login" type="egovframework.com.cmm.LoginVO">
-		<result property="id" column="id"/>
-		<result property="name" column="name"/>
-		<result property="ihidNum" column="ihidNum"/>
-		<result property="email" column="email"/>
-		<result property="password" column="password"/>
-		<result property="userSe" column="userSe"/>
-		<result property="orgnztId" column="orgnztId"/>
-		<result property="uniqId" column="uniqId"/>		
+		<result property="id" column="ID"/>
+		<result property="name" column="NAME"/>
+		<result property="ihidNum" column="IHID_NUM"/>
+		<result property="email" column="EMAIL"/>
+		<result property="password" column="PASSWORD"/>
+		<result property="userSe" column="USER_SE"/>
+		<result property="orgnztId" column="ORGNZT_ID"/>
+		<result property="uniqId" column="UNIQ_ID"/>
 	</resultMap>
 	
 	<!-- 아이디 찾기를 위한 resultMap 
@@ -30,16 +30,16 @@
 	<select id="actionLogin" resultMap="login">
 		<if test="userSe == &quot;USR&quot;">
 			
-            SELECT a.EMPLYR_ID AS id
-                 , a.USER_NM AS name
-                 , a.PASSWORD AS password
-                 , a.IHIDNUM AS ihidNum
-                 , a.EMAIL_ADRES AS email
-                 , 'USR' AS userSe
-                 , a.ORGNZT_ID AS orgnztId
-                 , a.ESNTL_ID AS uniqId
-                 , a.GROUP_ID AS groupId
-                 , b.GROUP_NM AS groupNm
+            SELECT a.EMPLYR_ID AS ID
+                 , a.USER_NM AS NAME
+                 , a.PASSWORD AS PASSWORD
+                 , a.IHIDNUM AS IHID_NUM
+                 , a.EMAIL_ADRES AS EMAIL
+                 , 'USR' AS USER_SE
+                 , a.ORGNZT_ID AS ORGNZT_ID
+                 , a.ESNTL_ID AS UNIQ_ID
+                 , a.GROUP_ID AS GROUP_ID
+                 , b.GROUP_NM AS GROUP_NM
               FROM LETTNEMPLYRINFO a
               LEFT OUTER JOIN 
 				LETTNAUTHORGROUPINFO b
@@ -80,7 +80,7 @@
 		</isEqual>
 		<isEqual property="userSe" compareValue="ENT">
 			<![CDATA[
-			SELECT entrprsmber_id AS id
+			SELECT entrprs_mber_id AS id
 			  FROM LETTNENTRPRSMBER
 			 WHERE cmpny_nm = #{name}
 			   AND applcnt_email_adres = #{email}
@@ -116,7 +116,7 @@
 			<![CDATA[
 			SELECT entrprs_mber_password AS password
 			  FROM LETTNENTRPRSMBER
-			 WHERE entrprsmber_id = #{id}
+			 WHERE entrprs_mber_id = #{id}
 			   AND cmpny_nm = #{name}
 			   AND applcnt_email_adres = #{email}
 			   AND entrprs_mber_password_hint = #{passwordHint}
@@ -151,7 +151,7 @@
 			<![CDATA[
 			UPDATE LETTNENTRPRSMBER
 			   SET entrprs_mber_password = #{password}
-			 WHERE entrprsmber_id = #{id}
+			 WHERE entrprs_mber_id = #{id}
 			]]>
 		</isEqual>
 		<isEqual property="userSe" compareValue="USR">
