@@ -6,14 +6,14 @@
 
 	<!-- 로그인 처리를 위한 resultMap -->
 	<resultMap id="login" type="egovframework.com.cmm.LoginVO">
-		<result property="id" column="id"/>
-		<result property="name" column="name"/>
-		<result property="ihidNum" column="ihidNum"/>
-		<result property="email" column="email"/>
-		<result property="password" column="password"/>
-		<result property="userSe" column="userSe"/>
-		<result property="orgnztId" column="orgnztId"/>
-		<result property="uniqId" column="uniqId"/>		
+		<result property="id" column="ID"/>
+		<result property="name" column="NAME"/>
+		<result property="ihidNum" column="IHID_NUM"/>
+		<result property="email" column="EMAIL"/>
+		<result property="password" column="PASSWORD"/>
+		<result property="userSe" column="USER_SE"/>
+		<result property="orgnztId" column="ORGNZT_ID"/>
+		<result property="uniqId" column="UNIQ_ID"/>
 	</resultMap>
 	
 	<!-- 아이디 찾기를 위한 resultMap -->
@@ -48,7 +48,7 @@
 		<!-- 기업회원 -->
 		<if test="userSe == &quot;ENT&quot;">
 			
-			SELECT entrprsmber_id AS id
+			SELECT entrprs_mber_id AS id
 			     , cmpny_nm AS name
 			     , entrprs_mber_password AS password
 			     , bizrno AS ihidNum
@@ -57,7 +57,7 @@
 			     , '-' AS orgnztId
 			     , esntl_id AS uniqId
 			  FROM LETTNENTRPRSMBER
-			 WHERE entrprsmber_id = #{id}
+			 WHERE entrprs_mber_id = #{id}
 			   AND entrprs_mber_password = #{password}
 			   AND entrprs_mber_sttus = 'P'
 			
@@ -117,7 +117,7 @@
 		<!-- 기업회원 -->
 		<if test="userSe == &quot;ENT&quot;">
 			
-			SELECT entrprsmber_id AS id
+			SELECT entrprs_mber_id AS id
 			  FROM LETTNENTRPRSMBER
 			 WHERE cmpny_nm = #{name}
 			   AND applcnt_email_adres = #{email}
@@ -156,7 +156,7 @@
 			
 			SELECT entrprs_mber_password AS password
 			  FROM LETTNENTRPRSMBER
-			 WHERE entrprsmber_id = #{id}
+			 WHERE entrprs_mber_id = #{id}
 			   AND cmpny_nm = #{name}
 			   AND applcnt_email_adres = #{email}
 			   AND entrprs_mber_password_hint = #{passwordHint}
@@ -194,7 +194,7 @@
 			
 			UPDATE LETTNENTRPRSMBER
 			   SET entrprs_mber_password = #{password}
-			 WHERE entrprsmber_id = #{id}
+			 WHERE entrprs_mber_id = #{id}
 			
 		</if>
 		<!-- 업무사용자 -->
