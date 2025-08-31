@@ -31,50 +31,50 @@
 		<!-- 일반회원 -->
 		<if test="userSe == &quot;GNR&quot;">
 			
-			SELECT mber_id AS id
-			     , mber_nm AS name
-			     , ihidNum AS ihidNum
-			     , password AS password
-			     , mber_email_adres AS email
-			     , 'GNR' AS userSe
-			     , '-' AS orgnztId
-			     , esntl_id AS uniqId
+			SELECT MBER_ID 				AS ID
+			     , MBER_NM 				AS NAME
+			     , PASSWORD 			AS PASSWORD
+			     , IHIDNUM 				AS IHID_NUM
+			     , MBER_EMAIL_ADRES 	AS EMAIL
+			     , 'GNR' 				AS USER_SE
+			     , '-' 					AS ORGNZT_ID
+			     , ESNTL_ID 			AS UNIQ_ID
 			  FROM LETTNGNRLMBER
-			 WHERE mber_id = #{id}
-			   AND password = #{password}
-			   AND mber_sttus = 'P'
+			 WHERE MBER_ID = #{id}
+			   AND PASSWORD = #{password}
+			   AND MBER_STTUS = 'P'
 			
 		</if>
 		<!-- 기업회원 -->
 		<if test="userSe == &quot;ENT&quot;">
 			
-			SELECT entrprs_mber_id AS id
-			     , cmpny_nm AS name
-			     , entrprs_mber_password AS password
-			     , bizrno AS ihidNum
-			     , applcnt_email_adres AS email
-			     , 'ENT' AS userSe
-			     , '-' AS orgnztId
-			     , esntl_id AS uniqId
+			SELECT ENTRPRS_MBER_ID 			AS ID
+			     , CMPNY_NM 				AS NAME
+			     , ENTRPRS_MBER_PASSWORD 	AS PASSWORD
+			     , BIZRNO 					AS IHID_NUM
+			     , APPLCNT_EMAIL_ADRES 		AS EMAIL
+			     , 'ENT' 					AS USER_SE
+			     , '-' 						AS ORGNZT_ID
+			     , ESNTL_ID 				AS UNIQ_ID
 			  FROM LETTNENTRPRSMBER
-			 WHERE entrprs_mber_id = #{id}
-			   AND entrprs_mber_password = #{password}
-			   AND entrprs_mber_sttus = 'P'
+			 WHERE ENTRPRS_MBER_ID = #{id}
+			   AND ENTRPRS_MBER_PASSWORD = #{password}
+			   AND ENTRPRS_MBER_STTUS	 = 'P'
 			
 		</if>
 		<!-- 업무사용자 -->
 		<if test="userSe == &quot;USR&quot;">
 			
-			SELECT a.EMPLYR_ID AS ID
-                 , a.USER_NM AS NAME
-                 , a.PASSWORD AS PASSWORD
-                 , a.IHIDNUM AS IHID_NUM
-                 , a.EMAIL_ADRES AS EMAIL
-                 , 'USR' AS USER_SE
-                 , a.ORGNZT_ID AS ORGNZT_ID
-                 , a.ESNTL_ID AS UNIQ_ID
-                 , a.GROUP_ID AS GROUP_ID
-                 , b.GROUP_NM AS GROUP_NM
+			SELECT a.EMPLYR_ID 			AS ID
+                 , a.USER_NM 			AS NAME
+                 , a.PASSWORD 			AS PASSWORD
+                 , a.IHIDNUM 			AS IHID_NUM
+                 , a.EMAIL_ADRES 		AS EMAIL
+                 , 'USR' 				AS USER_SE
+                 , a.ORGNZT_ID 			AS ORGNZT_ID
+                 , a.ESNTL_ID 			AS UNIQ_ID
+                 , a.GROUP_ID 			AS GROUP_ID
+                 , b.GROUP_NM 			AS GROUP_NM
               FROM LETTNEMPLYRINFO a
               LEFT OUTER JOIN 
 				LETTNAUTHORGROUPINFO b
@@ -89,16 +89,16 @@
 	<!-- 인증서 로그인 -->
 	<select id="actionCrtfctLogin" resultMap="login">
 		
-		SELECT emplyr_id AS id
-		     , user_nm AS name
-		     , password AS password
-		     , ihidnum AS ihidNum
-		     , email_adres AS email
-		     , 'USR' AS userSe
-		     , orgnzt_id AS orgnztId
-		     , esntl_id AS uniqId
+		SELECT EMPLYR_ID 			AS ID
+		     , USER_NM 				AS NAME
+		     , PASSWORD 			AS PASSWORD
+		     , IHIDNUM 				AS IHID_NUM
+		     , EMAIL_ADRES 			AS EMAIL
+		     , 'USR' 				AS USER_SE
+		     , ORGNZT_ID 			AS ORGNZT_ID
+		     , ESNTL_ID 			AS UNIQ_ID
 		  FROM LETTNEMPLYRINFO
-		 WHERE sub_dn = #{dn}
+		 WHERE CRTFC_DN_VALUE = #{dn}
 		
 	</select>
 	
@@ -107,31 +107,31 @@
 		<!-- 일반회원 -->
 		<if test="userSe == &quot;GNR&quot;">
 			
-			SELECT mber_id AS id
+			SELECT MBER_ID 				AS ID
 			  FROM LETTNGNRLMBER
-			 WHERE mber_nm = #{name}
-			   AND mber_email_adres = #{email}
-			   AND mber_sttus = 'P'
+			 WHERE MBER_NM = #{name}
+			   AND MBER_EMAIL_ADRES = #{email}
+			   AND MBER_STTUS = 'P'
 			
 		</if>
 		<!-- 기업회원 -->
 		<if test="userSe == &quot;ENT&quot;">
 			
-			SELECT entrprs_mber_id AS id
+			SELECT ENTRPRS_MBER_ID 			AS ID
 			  FROM LETTNENTRPRSMBER
-			 WHERE cmpny_nm = #{name}
-			   AND applcnt_email_adres = #{email}
-			   AND entrprs_mber_sttus = 'P'
+			 WHERE CMPNY_NM = #{name}
+			   AND APPLCNT_EMAIL_ADRES = #{email}
+			   AND ENTRPRS_MBER_STTUS = 'P'
 			
 		</if>
 		<!-- 업무사용자 -->
 		<if test="userSe == &quot;USR&quot;">
 			
-			SELECT emplyr_id AS id
+			SELECT EMPLYR_ID 			AS ID
 			  FROM LETTNEMPLYRINFO
-			 WHERE user_nm = #{name}
-			   AND email_adres = #{email}
-			   AND emplyr_sttus_code = 'P'
+			 WHERE USER_NM = #{name}
+			   AND EMAIL_ADRES = #{email}
+			   AND EMPLYR_STTUS_CODE = 'P'
 			
 		</if>
 	</select>
@@ -141,40 +141,40 @@
 		<!-- 일반회원 -->
 		<if test="userSe == &quot;GNR&quot;">
 			
-			SELECT password AS password
+			SELECT PASSWORD 			AS PASSWORD
 			  FROM LETTNGNRLMBER
-			 WHERE mber_id = #{id}
-			   AND mber_nm = #{name}
-			   AND mber_email_adres = #{email}
-			   AND password_hint = #{passwordHint}
-			   AND password_cnsr = #{passwordCnsr}
-			   AND mber_sttus = 'P'
+			 WHERE MBER_ID = #{id}
+			   AND MBER_NM = #{name}
+			   AND MBER_EMAIL_ADRES = #{email}
+			   AND PASSWORD_HINT = #{passwordHint}
+			   AND PASSWORD_CNSR = #{passwordCnsr}
+			   AND MBER_STTUS = 'P'
 			
 		</if>
 		<!-- 기업회원 -->
 		<if test="userSe == &quot;ENT&quot;">
 			
-			SELECT entrprs_mber_password AS password
+			SELECT ENTRPRS_MBER_PASSWORD 	AS PASSWORD
 			  FROM LETTNENTRPRSMBER
-			 WHERE entrprs_mber_id = #{id}
-			   AND cmpny_nm = #{name}
-			   AND applcnt_email_adres = #{email}
-			   AND entrprs_mber_password_hint = #{passwordHint}
-			   AND entrprs_mber_password_cnsr = #{passwordCnsr}
-			   AND entrprs_mber_sttus = 'P'
+			 WHERE ENTRPRS_MBER_ID = #{id}
+			   AND CMPNY_NM = #{name}
+			   AND APPLCNT_EMAIL_ADRES = #{email}
+			   AND ENTRPRS_MBER_PASSWORD_HINT = #{passwordHint}
+			   AND ENTRPRS_MBER_PASSWORD_CNSR = #{passwordCnsr}
+			   AND ENTRPRS_MBER_STTUS = 'P'
 			
 		</if>
 		<!-- 업무사용자 -->
 		<if test="userSe == &quot;USR&quot;">
 			
-			SELECT password AS password
+			SELECT PASSWORD 			AS PASSWORD
 			  FROM LETTNEMPLYRINFO
-			 WHERE emplyr_id = #{id}
-			   AND user_nm = #{name}
-			   AND email_adres = #{email}
-			   AND password_hint = #{passwordHint}
-			   AND password_cnsr = #{passwordCnsr}
-			   AND emplyr_sttus_code = 'P'
+			 WHERE EMPLYR_ID = #{id}
+			   AND USER_NM = #{name}
+			   AND EMAIL_ADRES = #{email}
+			   AND PASSWORD_HINT = #{passwordHint}
+			   AND PASSWORD_CNSR = #{passwordCnsr}
+			   AND EMPLYR_STTUS_CODE = 'P'
 			
 		</if>
 	</select>
@@ -185,25 +185,26 @@
 		<if test="userSe == &quot;GNR&quot;">
 			
 			UPDATE LETTNGNRLMBER
-			   SET password = #{password}
-			 WHERE mber_id = #{id}
+			   SET PASSWORD = #{password}
+			 WHERE MBER_ID = #{id}
 			
 		</if>
 		<!-- 기업회원 -->
 		<if test="userSe == &quot;ENT&quot;">
 			
 			UPDATE LETTNENTRPRSMBER
-			   SET entrprs_mber_password = #{password}
-			 WHERE entrprs_mber_id = #{id}
+			   SET ENTRPRS_MBER_PASSWORD = #{password}
+			 WHERE ENTRPRS_MBER_ID = #{id}
 			
 		</if>
 		<!-- 업무사용자 -->
 		<if test="userSe == &quot;USR&quot;">
 			
 			UPDATE LETTNEMPLYRINFO
-			   SET password = #{password}
-			 WHERE emplyr_id = #{id}
+			   SET PASSWORD = #{password}
+			 WHERE EMPLYR_ID = #{id}
 			
 		</if>
 	</update>
+	
 </mapper>

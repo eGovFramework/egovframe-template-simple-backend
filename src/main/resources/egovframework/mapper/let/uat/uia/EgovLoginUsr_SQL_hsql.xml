@@ -16,30 +16,65 @@
 		<result property="uniqId" column="UNIQ_ID"/>
 	</resultMap>
 	
-	<!-- 아이디 찾기를 위한 resultMap 
-	<resultMap id="id" class="egovframework.com.cmm.LoginVO">
-		<result property="id" column="id" columnIndex="1"/>
+	<!-- 아이디 찾기를 위한 resultMap -->
+	<resultMap id="id" type="egovframework.com.cmm.LoginVO">
+		<result property="id" column="ID"/>
 	</resultMap>
-	-->
-	<!-- 비밀번호 처리를 위한 resultMap 
-	<resultMap id="password" class="egovframework.com.cmm.LoginVO">
-		<result property="password" column="password" columnIndex="1"/>
+	
+	<!-- 비밀번호 처리를 위한 resultMap -->
+	<resultMap id="password" type="egovframework.com.cmm.LoginVO">
+		<result property="password" column="PASSWORD"/>
 	</resultMap>
-	-->
+	
 	<!-- 일반 로그인 -->
 	<select id="actionLogin" resultMap="login">
+		<!-- 일반회원 -->
+		<if test="userSe == &quot;GNR&quot;">
+			
+			SELECT MBER_ID 				AS ID
+			     , MBER_NM 				AS NAME
+			     , PASSWORD 			AS PASSWORD
+			     , IHIDNUM 				AS IHID_NUM
+			     , MBER_EMAIL_ADRES 	AS EMAIL
+			     , 'GNR' 				AS USER_SE
+			     , '-' 					AS ORGNZT_ID
+			     , ESNTL_ID 			AS UNIQ_ID
+			  FROM LETTNGNRLMBER
+			 WHERE MBER_ID = #{id}
+			   AND PASSWORD = #{password}
+			   AND MBER_STTUS = 'P'
+			
+		</if>
+		<!-- 기업회원 -->
+		<if test="userSe == &quot;ENT&quot;">
+			
+			SELECT ENTRPRS_MBER_ID 			AS ID
+			     , CMPNY_NM 				AS NAME
+			     , ENTRPRS_MBER_PASSWORD 	AS PASSWORD
+			     , BIZRNO 					AS IHID_NUM
+			     , APPLCNT_EMAIL_ADRES 		AS EMAIL
+			     , 'ENT' 					AS USER_SE
+			     , '-' 						AS ORGNZT_ID
+			     , ESNTL_ID 				AS UNIQ_ID
+			  FROM LETTNENTRPRSMBER
+			 WHERE ENTRPRS_MBER_ID = #{id}
+			   AND ENTRPRS_MBER_PASSWORD = #{password}
+			   AND ENTRPRS_MBER_STTUS	 = 'P'
+			
+		</if>
+		<!-- 업무사용자 -->
 		<if test="userSe == &quot;USR&quot;">
 			
-            SELECT a.EMPLYR_ID AS ID
-                 , a.USER_NM AS NAME
-                 , a.PASSWORD AS PASSWORD
-                 , a.IHIDNUM AS IHID_NUM
-                 , a.EMAIL_ADRES AS EMAIL
-                 , 'USR' AS USER_SE
-                 , a.ORGNZT_ID AS ORGNZT_ID
-                 , a.ESNTL_ID AS UNIQ_ID
-                 , a.GROUP_ID AS GROUP_ID
-                 , b.GROUP_NM AS GROUP_NM
+            SELECT a.EMPLYR_ID 			AS ID
+                 , a.USER_NM 			AS NAME
+                 , a.PASSWORD 			AS PASSWORD
+                 , a.IHIDNUM 			AS IHID_NUM
+                 , a.EMAIL_ADRES 		AS EMAIL
+                 , 'USR' 				AS USER_SE
+                 , a.ORGNZT_ID 			AS ORGNZT_ID
+                 , a.ESNTL_ID 			AS UNIQ_ID
+                 , a.GROUP_ID 			AS GROUP_ID
+                 , b.GROUP_NM 			AS GROUP_NM
               FROM LETTNEMPLYRINFO a
               LEFT OUTER JOIN 
 				LETTNAUTHORGROUPINFO b
@@ -51,116 +86,125 @@
 		</if>
 	</select>
 	
-	<!-- 인증서 로그인
+	<!-- 인증서 로그인 -->
 	<select id="actionCrtfctLogin" resultMap="login">
-		<![CDATA[
-		SELECT emplyr_id AS id
-		     , USER_NM AS name
-		     , password AS password
-		     , ihidnum AS ihidNum
-		     , email_adres AS email
-		     , 'USR' AS userSe
-		     , orgnzt_id AS orgnztId
-		     , ESNTL_ID AS uniqId
+		
+		SELECT EMPLYR_ID 			AS ID
+		     , USER_NM 				AS NAME
+		     , PASSWORD 			AS PASSWORD
+		     , IHIDNUM 				AS IHID_NUM
+		     , EMAIL_ADRES 			AS EMAIL
+		     , 'USR' 				AS USER_SE
+		     , ORGNZT_ID 			AS ORGNZT_ID
+		     , ESNTL_ID 			AS UNIQ_ID
 		  FROM LETTNEMPLYRINFO
-		 WHERE sub_dn = #{dn}
-		]]>
+		 WHERE CRTFC_DN_VALUE = #{dn}
+		
 	</select>
-	 -->
-	<!-- 아이디 찾기
+	 
+	<!-- 아이디 찾기 -->
 	<select id="searchId" resultMap="id">
-		<isEqual property="userSe" compareValue="GNR">
-			<![CDATA[
-			SELECT mber_id AS id
+		<!-- 일반회원 -->
+		<if test="userSe == &quot;GNR&quot;">
+			
+			SELECT MBER_ID 				AS ID
 			  FROM LETTNGNRLMBER
-			 WHERE mber_nm = #{name}
-			   AND mber_email_adres = #{email}
-			   AND mber_sttus = 'P'
-			]]>
-		</isEqual>
-		<isEqual property="userSe" compareValue="ENT">
-			<![CDATA[
-			SELECT entrprs_mber_id AS id
+			 WHERE MBER_NM = #{name}
+			   AND MBER_EMAIL_ADRES = #{email}
+			   AND MBER_STTUS = 'P'
+			
+		</if>
+		<!-- 기업회원 -->
+		<if test="userSe == &quot;ENT&quot;">
+			
+			SELECT ENTRPRS_MBER_ID 			AS ID
 			  FROM LETTNENTRPRSMBER
-			 WHERE cmpny_nm = #{name}
-			   AND applcnt_email_adres = #{email}
-			   AND entrprs_mber_sttus = 'P'
-			]]>
-		</isEqual>
-		<isEqual property="userSe" compareValue="USR">
-			<![CDATA[
-			SELECT emplyr_id AS id
+			 WHERE CMPNY_NM = #{name}
+			   AND APPLCNT_EMAIL_ADRES = #{email}
+			   AND ENTRPRS_MBER_STTUS = 'P'
+			
+		</if>
+		<!-- 업무사용자 -->
+		<if test="userSe == &quot;USR&quot;">
+			
+			SELECT EMPLYR_ID 			AS ID
 			  FROM LETTNEMPLYRINFO
 			 WHERE USER_NM = #{name}
-			   AND email_adres = #{email}
-			   AND emplyr_sttus_code = 'P'
-			]]>
-		</isEqual>
+			   AND EMAIL_ADRES = #{email}
+			   AND EMPLYR_STTUS_CODE = 'P'
+			
+		</if>
 	</select>
-	 -->
-	<!-- 비밀번호 찾기 
+	 
+	<!-- 비밀번호 찾기 -->
 	<select id="searchPassword" resultMap="password">
-		<isEqual property="userSe" compareValue="GNR">
-			<![CDATA[
-			SELECT password AS password
+		<!-- 일반회원 -->
+		<if test="userSe == &quot;GNR&quot;">
+			
+			SELECT PASSWORD 			AS PASSWORD
 			  FROM LETTNGNRLMBER
-			 WHERE mber_id = #{id}
-			   AND mber_nm = #{name}
-			   AND mber_email_adres = #{email}
-			   AND password_hint = #{passwordHint}
-			   AND password_cnsr = #{passwordCnsr}
-			   AND mber_sttus = 'P'
-			]]>
-		</isEqual>
-		<isEqual property="userSe" compareValue="ENT">
-			<![CDATA[
-			SELECT entrprs_mber_password AS password
+			 WHERE MBER_ID = #{id}
+			   AND MBER_NM = #{name}
+			   AND MBER_EMAIL_ADRES = #{email}
+			   AND PASSWORD_HINT = #{passwordHint}
+			   AND PASSWORD_CNSR = #{passwordCnsr}
+			   AND MBER_STTUS = 'P'
+			
+		</if>
+		<!-- 기업회원 -->
+		<if test="userSe == &quot;ENT&quot;">
+			
+			SELECT ENTRPRS_MBER_PASSWORD 	AS PASSWORD
 			  FROM LETTNENTRPRSMBER
-			 WHERE entrprs_mber_id = #{id}
-			   AND cmpny_nm = #{name}
-			   AND applcnt_email_adres = #{email}
-			   AND entrprs_mber_password_hint = #{passwordHint}
-			   AND entrprs_mber_password_cnsr = #{passwordCnsr}
-			   AND entrprs_mber_sttus = 'P'
-			]]>
-		</isEqual>
-		<isEqual property="userSe" compareValue="USR">
-			<![CDATA[
-			SELECT password AS password
+			 WHERE ENTRPRS_MBER_ID = #{id}
+			   AND CMPNY_NM = #{name}
+			   AND APPLCNT_EMAIL_ADRES = #{email}
+			   AND ENTRPRS_MBER_PASSWORD_HINT = #{passwordHint}
+			   AND ENTRPRS_MBER_PASSWORD_CNSR = #{passwordCnsr}
+			   AND ENTRPRS_MBER_STTUS = 'P'
+			
+		</if>
+		<!-- 업무사용자 -->
+		<if test="userSe == &quot;USR&quot;">
+			
+			SELECT PASSWORD 			AS PASSWORD
 			  FROM LETTNEMPLYRINFO
-			 WHERE emplyr_id = #{id}
+			 WHERE EMPLYR_ID = #{id}
 			   AND USER_NM = #{name}
-			   AND email_adres = #{email}
-			   AND password_hint = #{passwordHint}
-			   AND password_cnsr = #{passwordCnsr}
-			   AND emplyr_sttus_code = 'P'
-			]]>
-		</isEqual>
+			   AND EMAIL_ADRES = #{email}
+			   AND PASSWORD_HINT = #{passwordHint}
+			   AND PASSWORD_CNSR = #{passwordCnsr}
+			   AND EMPLYR_STTUS_CODE = 'P'
+			
+		</if>
 	</select>
-	-->
-	<!-- 변경된 비밀번호를 저장 
+	
+	<!-- 변경된 비밀번호를 저장 -->
 	<update id="updatePassword">
-		<isEqual property="userSe" compareValue="GNR">
-			<![CDATA[
+		<!-- 일반회원 -->
+		<if test="userSe == &quot;GNR&quot;">
+			
 			UPDATE LETTNGNRLMBER
-			   SET password = #{password}
-			 WHERE mber_id = #{id}
-			]]>
-		</isEqual>
-		<isEqual property="userSe" compareValue="ENT">
-			<![CDATA[
+			   SET PASSWORD = #{password}
+			 WHERE MBER_ID = #{id}
+			
+		</if>
+		<!-- 기업회원 -->
+		<if test="userSe == &quot;ENT&quot;">
+			
 			UPDATE LETTNENTRPRSMBER
-			   SET entrprs_mber_password = #{password}
-			 WHERE entrprs_mber_id = #{id}
-			]]>
-		</isEqual>
-		<isEqual property="userSe" compareValue="USR">
-			<![CDATA[
+			   SET ENTRPRS_MBER_PASSWORD = #{password}
+			 WHERE ENTRPRS_MBER_ID = #{id}
+			
+		</if>
+		<!-- 업무사용자 -->
+		<if test="userSe == &quot;USR&quot;">
+			
 			UPDATE LETTNEMPLYRINFO
-			   SET password = #{password}
-			 WHERE emplyr_id = #{id}
-			]]>
-		</isEqual>
+			   SET PASSWORD = #{password}
+			 WHERE EMPLYR_ID = #{id}
+			
+		</if>
 	</update>
-	-->
+	
 </mapper>
