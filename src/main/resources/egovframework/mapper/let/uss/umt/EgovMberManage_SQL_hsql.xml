@@ -193,12 +193,21 @@
     </update>
     
     <select id="selectStplat_S" resultMap="stplatMap">
+        <!-- 
         SELECT
             USE_STPLAT_ID           ,
             USE_STPLAT_CN           ,
             INFO_PROVD_AGRE_CN      
         FROM LETTNSTPLATINFO
         WHERE USE_STPLAT_ID=#{stplatId}
+         -->
+        
+        SELECT 
+        	   '' AS USE_STPLAT_ID
+             , '' AS USE_STPLAT_CN
+             , '' AS INFO_PROVD_AGRE_CN 
+          FROM DUAL
+         WHERE 1 = 1
     </select>
     
     <update id="updatePassword_S">
