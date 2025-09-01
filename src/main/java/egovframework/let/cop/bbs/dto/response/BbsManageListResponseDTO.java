@@ -31,7 +31,7 @@ import java.util.List;
 @Builder
 @Schema(description = "BBsManage 게시판 리스트 조회 응답 DTO")
 public class BbsManageListResponseDTO {
-    private List<BbsManageDetailResponseDTO> resultList;
+    private List<BbsManageListItemResponseDTO> resultList;
     private int resultCnt;
 
     @Schema(
