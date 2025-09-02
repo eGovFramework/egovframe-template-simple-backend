@@ -220,8 +220,7 @@
         	   '' AS USE_STPLAT_ID
              , '' AS USE_STPLAT_CN
              , '' AS INFO_PROVD_AGRE_CN 
-          FROM DUAL
-         WHERE 1 = 1
+          FROM (VALUES ('')) AS T(USE_STPLAT_ID)
     </select>
     
     <update id="updatePassword_S">

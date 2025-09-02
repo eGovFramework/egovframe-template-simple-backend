@@ -219,9 +219,7 @@
         SELECT 
         	   '' AS USE_STPLAT_ID
              , '' AS USE_STPLAT_CN
-             , '' AS INFO_PROVD_AGRE_CN 
-          FROM DUAL
-         WHERE 1 = 1
+             , '' AS INFO_PROVD_AGRE_CN
     </select>
     
     <update id="updatePassword_S">
