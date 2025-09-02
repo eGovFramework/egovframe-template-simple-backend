@@ -9,20 +9,21 @@
     </resultMap>
 	<!-- Hsql과 호환때문에 아래 resultMap 추가: KIK -->
 	<resultMap id="userList" type="egovframework.let.uss.umt.service.MberManageVO">
-			<result property="uniqId" column="UNIQ_ID" />
-			<result property="orgnztId" column="ORGNZT_ID" />
-			<result property="userTy" column="USER_TY" />
-			<result property="mberId" column="USER_ID" />
-			<result property="mberNm" column="USER_NM" />
-			<result property="mberEmailAdres" column="EMAIL_ADRES" />
-			<result property="areaNo" column="AREA_NO" />
-			<result property="middleTelno" column="MIDDLE_TEL_NO" />
-			<result property="endTelno" column="END_TEL_NO" />
-			<result property="moblphonNo" column="MOBL_PHON_NO" />		
-			<result property="groupId" column="GROUP_ID" />
-			<result property="mberSttus" column="STTUS" />
-			<result property="sbscrbDe" column="SBSCR_DE" />
+		<result property="uniqId" column="UNIQ_ID" />
+		<result property="orgnztId" column="ORGNZT_ID" />
+		<result property="userTy" column="USER_TY" />
+		<result property="mberId" column="USER_ID" />
+		<result property="mberNm" column="USER_NM" />
+		<result property="mberEmailAdres" column="EMAIL_ADRES" />
+		<result property="areaNo" column="AREA_NO" />
+		<result property="middleTelno" column="MIDDLE_TEL_NO" />
+		<result property="endTelno" column="END_TEL_NO" />
+		<result property="moblphonNo" column="MOBL_PHON_NO" />		
+		<result property="groupId" column="GROUP_ID" />
+		<result property="mberSttus" column="STTUS" />
+		<result property="sbscrbDe" column="SBSCR_DE" />
 	</resultMap>
+	
 	<select id="selectMberList" parameterType="userSearchVO" resultMap="userList">
 		SELECT 
 		       UNIQ_ID
@@ -53,9 +54,9 @@
 			         , GROUP_ID				AS GROUP_ID
 			         , EMPLYR_STTUS_CODE	AS STTUS
 			         , DATE_FORMAT(SBSCRB_DE, '%Y-%m-%d %H:%i:%s') AS SBSCR_DE
-			      FROM    LETTNEMPLYRINFO
-		) A
-	    WHERE 1=1
+			      FROM LETTNEMPLYRINFO
+				) A
+	     WHERE 1=1
 	    <if test="sbscrbSttus != 0">AND
 	    	STTUS LIKE CONCAT('%' , #{sbscrbSttus}, '%')
 	    </if>
@@ -65,8 +66,8 @@
 	    <if test="searchCondition == 1">AND
 	    	USER_NM LIKE CONCAT('%' , #{searchKeyword}, '%')
 	    </if>
-	    ORDER BY SBSCR_DE DESC
-	    LIMIT #{recordCountPerPage} OFFSET #{firstIndex}
+	     ORDER BY SBSCR_DE DESC
+	     LIMIT #{recordCountPerPage} OFFSET #{firstIndex}
    	</select>
     	
    	<select id="selectMberListTotCnt" parameterType="userSearchVO" resultType="int">
@@ -86,9 +87,9 @@
 			         , GROUP_ID				AS GROUP_ID
 			         , EMPLYR_STTUS_CODE	AS STTUS
 			         , DATE_FORMAT(SBSCRB_DE, '%Y-%m-%d %H:%i:%s') AS SBSCR_DE
-			      FROM    LETTNEMPLYRINFO
-	    ) A
-        WHERE 1=1
+			      FROM LETTNEMPLYRINFO
+	    		) A
+         WHERE 1=1
 	    <if test="sbscrbSttus != 0">AND
 	    	STTUS LIKE CONCAT('%' , #{sbscrbSttus}, '%')
 	    </if>
@@ -145,8 +146,8 @@
                 , #{mberFxnum}
                 , #{mberEmailAdres}
                 , #{middleTelno}
-                , sysdate()  
-        )           
+                , sysdate()
+        )
     </insert>
     
     <delete id="deleteMber_S">
@@ -237,20 +238,20 @@
     </select>
     
     <select id="checkIdDplct_S" resultType="int">
-         SELECT COUNT(1)	AS USED_CNT
-           FROM (
-	             SELECT
-	                    EMPLYR_ID			AS USER_ID
-	               FROM LETTNEMPLYRINFO
-	             UNION ALL
-	             SELECT
-	                    ENTRPRS_MBER_ID		AS USER_ID
-	               FROM LETTNENTRPRSMBER
-	             UNION ALL
-	             SELECT
-	                    MBER_ID				AS USER_ID
-	               FROM LETTNGNRLMBER
-	             ) A
+        SELECT COUNT(1)	AS USED_CNT
+          FROM (
+	            SELECT
+	                   EMPLYR_ID			AS USER_ID
+	              FROM LETTNEMPLYRINFO
+	            UNION ALL
+	            SELECT
+	                   ENTRPRS_MBER_ID		AS USER_ID
+	              FROM LETTNENTRPRSMBER
+	            UNION ALL
+	            SELECT
+	                   MBER_ID				AS USER_ID
+	              FROM LETTNGNRLMBER
+	            ) A
          WHERE USER_ID = #{checkId}
     </select>
 </mapper>
