@@ -4,16 +4,21 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.com.cmm.util.XssUtil;
 import egovframework.com.cmm.web.EgovFileDownloadController;
 import egovframework.let.cop.bbs.dto.request.BbsManageDetailBoardRequestDTO;
+import egovframework.let.cop.bbs.dto.request.BbsManageUpdateRequestDTO;
 import egovframework.let.cop.bbs.dto.request.BbsSearchRequestDTO;
 import egovframework.let.cop.bbs.dto.response.BbsManageDetailResponseDTO;
 import egovframework.let.cop.bbs.dto.response.BbsManageListItemResponseDTO;
 import egovframework.let.cop.bbs.dto.response.BbsManageListResponseDTO;
+import egovframework.let.utl.sim.service.EgovFileScrty;
 import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import org.egovframe.rte.fdl.cryptography.EgovCryptoService;
 import org.egovframe.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
@@ -29,6 +34,7 @@ import egovframework.let.cop.bbs.dto.request.BbsManageDeleteBoardRequestDTO;
 import egovframework.let.cop.bbs.service.EgovBBSManageService;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 게시물 관리를 위한 서비스 구현 클래스
@@ -54,7 +60,9 @@ public class EgovBBSManageServiceImpl extends EgovAbstractServiceImpl implements
 	private final BBSManageDAO bbsMngDAO;
 	private final EgovFileMngService fileService;
 	private final EgovCryptoService cryptoService;
-
+	private final XssUtil xssUtil;
+	private final EgovFileMngUtil fileUtil;
+	private final EgovFileMngService fileMngService;
 
 	/**
 	 * 게시물 한 건을 삭제 한다.
@@ -200,8 +208,41 @@ public class EgovBBSManageServiceImpl extends EgovAbstractServiceImpl implements
 	 * @see egovframework.let.cop.bbs.brd.service.EgovBBSManageService#updateBoardArticle(egovframework.let.cop.bbs.domain.model.brd.service.Board)
 	 */
 	@Override
-	public void updateBoardArticle(Board board) throws Exception {
-		bbsMngDAO.updateBoardArticle(board);
+	public void updateBoardArticle(BbsManageUpdateRequestDTO bbsManageUpdateRequestDTO, LoginVO user, List<MultipartFile> files) throws Exception {
+		String atchFileId = java.util.Optional.ofNullable(bbsManageUpdateRequestDTO.getAtchFileId())
+				.orElse("")
+				.replaceAll("\\s", "");
+
+		Map<String, MultipartFile> fileMap = new LinkedHashMap<>();
+		if (files != null) {
+			int i = 0;
+			for (MultipartFile f : files) {
+				if (f != null && !f.isEmpty()) {
+					fileMap.put("file_" + (i++), f);
+				}
+			}
+		}
+
+		if (!fileMap.isEmpty()) {
+			if (atchFileId.isEmpty()) {
+				// 신규 파일 등록
+				List<FileVO> result = fileUtil.parseFileInf(fileMap, "BBS_", 0, atchFileId, "");
+				atchFileId = fileMngService.insertFileInfs(result);
+				bbsManageUpdateRequestDTO.setAtchFileId(atchFileId);
+			} else {
+				// 기존 파일 세트에 추가
+				FileVO fvo = new FileVO();
+				fvo.setAtchFileId(atchFileId);
+				int cnt = fileMngService.getMaxFileSN(fvo);
+				List<FileVO> more = fileUtil.parseFileInf(fileMap, "BBS_", cnt, atchFileId, "");
+				fileMngService.updateFileInfs(more);
+			}
+		}
+
+		bbsManageUpdateRequestDTO.setPassword(EgovFileScrty.encryptPassword("", user.getUniqId())); // dummy 오류 수정 (익명이 아닌 경우 validator 처리를 위해 dummy로 지정됨)
+		bbsManageUpdateRequestDTO.setNttCn(xssUtil.unscript(bbsManageUpdateRequestDTO.getNttCn())); // XSS 방지
+
+		bbsMngDAO.updateBoardArticle(bbsManageUpdateRequestDTO.toBoardMaster(bbsManageUpdateRequestDTO, user));
 	}
 
 	/**

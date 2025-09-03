@@ -1,5 +1,6 @@
 package egovframework.let.cop.bbs.service;
 
+import java.util.List;
 import java.util.Map;
 
 import egovframework.com.cmm.LoginVO;
@@ -7,11 +8,12 @@ import egovframework.let.cop.bbs.domain.model.Board;
 import egovframework.let.cop.bbs.domain.model.BoardVO;
 import egovframework.let.cop.bbs.dto.request.BbsManageDeleteBoardRequestDTO;
 import egovframework.let.cop.bbs.dto.request.BbsManageDetailBoardRequestDTO;
+import egovframework.let.cop.bbs.dto.request.BbsManageUpdateRequestDTO;
 import egovframework.let.cop.bbs.dto.request.BbsSearchRequestDTO;
-import egovframework.let.cop.bbs.dto.response.BbsManageDetailItemResponseDTO;
 import egovframework.let.cop.bbs.dto.response.BbsManageDetailResponseDTO;
 import egovframework.let.cop.bbs.dto.response.BbsManageListResponseDTO;
 import org.egovframe.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 게시물 관리를 위한 서비스 인터페이스  클래스
@@ -104,10 +106,10 @@ public interface EgovBBSManageService {
 	/**
 	 * 게시물 한 건의 내용을 수정 한다.
 	 * 
-	 * @param Board
+	 * @param bbsManageUpdateRequestDTO
 	 * @exception Exception Exception
 	 */
-	public void updateBoardArticle(Board Board)
+	public void updateBoardArticle(BbsManageUpdateRequestDTO bbsManageUpdateRequestDTO, LoginVO user, List<MultipartFile> files)
 	  throws Exception;
 
 }
