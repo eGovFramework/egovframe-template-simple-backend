@@ -240,9 +240,48 @@ public class EgovBBSManageApiController {
 			tags = {"EgovBBSManageApiController"}
 	)
 	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "수정 성공"),
-			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님"),
-			@ApiResponse(responseCode = "900", description = "입력값 무결성 오류")
+			@ApiResponse(
+					responseCode = "200",
+					description = "수정 성공",
+					content = @Content(
+							mediaType = "application/json",
+							examples = @ExampleObject(
+									name = "200 응답 예시",
+									summary = "Forbidden",
+									value = "{\n" +
+											"  \"resultCode\": 200,\n" +
+											"  \"resultMessage\": \"성공했습니다.\"\n" +
+											"}"
+							)
+					)),
+			@ApiResponse(
+					responseCode = "403",
+					description = "인가된 사용자가 아님",
+					content = @Content(
+							mediaType = "application/json",
+							examples = @ExampleObject(
+									name = "403 응답 예시",
+									summary = "Forbidden",
+									value = "{\n" +
+											"  \"resultCode\": 403,\n" +
+											"  \"resultMessage\": \"인가된 사용자가 아님\"\n" +
+											"}"
+							)
+					)),
+			@ApiResponse(
+					responseCode = "900",
+					description = "입력값 무결성 오류",
+					content = @Content(
+							mediaType = "application/json",
+							examples = @ExampleObject(
+									name = "900 응답 예시",
+									summary = "Forbidden",
+									value = "{\n" +
+											"  \"resultCode\": 900,\n" +
+											"  \"resultMessage\": \"입력값 무결성 오류\"\n" +
+											"}"
+							)
+					)),
 	})
 	@PutMapping(value = "/board/{nttId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public IntermediateResultVO<Object> updateBoardArticle(
