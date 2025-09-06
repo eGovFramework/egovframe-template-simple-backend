@@ -15,10 +15,9 @@ class EgovBootApplication {
 private val log = KotlinLogging.logger {}
 
 fun main(args: Array<String>) {
-    log.debug{"##### EgovBootApplication Start #####"}
-    // runApplication 함수 하나로 애플리케이션 실행을 통일하고, 람다 블록으로 추가 설정을 전달합니다.
+    log.debug { "##### EgovBootApplication Start #####" }
     runApplication<EgovBootApplication>(*args) {
         setBannerMode(Banner.Mode.OFF)
     }
-    log.debug{"##### EgovBootApplication End #####"}
+    log.debug { "##### EgovBootApplication End #####" }
 }

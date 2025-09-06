@@ -2,7 +2,7 @@ package egovframework.com.cmm
 
 import org.springframework.context.MessageSource
 import org.springframework.context.support.ReloadableResourceBundleMessageSource
-import java.util.Locale
+import java.util.*
 
 class EgovMessageSource : ReloadableResourceBundleMessageSource(), MessageSource {
 
@@ -26,8 +26,6 @@ class EgovMessageSource : ReloadableResourceBundleMessageSource(), MessageSource
     /** 지정 Locale로 메시지 조회 */
     fun getMessage(code: String, locale: Locale): String =
         reloadableResourceBundleMessageSource.getMessage(code, null, locale)
-
-
 
 
 }
