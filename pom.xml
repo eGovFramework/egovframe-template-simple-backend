@@ -1,286 +1,287 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.egovframe.template</groupId>
-	<artifactId>simpleHomePage</artifactId> 
-	<packaging>jar</packaging>
-	<version>1.0.0</version>
-	<name>egovframework</name>
-	<url>example.egovframework.com</url>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.egovframe.template</groupId>
+    <artifactId>simpleHomePage</artifactId>
+    <packaging>jar</packaging>
+    <version>1.0.0</version>
+    <name>egovframework</name>
+    <url>example.egovframework.com</url>
 
-	<licenses>
-		<license>
-			<name>The Apache Software License, Version 2.0</name>
-			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-		</license>
-	</licenses>
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
 
-	<properties>
-		<spring.maven.artifact.version>5.3.37</spring.maven.artifact.version>
-		<org.egovframe.rte.version>4.3.0</org.egovframe.rte.version>
+    <properties>
+        <spring.maven.artifact.version>5.3.37</spring.maven.artifact.version>
+        <org.egovframe.rte.version>4.3.0</org.egovframe.rte.version>
         <selenium.version>4.13.0</selenium.version>
-	</properties>
+        <kotlin.version>2.2.0</kotlin.version>
+    </properties>
 
-	<repositories>
-		<repository>
-			<id>mvn2s</id>
-			<url>https://repo1.maven.org/maven2/</url>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
-		<repository>
-			<id>egovframe2</id>
-			<url>https://maven.egovframe.go.kr/maven/</url>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-	</repositories>
+    <repositories>
+        <repository>
+            <id>mvn2s</id>
+            <url>https://repo1.maven.org/maven2/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>egovframe2</id>
+            <url>https://maven.egovframe.go.kr/maven/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
 
-	<!-- eGovFramework Boot Parent 설정 -->
-	<parent>
-		<groupId>org.egovframe.boot</groupId>
-		<artifactId>org.egovframe.boot.starter.parent</artifactId>
-		<version>4.3.0</version>
-	</parent>
+    <!-- eGovFramework Boot Parent 설정 -->
+    <parent>
+        <groupId>org.egovframe.boot</groupId>
+        <artifactId>org.egovframe.boot.starter.parent</artifactId>
+        <version>4.3.0</version>
+    </parent>
 
-	<dependencies>
-		<!-- spring boot dependency start -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-			<exclusions>
-				<exclusion>
-					<groupId>org.springframework.boot</groupId>
-					<artifactId>spring-boot-starter-logging</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-jpa</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpclient</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.querydsl</groupId>
-			<artifactId>querydsl-jpa</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.querydsl</groupId>
-			<artifactId>querydsl-apt</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-		    <groupId>org.apache.tomcat.embed</groupId>
-		    <artifactId>tomcat-embed-core</artifactId>
-			<version>9.0.91</version>
-		</dependency>
-		<dependency>
-		    <groupId>org.apache.tomcat.embed</groupId>
-		    <artifactId>tomcat-embed-el</artifactId>
-			<version>9.0.91</version>
-		</dependency>
-		<dependency>
-		    <groupId>org.apache.tomcat.embed</groupId>
-		    <artifactId>tomcat-embed-jasper</artifactId>
-			<version>9.0.91</version>
-		</dependency>
-		<dependency>
-		    <groupId>org.apache.tomcat.embed</groupId>
-		    <artifactId>tomcat-embed-websocket</artifactId>
-			<version>9.0.91</version>
-		</dependency>
-		<dependency>
-		    <groupId>org.apache.tomcat</groupId>
-		    <artifactId>tomcat-annotations-api</artifactId>
-			<version>9.0.91</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-devtools</artifactId>
-			<optional>true</optional>
-		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<!-- war 배포 시 해당 주석 제거
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-tomcat</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		-->
-		<!-- spring boot dependency end -->
-		
-		<!-- swagger -->
-		<dependency>
-    		<groupId>org.springdoc</groupId>
-    		<artifactId>springdoc-openapi-ui</artifactId>
-    		<version>1.7.0</version>
-    		<exclusions>
-				<exclusion>
-					<groupId>org.apache.commons</groupId>
-					<artifactId>commons-lang3</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		
-		<dependency>
-			<groupId>org.egovframe.rte</groupId>
-			<artifactId>org.egovframe.rte.ptl.mvc</artifactId>
-			<version>${org.egovframe.rte.version}</version>
-			<exclusions>
-				<!-- war 배포 시 해당 주석 제거
-				<exclusion>
-					<groupId>commons-logging</groupId>
-					<artifactId>commons-logging</artifactId>
-				</exclusion>
-				-->
-				<exclusion>
-					<groupId>org.apache.commons</groupId>
-					<artifactId>commons-lang3</artifactId>
-				</exclusion>
-			</exclusions>
+    <dependencies>
+        <!-- spring boot dependency start -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.querydsl</groupId>
+            <artifactId>querydsl-jpa</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.querydsl</groupId>
+            <artifactId>querydsl-apt</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tomcat.embed</groupId>
+            <artifactId>tomcat-embed-core</artifactId>
+            <version>9.0.91</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tomcat.embed</groupId>
+            <artifactId>tomcat-embed-el</artifactId>
+            <version>9.0.91</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tomcat.embed</groupId>
+            <artifactId>tomcat-embed-jasper</artifactId>
+            <version>9.0.91</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tomcat.embed</groupId>
+            <artifactId>tomcat-embed-websocket</artifactId>
+            <version>9.0.91</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-annotations-api</artifactId>
+            <version>9.0.91</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <!-- war 배포 시 해당 주석 제거
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        -->
+        <!-- spring boot dependency end -->
 
-		</dependency>
-		<dependency>
-			<groupId>org.egovframe.rte</groupId>
-			<artifactId>org.egovframe.rte.psl.dataaccess</artifactId>
-			<version>${org.egovframe.rte.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.egovframe.rte</groupId>
-			<artifactId>org.egovframe.rte.fdl.idgnr</artifactId>
-			<version>${org.egovframe.rte.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.egovframe.rte</groupId>
-			<artifactId>org.egovframe.rte.fdl.property</artifactId>
-			<version>${org.egovframe.rte.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.apache.commons</groupId>
-					<artifactId>commons-lang3</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>org.egovframe.rte</groupId>
-			<artifactId>org.egovframe.rte.fdl.string</artifactId>
-			<version>${org.egovframe.rte.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.egovframe.rte</groupId>
-			<artifactId>org.egovframe.rte.fdl.crypto</artifactId>
-			<version>${org.egovframe.rte.version}</version>
-		</dependency>
-		<dependency>
-    		<groupId>org.egovframe.rte</groupId>
-    		<artifactId>org.egovframe.rte.fdl.security</artifactId>
-    		<version>${org.egovframe.rte.version}</version>
-		</dependency>
-		
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>javax.servlet-api</artifactId>
-			<version>4.0.1</version>
-			<scope>provided</scope>
-		</dependency>
+        <!-- swagger -->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+            <version>1.7.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.commons</groupId>
+                    <artifactId>commons-lang3</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
 
-		<dependency>
+        <dependency>
+            <groupId>org.egovframe.rte</groupId>
+            <artifactId>org.egovframe.rte.ptl.mvc</artifactId>
+            <version>${org.egovframe.rte.version}</version>
+            <exclusions>
+                <!-- war 배포 시 해당 주석 제거
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+                -->
+                <exclusion>
+                    <groupId>org.apache.commons</groupId>
+                    <artifactId>commons-lang3</artifactId>
+                </exclusion>
+            </exclusions>
+
+        </dependency>
+        <dependency>
+            <groupId>org.egovframe.rte</groupId>
+            <artifactId>org.egovframe.rte.psl.dataaccess</artifactId>
+            <version>${org.egovframe.rte.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.egovframe.rte</groupId>
+            <artifactId>org.egovframe.rte.fdl.idgnr</artifactId>
+            <version>${org.egovframe.rte.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.egovframe.rte</groupId>
+            <artifactId>org.egovframe.rte.fdl.property</artifactId>
+            <version>${org.egovframe.rte.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.commons</groupId>
+                    <artifactId>commons-lang3</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.egovframe.rte</groupId>
+            <artifactId>org.egovframe.rte.fdl.string</artifactId>
+            <version>${org.egovframe.rte.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.egovframe.rte</groupId>
+            <artifactId>org.egovframe.rte.fdl.crypto</artifactId>
+            <version>${org.egovframe.rte.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.egovframe.rte</groupId>
+            <artifactId>org.egovframe.rte.fdl.security</artifactId>
+            <version>${org.egovframe.rte.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>4.0.1</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
             <groupId>javax.servlet.jsp.jstl</groupId>
             <artifactId>jstl-api</artifactId>
             <version>1.2</version>
         </dependency>
 
-		<dependency>
-		    <groupId>org.apache.commons</groupId>
-		    <artifactId>commons-dbcp2</artifactId>
-			<version>2.12.0</version>
-		</dependency>
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<version>1.18.34</version>
-			<optional>true</optional>
-		</dependency>
-		<dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-dbcp2</artifactId>
+            <version>2.12.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.34</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
-			<version>1.17.0</version>
-		</dependency>
-		
-		<dependency>
-			<groupId>commons-validator</groupId>
-			<artifactId>commons-validator</artifactId>
-			<version>1.8.0</version>
-		</dependency>
+            <version>1.17.0</version>
+        </dependency>
 
-		<dependency>
-			<groupId>org.apache.taglibs</groupId>
-    		<artifactId>taglibs-standard-impl</artifactId>
-    		<version>1.2.5</version>
-		</dependency>
+        <dependency>
+            <groupId>commons-validator</groupId>
+            <artifactId>commons-validator</artifactId>
+            <version>1.8.0</version>
+        </dependency>
 
-		<dependency>
-			<groupId>cglib</groupId>
-			<artifactId>cglib</artifactId>
-			<version>3.3.0</version>
-		</dependency>
+        <dependency>
+            <groupId>org.apache.taglibs</groupId>
+            <artifactId>taglibs-standard-impl</artifactId>
+            <version>1.2.5</version>
+        </dependency>
 
-		<dependency>
-			<groupId>org.antlr</groupId>
-			<artifactId>antlr</artifactId>
-			<version>3.5</version>
-		</dependency>
+        <dependency>
+            <groupId>cglib</groupId>
+            <artifactId>cglib</artifactId>
+            <version>3.3.0</version>
+        </dependency>
 
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-compress</artifactId>
-			<version>1.26.2</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.apache.commons</groupId>
-					<artifactId>commons-lang3</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
+        <dependency>
+            <groupId>org.antlr</groupId>
+            <artifactId>antlr</artifactId>
+            <version>3.5</version>
+        </dependency>
 
-		<dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-compress</artifactId>
+            <version>1.26.2</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.commons</groupId>
+                    <artifactId>commons-lang3</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>3.18.0</version>
         </dependency>
 
-		<dependency>
-			<groupId>org.hsqldb</groupId>
-			<artifactId>hsqldb</artifactId>
-			<version>2.7.3</version>
-			<classifier>jdk8</classifier>
-		</dependency>
+        <dependency>
+            <groupId>org.hsqldb</groupId>
+            <artifactId>hsqldb</artifactId>
+            <version>2.7.3</version>
+            <classifier>jdk8</classifier>
+        </dependency>
 
-		<!-- mysql driver -->
+        <!-- mysql driver -->
 
         <dependency>
             <groupId>mysql</groupId>
@@ -288,186 +289,222 @@
             <version>8.0.33</version>
         </dependency>
 
-		<!-- oracle 10g driver -->
-		<!--
-		<dependency>
-			<groupId>oracle</groupId>
-		    <artifactId>ojdbc6</artifactId>
-		    <version>11.2.0.3</version>
-		</dependency>
-		-->
+        <!-- oracle 10g driver -->
+        <!--
+        <dependency>
+            <groupId>oracle</groupId>
+            <artifactId>ojdbc6</artifactId>
+            <version>11.2.0.3</version>
+        </dependency>
+        -->
 
-		<!-- altibase driver -->
-		<!--
-		<dependency>
-		    <groupId>com.altibase</groupId>
-		    <artifactId>altibase-jdbc</artifactId>
-		    <version>7.1.0.9.2</version>
-		</dependency>
-		-->
+        <!-- altibase driver -->
+        <!--
+        <dependency>
+            <groupId>com.altibase</groupId>
+            <artifactId>altibase-jdbc</artifactId>
+            <version>7.1.0.9.2</version>
+        </dependency>
+        -->
 
-		<!-- tibero driver -->
-		<!--
-		<dependency>
-		    <groupId>jdbc.tibero</groupId>
-		    <artifactId>tibero</artifactId>
-		    <version>6</version>
-		</dependency>
-		-->
+        <!-- tibero driver -->
+        <!--
+        <dependency>
+            <groupId>jdbc.tibero</groupId>
+            <artifactId>tibero</artifactId>
+            <version>6</version>
+        </dependency>
+        -->
 
-		<!-- cubrid driver -->
-		<!--
-		<dependency>
-		    <groupId>cubrid</groupId>
-		    <artifactId>cubrid-jdbc</artifactId>
-		    <version>10.2.15.8978</version>
-		</dependency>
-		-->
+        <!-- cubrid driver -->
+        <!--
+        <dependency>
+            <groupId>cubrid</groupId>
+            <artifactId>cubrid-jdbc</artifactId>
+            <version>10.2.15.8978</version>
+        </dependency>
+        -->
 
-		<!-- validator -->
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-validator</artifactId>
-			<version>7.0.4.Final</version>
-		</dependency>
+        <!-- validator -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>7.0.4.Final</version>
+        </dependency>
 
-		<!-- log4jdbc driver -->
-		<dependency>
-			<groupId>com.googlecode.log4jdbc</groupId>
-			<artifactId>log4jdbc</artifactId>
-			<version>1.2</version>
-			<exclusions>
-				<exclusion>
-					<artifactId>slf4j-api</artifactId>
-					<groupId>org.slf4j</groupId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		
-		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-core</artifactId>
-		</dependency>
-		
-		<!-- JWT 2022.07.27 -->
-		<dependency>
-    		<groupId>io.jsonwebtoken</groupId>
-    		<artifactId>jjwt</artifactId>
-    		<version>0.9.1</version>
-		</dependency>
+        <!-- log4jdbc driver -->
+        <dependency>
+            <groupId>com.googlecode.log4jdbc</groupId>
+            <artifactId>log4jdbc</artifactId>
+            <version>1.2</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>slf4j-api</artifactId>
+                    <groupId>org.slf4j</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
 
-		<dependency>
-			<groupId>commons-fileupload</groupId>
-			<artifactId>commons-fileupload</artifactId>
-			<version>1.5</version>
-		</dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>javax.servlet.jsp</groupId>
-			<artifactId>javax.servlet.jsp-api</artifactId>
-			<version>2.3.3</version>
-			<scope>provided</scope>
-		</dependency>
+        <!-- JWT 2022.07.27 -->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>0.9.1</version>
+        </dependency>
 
-		<dependency>
-			<groupId>com.ibm.icu</groupId>
-			<artifactId>icu4j</artifactId>
-			<version>75.1</version>
-		</dependency>
+        <dependency>
+            <groupId>commons-fileupload</groupId>
+            <artifactId>commons-fileupload</artifactId>
+            <version>1.5</version>
+        </dependency>
 
-		<dependency>
-			<groupId>org.eclipse</groupId>
-			<artifactId>yasson</artifactId>
-			<version>1.0.2</version>
-		</dependency>
-		<dependency>
-			<groupId>org.glassfish</groupId>
-			<artifactId>javax.json</artifactId>
-			<version>1.1.4</version>
-		</dependency>
+        <dependency>
+            <groupId>javax.servlet.jsp</groupId>
+            <artifactId>javax.servlet.jsp-api</artifactId>
+            <version>2.3.3</version>
+            <scope>provided</scope>
+        </dependency>
 
-		<!-- https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java -->
-		<dependency>
-			<groupId>org.seleniumhq.selenium</groupId>
-				<artifactId>selenium-java</artifactId>
-				<scope>test</scope>
-			</dependency>
-	</dependencies>
+        <dependency>
+            <groupId>com.ibm.icu</groupId>
+            <artifactId>icu4j</artifactId>
+            <version>75.1</version>
+        </dependency>
 
-	<build>
-		<defaultGoal>install</defaultGoal>
-		<directory>${basedir}/target</directory>
-		<finalName>sht_webapp</finalName>
-		<pluginManagement>
-			<plugins>
+        <dependency>
+            <groupId>org.eclipse</groupId>
+            <artifactId>yasson</artifactId>
+            <version>1.0.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish</groupId>
+            <artifactId>javax.json</artifactId>
+            <version>1.1.4</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java -->
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-java</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Kotlin -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.module</groupId>
+            <artifactId>jackson-module-kotlin</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-reflect</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-stdlib</artifactId>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <defaultGoal>install</defaultGoal>
+        <directory>${basedir}/target</directory>
+        <finalName>sht_webapp</finalName>
+        <pluginManagement>
+            <plugins>
                 <plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-compiler-plugin</artifactId>
-					<version>3.13.0</version>
-					<configuration>
-						<source>1.8</source>
-						<target>1.8</target>
-						<encoding>UTF-8</encoding>
-						<maxmem>1024m</maxmem>
-					</configuration>
-				</plugin>
-				<!-- war 배포 시 maven-war-plugin 주석 해제 -->
-				<!--<plugin>
-                	<groupId>org.apache.maven.plugins</groupId>
-                	<artifactId>maven-war-plugin</artifactId>
-					<version>3.4.0</version>
-                	<configuration>
-                		<failOnMissingWebXml>false</failOnMissingWebXml>
-                	</configuration>
-                </plugin>-->    
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.13.0</version>
+                    <configuration>
+                        <source>1.8</source>
+                        <target>1.8</target>
+                        <encoding>UTF-8</encoding>
+                        <maxmem>1024m</maxmem>
+                    </configuration>
+                </plugin>
+                <!-- war 배포 시 maven-war-plugin 주석 해제 -->
+                <!--<plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-war-plugin</artifactId>
+                    <version>3.4.0</version>
+                    <configuration>
+                        <failOnMissingWebXml>false</failOnMissingWebXml>
+                    </configuration>
+                </plugin>-->
             </plugins>
         </pluginManagement>
- 
+
         <plugins>
-			<plugin>
-				<groupId>com.mysema.maven</groupId>
-				<artifactId>apt-maven-plugin</artifactId>
-				<version>1.1.3</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>process</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>${project.build.directory}/generated-sources</outputDirectory>
-							<processor>com.querydsl.apt.jpa.JPAAnnotationProcessor</processor>
-						</configuration>
-					</execution>
-					<execution>
-						<id>generate-test-entities</id>
-						<phase>generate-test-sources</phase>
-						<goals>
-							<goal>test-process</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>${project.build.directory}/generated-test-sources</outputDirectory>
-							<processor>com.querydsl.apt.jpa.JPAAnnotationProcessor</processor>
-							<options>
-								<querydsl.generatedAnnotationClass>javax.annotation.Generated</querydsl.generatedAnnotationClass>
-							</options>
-						</configuration>
-					</execution>
-				</executions>
-				<dependencies>
-					<dependency>
-						<groupId>com.querydsl</groupId>
-						<artifactId>querydsl-apt</artifactId>
-						<version>4.4.0</version>
-					</dependency>
-				</dependencies>
-			</plugin>
-		    <!-- spring-boot-maven-plugin -->
-		    <plugin>
-      	    	<groupId>org.springframework.boot</groupId>
-            	<artifactId>spring-boot-maven-plugin</artifactId>
-            	<configuration>
-                	<executable>true</executable>
-            	</configuration>
+            <plugin>
+                <groupId>com.mysema.maven</groupId>
+                <artifactId>apt-maven-plugin</artifactId>
+                <version>1.1.3</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>process</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/generated-sources</outputDirectory>
+                            <processor>com.querydsl.apt.jpa.JPAAnnotationProcessor</processor>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>generate-test-entities</id>
+                        <phase>generate-test-sources</phase>
+                        <goals>
+                            <goal>test-process</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/generated-test-sources</outputDirectory>
+                            <processor>com.querydsl.apt.jpa.JPAAnnotationProcessor</processor>
+                            <options>
+                                <querydsl.generatedAnnotationClass>javax.annotation.Generated
+                                </querydsl.generatedAnnotationClass>
+                            </options>
+                        </configuration>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.querydsl</groupId>
+                        <artifactId>querydsl-apt</artifactId>
+                        <version>4.4.0</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+            <!-- spring-boot-maven-plugin -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <executable>true</executable>
+                </configuration>
+            </plugin>
+            <!-- Kotlin -->
+            <plugin>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <artifactId>kotlin-maven-plugin</artifactId>
+                <configuration>
+                    <args>
+                        <arg>-Xjsr305=strict</arg>
+                    </args>
+                    <compilerPlugins>
+                        <plugin>spring</plugin>
+                    </compilerPlugins>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.jetbrains.kotlin</groupId>
+                        <artifactId>kotlin-maven-allopen</artifactId>
+                        <version>${kotlin.version}</version>
+                    </dependency>
+                </dependencies>
             </plugin>
         </plugins>
     </build>
