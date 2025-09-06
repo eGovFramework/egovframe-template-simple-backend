@@ -407,7 +407,6 @@
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-stdlib</artifactId>
         </dependency>
-
     </dependencies>
 
     <build>
@@ -445,6 +444,23 @@
                 <artifactId>apt-maven-plugin</artifactId>
                 <version>1.1.3</version>
                 <executions>
+                    <!-- Kotlin 소스 코드를 Java보다 먼저 컴파일합니다. -->
+                    <execution>
+                        <id>compile</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                    <!-- 테스트 코드 컴파일 -->
+                    <execution>
+                        <id>test-compile</id>
+                        <phase>test-compile</phase>
+                        <goals>
+                            <goal>test-compile</goal>
+                        </goals>
+                    </execution>
+
                     <execution>
                         <goals>
                             <goal>process</goal>
