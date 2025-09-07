@@ -61,12 +61,12 @@
 	    	sttus LIKE CONCAT('%' , #{sbscrbSttus}, '%')
 	    </if>
 	    <if test="searchCondition == 0">AND
-	    	userId LIKE CONCAT('%' , #{searchKeyword}, '%')
+	    	USER_ID LIKE CONCAT('%' , #{searchKeyword}, '%')
 	    </if>
 	    <if test="searchCondition == 1">AND
-	    	userNm LIKE CONCAT('%' , #{searchKeyword}, '%')
+	    	USER_NM LIKE CONCAT('%' , #{searchKeyword}, '%')
 	    </if>
-	     ORDER BY sbscrbDe DESC
+	     ORDER BY SBSCR_DE DESC
 	     LIMIT #{recordCountPerPage} OFFSET #{firstIndex}
    	</select>
     	
