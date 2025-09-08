@@ -34,17 +34,12 @@ import egovframework.let.cop.bbs.dto.request.BbsSearchRequestDTO;
 import egovframework.let.uss.umt.service.EgovMberManageService;
 import egovframework.let.uss.umt.service.MberManageVO;
 import egovframework.let.uss.umt.service.UserDefaultVO;
-import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
 /**
  * 회원관련 요청을 비지니스 클래스로 전달하고 처리된 결과를 해당 웹 화면으로 전달하는 Controller를 정의한다
- * 
+ *
  * @author 공통서비스 개발팀 조재영
  * @since 2009.04.10
  * @version 1.0
@@ -57,13 +52,13 @@ import lombok.RequiredArgsConstructor;
  *  -------    --------    ---------------------------
  *   2009.04.10  조재영          최초 생성
  *   2024.07.22  김일국          Boot 템플릿 커스터마이징버전 생성
+ *   2025.09.06  박준규		   Swagger Annotation 분리
  *
  *      </pre>
  */
 @RestController
 @RequiredArgsConstructor
-@Tag(name = "EgovMberManageApiController", description = "회원 관리")
-public class EgovMberManageApiController {
+public class EgovMberManageApiController implements EgovMberManageApi {
 
 	private EgovJwtTokenUtil jwtTokenUtil;
 	public static final String HEADER_STRING = "Authorization";
@@ -74,24 +69,12 @@ public class EgovMberManageApiController {
 	private final DefaultBeanValidator beanValidator;
 	private final ResultVoHelper resultVoHelper;
 
-	/**
-	 * 관리자단에서 회원목록을 조회한다. (paging)
-	 * 
-	 * @param request
-	 * @return resultVO
-	 * @throws Exception
-	 */
-	@Operation(summary = "관리자단에서 회원 목록조회화면", description = "관리자단에서 회원에 대한 목록을 조회", security = {
-			@SecurityRequirement(name = "Authorization") }, tags = { "EgovMberManageApiController" })
-	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "조회 성공"),
-			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
-	})
+	@Override
 	@GetMapping(value = "/members")
 	public ResultVO selectMberList(
-			@ModelAttribute BbsSearchRequestDTO boardMasterSearchVO,
-			@Parameter(hidden = true) @AuthenticationPrincipal LoginVO user)
-			throws Exception {
+		@ModelAttribute BbsSearchRequestDTO boardMasterSearchVO,
+		@Parameter(hidden = true) @AuthenticationPrincipal LoginVO user)
+		throws Exception {
 
 		MberManageVO userSearchVO = new MberManageVO();
 
@@ -143,23 +126,10 @@ public class EgovMberManageApiController {
 		return resultVoHelper.buildFromMap(resultMap, ResponseCode.SUCCESS);
 	}
 
-	/**
-	 * 관리자단에서 회원등록화면으로 이동한다.
-	 * 
-	 * @param userSearchVO 검색조건정보
-	 * @param mberManageVO 회원초기화정보
-	 * @return resultVO
-	 * @throws Exception
-	 */
-	@Operation(summary = "관리자단에서 회원 등록화면", description = "관리자단에서 회원등록화면에 필요한 값 생성", security = {
-			@SecurityRequirement(name = "Authorization") }, tags = { "EgovMberManageApiController" })
-	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "조회 성공"),
-			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
-	})
+	@Override
 	@GetMapping("/members/insert")
 	public ResultVO insertMberView(UserDefaultVO userSearchVO, MberManageVO mberManageVO)
-			throws Exception {
+		throws Exception {
 
 		ComDefaultCodeVO vo = new ComDefaultCodeVO();
 		Map<String, Object> resultMap = new HashMap<String, Object>();
@@ -179,21 +149,6 @@ public class EgovMberManageApiController {
 		return resultVoHelper.buildFromMap(resultMap, ResponseCode.SUCCESS);
 	}
 
-	/**
-	 * 관리자단에서 회원등록처리
-	 * 
-	 * @param mberManageVO  회원등록정보
-	 * @param bindingResult 입력값검증용 bindingResult
-	 * @return resultVO
-	 * @throws Exception
-	 */
-	@Operation(summary = "관리자단에서 회원 등록처리", description = "관리자단에서 회원 등록처리", security = {
-			@SecurityRequirement(name = "Authorization") }, tags = { "EgovMberManageApiController" })
-	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "등록 성공"),
-			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님"),
-			@ApiResponse(responseCode = "900", description = "입력값 무결성 오류")
-	})
 	@PostMapping("/members/insert")
 	public ResultVO insertMber(MberManageVO mberManageVO, BindingResult bindingResult) throws Exception {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
@@ -229,20 +184,7 @@ public class EgovMberManageApiController {
 		return resultVoHelper.buildFromMap(resultMap, ResponseCode.SUCCESS);
 	}
 
-	/**
-	 * 관리자단에서 회원정보 수정을 위해 회원정보를 상세조회한다.
-	 * 
-	 * @param uniqId       상세조회대상 회원아이디
-	 * @param userSearchVO 검색조건
-	 * @return resultVO
-	 * @throws Exception
-	 */
-	@Operation(summary = "관리자단에서 회원정보 수정용 상세조회화면", description = "관리자단에서 회원정보 수정을 위해 회원정보를 상세조회", security = {
-			@SecurityRequirement(name = "Authorization") }, tags = { "EgovMberManageApiController" })
-	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "조회 성공"),
-			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
-	})
+	@Override
 	@GetMapping("/members/update/{uniqId}")
 	public ResultVO updateMberView(@PathVariable("uniqId") String uniqId, UserDefaultVO userSearchVO) throws Exception {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
@@ -271,21 +213,7 @@ public class EgovMberManageApiController {
 		return resultVoHelper.buildFromMap(resultMap, ResponseCode.SUCCESS);
 	}
 
-	/**
-	 * 관리자단에서 회원수정 처리
-	 * 
-	 * @param mberManageVO  회원수정정보
-	 * @param bindingResult 입력값검증용 bindingResult
-	 * @return resultVO
-	 * @throws Exception
-	 */
-	@Operation(summary = "관리자단에서 회원 수정처리", description = "관리자단에서 회원 수정처리", security = {
-			@SecurityRequirement(name = "Authorization") }, tags = { "EgovMberManageApiController" })
-	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "등록 성공"),
-			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님"),
-			@ApiResponse(responseCode = "900", description = "입력값 무결성 오류")
-	})
+	@Override
 	@PutMapping("/members/update")
 	public ResultVO updateMber(@RequestBody MberManageVO mberManageVO, BindingResult bindingResult) throws Exception {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
@@ -321,21 +249,7 @@ public class EgovMberManageApiController {
 		return resultVoHelper.buildFromMap(resultMap, ResponseCode.SUCCESS);
 	}
 
-	/**
-	 * 관리자단에서 회원정보삭제.
-	 * 
-	 * @param checkedIdForDel 삭제대상 아이디 정보
-	 * @param userSearchVO    검색조건정보
-	 * @return resultVO
-	 * @throws Exception
-	 */
-	@Operation(summary = "관리자단에서 회원 삭제처리", description = "관리자단에서 회원 삭제처리", security = {
-			@SecurityRequirement(name = "Authorization") }, tags = { "EgovMberManageApiController" })
-	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "삭제 성공"),
-			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님"),
-			@ApiResponse(responseCode = "900", description = "입력값 무결성 오류")
-	})
+	@Override
 	@DeleteMapping("/members/delete/{uniqId}")
 	public ResultVO deleteMber(@PathVariable("uniqId") String uniqId, UserDefaultVO userSearchVO) throws Exception {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
@@ -345,19 +259,7 @@ public class EgovMberManageApiController {
 		return resultVoHelper.buildFromMap(resultMap, ResponseCode.SUCCESS);
 	}
 
-	/**
-	 * 사용자단에서 회원정보 수정을 위해 회원정보를 상세조회한다.
-	 * 
-	 * @param user 인증된 사용자 정보
-	 * @return resultVO
-	 * @throws Exception
-	 */
-	@Operation(summary = "사용자단에서 회원정보 수정용 상세조회화면", description = "사용자단에서 회원정보 수정을 위해 회원정보를 상세조회", security = {
-			@SecurityRequirement(name = "Authorization") }, tags = { "EgovMberManageApiController" })
-	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "조회 성공"),
-			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
-	})
+	@Override
 	@GetMapping("/mypage")
 	public ResultVO selectMypageView(@Parameter(hidden = true) @AuthenticationPrincipal LoginVO user) throws Exception {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
@@ -391,21 +293,7 @@ public class EgovMberManageApiController {
 		return resultVoHelper.buildFromMap(resultMap, ResponseCode.SUCCESS);
 	}
 
-	/**
-	 * 사용자단에서 회원 수정처리
-	 * 
-	 * @param mberManageVO  회원수정정보
-	 * @param bindingResult 입력값검증용 bindingResult
-	 * @return resultVO
-	 * @throws Exception
-	 */
-	@Operation(summary = "사용자단에서 회원 수정처리", description = "사용자단에서 회원 수정처리", security = {
-			@SecurityRequirement(name = "Authorization") }, tags = { "EgovMberManageApiController" })
-	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "등록 성공"),
-			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님"),
-			@ApiResponse(responseCode = "900", description = "입력값 무결성 오류")
-	})
+	@Override
 	@PutMapping("/mypage/update")
 	public ResultVO updateMypage(@RequestBody MberManageVO mberManageVO, BindingResult bindingResult) throws Exception {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
@@ -426,24 +314,10 @@ public class EgovMberManageApiController {
 		return resultVoHelper.buildFromMap(resultMap, ResponseCode.SUCCESS);
 	}
 
-	/**
-	 * 사용자단에서 회원탈퇴 처리
-	 * 
-	 * @param mberManageVO  회원수정정보
-	 * @param bindingResult 입력값검증용 bindingResult
-	 * @return resultVO
-	 * @throws Exception
-	 */
-	@Operation(summary = "사용자단에서 회원 탈퇴처리", description = "사용자단에서 회원 탈퇴처리", security = {
-			@SecurityRequirement(name = "Authorization") }, tags = { "EgovMberManageApiController" })
-	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "등록 성공"),
-			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님"),
-			@ApiResponse(responseCode = "900", description = "입력값 무결성 오류")
-	})
+	@Override
 	@PutMapping("/mypage/delete")
 	public ResultVO deleteMypage(@RequestBody MberManageVO mberManageVO, BindingResult bindingResult,
-			HttpServletRequest request, HttpServletResponse response) throws Exception {
+		HttpServletRequest request, HttpServletResponse response) throws Exception {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 
 		beanValidator.validate(mberManageVO, bindingResult);
@@ -461,18 +335,7 @@ public class EgovMberManageApiController {
 		return resultVoHelper.buildFromMap(resultMap, ResponseCode.SUCCESS);
 	}
 
-	/**
-	 * 사용자단에서 회원가입신청등록처리.
-	 * 
-	 * @param mberManageVO 회원가입신청정보
-	 * @return resultVO
-	 * @throws Exception
-	 */
-	@Operation(summary = "사용자단에서 회원 등록처리", description = "사용자단에서 회원 등록처리", tags = { "EgovMberManageApiController" })
-	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "등록 성공"),
-			@ApiResponse(responseCode = "900", description = "입력값 무결성 오류")
-	})
+	@Override
 	@PostMapping("/etc/member_insert")
 	public ResultVO sbscrbMber(MberManageVO mberManageVO, BindingResult bindingResult) throws Exception {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
@@ -493,23 +356,10 @@ public class EgovMberManageApiController {
 		return resultVoHelper.buildFromMap(resultMap, ResponseCode.SUCCESS);
 	}
 
-	/**
-	 * 사용자단에서 회원가입신청(등록화면)으로 이동한다.
-	 * 
-	 * @param userSearchVO 검색조건
-	 * @param mberManageVO 회원가입신청정보
-	 * @param commandMap   파라메터전달용 commandMap
-	 * @return resultVO
-	 * @throws Exception
-	 */
-	@Operation(summary = "사용자단에서 회원 가입화면", description = "사용자단에서 회원가입화면에 필요한 값 생성", tags = {
-			"EgovMberManageApiController" })
-	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "조회 성공"),
-	})
+	@Override
 	@GetMapping("/etc/member_insert")
 	public ResultVO sbscrbMberView(UserDefaultVO userSearchVO, MberManageVO mberManageVO,
-			@RequestParam Map<String, Object> commandMap) throws Exception {
+		@RequestParam Map<String, Object> commandMap) throws Exception {
 
 		ComDefaultCodeVO vo = new ComDefaultCodeVO();
 		Map<String, Object> resultMap = new HashMap<String, Object>();
@@ -536,17 +386,7 @@ public class EgovMberManageApiController {
 		return resultVoHelper.buildFromMap(resultMap, ResponseCode.SUCCESS);
 	}
 
-	/**
-	 * 회원 약관확인
-	 * 
-	 * @return resultVO
-	 * @throws Exception
-	 */
-	@Operation(summary = "사용자단에서 회원 약관확인", description = "사용자단에서 회원 약관확인에 필요한 값 생성", tags = {
-			"EgovMberManageApiController" })
-	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "조회 성공"),
-	})
+	@Override
 	@GetMapping("/etc/member_agreement")
 	public ResultVO sbscrbEntrprsMber() throws Exception {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
@@ -561,19 +401,7 @@ public class EgovMberManageApiController {
 		return resultVoHelper.buildFromMap(resultMap, ResponseCode.SUCCESS);
 	}
 
-	/**
-	 * 사용자아이디의 중복여부를 체크하여 사용가능여부를 확인
-	 * 
-	 * @param commandMap 파라메터전달용 commandMap
-	 * @return resultVO
-	 * @throws Exception
-	 */
-	@Operation(summary = "사용자아이디의 중복여부 체크처리", description = "사용자아이디의 중복여부 체크처리", tags = {
-			"EgovMberManageApiController" })
-	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "조회 성공"),
-			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
-	})
+	@Override
 	@GetMapping("/etc/member_checkid/{checkid}")
 	public ResultVO checkIdDplct(@PathVariable("checkid") String checkId) throws Exception {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
