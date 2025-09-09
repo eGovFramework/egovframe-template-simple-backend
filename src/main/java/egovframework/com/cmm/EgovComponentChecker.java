@@ -46,12 +46,10 @@ public class EgovComponentChecker extends EgovAbstractServiceImpl implements App
 	 * Spring MVC에서 설정한 빈이 아닌 서비스 빈(컴포넌트)만을 검색할 수 있음
 	 *
 	*/
-	public static boolean hasComponent(String componentName){
-
-        if (context == null || !StringUtils.hasText(componentName)) {
-            return false;
-        }
-        return context.containsBean(componentName);
-    }
+	public static boolean hasComponent(String componentName) {
+		return context != null
+				&& StringUtils.hasText(componentName)
+				&& context.containsBean(componentName);
+	}
 
 }
