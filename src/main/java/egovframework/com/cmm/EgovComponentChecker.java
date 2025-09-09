@@ -8,6 +8,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 
 
 /**
@@ -45,21 +46,10 @@ public class EgovComponentChecker extends EgovAbstractServiceImpl implements App
 	 * Spring MVC에서 설정한 빈이 아닌 서비스 빈(컴포넌트)만을 검색할 수 있음
 	 *
 	*/
-	public static boolean hasComponent(String componentName){
-
-		try{
-			Object component = context.getBean(componentName);
-
-			// Fix: Null pointers should not be dereferenced 이슈 수정
-			if(ObjectUtils.isEmpty(component)){
-				return false;
-			}else{
-				return true;
-			}
-
-		}catch(NoSuchBeanDefinitionException ex){// 해당 컴포넌트를 찾을 수없을 경우 false반환
-			return false;
-		}
+	public static boolean hasComponent(String componentName) {
+		return context != null
+				&& StringUtils.hasText(componentName)
+				&& context.containsBean(componentName);
 	}
 
 }
