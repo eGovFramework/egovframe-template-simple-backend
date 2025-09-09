@@ -24,8 +24,6 @@ import org.egovframe.rte.fdl.idgnr.impl.strategy.EgovIdGnrStrategyImpl;
  */
 public class EgovIdGnrBuilder {
 
-	// TODO : 기본값 설정, 예외처리 필요
-
 	private DataSource dataSource;
 	private EgovIdGnrStrategyImpl egovIdGnrStrategyImpl;
 
@@ -73,6 +71,15 @@ public class EgovIdGnrBuilder {
 	}
 
 	public EgovTableIdGnrServiceImpl build() {
+
+        if (dataSource == null)
+            throw new IllegalStateException("dataSource is required");
+        if (tableName == null || tableName.isEmpty())
+            throw new IllegalStateException("tableName is required");
+        if (blockSize <= 0)
+            blockSize = 1;
+        if (cipers < 0)
+            cipers = 0;
 
 		EgovTableIdGnrServiceImpl egovTableIdGnrServiceImpl = new EgovTableIdGnrServiceImpl();
 		egovTableIdGnrServiceImpl.setDataSource(dataSource);
