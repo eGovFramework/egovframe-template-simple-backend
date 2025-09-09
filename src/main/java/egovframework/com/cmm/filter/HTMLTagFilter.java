@@ -30,16 +30,19 @@ public class HTMLTagFilter implements Filter{
 	@SuppressWarnings("unused")
 	private FilterConfig config;
 
+	@Override
 	public void doFilter(ServletRequest request, ServletResponse response,
 			FilterChain chain) throws IOException, ServletException {
 
 		chain.doFilter(new HTMLTagFilterRequestWrapper((HttpServletRequest)request), response);
 	}
 
+	@Override
 	public void init(FilterConfig config) throws ServletException {
 		this.config = config;
 	}
 
+	@Override
 	public void destroy() {
 
 	}

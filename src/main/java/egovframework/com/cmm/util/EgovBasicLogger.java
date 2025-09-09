@@ -71,9 +71,9 @@ public class EgovBasicLogger {
 	public static void debug(String message) {
 		debug(message, null);
 	}
-	
+
 	/**
-	 * 일반적이 정보를 기록하는 경우 사용.
+	 * 일반적인 정보를 기록하는 경우 사용.
 	 * @param message
 	 * @param exception
 	 */
