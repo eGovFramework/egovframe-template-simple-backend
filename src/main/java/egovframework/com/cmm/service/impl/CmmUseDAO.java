@@ -38,7 +38,7 @@ public class CmmUseDAO extends EgovAbstractMapper {
 	}
 
     /**
-     * 공통코드로 사용할 조직정보를 를 불러온다.
+     * 공통코드로 사용할 조직정보를 불러온다.
      *
      * @param vo
      * @return
@@ -49,7 +49,7 @@ public class CmmUseDAO extends EgovAbstractMapper {
 	}
 
     /**
-     * 공통코드로 사용할그룹정보를 를 불러온다.
+     * 공통코드로 사용할그룹정보를 불러온다.
      *
      * @param vo
      * @return
