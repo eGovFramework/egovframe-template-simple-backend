@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="IndvdlSchdulManage">
+
+
+	<resultMap id="IndvdlSchdulManage" type="egovframework.let.cop.smt.sim.service.IndvdlSchdulManageVO">
+		<result property="schdulId" column="SCHDUL_ID"/>
+		<result property="schdulSe" column="SCHDUL_SE"/>
+		<result property="schdulDeptId" column="SCHDUL_DEPT_ID"/>
+		<result property="schdulDeptName" column="SCHDUL_DEPT_NAME"/>
+		
+		<result property="schdulKindCode" column="SCHDUL_KND_CODE"/>
+		<result property="schdulBgnde" column="SCHDUL_BEGINDE"/>
+		<result property="schdulEndde" column="SCHDUL_ENDDE"/>
+		<result property="schdulNm" column="SCHDUL_NM"/>
+		<result property="schdulCn" column="SCHDUL_CN"/>
+		<result property="schdulPlace" column="SCHDUL_PLACE"/>
+		<result property="schdulIpcrCode" column="SCHDUL_IPCR_CODE"/>
+		<result property="schdulChargerId" column="SCHDUL_CHARGER_ID"/>
+		<result property="schdulChargerName" column="SCHDUL_CHARGER_NAME"/>
+		
+		<result property="atchFileId" column="ATCH_FILE_ID"/>
+		<result property="reptitSeCode" column="REPTIT_SE_CODE"/>    
+		<result property="frstRegisterPnttm" column="FRST_REGIST_PNTTM"/>
+		<result property="frstRegisterId" column="FRST_REGISTER_ID"/>
+		<result property="lastUpdusrPnttm" column="LAST_UPDT_PNTTM"/>
+		<result property="lastUpdusrId" column="LAST_UPDUSR_ID"/>				
+	</resultMap>
+	
+	<!-- 메인페이지/일정관리조회 -->  
+	<select id="selectIndvdlSchdulManageMainList" parameterType="java.util.Map" resultType="egovMap">
+		SELECT MAIN.* 
+		FROM (
+		SELECT 
+			TO_CHAR(sysdate, 'YYYY-MM-DD') TO_DAY,
+			A.SCHDUL_ID,
+			A.SCHDUL_SE,
+			A.SCHDUL_DEPT_ID,
+			A.SCHDUL_KND_CODE,
+			A.SCHDUL_BEGINDE AS "schdulBgnde",
+			A.SCHDUL_ENDDE,
+			A.SCHDUL_NM,
+			A.SCHDUL_CN,
+			A.SCHDUL_PLACE,
+			A.SCHDUL_IPCR_CODE,
+			A.SCHDUL_CHARGER_ID,		
+			A.ATCH_FILE_ID,
+			TO_CHAR(A.FRST_REGIST_PNTTM,'YYYY-MM-DD') FRST_REGIST_PNTTM,
+			A.FRST_REGISTER_ID,
+			A.LAST_UPDT_PNTTM,
+			A.LAST_UPDUSR_ID,
+			A.REPTIT_SE_CODE 
+		FROM LETTNSCHDULINFO A
+		WHERE 1=1 
+		AND A.SCHDUL_KND_CODE = '2'   
+		AND (A.SCHDUL_CHARGER_ID = #{uniqId} OR A.FRST_REGISTER_ID = #{uniqId})  
+		
+		
+		AND ( 
+		 ( SUBSTR(A.SCHDUL_BEGINDE,1,8) &gt; TO_CHAR(sysdate, 'YYYYMMDD') AND SUBSTR(A.SCHDUL_BEGINDE,1,8) &lt;= TO_CHAR(sysdate, 'YYYYMMDD') )
+		OR
+		 ( SUBSTR(A.SCHDUL_ENDDE,1,8) &gt; TO_CHAR(sysdate, 'YYYYMMDD') AND SUBSTR(A.SCHDUL_BEGINDE,1,8) &lt;= TO_CHAR(sysdate, 'YYYYMMDD') )
+		) 
+		
+		ORDER BY A.FRST_REGIST_PNTTM DESC
+
+		 ) MAIN 
+		WHERE ROWNUM &lt; 5 
+		 
+	</select>
+	
+	<!-- 개인일정정보::목록조회 -->
+	<select id="selectIndvdlSchdulManageRetrieve" parameterType="java.util.Map" resultType="egovMap">
+	 
+		SELECT 
+			A.SCHDUL_ID,
+			A.SCHDUL_SE,
+			A.SCHDUL_DEPT_ID,
+			A.SCHDUL_KND_CODE,
+			A.SCHDUL_BEGINDE AS "schdulBgnde",
+			A.SCHDUL_ENDDE,
+			A.SCHDUL_NM,
+			A.SCHDUL_CN,
+			A.SCHDUL_PLACE,
+			A.SCHDUL_IPCR_CODE,
+			A.SCHDUL_CHARGER_ID,		
+			A.ATCH_FILE_ID,
+			A.FRST_REGIST_PNTTM,
+			A.FRST_REGISTER_ID,
+			A.LAST_UPDT_PNTTM,
+			A.LAST_UPDUSR_ID,
+			A.REPTIT_SE_CODE,
+			(SELECT USER_NM FROM LETTNEMPLYRINFO WHERE ESNTL_ID = A.SCHDUL_CHARGER_ID) USER_NM  
+		FROM LETTNSCHDULINFO A
+		WHERE 1=1 
+		AND A.SCHDUL_KND_CODE = '2' 
+	 
+	 <if test="searchMode != null and searchMode != ''">
+	 <if test="searchMode == &quot;MONTH&quot;">
+	 
+		 <if test="searchMonth != null and searchMonth != ''">
+		 	
+		 	 AND (#{searchMonth} BETWEEN SUBSTR(A.SCHDUL_BEGINDE, 1, 6)  AND SUBSTR(A.SCHDUL_ENDDE, 1, 6) ) 
+		 	
+		 </if>
+	 
+	 </if>
+	 <if test="searchMode == &quot;WEEK&quot;">
+	  		 
+		AND ( 
+		 ( SUBSTR(A.SCHDUL_BEGINDE,1,8) &gt;= #{schdulBgnde} AND SUBSTR(A.SCHDUL_BEGINDE,1,8) &lt;= #{schdulEndde})
+		OR
+		 ( SUBSTR(A.SCHDUL_ENDDE,1,8) &gt;= #{schdulBgnde} AND SUBSTR(A.SCHDUL_BEGINDE,1,8) &lt;= #{schdulEndde})
+		) 
+	
+	 </if>
+	 <if test="searchMode == &quot;DAILY&quot;">
+	 
+	 	 AND (#{searchDay} BETWEEN SUBSTR(A.SCHDUL_BEGINDE, 1, 8)  AND SUBSTR(A.SCHDUL_ENDDE, 1, 8) )
+	   
+	 </if>
+	 </if>
+
+	 <if test="searchKeyword != null and searchKeyword != ''">
+	 		AND SCHDUL_SE LIKE CONCAT(CONCAT('%', #{searchKeyword}), '%')
+	 </if>
+	<if test="schdulSe != null and schdulSe != ''">
+	 		AND SCHDUL_SE = #{schdulSe}
+	 </if>
+
+	</select>
+	
+	<!-- 개인일정정보::상세보기 -->
+	<select id="selectIndvdlSchdulManageDetailVO" resultMap="IndvdlSchdulManage">
+		SELECT 
+			A.SCHDUL_ID,
+			A.SCHDUL_SE,
+			A.SCHDUL_DEPT_ID,
+			(SELECT ORGNZT_NM FROM LETTNORGNZTINFO WHERE ORGNZT_ID = A.SCHDUL_DEPT_ID) SCHDUL_DEPT_NAME,
+			A.SCHDUL_KND_CODE,
+			A.SCHDUL_BEGINDE,
+			A.SCHDUL_ENDDE,
+			A.SCHDUL_NM,
+			A.SCHDUL_CN,
+			A.SCHDUL_PLACE,
+			A.SCHDUL_IPCR_CODE,
+			A.SCHDUL_CHARGER_ID,
+			(SELECT USER_NM FROM LETTNEMPLYRINFO WHERE ESNTL_ID = A.SCHDUL_CHARGER_ID) SCHDUL_CHARGER_NAME,	
+			A.ATCH_FILE_ID,
+			A.REPTIT_SE_CODE,
+			A.FRST_REGIST_PNTTM,
+			A.FRST_REGISTER_ID,
+			A.LAST_UPDT_PNTTM,
+			A.LAST_UPDUSR_ID 
+		FROM LETTNSCHDULINFO A
+		WHERE 1=1 
+		AND SCHDUL_ID = #{schdulId}
+	</select>
+	
+	<!-- 개인일정정보::목록조회_게시물정보 -->
+	<select id="selectIndvdlSchdulManage" parameterType="comDefaultVO" resultType="egovMap">
+		
+	SELECT *
+	FROM (
+	SELECT T0.*, ROWNUM RNUM
+		FROM (
+	
+	 
+		SELECT 
+			A.SCHDUL_ID,
+			A.SCHDUL_SE,
+			A.SCHDUL_DEPT_ID,
+			A.SCHDUL_KND_CODE,
+			A.SCHDUL_BEGINDE AS "schdulBgnde",
+			A.SCHDUL_ENDDE,
+			A.SCHDUL_NM,
+			A.SCHDUL_CN,
+			A.SCHDUL_PLACE,
+			A.SCHDUL_IPCR_CODE,
+			A.SCHDUL_CHARGER_ID,		
+			A.ATCH_FILE_ID,
+			A.FRST_REGIST_PNTTM,
+			A.FRST_REGISTER_ID,
+			A.LAST_UPDT_PNTTM,
+			A.LAST_UPDUSR_ID,
+			A.REPTIT_SE_CODE 
+		FROM LETTNSCHDULINFO A
+		WHERE 1=1 
+	 
+	 <if test="searchKeyword != null and searchKeyword != ''">
+	 	
+	 		
+	 		AND SCHDUL_SE LIKE CONCAT(CONCAT('%', #{searchKeyword}), '%')
+	 		
+	 	
+	 </if>
+	 
+		ORDER BY A.FRST_REGIST_PNTTM DESC
+	
+		
+		) T0
+	) 
+	WHERE RNUM BETWEEN #{firstIndex} + 1 AND #{firstIndex} + #{recordCountPerPage}
+		
+	</select>
+	
+	<!-- 개인일정정보::목록조회_게시물 총갯수  -->
+	<select id="selectIndvdlSchdulManageCnt" parameterType="comDefaultVO" resultType="int">
+		SELECT 
+		COUNT(*) totcnt
+		FROM LETTNSCHDULINFO
+		WHERE 1=1 
+	 <if test="searchKeyword != null and searchKeyword != ''">
+	 	
+	 		
+	 		AND SCHDUL_SE LIKE CONCAT(CONCAT('%', #{searchKeyword}), '%')
+	 		
+	 	
+	 </if>
+	</select>
+
+	
+	<!-- 개인일정정보::삭제  -->
+	<delete id="deleteDiaryManage">
+			DELETE FROM LETTNDIARYINFO WHERE SCHDUL_ID = #{schdulId};
+	</delete>
+	<delete id="deleteIndvdlSchdulManage">
+		
+			DELETE FROM LETTNSCHDULINFO WHERE SCHDUL_ID = #{schdulId}; 
+		
+	</delete>
+
+	<!-- 개인일정정보::수정  -->
+	<update id="updateIndvdlSchdulManage"> 
+		UPDATE LETTNSCHDULINFO 
+		SET  
+			SCHDUL_SE=#{schdulSe},
+			SCHDUL_DEPT_ID=#{schdulDeptId},
+			SCHDUL_KND_CODE=#{schdulKindCode},
+			SCHDUL_BEGINDE=#{schdulBgnde},
+			SCHDUL_ENDDE=#{schdulEndde},
+			SCHDUL_NM=#{schdulNm},
+			SCHDUL_CN=#{schdulCn},
+			SCHDUL_IPCR_CODE=#{schdulIpcrCode},
+			SCHDUL_CHARGER_ID=#{schdulChargerId},
+			ATCH_FILE_ID=#{atchFileId},
+			REPTIT_SE_CODE=#{reptitSeCode},
+			LAST_UPDT_PNTTM = sysdate,
+			LAST_UPDUSR_ID = #{lastUpdusrId}
+		WHERE SCHDUL_ID = #{schdulId}
+	</update>
+	
+	<!-- 개인일정정보::상세보기 -->
+	<select id="selectIndvdlSchdulManageDetail" resultType="egovMap">
+		SELECT 
+			A.SCHDUL_ID,
+			A.SCHDUL_SE,
+			A.SCHDUL_DEPT_ID,
+			(SELECT ORGNZT_NM FROM LETTNORGNZTINFO WHERE ORGNZT_ID = A.SCHDUL_DEPT_ID) SCHDUL_DEPT_NAME,
+			A.SCHDUL_KND_CODE,
+			A.SCHDUL_BEGINDE AS "schdulBgnde",
+			A.SCHDUL_ENDDE,
+			A.SCHDUL_NM,
+			A.SCHDUL_CN,
+			A.SCHDUL_PLACE,
+			A.SCHDUL_IPCR_CODE,
+			A.SCHDUL_CHARGER_ID,
+			(SELECT USER_NM FROM LETTNEMPLYRINFO WHERE ESNTL_ID = A.SCHDUL_CHARGER_ID) SCHDUL_CHARGER_NAME,	
+			A.ATCH_FILE_ID,
+			A.FRST_REGIST_PNTTM,
+			A.FRST_REGISTER_ID,
+			A.LAST_UPDT_PNTTM,
+			A.LAST_UPDUSR_ID,
+			A.REPTIT_SE_CODE
+		FROM LETTNSCHDULINFO A
+		WHERE 1=1
+		AND SCHDUL_ID = #{schdulId}
+	</select>
+	
+	<!-- 개인일정정보::입력  -->
+	<insert id="insertIndvdlSchdulManage">
+	 
+	 
+		INSERT INTO LETTNSCHDULINFO ( 
+			SCHDUL_ID,
+			SCHDUL_SE,
+			SCHDUL_DEPT_ID,
+			SCHDUL_KND_CODE,
+			SCHDUL_BEGINDE,
+			SCHDUL_ENDDE,
+			SCHDUL_NM,
+			SCHDUL_CN,
+			SCHDUL_PLACE,
+			SCHDUL_IPCR_CODE,
+			SCHDUL_CHARGER_ID,
+			ATCH_FILE_ID,
+			REPTIT_SE_CODE,
+			FRST_REGIST_PNTTM,
+			FRST_REGISTER_ID,
+			LAST_UPDT_PNTTM,
+			LAST_UPDUSR_ID
+		)VALUES( 
+			#{schdulId},
+			#{schdulSe},
+			#{schdulDeptId},
+			#{schdulKindCode},
+			#{schdulBgnde},
+			#{schdulEndde},
+			#{schdulNm},
+			#{schdulCn},
+			#{schdulPlace},
+			#{schdulIpcrCode},
+			#{schdulChargerId},
+			#{atchFileId},
+			#{reptitSeCode},    
+			sysdate,
+			#{frstRegisterId},
+			sysdate,
+			#{lastUpdusrId} 
+		)
+
+	 
+	</insert>
+
+
+</mapper>
