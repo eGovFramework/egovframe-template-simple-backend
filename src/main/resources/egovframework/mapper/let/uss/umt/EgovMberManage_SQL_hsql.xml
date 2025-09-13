@@ -53,7 +53,7 @@
 			         , MBTLNUM				AS MOBL_PHON_NO
 			         , GROUP_ID				AS GROUP_ID
 			         , EMPLYR_STTUS_CODE	AS STTUS
-			         , DATE_FORMAT(SBSCRB_DE, '%Y-%m-%d %H:%i:%s') AS SBSCR_DE
+                     , TO_CHAR(SBSCRB_DE, 'YYYY-MM-DD HH24:MI:SS') AS SBSCR_DE
 			      FROM    LETTNEMPLYRINFO
 				) A
 	     WHERE 1=1
@@ -61,12 +61,12 @@
 	    	sttus LIKE CONCAT('%' , #{sbscrbSttus}, '%')
 	    </if>
 	    <if test="searchCondition == 0">AND
-	    	userId LIKE CONCAT('%' , #{searchKeyword}, '%')
+	    	USER_ID LIKE CONCAT('%' , #{searchKeyword}, '%')
 	    </if>
 	    <if test="searchCondition == 1">AND
-	    	userNm LIKE CONCAT('%' , #{searchKeyword}, '%')
+	    	USER_NM LIKE CONCAT('%' , #{searchKeyword}, '%')
 	    </if>
-	     ORDER BY sbscrbDe DESC
+	     ORDER BY SBSCR_DE DESC
 	     LIMIT #{recordCountPerPage} OFFSET #{firstIndex}
    	</select>
     	
@@ -86,7 +86,7 @@
 			         , MBTLNUM				AS MOBL_PHON_NO
 			         , GROUP_ID				AS GROUP_ID
 			         , EMPLYR_STTUS_CODE	AS STTUS
-			         , DATE_FORMAT(SBSCRB_DE, '%Y-%m-%d %H:%i:%s') AS SBSCR_DE
+                     , TO_CHAR(SBSCRB_DE, 'YYYY-MM-DD HH24:MI:SS') AS SBSCR_DE
 			      FROM LETTNEMPLYRINFO
 	    		) A
          WHERE 1=1
