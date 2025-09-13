@@ -167,8 +167,9 @@ public class EgovStringUtil {
 		if (isEmpty(str)) {
 			return true;
 		} else {
-			for(int i = 0; i < str.length(); ++i) {
-				if (!Character.isWhitespace(str.charAt(i))) {
+			for(int i = 0, n = str.length(); i < n; ++i) {
+				char ch =  str.charAt(i);
+				if (ch != ' ' && ch != '\t' && !Character.isWhitespace(ch)) {
 					return false;
 				}
 			}
