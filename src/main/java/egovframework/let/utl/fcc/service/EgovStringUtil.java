@@ -160,15 +160,15 @@ public class EgovStringUtil {
 	 * StringUtil.isBlank("  bob  ") = false
 	 * </pre>
 	 *
-	 * @param string - 검사할 문자열, null을 허용합니다.
+	 * @param str - 검사할 문자열, null을 허용합니다.
 	 * @return <code>true</code> - 문자열이 null이거나, 비어있거나, 공백으로만 이루어진 경우
 	 */
-	public static boolean isBlank(@Nullable String string) {
-		if (isEmpty(string)) {
+	public static boolean isBlank(@Nullable String str) {
+		if (isEmpty(str)) {
 			return true;
 		} else {
-			for(int i = 0; i < string.length(); ++i) {
-				if (!Character.isWhitespace(string.charAt(i))) {
+			for(int i = 0; i < str.length(); ++i) {
+				if (!Character.isWhitespace(str.charAt(i))) {
 					return false;
 				}
 			}
@@ -182,18 +182,18 @@ public class EgovStringUtil {
 	 * </p>
 	 *
 	 * <pre>
-	 * tringUtil.isNotBlank(null)      = false
-	 * tringUtil.isNotBlank("")        = false
-	 * tringUtil.isNotBlank(" ")       = false
-	 * tringUtil.isNotBlank("bob")     = true
-	 * tringUtil.isNotBlank("  bob  ") = true
+	 * StringUtil.isNotBlank(null)      = false
+	 * StringUtil.isNotBlank("")        = false
+	 * StringUtil.isNotBlank(" ")       = false
+	 * StringUtil.isNotBlank("bob")     = true
+	 * StringUtil.isNotBlank("  bob  ") = true
 	 * </pre>
 	 *
-	 * @param string - 검사할 문자열, null을 허용합니다.
+	 * @param str - 검사할 문자열, null을 허용합니다.
 	 * @return <code>true</code> - 문자열이 null이 아니고, 비어있지 않으며, 공백으로만 이루어져 있지 않은 경우
 	 */
-	public static boolean isNotBlank(@Nullable String string) {
-		return !isBlank(string);
+	public static boolean isNotBlank(@Nullable String str) {
+		return !isBlank(str);
 	}
 
 	/**
@@ -423,13 +423,13 @@ public class EgovStringUtil {
 	 * @return resultVal 문자열
 	 */
 	public static String isNullToString(Object object) {
-		String string = "";
+		String str = "";
 
 		if (object != null) {
-			string = object.toString().trim();
+			str = object.toString().trim();
 		}
 
-		return string;
+		return str;
 	}
 
 	/**
