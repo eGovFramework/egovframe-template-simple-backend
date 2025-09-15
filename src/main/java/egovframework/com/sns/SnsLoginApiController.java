@@ -140,7 +140,6 @@ public class SnsLoginApiController {
         String openApiURL = "https://kapi.kakao.com/v2/user/me";
         requestHeaders.put("Authorization", header);
         requestHeaders.put("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
-        requestHeaders.put("Authorization", header);
         requestHeaders.put("X-Http-Method-Override", "POST");
         responseBody = SnsUtils.getOpenApi(openApiURL,requestHeaders);
         log.debug("responseBody="+ responseBody);
