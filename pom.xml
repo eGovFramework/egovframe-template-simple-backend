@@ -323,6 +323,13 @@
 		    <version>10.2.15.8978</version>
 		</dependency>
 		-->
+		
+		<!-- postgresql driver -->
+		<dependency>
+		    <groupId>org.postgresql</groupId>
+		    <artifactId>postgresql</artifactId>
+		    <version>42.7.4</version>
+		</dependency>
 
 		<!-- validator -->
 		<dependency>
