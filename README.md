@@ -57,7 +57,7 @@ mvn spring-boot:run
 
 ### 1. [Java Config 변환](./Docs/java-config-convert.md)
 
-#### 1) Web.xml을 WebApplicationInitializer 구현체로 변환
+#### 1) web.xml을 WebApplicationInitializer 구현체로 변환
 
 #### 2) context-\*.xml 파일을 @Configuration 클래스로 변환
 
