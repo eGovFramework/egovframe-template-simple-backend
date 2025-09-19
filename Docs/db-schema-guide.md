@@ -17,7 +17,7 @@
 ---
 
 ## 표기 규칙
-- **PK**: 기본키, **FK**: 외래키, **NN**: NOT NULL
+- **PK**: 기본키, **FK**: 외래키, **NN**: NOT NULL, **DF**: DEFAULT
 - FK의 삭제 규칙(예: `ON DELETE CASCADE`)은 **제약**에 명시했습니다.
 
 ---
@@ -348,15 +348,15 @@
 ### LETTNBBSMASTEROPTN (게시판 옵션)
 **용도**: 게시판 세부 옵션(만족도/답변 기능 등)
 
-| 컬럼                | 타입          | 제약      | 기본값                     | 설명             |
-|-------------------|-------------|---------|-------------------------|----------------|
-| BBS_ID            | CHAR(20)    | PK, NN  | ''                      | 게시판ID          |
-| ANSWER_AT         | CHAR(1)     | NN      | ''                      | 답변 기능 사용(Y/N)  |
-| STSFDG_AT         | CHAR(1)     | NN      | ''                      | 만족도 조사 사용(Y/N) |
-| FRST_REGIST_PNTTM | TIMESTAMP   | NN      | '1970-01-01 00:00:00.0' | 최초등록시각         |
-| LAST_UPDT_PNTTM   | TIMESTAMP   |         |                         | 최종수정시각         |
-| FRST_REGISTER_ID  | VARCHAR(20) | NN      | DF ''                   | 최초등록자ID        |
-| LAST_UPDUSR_ID    | VARCHAR(20) |         |                         | 최종수정자ID        |
+| 컬럼                | 타입          | 제약      | 기본값                        | 설명             |
+|-------------------|-------------|---------|----------------------------|----------------|
+| BBS_ID            | CHAR(20)    | PK, NN  | DF ''                      | 게시판ID          |
+| ANSWER_AT         | CHAR(1)     | NN      | DF ''                      | 답변 기능 사용(Y/N)  |
+| STSFDG_AT         | CHAR(1)     | NN      | DF ''                      | 만족도 조사 사용(Y/N) |
+| FRST_REGIST_PNTTM | TIMESTAMP   | NN      | DF '1970-01-01 00:00:00.0' | 최초등록시각         |
+| LAST_UPDT_PNTTM   | TIMESTAMP   |         |                            | 최종수정시각         |
+| FRST_REGISTER_ID  | VARCHAR(20) | NN      | DF ''                      | 최초등록자ID        |
+| LAST_UPDUSR_ID    | VARCHAR(20) |         |                            | 최종수정자ID        |
 
 ---
 
@@ -441,18 +441,18 @@
 ### IDS (내장/샘플 시퀀스)
 **용도**: 내장 DB에서 사용하는 단순 시퀀스
 
-| 컬럼          | 타입            | 제약      | 기본값  | 설명        |
-|-------------|---------------|---------|------|-----------|
-| TABLE_NAME  | VARCHAR(20)   | PK, NN  | ''   | 대상 테이블명   |
-| NEXT_ID     | NUMERIC(30)   | NN      | 0    | 다음 ID 값   |
+| 컬럼          | 타입            | 제약      | 기본값   | 설명        |
+|-------------|---------------|---------|-------|-----------|
+| TABLE_NAME  | VARCHAR(20)   | PK, NN  | DF '' | 대상 테이블명   |
+| NEXT_ID     | NUMERIC(30)   | NN      | DF 0  | 다음 ID 값   |
 
 ---
 
 ### COMTECOPSEQ (범용 시퀀스)
 **용도**: 범용 시퀀스
 
-| 컬럼           | 타입            | 제약      | 기본값  | 설명        |
-|--------------|---------------|---------|------|-----------|
-| TABLE_NAME   | VARCHAR(20)   | PK, NN  | ''   | 대상 테이블명   |
-| NEXT_ID      | NUMERIC(30)   | NN      | 0    | 다음 ID 값   |
+| 컬럼           | 타입            | 제약      | 기본값   | 설명        |
+|--------------|---------------|---------|-------|-----------|
+| TABLE_NAME   | VARCHAR(20)   | PK, NN  | DF '' | 대상 테이블명   |
+| NEXT_ID      | NUMERIC(30)   | NN      | DF 0  | 다음 ID 값   |
 
