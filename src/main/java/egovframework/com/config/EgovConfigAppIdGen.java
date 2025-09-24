@@ -2,7 +2,6 @@ package egovframework.com.config;
 
 import javax.sql.DataSource;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,13 +29,18 @@ import org.egovframe.rte.fdl.idgnr.impl.strategy.EgovIdGnrStrategyImpl;
  */
 @Configuration
 public class EgovConfigAppIdGen {
-	@Autowired
-	@Qualifier("dataSource")
-	DataSource dataSource;
 
-	@Autowired
-	@Qualifier("egovDataSource")
-	DataSource egovDataSource;
+    private final DataSource dataSource;
+
+    private final DataSource egovDataSource;
+
+    public EgovConfigAppIdGen(
+        @Qualifier("dataSource") DataSource dataSource,
+        @Qualifier("egovDataSource") DataSource egovDataSource
+    ) {
+        this.dataSource = dataSource;
+        this.egovDataSource = egovDataSource;
+    }
 
 	// 구현 방법 1:
 

@@ -8,7 +8,6 @@ import javax.sql.DataSource;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -41,11 +40,15 @@ import org.springframework.jdbc.support.lob.DefaultLobHandler;
 	@PropertySource("classpath:/application.properties")
 })
 public class EgovConfigAppMapper {
-	@Autowired
-	DataSource dataSource;
 
-	@Autowired
-	Environment env;
+    private final DataSource dataSource;
+
+    private final Environment env;
+
+    public EgovConfigAppMapper(DataSource dataSource, Environment env) {
+        this.dataSource = dataSource;
+        this.env = env;
+    }
 
 	private String dbType;
 
