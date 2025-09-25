@@ -112,7 +112,7 @@ Body:
 
 ## 🔧 7. 문제 해결
 
-### 🚫 인증 오류 시
+### 인증 오류 시
 
 **문제**: `401 Unauthorized` 또는 "인가된 사용자가 아닙니다."
 
@@ -121,7 +121,7 @@ Body:
 - [ ] 토큰이 만료되지 않았는지 확인  
 - [ ] 필요시 다시 로그인하여 새로운 토큰 획득
 
-### 🌐 접속 불가 시
+### 접속 불가 시
 
 **문제**: Swagger UI 페이지에 접속할 수 없음
 
@@ -131,7 +131,7 @@ Body:
 - [ ] 방화벽 설정 확인
 - [ ] 브라우저 캐시 삭제
 
-### ⚠️ API 응답 오류 시
+### API 응답 오류 시
 
 **문제**: API 호출 시 오류 발생
 
@@ -143,16 +143,16 @@ Body:
 
 ---
 
-## 📚 8. 추가 정보
+## 8. 추가 정보
 
-### 🔗 관련 저장소
+### 관련 저장소
 
 | 구분 | 저장소 | 설명 |
 |------|--------|------|
 | **Backend** | [egovframe-template-simple-backend](https://github.com/eGovFramework/egovframe-template-simple-backend) | 현재 프로젝트 |
 | **Frontend** | [egovframe-template-simple-react](https://github.com/eGovFramework/egovframe-template-simple-react.git) | React 기반 프론트엔드 |
 
-### ⚙️ 개발 환경 요구사항
+### 개발 환경 요구사항
 
 | 항목 | 버전 | 비고 |
 |------|------|------|
@@ -160,7 +160,7 @@ Body:
 | **Maven** | 3.8.4 | 빌드 도구 |
 | **Spring Boot** | - | 프레임워크 |
 
-### 🚀 실행 명령어
+### 실행 명령어
 
 ```bash
 # 개발 모드 실행
@@ -172,7 +172,7 @@ java -jar <jar파일명> --spring.profiles.active=<profile명>
 
 ---
 
-## 📋 요약 체크리스트
+## 요약 체크리스트
 
 ### 초기 설정
 - [ ] Spring Boot 애플리케이션 구동
@@ -188,5 +188,3 @@ java -jar <jar파일명> --spring.profiles.active=<profile명>
 - [ ] GET 요청 테스트 (인증 불필요)
 - [ ] POST/PUT/DELETE 요청 테스트 (인증 필요)
 - [ ] 응답 코드 및 결과 확인
-
-> 💬 **도움이 필요하시면** 이 가이드를 참고하여 단계별로 진행해보세요!
