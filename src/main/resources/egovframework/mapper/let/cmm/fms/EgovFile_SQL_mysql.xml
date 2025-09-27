@@ -165,6 +165,14 @@
 				a.USE_AT = 'Y'				
 			ORDER BY b.FILE_SN	
  		
- 	</select>	
+ 	</select>
+
+	<delete id="FileManageDAO.deleteFileDetail_bulk" parameterType="java.util.List">
+		DELETE FROM LETTNFILEDETAIL
+		WHERE (ATCH_FILE_ID, FILE_SN) IN
+		<foreach item="file" collection="list" open="(" separator="," close=")">
+			(#{file.atchFileId}, #{file.fileSn})
+		</foreach>
+	</delete>
  	
 </mapper>
