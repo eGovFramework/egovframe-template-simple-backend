@@ -93,6 +93,16 @@ public class FileManageDAO extends EgovAbstractMapper {
 	}
 
 	/**
+	 * 여러 개의 파일을 한번에 삭제한다. (Bulk 처리)
+	 *
+	 * @param fileList
+	 * @throws Exception
+	 */
+	public void deleteFileInfs_bulk(List<FileVO> fileList) throws Exception {
+		delete("FileManageDAO.deleteFileDetail_bulk", fileList);
+	}
+
+	/**
 	 * 하나의 파일을 삭제한다.
 	 *
 	 * @param fvo
