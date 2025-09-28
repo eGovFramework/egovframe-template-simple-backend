@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="FileManageDAO">
 
@@ -13,7 +13,7 @@
 		<result property="fileStreCours" column="FILE_STRE_COURS"/>
 		<result property="orignlFileNm" column="ORIGNL_FILE_NM"/>
 		<result property="streFileNm" column="STRE_FILE_NM"/>
-		<result property="creatDt" column="CREAT_DT"/>			
+		<result property="creatDt" column="CREAT_DT"/>
 	</resultMap>
 
 	<resultMap id="fileDetail" type="egovframework.com.cmm.service.FileVO">
@@ -25,154 +25,178 @@
 		<result property="fileStreCours" column="FILE_STRE_COURS"/>
 		<result property="orignlFileNm" column="ORIGNL_FILE_NM"/>
 		<result property="streFileNm" column="STRE_FILE_NM"/>
-	</resultMap>	
+	</resultMap>
 
 
  	<select id="FileManageDAO.selectFileList" parameterType="FileVO" resultMap="fileList">
- 		
-			SELECT 
+
+			SELECT
 				a.ATCH_FILE_ID, b.FILE_CN, b.FILE_SN, b.FILE_STRE_COURS, b.STRE_FILE_NM,
 				b.FILE_EXTSN, b.ORIGNL_FILE_NM, b.FILE_SIZE, a.CREAT_DT
 			FROM
 				LETTNFILE a, LETTNFILEDETAIL b
 			WHERE
 				a.ATCH_FILE_ID = #{atchFileId}
-			AND 
+			AND
 				a.ATCH_FILE_ID = b.ATCH_FILE_ID
-			AND 
-				a.USE_AT = 'Y'				
-			ORDER BY b.FILE_SN	
- 		
+			AND
+				a.USE_AT = 'Y'
+			ORDER BY b.FILE_SN
+
  	</select>
- 	
+
 	<insert id="FileManageDAO.insertFileMaster" parameterType="FileVO">
-		
+
 			INSERT INTO LETTNFILE
 			(ATCH_FILE_ID, CREAT_DT, USE_AT)
 			VALUES
-			( #{atchFileId}, SYSDATE(), 'Y')			
-		
+			( #{atchFileId}, SYSDATE(), 'Y')
+
 	</insert>
-	
+
 	<insert id="FileManageDAO.insertFileDetail" parameterType="FileVO">
-		
+
 			INSERT INTO LETTNFILEDETAIL
-			( ATCH_FILE_ID, FILE_SN, FILE_STRE_COURS, STRE_FILE_NM, 
+			( ATCH_FILE_ID, FILE_SN, FILE_STRE_COURS, STRE_FILE_NM,
 			  ORIGNL_FILE_NM, FILE_EXTSN, FILE_SIZE, FILE_CN )
 			VALUES
-			( #{atchFileId}, #{fileSn}, #{fileStreCours}, #{streFileNm}, 
-			  #{orignlFileNm}, #{fileExtsn}, #{fileMg}, #{fileCn} )			
-		
-	</insert>	
-	
+			( #{atchFileId}, #{fileSn}, #{fileStreCours}, #{streFileNm},
+			  #{orignlFileNm}, #{fileExtsn}, #{fileMg}, #{fileCn} )
+
+	</insert>
+
 	<delete id="FileManageDAO.deleteFileDetail" parameterType="FileVO">
-		
+
 			DELETE FROM LETTNFILEDETAIL
 			WHERE
 				ATCH_FILE_ID = #{atchFileId}
-			AND	
-				FILE_SN = #{fileSn}			
-			
+			AND
+				FILE_SN = #{fileSn}
+
 	</delete>
- 	
+
 	<select id="FileManageDAO.getMaxFileSN" parameterType="FileVO" resultType="java.lang.Integer">
-		
+
 			SELECT IFNULL(MAX(FILE_SN),0)+1 AS FILE_SN
 			FROM LETTNFILEDETAIL
-			WHERE ATCH_FILE_ID =  #{atchFileId}		
-		
+			WHERE ATCH_FILE_ID =  #{atchFileId}
+
 	</select>
 
  	<select id="FileManageDAO.selectFileInf" parameterType="FileVO" resultMap="fileDetail">
- 		
-			SELECT 
+
+			SELECT
 				ATCH_FILE_ID, FILE_CN, FILE_SN, FILE_STRE_COURS, STRE_FILE_NM,
 				FILE_EXTSN, ORIGNL_FILE_NM, FILE_SIZE
 			FROM
 				LETTNFILEDETAIL
 			WHERE
 				ATCH_FILE_ID = #{atchFileId}
-			AND 
-				FILE_SN = #{fileSn}	
- 		
+			AND
+				FILE_SN = #{fileSn}
+
  	</select>
 
 	<update id="FileManageDAO.deleteCOMTNFILE" parameterType="FileVO">
-		
+
 			UPDATE LETTNFILE
 			SET USE_AT = 'N'
 			WHERE ATCH_FILE_ID = #{atchFileId}
-		
+
 	</update>
 
  	<select id="FileManageDAO.selectFileListByFileNm" parameterType="FileVO" resultMap="fileList">
- 		
-			SELECT 
+
+			SELECT
 				a.ATCH_FILE_ID, b.FILE_CN, b.FILE_SN, b.FILE_STRE_COURS, b.STRE_FILE_NM,
 				b.FILE_EXTSN, b.ORIGNL_FILE_NM, b.FILE_SIZE, a.CREAT_DT
 			FROM
 				LETTNFILE a, LETTNFILEDETAIL b
 			WHERE
 				a.ATCH_FILE_ID = b.ATCH_FILE_ID
-			AND 
+			AND
 				a.USE_AT = 'Y'
- 		
+
 			<if test="searchCnd == &quot;streFileNm&quot;">AND
-					b.STRE_FILE_NM LIKE CONCAT ('%', #{searchWrd},'%') 		
+					b.STRE_FILE_NM LIKE CONCAT ('%', #{searchWrd},'%')
 			</if>
 			<if test="searchCnd == &quot;orignlFileNm&quot;">AND
-					b.ORIGNL_FILE_NM LIKE CONCAT ('%', #{searchWrd},'%') 		
-			</if>	
-					
-			ORDER BY a.ATCH_FILE_ID, b.FILE_SN	
+					b.ORIGNL_FILE_NM LIKE CONCAT ('%', #{searchWrd},'%')
+			</if>
+
+			ORDER BY a.ATCH_FILE_ID, b.FILE_SN
 			LIMIT #{recordCountPerPage} OFFSET #{firstIndex}
-				 		
+
  	</select>
 
  	<select id="FileManageDAO.selectFileListCntByFileNm" parameterType="FileVO" resultType="java.lang.Integer">
- 		
-			SELECT 
+
+			SELECT
 				COUNT(a.ATCH_FILE_ID)
 			FROM
 				LETTNFILE a, LETTNFILEDETAIL b
 			WHERE
 				a.ATCH_FILE_ID = b.ATCH_FILE_ID
-			AND 
-				a.USE_AT = 'Y'				
- 		
+			AND
+				a.USE_AT = 'Y'
+
 			<if test="searchCnd == &quot;streFileNm&quot;">AND
-					b.STRE_FILE_NM LIKE CONCAT ('%', #{searchWrd},'%') 		
+					b.STRE_FILE_NM LIKE CONCAT ('%', #{searchWrd},'%')
 			</if>
 			<if test="searchCnd == &quot;orignlFileNm&quot;">AND
-					b.ORIGNL_FILE_NM LIKE CONCAT ('%', #{searchWrd},'%') 		
-			</if>	 		
+					b.ORIGNL_FILE_NM LIKE CONCAT ('%', #{searchWrd},'%')
+			</if>
  	</select>
- 	
+
   	<select id="FileManageDAO.selectImageFileList" parameterType="FileVO" resultMap="fileList">
- 		
-			SELECT 
+			SELECT
 				a.ATCH_FILE_ID, b.FILE_CN, b.FILE_SN, b.FILE_STRE_COURS, b.STRE_FILE_NM,
 				b.FILE_EXTSN, b.ORIGNL_FILE_NM, b.FILE_SIZE, a.CREAT_DT
 			FROM
 				LETTNFILE a, LETTNFILEDETAIL b
 			WHERE
 				a.ATCH_FILE_ID = #{atchFileId}
-			AND 
+			AND
 				a.ATCH_FILE_ID = b.ATCH_FILE_ID
 			AND
 				UPPER(b.FILE_EXTSN) IN ('GIF','JPG','BMP','PNG')
-			AND 
-				a.USE_AT = 'Y'				
-			ORDER BY b.FILE_SN	
- 		
+			AND
+				a.USE_AT = 'Y'
+			ORDER BY b.FILE_SN
+
  	</select>
 
-	<delete id="FileManageDAO.deleteFileDetail_bulk" parameterType="java.util.List">
+	<insert id="FileManageDAO.insertFileDetail_bulk" parameterType="java.util.List">
+		INSERT INTO LETTNFILEDETAIL
+		(ATCH_FILE_ID, FILE_SN, FILE_STRE_COURS, STRE_FILE_NM, ORIGNL_FILE_NM, FILE_EXTSN, FILE_SIZE, FILE_CN)
+		VALUES
+		<foreach collection="list" item="file" separator=",">
+			(#{file.atchFileId}, #{file.fileSn}, #{file.fileStreCours}, #{file.streFileNm}, #{file.orignlFileNm}, #{file.fileExtsn}, #{file.fileMg}, #{file.fileCn})
+		</foreach>
+	</insert>
+
+	<insert id="FileManageDAO.updateFileDetail_bulk" parameterType="java.util.List">
+		INSERT INTO LETTNFILEDETAIL
+		(ATCH_FILE_ID, FILE_SN, FILE_STRE_COURS, STRE_FILE_NM, ORIGNL_FILE_NM, FILE_EXTSN, FILE_SIZE, FILE_CN)
+		VALUES
+		<foreach collection="list" item="file" separator=",">
+			(#{file.atchFileId}, #{file.fileSn}, #{file.fileStreCours}, #{file.streFileNm}, #{file.orignlFileNm}, #{file.fileExtsn}, #{file.fileMg}, #{file.fileCn})
+		</foreach>
+		ON DUPLICATE KEY UPDATE
+		FILE_STRE_COURS = VALUES(FILE_STRE_COURS),
+		STRE_FILE_NM = VALUES(STRE_FILE_NM),
+		ORIGNL_FILE_NM = VALUES(ORIGNL_FILE_NM),
+		FILE_EXTSN = VALUES(FILE_EXTSN),
+		FILE_SIZE = VALUES(FILE_SIZE),
+		FILE_CN = VALUES(FILE_CN)
+	</insert>
+
+	<delete id="deleteFileDetail_bulk" parameterType="java.util.List">
 		DELETE FROM LETTNFILEDETAIL
 		WHERE (ATCH_FILE_ID, FILE_SN) IN
-		<foreach item="file" collection="list" open="(" separator="," close=")">
+		<foreach collection="list" item="file" open="(" separator="," close=")">
 			(#{file.atchFileId}, #{file.fileSn})
 		</foreach>
 	</delete>
- 	
+
 </mapper>
