@@ -53,6 +53,11 @@
 	</parent>
 
 	<dependencies>
+		<dependency>
+			<groupId>com.github.gavlyukovskiy</groupId>
+			<artifactId>p6spy-spring-boot-starter</artifactId>
+			<version>1.9.0</version> <scope>test</scope>
+		</dependency>
 		<!-- spring boot dependency start -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
