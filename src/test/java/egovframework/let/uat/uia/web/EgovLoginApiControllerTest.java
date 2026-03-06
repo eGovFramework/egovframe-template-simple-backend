@@ -96,6 +96,6 @@ public class EgovLoginApiControllerTest {
         HttpEntity request = new HttpEntity(headers);
         TestRestTemplate rest = new TestRestTemplate();
 
-         return rest.exchange(this.SERVER_URL + "/uat/esm/jwtAuthAPI.do", HttpMethod.POST, request,ResultVO.class);
+         return rest.exchange(this.SERVER_URL + "/uat/esm/jwtAuthAPI", HttpMethod.POST, request,ResultVO.class);
     }
 }

@@ -8,9 +8,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
-import org.egovframe.rte.fdl.cryptography.EgovCryptoService;
+import org.egovframe.rte.fdl.crypto.EgovCryptoService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springmodules.validation.commons.DefaultBeanValidator;
 
 import egovframework.com.cmm.ComDefaultCodeVO;
 import egovframework.com.cmm.LoginVO;
@@ -65,8 +64,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Tag(name="EgovIndvdlSchdulManageApiController",description = "일정관리")
 public class EgovIndvdlSchdulManageApiController {
-
-	private final DefaultBeanValidator beanValidator;
 	private final EgovIndvdlSchdulManageService egovIndvdlSchdulManageService;
 	private final EgovCmmUseService cmmUseService;
 	private final EgovFileMngService fileMngService;
@@ -175,8 +172,6 @@ public class EgovIndvdlSchdulManageApiController {
 		@Parameter(hidden = true) @AuthenticationPrincipal LoginVO loginVO
 	) throws Exception {
 
-		//서버  validate 체크
-		beanValidator.validate(indvdlSchdulManageVO, bindingResult);
 		if (bindingResult.hasErrors()) {
 			return resultVoHelper.buildFromResultVO(new ResultVO(), ResponseCode.INPUT_CHECK_ERROR);
 		}
@@ -340,9 +335,7 @@ public class EgovIndvdlSchdulManageApiController {
     	
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 
-		//서버  validate 체크
 		indvdlSchdulManageVO.setSchdulId(schdulId);
-		beanValidator.validate(indvdlSchdulManageVO, bindingResult);
 		if (bindingResult.hasErrors()) {
 			return resultVoHelper.buildFromMap(resultMap, ResponseCode.INPUT_CHECK_ERROR);
 		}
@@ -355,7 +348,10 @@ public class EgovIndvdlSchdulManageApiController {
 		/* *****************************************************************
 		// 첨부파일 관련 ID 생성 start....
 		****************************************************************** */
-		String _atchFileId = indvdlSchdulManageVO.getAtchFileId();
+		// 26.03.04 KISA 보안취약점 조치
+		// null check 추가
+		String rawAtchFileId = indvdlSchdulManageVO.getAtchFileId();
+		String _atchFileId = rawAtchFileId != null ? rawAtchFileId : "";
 
 		final Map<String, MultipartFile> files = multiRequest.getFileMap();
 

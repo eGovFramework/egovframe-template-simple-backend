@@ -1,6 +1,6 @@
 package egovframework.let.cop.bbs.dto.request;
 
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 
 import egovframework.let.cop.bbs.domain.model.BoardMaster;
 import io.swagger.v3.oas.annotations.media.Schema;

@@ -1,21 +1,21 @@
 package egovframework.com.jwt;
 
 import java.io.Serializable;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.SignatureException;
-import io.jsonwebtoken.UnsupportedJwtException;
+import javax.crypto.SecretKey;
+
 import org.springframework.stereotype.Component;
 
 import egovframework.com.cmm.LoginVO;
 import egovframework.com.cmm.service.EgovProperties;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 
 //security 관련 제외한 jwt util 클래스
@@ -24,10 +24,19 @@ import lombok.extern.slf4j.Slf4j;
 public class EgovJwtTokenUtil implements Serializable{
 
 	private static final long serialVersionUID = -5180902194184255251L;
-	//public static final long JWT_TOKEN_VALIDITY = 24 * 60 * 60; //하루
-	public static final long JWT_TOKEN_VALIDITY = (long) ((1 * 60 * 60) / 60) * 60; //토큰의 유효시간 설정, 기본 60분
+
+	// JWT 토큰 유효시간 (초 단위)
+	// public static final long JWT_TOKEN_VALIDITY = 24 * 60 * 60; // 24시간 (86400초)
+	public static final long JWT_TOKEN_VALIDITY = 60 * 60; // 1시간 (3600초)
 	
-	public static final String SECRET_KEY = EgovProperties.getProperty("Globals.jwt.secret");
+	public static final String SECRET_KEY_STRING = EgovProperties.getProperty("Globals.jwt.secret");
+	
+	/**
+	 * SecretKey를 생성합니다. (io.jsonwebtoken 0.12.6 버전 호환)
+	 */
+	private SecretKey getSecretKey() {
+		return Keys.hmacShaKeyFor(SECRET_KEY_STRING.getBytes(StandardCharsets.UTF_8));
+	}
   
 	// retrieve username from jwt token
 	public String getUserIdFromToken(String token) {
@@ -52,8 +61,13 @@ public class EgovJwtTokenUtil implements Serializable{
 
 	//for retrieveing any information from token we will need the secret key
 	public Claims getAllClaimsFromToken(String token) {
-		log.debug("===>>> secret = "+SECRET_KEY);
-		return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
+		log.debug("===>>> secret = "+SECRET_KEY_STRING);
+		SecretKey key = getSecretKey();
+		return Jwts.parser()
+				.verifyWith(key)
+				.build()
+				.parseSignedClaims(token)
+				.getPayload();
 	}
 
 	//generate token for user
@@ -77,10 +91,15 @@ public class EgovJwtTokenUtil implements Serializable{
         claims.put("type", subject);
         claims.put("groupNm", loginVO.getGroupNm());//권한그룹으로 시프링시큐리티 사용
 
-    	log.debug("===>>> secret = "+SECRET_KEY);
-        return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
-            .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000))
-            .signWith(SignatureAlgorithm.HS512, SECRET_KEY).compact();
+    	log.debug("===>>> secret = "+SECRET_KEY_STRING);
+    	SecretKey key = getSecretKey();
+        return Jwts.builder()
+        		.claims(claims)
+        		.subject(subject)
+        		.issuedAt(new Date(System.currentTimeMillis()))
+        		.expiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000))
+        		.signWith(key)
+        		.compact();
     }
 
 	public LoginVO getLoginVOFromToken(String token) throws InvalidJwtException{
@@ -95,9 +114,9 @@ public class EgovJwtTokenUtil implements Serializable{
             loginVO.setGroupNm(getInfoFromToken("groupNm", token));
 
             if(loginVO.getId() == null) throw new InvalidJwtException("Missing id in token");
-        } catch (IllegalArgumentException | ExpiredJwtException |
-                 MalformedJwtException | UnsupportedJwtException |
-                 SignatureException e) {
+        } catch (IllegalArgumentException e) {
+            throw new InvalidJwtException("Unable to verify JWT Token: " + e.getMessage());
+        } catch (JwtException e) {
             throw new InvalidJwtException("Unable to verify JWT Token: " + e.getMessage());
         }
 

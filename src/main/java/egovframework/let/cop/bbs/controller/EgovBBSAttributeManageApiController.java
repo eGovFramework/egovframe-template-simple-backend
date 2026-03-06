@@ -2,11 +2,11 @@ package egovframework.let.cop.bbs.controller;
 
 import java.util.List;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 import org.egovframe.rte.fdl.property.EgovPropertyService;
 import org.egovframe.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
-import org.springdoc.api.annotations.ParameterObject;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springmodules.validation.commons.DefaultBeanValidator;
 
 import egovframework.com.cmm.ComDefaultCodeVO;
 import egovframework.com.cmm.LoginVO;
@@ -71,7 +70,6 @@ public class EgovBBSAttributeManageApiController {
 	private final EgovBBSAttributeManageService bbsAttrbService;
 	private final EgovCmmUseService cmmUseService;
 	private final EgovPropertyService propertyService;
-	private final DefaultBeanValidator beanValidator;
 
 	/**
 	 * 게시판 마스터 목록을 조회한다.
@@ -166,8 +164,6 @@ public class EgovBBSAttributeManageApiController {
 									   @Parameter(hidden = true) @AuthenticationPrincipal LoginVO loginVO
 	)
 		throws Exception {
-
-		beanValidator.validate(bbsAttributeInsertRequestDTO, bindingResult);
 		
 		BbsAttributeResponseDTO response = new BbsAttributeResponseDTO();
 		
@@ -260,7 +256,6 @@ public class EgovBBSAttributeManageApiController {
 										BindingResult bindingResult,
 										@Parameter(hidden = true) @AuthenticationPrincipal LoginVO loginVO
 										) throws Exception {
-		beanValidator.validate(bbsAttributeUpdateRequestDTO, bindingResult);
 
 		if (bindingResult.hasErrors()) {
 			String bbsId = bbsAttributeUpdateRequestDTO.getBbsId();

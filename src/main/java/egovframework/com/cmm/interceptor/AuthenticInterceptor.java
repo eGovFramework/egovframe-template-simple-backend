@@ -1,8 +1,8 @@
 package egovframework.com.cmm.interceptor;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.ModelAndViewDefiningException;
@@ -33,7 +33,7 @@ import lombok.extern.slf4j.Slf4j;
 public class AuthenticInterceptor extends WebContentInterceptor {
 
 	/**
-	 * 세션에 계정정보(LoginVO)가 있는지 여부로 인증 여부를 체크한다.
+	 * SecurityContext에 계정정보(LoginVO)가 있는지 여부로 인증 여부를 체크한다.
 	 * 계정정보(LoginVO)가 없다면, 로그인 페이지로 이동한다.
 	 */
 	@Override
@@ -42,10 +42,10 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 		LoginVO loginVO = (LoginVO) EgovUserDetailsHelper.getAuthenticatedUser();
 
 		if (loginVO.getId() != null) {
-			
-			log.debug("AuthenticInterceptor sessionID "+loginVO.getId());
+
+			log.debug("AuthenticInterceptor authenticated user: "+loginVO.getId());
 			log.debug("AuthenticInterceptor ================== ");
-			
+
 			return true;
     }
 		log.debug("AuthenticInterceptor Fail!!!!!!!!!!!!================== ");

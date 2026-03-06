@@ -9,7 +9,7 @@ import egovframework.let.cop.com.service.UserInfVO;
 
 import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 

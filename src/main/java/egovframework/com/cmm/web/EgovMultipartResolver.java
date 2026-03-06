@@ -15,21 +15,13 @@ package egovframework.com.cmm.web;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.http.HttpServletRequest;
 
-import org.apache.commons.fileupload.FileItem;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
-import org.springframework.web.multipart.commons.CommonsMultipartResolver;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.support.StandardServletMultipartResolver;
 
 import egovframework.com.cmm.service.EgovProperties;
 import egovframework.let.utl.fcc.service.EgovFileUploadUtil;
@@ -56,94 +48,58 @@ import lombok.extern.slf4j.Slf4j;
  *      </pre>
  */
 @Slf4j
-public class EgovMultipartResolver extends CommonsMultipartResolver {
+public class EgovMultipartResolver extends StandardServletMultipartResolver {
 
 	public EgovMultipartResolver() {
 	}
 
 	/**
-	 * 첨부파일 처리를 위한 multipart resolver를 생성한다.
-	 *
-	 * @param servletContext
-	 */
-	public EgovMultipartResolver(ServletContext servletContext) {
-		super(servletContext);
-	}
-
-	/**
-	 * multipart에 대한 parsing을 처리한다.
+	 * multipart 요청에 대한 parsing을 처리하고 확장자 검증을 수행한다.
 	 */
 	@Override
-	protected MultipartParsingResult parseFileItems(List<FileItem> fileItems, String encoding) {
-
-		// 스프링 3.0변경으로 수정한 부분
-		MultiValueMap<String, MultipartFile> multipartFiles = new LinkedMultiValueMap<String, MultipartFile>();
-		Map<String, String[]> multipartParameters = new HashMap<String, String[]>();
+	public MultipartHttpServletRequest resolveMultipart(HttpServletRequest request) {
+		MultipartHttpServletRequest multipartRequest = super.resolveMultipart(request);
+		
+		// 확장자 제한 검증
 		String whiteListFileUploadExtensions = EgovProperties.getProperty("Globals.fileUpload.Extensions");
-		Map<String, String> mpParamContentTypes = new HashMap<String, String>();
-
-		// Extract multipart files and multipart parameters.
-		for (Iterator<FileItem> it = fileItems.iterator(); it.hasNext();) {
-			FileItem fileItem = it.next();
-
-			if (fileItem.isFormField()) {
-
-				String value = null;
-				if (encoding != null) {
-					try {
-						value = fileItem.getString(encoding);
-					} catch (UnsupportedEncodingException ex) {
-						log.warn("Could not decode multipart item '{}' with encoding '{}': using platform default",
-								fileItem.getFieldName(), encoding);
-						value = fileItem.getString();
-					}
-				} else {
-					value = fileItem.getString();
-				}
-				String[] curParam = multipartParameters.get(fileItem.getFieldName());
-				if (curParam == null) {
-					// simple form field
-					multipartParameters.put(fileItem.getFieldName(), new String[] { value });
-				} else {
-					// array of simple form fields
-					String[] newParam = StringUtils.addStringToArray(curParam, value);
-					multipartParameters.put(fileItem.getFieldName(), newParam);
-				}
-
-				//contentType 입력
-				mpParamContentTypes.put(fileItem.getFieldName(), fileItem.getContentType());
-			} else {
-
-				CommonsMultipartFile file = createMultipartFile(fileItem);
-				multipartFiles.add(file.getName(), file);
-
-				log.debug("Found multipart file [{" + file.getName() + "}] of size {" + file.getSize()
-						+ "} bytes with original filename [{" + file.getOriginalFilename() + "}], stored {"
-						+ file.getStorageDescription() + "}");
-
-				String fileName = file.getOriginalFilename();
-				String fileExtension = EgovFileUploadUtil.getFileExtension(fileName);
-				log.debug("Found File Extension = "+fileExtension);
-				if (whiteListFileUploadExtensions == null || "".equals(whiteListFileUploadExtensions)) {
-					log.debug("The file extension whitelist has not been set.");
-				} else {
-					if (fileName == null || "".equals(fileName)) {
+		
+		if (whiteListFileUploadExtensions != null && !"".equals(whiteListFileUploadExtensions)) {
+			Iterator<String> fileNames = multipartRequest.getFileNames();
+			
+			while (fileNames.hasNext()) {
+				String fileName = fileNames.next();
+				MultipartFile file = multipartRequest.getFile(fileName);
+				
+				if (file != null && !file.isEmpty()) {
+					String originalFileName = file.getOriginalFilename();
+					
+					log.debug("Found multipart file [{}] of size {} bytes with original filename [{}]",
+							fileName, file.getSize(), originalFileName);
+					
+					if (originalFileName == null || "".equals(originalFileName)) {
 						log.debug("No file name.");
-					} else {
-						if ("".equals(fileExtension)) { // 확장자 없는 경우 처리 불가
-							throw new SecurityException("[No file extension] File extension not allowed.");
-						}
-						if ((whiteListFileUploadExtensions+".").contains("."+fileExtension.toLowerCase()+".")) {
-							log.debug("File extension allowed.");
-						} else {
-							throw new SecurityException("["+fileExtension+"] File extension not allowed.");
-						}
+						continue;
 					}
+					
+					String fileExtension = EgovFileUploadUtil.getFileExtension(originalFileName);
+					log.debug("Found File Extension = {}", fileExtension);
+					
+					if ("".equals(fileExtension)) {
+						// 확장자 없는 경우 처리 불가
+						throw new SecurityException("[No file extension] File extension not allowed.");
+					}
+					
+					if (!(whiteListFileUploadExtensions + ".").contains("." + fileExtension.toLowerCase() + ".")) {
+						throw new SecurityException("[" + fileExtension + "] File extension not allowed.");
+					}
+					
+					log.debug("File extension allowed.");
 				}
-
 			}
+		} else {
+			log.debug("The file extension whitelist has not been set.");
 		}
-
-		return new MultipartParsingResult(multipartFiles, multipartParameters, mpParamContentTypes);//2022.01. Method call passes null for non-null parameter 처리
+		
+		return multipartRequest;
 	}
 }

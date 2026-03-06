@@ -3,16 +3,19 @@ package egovframework.let.uat.uia.web;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 class TestEgovLoginApiControllerSelenium {
 
 	WebDriver driver;
@@ -20,6 +23,13 @@ class TestEgovLoginApiControllerSelenium {
 	@BeforeEach
 	public void setup() {
 		driver = new ChromeDriver();
+	}
+
+	@AfterEach
+	public void tearDown() {
+		if (driver != null) {
+			driver.quit();
+		}
 	}
 
 	@Test

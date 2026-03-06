@@ -10,7 +10,6 @@ import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import egovframework.com.cmm.interceptor.AuthenticInterceptor;
-import egovframework.com.cmm.interceptor.CustomAuthenticInterceptor;
 
 /**
  * @ClassName : EgovConfigWebDispatcherServlet.java
@@ -49,15 +48,9 @@ public class EgovConfigWebDispatcherServlet implements WebMvcConfigurer {
 			.addPathPatterns(
 				"/auth/*")
 			.excludePathPatterns(
-				"/auth/login",
 				"/auth/login-jwt",
 				"/auth/logout"
 				);
-		registry.addInterceptor(new CustomAuthenticInterceptor())
-			.addPathPatterns(
-				"/**/*.do")
-			.excludePathPatterns(
-				"/auth/**");
 	}
 
 	// -------------------------------------------------------------

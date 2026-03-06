@@ -8,11 +8,11 @@ import java.io.IOException;
 import java.util.Base64;
 import java.util.Map;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletResponse;
 
-import org.egovframe.rte.fdl.cryptography.EgovCryptoService;
+import org.egovframe.rte.fdl.crypto.EgovCryptoService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -64,7 +64,7 @@ public class EgovImageProcessController extends HttpServlet {
 	
 	/** 암호화서비스 */
     @Resource(name="egovARIACryptoService")
-    EgovCryptoService cryptoService;
+    private EgovCryptoService cryptoService;
 
 	/**
 	 * 첨부된 이미지에 대한 미리보기 기능을 제공한다.

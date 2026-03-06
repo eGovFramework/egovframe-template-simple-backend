@@ -23,8 +23,4 @@ public enum ResponseCode {
 	public String getMessage() {
 		return message;
 	}
-
-
-
-
 }

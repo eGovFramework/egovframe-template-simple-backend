@@ -10,6 +10,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.transaction.annotation.Transactional;
 
+import jakarta.persistence.EntityManager;
 import java.util.List;
 
 /**
@@ -32,11 +33,15 @@ public class QueryDslTest {
     @Autowired
     private TestEntityManager entityManager;
 
+    @Autowired
+    private EntityManager em;
+
     private JPAQueryFactory queryFactory;
 
     @BeforeEach
     public void setup() {
-        queryFactory = new JPAQueryFactory(entityManager.getEntityManager());
+        // Spring이 관리하는 EntityManager를 사용하여 JPAQueryFactory 초기화
+        queryFactory = new JPAQueryFactory(em);
     }
 
     @Test
@@ -58,7 +63,7 @@ public class QueryDslTest {
 
     @Test
     @DisplayName("QueryDSL로 selectList - 동적")
-    public void testSelectListDynamic() throws CloneNotSupportedException {
+    public void testSelectListDynamic() {
         insertTestMembers(30);
 
         QMember member = QMember.member;
@@ -89,13 +94,14 @@ public class QueryDslTest {
         insertTestMembers(5);
 
         QMember member = QMember.member;
-        Member members = queryFactory
+        Member foundMember = queryFactory
                 .selectFrom(member)
                 .where(member.age.eq(3))
                 .fetchOne();
 
-        assertThat(members.getUsername()).isEqualTo("member_name3");
-        assertThat(members.getAge()).isEqualTo(3);
+        assertThat(foundMember).isNotNull();
+        assertThat(foundMember.getUsername()).isEqualTo("member_name3");
+        assertThat(foundMember.getAge()).isEqualTo(3);
     }
 
     private void insertTestMembers(int count) {
@@ -106,6 +112,8 @@ public class QueryDslTest {
                     .age(i)
                     .build());
         }
+        entityManager.flush();
+        entityManager.clear();
     }
 
 

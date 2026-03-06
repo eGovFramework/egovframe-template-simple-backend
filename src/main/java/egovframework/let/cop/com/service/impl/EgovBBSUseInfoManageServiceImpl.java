@@ -11,7 +11,7 @@ import egovframework.let.cop.com.service.EgovBBSUseInfoManageService;
 
 import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 

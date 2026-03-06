@@ -1,8 +1,6 @@
 package egovframework.com.security;
 
-import egovframework.com.cmm.filter.HTMLTagFilter;
-import egovframework.com.jwt.JwtAuthenticationEntryPoint;
-import egovframework.com.jwt.JwtAuthenticationFilter;
+import java.util.Arrays;
 
 import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.context.annotation.Bean;
@@ -12,6 +10,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.context.NullSecurityContextRepository;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.channel.ChannelProcessingFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -23,9 +22,10 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.multipart.support.MultipartFilter;
 
-import java.util.Arrays;
-
-import javax.servlet.MultipartConfigElement;
+import egovframework.com.cmm.filter.HTMLTagFilter;
+import egovframework.com.jwt.JwtAuthenticationEntryPoint;
+import egovframework.com.jwt.JwtAuthenticationFilter;
+import jakarta.servlet.MultipartConfigElement;
 
 /**
  * fileName : SecurityConfig
@@ -56,11 +56,20 @@ public class SecurityConfig {
     // 인증 예외 List
     private String[] AUTH_WHITELIST = {
             "/",
+            "/error", // 에러 페이지
             "/login/**",
             "/auth/login-jwt", // JWT 로그인
-            "/auth/login", // 일반 로그인
+            "/auth/logout", // 로그아웃
             "/file", // 파일 다운로드
             "/etc/**", // 사용자단의 회원약관,회원가입,사용자아이디 중복여부체크 URL허용
+
+            /* 정적 리소스 */
+            "/css/**",
+            "/js/**",
+            "/images/**",
+            "/static/**",
+            "/favicon.ico",
+            "/index.html",
 
             /* swagger */
             "/v3/api-docs/**",
@@ -68,6 +77,7 @@ public class SecurityConfig {
             "/swagger-resources/**",
             "/swagger-ui.html",
             "/swagger-ui/**",
+            "/webjars/**", // Swagger UI 정적 리소스
 
     };
     private static final String[] ORIGINS_WHITELIST = {
@@ -128,20 +138,23 @@ public class SecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
-                        .antMatchers("/admin/**").hasRole("ADMIN") // 관리자 페이지는 ADMIN만 접근
-                        .antMatchers("/members/**").hasRole("ADMIN") // 회원 관리는 ADMIN만 접근
-                        .antMatchers("/mypage/**").hasAnyRole("ADMIN", "USER") // 마이페이지는 ADMIN, USER 모두 접근
-                        .antMatchers("/inform/**").hasAnyRole("ADMIN", "USER") // 게시판은 ADMIN, USER 모두 접근
-                        .antMatchers(AUTH_WHITELIST).permitAll()
-                        .antMatchers(HttpMethod.GET, AUTH_GET_WHITELIST).permitAll()
+                        .requestMatchers("/admin/**").hasRole("ADMIN") // 관리자 페이지는 ADMIN만 접근
+                        .requestMatchers("/members/**").hasRole("ADMIN") // 회원 관리는 ADMIN만 접근
+                        .requestMatchers("/mypage/**").hasAnyRole("ADMIN", "USER") // 마이페이지는 ADMIN, USER 모두 접근
+                        .requestMatchers("/inform/**").hasAnyRole("ADMIN", "USER") // 게시판은 ADMIN, USER 모두 접근
+                        .requestMatchers(AUTH_WHITELIST).permitAll()
+                        .requestMatchers(HttpMethod.GET, AUTH_GET_WHITELIST).permitAll()
                         .anyRequest().authenticated())
-                .sessionManagement(
-                        (sessionManagement) -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .cors().and()
+                .sessionManagement(sessionManagement ->
+                        sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .securityContext(securityContext ->
+                        securityContext.securityContextRepository(new NullSecurityContextRepository()))
+                .requestCache(requestCache -> requestCache.disable())
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .addFilterBefore(characterEncodingFilter(), ChannelProcessingFilter.class)
                 .addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(multipartFilter(), CsrfFilter.class)
-                .exceptionHandling(exceptionHandlingConfigurer -> exceptionHandlingConfigurer
+                .exceptionHandling(exceptionHandling -> exceptionHandling
                         .authenticationEntryPoint(new JwtAuthenticationEntryPoint()))
                 .build();
     }

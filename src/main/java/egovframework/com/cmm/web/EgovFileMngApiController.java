@@ -2,10 +2,10 @@ package egovframework.com.cmm.web;
 
 import java.util.Base64;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
 
-import org.egovframe.rte.fdl.cryptography.EgovCryptoService;
+import org.egovframe.rte.fdl.crypto.EgovCryptoService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -45,7 +45,7 @@ public class EgovFileMngApiController {
 
 	/** 암호화서비스 */
     @Resource(name="egovARIACryptoService")
-    EgovCryptoService cryptoService;
+    private EgovCryptoService cryptoService;
 
     /**
      * 첨부파일에 대한 삭제를 처리한다.

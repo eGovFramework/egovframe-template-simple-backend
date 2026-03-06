@@ -5,12 +5,14 @@ import egovframework.study.jpa.domain.Member;
 import egovframework.study.jpa.domain.Team;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
-import javax.persistence.*;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
+import jakarta.persistence.*;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 import java.util.List;
 
 /**
@@ -24,32 +26,17 @@ import java.util.List;
  * 2023/04/28        crlee       최초 생성
  */
 @DataJpaTest
-@TestInstance(TestInstance. Lifecycle.PER_CLASS)
 public class JpaTest {
 
-    @PersistenceUnit
-    EntityManagerFactory emf; //엔티티 매니저 팩토리 생성
-    EntityManager em;
-    EntityTransaction tx;
+    @Autowired
+    private TestEntityManager testEntityManager;
 
-    @BeforeAll
-    public void init(){
-        this.em = emf.createEntityManager();
-    }
+    private EntityManager em;
+
     @BeforeEach
-    public void open(){
-        this.tx = em.getTransaction();
-        this.tx.begin(); //트랜잭션 시작
+    public void setup(){
+        this.em = testEntityManager.getEntityManager();
         this.setData();
-    }
-    @AfterEach
-    public void close(){
-        this.tx.rollback();
-    }
-    @AfterAll
-    public void end(){
-        this.em.close(); //엔티티 매니저 종료
-        this.emf.close();
     }
     void setData(){
         Team team1 = Team.builder()

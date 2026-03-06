@@ -2,7 +2,7 @@ package egovframework.com.cmm;
 
 import java.io.Serializable;
 
-import javax.validation.constraints.Email;
+import jakarta.validation.constraints.Email;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;

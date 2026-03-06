@@ -3,19 +3,15 @@ package egovframework.let.main.web;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
-import egovframework.let.cop.bbs.dto.request.BbsSearchRequestDTO;
-import egovframework.let.cop.bbs.dto.response.BbsManageListResponseDTO;
 import org.egovframe.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.SessionAttributes;
-
-import egovframework.com.cmm.ComDefaultVO;
 import egovframework.com.cmm.ResponseCode;
 import egovframework.com.cmm.service.ResultVO;
-import egovframework.let.cop.bbs.domain.model.BoardVO;
+import egovframework.let.cop.bbs.dto.request.BbsSearchRequestDTO;
+import egovframework.let.cop.bbs.dto.response.BbsManageListResponseDTO;
 import egovframework.let.cop.bbs.service.EgovBBSManageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -39,7 +35,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
  * </pre>
  */
 @RestController
-@SessionAttributes(types = ComDefaultVO.class)
 @Tag(name="EgovMainApiController",description = "메인 페이지")
 public class EgovMainApiController {
 

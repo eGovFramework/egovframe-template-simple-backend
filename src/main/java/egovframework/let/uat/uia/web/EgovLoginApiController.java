@@ -2,16 +2,10 @@ package egovframework.let.uat.uia.web;
 
 import java.util.HashMap;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.egovframe.rte.fdl.cmmn.trace.LeaveaTrace;
 import org.egovframe.rte.fdl.property.EgovPropertyService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,13 +22,16 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * 일반 로그인을 처리하는 컨트롤러 클래스
+ * JWT 기반 로그인을 처리하는 컨트롤러 클래스
  * @author 공통서비스 개발팀 박지욱
  * @since 2009.03.06
- * @version 1.0
+ * @version 2.0
  * @see
  *
  * <pre>
@@ -44,6 +41,7 @@ import lombok.extern.slf4j.Slf4j;
  *  -------            --------        ---------------------------
  *  2009.03.06  박지욱     최초 생성
  *  2011.08.31  JJY            경량환경 템플릿 커스터마이징버전 생성
+ *  2025.11.10             JWT 기반 로그인으로 전환, 세션 기반 로그인 제거
  *
  *  </pre>
  */
@@ -73,45 +71,12 @@ public class EgovLoginApiController {
     private EgovJwtTokenUtil jwtTokenUtil;
 
 	/**
-	 * 일반 로그인을 처리한다
-	 * @param vo - 아이디, 비밀번호가 담긴 LoginVO
-	 * @param request - 세션처리를 위한 HttpServletRequest
-	 * @return result - 로그인결과(세션정보)
+	 * JWT 기반 로그인을 처리한다
+	 * @param loginVO - 아이디, 비밀번호가 담긴 LoginVO
+	 * @param request - HttpServletRequest
+	 * @return HashMap - 로그인 결과(JWT 토큰, 사용자 정보)
 	 * @exception Exception
 	 */
-
-	@Operation(
-			summary = "일반 로그인",
-			description = "일반 로그인 처리",
-			tags = {"EgovLoginApiController"}
-	)
-	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "로그인 성공"),
-			@ApiResponse(responseCode = "300", description = "로그인 실패")
-	})
-	@PostMapping(value = "/auth/login", consumes = {MediaType.APPLICATION_JSON_VALUE , MediaType.TEXT_HTML_VALUE})
-	public HashMap<String, Object> actionLogin(@RequestBody LoginVO loginVO, HttpServletRequest request) throws Exception {
-		HashMap<String,Object> resultMap = new HashMap<String,Object>();
-
-		// 1. 일반 로그인 처리
-		LoginVO loginResultVO = loginService.actionLogin(loginVO);
-
-		if (loginResultVO != null && loginResultVO.getId() != null && !loginResultVO.getId().equals("")) {
-
-			request.getSession().setAttribute("LoginVO", loginResultVO);
-			resultMap.put("resultVO", loginResultVO);
-			resultMap.put("resultCode", "200");
-			resultMap.put("resultMessage", "성공 !!!");
-		} else {
-			resultMap.put("resultVO", loginResultVO);
-			resultMap.put("resultCode", "300");
-			resultMap.put("resultMessage", egovMessageSource.getMessage("fail.common.login"));
-		}
-
-		return resultMap;
-
-	}
-
 	@Operation(
 			summary = "JWT 로그인",
 			description = "JWT 로그인 처리",
@@ -122,7 +87,7 @@ public class EgovLoginApiController {
 			@ApiResponse(responseCode = "300", description = "로그인 실패")
 	})
 	@PostMapping(value = "/auth/login-jwt")
-	public HashMap<String, Object> actionLoginJWT(@RequestBody LoginVO loginVO, HttpServletRequest request, ModelMap model) throws Exception {
+	public HashMap<String, Object> actionLoginJWT(@RequestBody LoginVO loginVO, HttpServletRequest request) throws Exception {
 		HashMap<String, Object> resultMap = new HashMap<String, Object>();
 
 		// 1. JWT 로그인 처리
@@ -143,9 +108,9 @@ public class EgovLoginApiController {
 	    	log.debug("Dec jwtToken username = "+username);
 	    	String groupnm = jwtTokenUtil.getInfoFromToken("groupNm", jwtToken);
 	    	log.debug("Dec jwtToken groupnm = "+groupnm);//생성한 토큰에서 스프링시큐리티용 그룹명값 출력
-	    	//서버사이드 권한 체크 통과를 위해 삽입
-	    	//EgovUserDetailsHelper.isAuthenticated() 가 그 역할 수행. DB에 정보가 없으면 403을 돌려 줌. 로그인으로 튕기는 건 프론트 쪽에서 처리
-	    	request.getSession().setAttribute("LoginVO", loginResultVO);
+	    	// JWT 토큰을 클라이언트에 반환
+	    	// 클라이언트는 이후 모든 요청의 Authorization 헤더에 JWT 토큰을 포함하여 전송
+	    	// JwtAuthenticationFilter가 토큰을 검증하고 SecurityContext에 인증 정보를 설정
 	    	
 			resultMap.put("resultVO", loginResultVO);
 			resultMap.put("jToken", jwtToken);
@@ -162,13 +127,13 @@ public class EgovLoginApiController {
 	}
 
 	/**
-	 * 로그아웃한다.
-	 * @return resultVO
+	 * 로그아웃한다. SecurityContext를 초기화한다.
+	 * @return resultVO - 로그아웃 결과
 	 * @exception Exception
 	 */
 	@Operation(
 			summary = "로그아웃",
-			description = "로그아웃 처리(JWT,일반 관계 없이)",
+			description = "JWT 로그아웃 처리 (SecurityContext 초기화)",
 			security = {@SecurityRequirement(name = "Authorization")},
 			tags = {"EgovLoginApiController"}
 	)

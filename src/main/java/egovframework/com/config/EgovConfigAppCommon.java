@@ -11,7 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.util.AntPathMatcher;
-import org.springframework.web.multipart.commons.CommonsMultipartResolver;
+import org.springframework.web.multipart.MultipartResolver;
 
 import egovframework.com.cmm.EgovComTraceHandler;
 import egovframework.com.cmm.ImagePaginationRenderer;
@@ -21,8 +21,8 @@ import org.egovframe.rte.fdl.cmmn.trace.LeaveaTrace;
 import org.egovframe.rte.fdl.cmmn.trace.handler.TraceHandler;
 import org.egovframe.rte.fdl.cmmn.trace.manager.DefaultTraceHandleManager;
 import org.egovframe.rte.fdl.cmmn.trace.manager.TraceHandlerService;
-import org.egovframe.rte.fdl.cryptography.EgovPasswordEncoder;
-import org.egovframe.rte.fdl.cryptography.impl.EgovARIACryptoServiceImpl;
+import org.egovframe.rte.fdl.crypto.EgovPasswordEncoder;
+import org.egovframe.rte.fdl.crypto.impl.EgovARIACryptoServiceImpl;
 import org.egovframe.rte.ptl.mvc.tags.ui.pagination.DefaultPaginationManager;
 import org.egovframe.rte.ptl.mvc.tags.ui.pagination.PaginationRenderer;
 
@@ -116,32 +116,21 @@ public class EgovConfigAppCommon {
 	}
 
 	/**
-	 * @return [MultipartResolver 설정] CommonsMultipartResolver 등록
-	 */
-	@Bean
-	public CommonsMultipartResolver springRegularCommonsMultipartResolver() {
-		CommonsMultipartResolver commonsMultipartResolver = new CommonsMultipartResolver();
-		commonsMultipartResolver.setMaxUploadSize(100000000);
-		commonsMultipartResolver.setMaxInMemorySize(100000000);
-		commonsMultipartResolver.setSupportedMethods("POST","PUT");
-		return commonsMultipartResolver;
-	}
-
-	/**
 	 * 확장자 제한 : globals.properties > Globals.fileUpload.Extensions로 설정
-	 * @return [MultipartResolver 설정] EgovMultipartResolver 등록
+	 * @return [MultipartResolver 설정] EgovMultipartResolver 등록 (StandardServletMultipartResolver 기반)
+	 * 
+	 * 참고: 파일 크기 제한은 application.properties에서 설정 가능:
+	 * - spring.servlet.multipart.max-file-size=100MB
+	 * - spring.servlet.multipart.max-request-size=100MB
 	 */
 	@Bean
 	public EgovMultipartResolver localMultiCommonsMultipartResolver() {
 		EgovMultipartResolver egovMultipartResolver = new EgovMultipartResolver();
-		egovMultipartResolver.setMaxUploadSize(100000000);
-		egovMultipartResolver.setMaxInMemorySize(100000000);
-		egovMultipartResolver.setSupportedMethods("POST","PUT");
 		return egovMultipartResolver;
 	}
 	
 	@Bean
-	public CommonsMultipartResolver multipartResolver() {
+	public MultipartResolver multipartResolver() {
 		return localMultiCommonsMultipartResolver();
 	}
 	

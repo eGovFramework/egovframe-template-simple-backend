@@ -1,0 +1,32 @@
+# 기본: 텍스트 파일은 LF로 정규화
+* text=auto eol=lf
+
+# Java 관련
+*.java text eol=lf
+*.xml text eol=lf
+*.properties text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.json text eol=lf
+*.sql text eol=lf
+*.md text eol=lf
+*.txt text eol=lf
+*.html text eol=lf
+*.css text eol=lf
+*.js text eol=lf
+
+# Windows 전용 파일
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# 바이너리 파일 (줄 끝 변환 없음)
+*.jar binary
+*.war binary
+*.class binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.zip binary

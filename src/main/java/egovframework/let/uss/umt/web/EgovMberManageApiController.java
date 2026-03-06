@@ -4,8 +4,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 
 import org.egovframe.rte.fdl.property.EgovPropertyService;
 import org.egovframe.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
@@ -21,7 +22,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springmodules.validation.commons.DefaultBeanValidator;
 
 import egovframework.com.cmm.ComDefaultCodeVO;
 import egovframework.com.cmm.LoginVO;
@@ -71,7 +71,6 @@ public class EgovMberManageApiController {
 	private final EgovMberManageService mberManageService;
 	private final EgovCmmUseService cmmUseService;
 	private final EgovPropertyService propertiesService;
-	private final DefaultBeanValidator beanValidator;
 	private final ResultVoHelper resultVoHelper;
 
 	/**
@@ -195,9 +194,8 @@ public class EgovMberManageApiController {
 			@ApiResponse(responseCode = "900", description = "입력값 무결성 오류")
 	})
 	@PostMapping("/members/insert")
-	public ResultVO insertMber(MberManageVO mberManageVO, BindingResult bindingResult) throws Exception {
+	public ResultVO insertMber(@Valid MberManageVO mberManageVO, BindingResult bindingResult) throws Exception {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		beanValidator.validate(mberManageVO, bindingResult);
 
 		if (bindingResult.hasErrors()) {
 			ComDefaultCodeVO vo = new ComDefaultCodeVO();
@@ -287,9 +285,8 @@ public class EgovMberManageApiController {
 			@ApiResponse(responseCode = "900", description = "입력값 무결성 오류")
 	})
 	@PutMapping("/members/update")
-	public ResultVO updateMber(@RequestBody MberManageVO mberManageVO, BindingResult bindingResult) throws Exception {
+	public ResultVO updateMber(@Valid @RequestBody MberManageVO mberManageVO, BindingResult bindingResult) throws Exception {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		beanValidator.validate(mberManageVO, bindingResult);
 
 		if (bindingResult.hasErrors()) {
 			ComDefaultCodeVO vo = new ComDefaultCodeVO();
@@ -407,10 +404,9 @@ public class EgovMberManageApiController {
 			@ApiResponse(responseCode = "900", description = "입력값 무결성 오류")
 	})
 	@PutMapping("/mypage/update")
-	public ResultVO updateMypage(@RequestBody MberManageVO mberManageVO, BindingResult bindingResult) throws Exception {
+	public ResultVO updateMypage(@Valid @RequestBody MberManageVO mberManageVO, BindingResult bindingResult) throws Exception {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 
-		beanValidator.validate(mberManageVO, bindingResult);
 		if (bindingResult.hasErrors()) {
 			resultMap.put("resultMsg", "fail.common.insert");
 			return resultVoHelper.buildFromMap(resultMap, ResponseCode.SAVE_ERROR);
@@ -442,11 +438,10 @@ public class EgovMberManageApiController {
 			@ApiResponse(responseCode = "900", description = "입력값 무결성 오류")
 	})
 	@PutMapping("/mypage/delete")
-	public ResultVO deleteMypage(@RequestBody MberManageVO mberManageVO, BindingResult bindingResult,
+	public ResultVO deleteMypage(@Valid @RequestBody MberManageVO mberManageVO, BindingResult bindingResult,
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 
-		beanValidator.validate(mberManageVO, bindingResult);
 		if (bindingResult.hasErrors()) {
 			resultMap.put("resultMsg", "fail.common.insert");
 			return resultVoHelper.buildFromMap(resultMap, ResponseCode.SAVE_ERROR);
@@ -474,9 +469,8 @@ public class EgovMberManageApiController {
 			@ApiResponse(responseCode = "900", description = "입력값 무결성 오류")
 	})
 	@PostMapping("/etc/member_insert")
-	public ResultVO sbscrbMber(MberManageVO mberManageVO, BindingResult bindingResult) throws Exception {
+	public ResultVO sbscrbMber(@Valid MberManageVO mberManageVO, BindingResult bindingResult) throws Exception {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		beanValidator.validate(mberManageVO, bindingResult);
 
 		if (bindingResult.hasErrors()) {
 			resultMap.put("resultMsg", "fail.common.insert");

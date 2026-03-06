@@ -10,12 +10,12 @@ import java.net.URLEncoder;
 import java.util.Base64;
 import java.util.Map;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.egovframe.rte.fdl.cmmn.exception.EgovBizException;
-import org.egovframe.rte.fdl.cryptography.EgovCryptoService;
+import org.egovframe.rte.fdl.crypto.EgovCryptoService;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -63,7 +63,7 @@ public class EgovFileDownloadController {
 	
 	/** 암호화서비스 */
     @Resource(name="egovARIACryptoService")
-    EgovCryptoService cryptoService;
+    private EgovCryptoService cryptoService;
 	
 	public static final String ALGORITM_KEY = EgovProperties.getProperty("Globals.crypto.algoritm");
 
@@ -75,6 +75,11 @@ public class EgovFileDownloadController {
 	 */
 	private String getBrowser(HttpServletRequest request) {
 		String header = request.getHeader("User-Agent");
+		// 26.03.04 KISA 보안취약점 조치
+		// null check 추가
+		if (header == null) {
+			return "Firefox";
+		}
 		if (header.indexOf("MSIE") > -1) {
 			return "MSIE";
 		} else if (header.indexOf("Trident") > -1) { // IE11 문자열 깨짐 방지

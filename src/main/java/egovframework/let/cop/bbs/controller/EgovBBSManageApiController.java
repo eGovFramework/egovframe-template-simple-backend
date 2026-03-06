@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import egovframework.let.cop.bbs.dto.request.BbsManageDetailBoardRequestDTO;
 import egovframework.let.cop.bbs.dto.response.BbsManageDetailResponseDTO;
@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springmodules.validation.commons.DefaultBeanValidator;
 
 import egovframework.com.cmm.LoginVO;
 import egovframework.com.cmm.ResponseCode;
@@ -86,7 +85,6 @@ public class EgovBBSManageApiController {
     private final EgovFileMngService fileMngService;
     private final EgovPropertyService propertyService;
     private final EgovBBSAttributeManageService bbsAttrbService;
-    private final DefaultBeanValidator beanValidator;
 	
 	/**
 	 * 게시판 마스터 상세내용을 조회한다.
@@ -250,9 +248,11 @@ public class EgovBBSManageApiController {
 		BindingResult bindingResult)
 		throws Exception {
 		LoginVO user = extractUserFromJwt(request);
-		String atchFileId = boardVO.getAtchFileId().replaceAll("\\s", "");
+		// 26.03.04 KISA 보안취약점 조치
+		// null check 추가
+		String rawAtchFileId = boardVO.getAtchFileId();
+		String atchFileId = rawAtchFileId != null ? rawAtchFileId.replaceAll("\\s", "") : "";
 
-		beanValidator.validate(boardVO, bindingResult);
 		if (bindingResult.hasErrors()) {
 			return resultVoHelper.buildFromResultVO(new ResultVO(), ResponseCode.INPUT_CHECK_ERROR);
 		}
@@ -312,9 +312,7 @@ public class EgovBBSManageApiController {
 		throws Exception {
 		LoginVO user = extractUserFromJwt(request);
 		
-		beanValidator.validate(boardVO, bindingResult);
 		if (bindingResult.hasErrors()) {
-
 			return resultVoHelper.buildFromResultVO(new ResultVO(), ResponseCode.INPUT_CHECK_ERROR);
 		}
 	
@@ -368,7 +366,6 @@ public class EgovBBSManageApiController {
 		ResultVO resultVO = new ResultVO();
 		LoginVO user = extractUserFromJwt(request);
 
-		beanValidator.validate(boardVO, bindingResult);
 		if (bindingResult.hasErrors()) {
 			resultVO.setResultCode(ResponseCode.INPUT_CHECK_ERROR.getCode());
 			resultVO.setResultMessage(ResponseCode.INPUT_CHECK_ERROR.getMessage());

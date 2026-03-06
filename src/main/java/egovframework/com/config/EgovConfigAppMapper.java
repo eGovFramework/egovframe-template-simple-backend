@@ -2,7 +2,8 @@ package egovframework.com.config;
 
 import java.io.IOException;
 
-import javax.annotation.PostConstruct;
+import egovframework.com.cmm.util.EgovBasicLogger;
+import jakarta.annotation.PostConstruct;
 import javax.sql.DataSource;
 
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -79,7 +80,10 @@ public class EgovConfigAppMapper {
 				pathMatchingResourcePatternResolver
 					.getResources("classpath:/egovframework/mapper/let/**/*_" + dbType + ".xml"));
 		} catch (IOException e) {
-			// TODO Exception 처리 필요
+			// 26.03.04 KISA 보안취약점 조치
+			// 구체적인 Exception 명시
+			EgovBasicLogger.debug("Mapper 파일 로딩 중 오류가 발생했습니다.", e);
+			throw new IllegalStateException("Mapper 파일 로딩 중 오류가 발생했습니다.", e);
 		}
 
 		return sqlSessionFactoryBean;
