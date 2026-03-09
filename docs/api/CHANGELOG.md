@@ -4,8 +4,17 @@
 
 ---
 
-## [2026-03-06] 초기 API 명세 작성
+<!-- 아래 형식을 따라 새 변경 이력을 기록하세요:
 
-### 기록
-- 기존 프로젝트의 전체 API를 분석하여 `API_SPEC.md` 초기 작성
-- 총 8개 컨트롤러, 약 30개 엔드포인트 문서화
+## [YYYY-MM-DD] 변경 내용
+
+### 추가
+- `[POST] /new-endpoint` - 신규 API 추가
+
+### 수정
+- `[GET] /existing-endpoint` - 파라미터 추가 (searchType)
+
+### 삭제
+- `[DELETE] /old-endpoint` - API 제거
+
+-->

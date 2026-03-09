@@ -41,19 +41,13 @@ import jakarta.servlet.MultipartConfigElement;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    // Http Methpd : Get 인증예외 List
+    // Http Method : GET 인증예외 List
+    // 새 API 엔드포인트 중 인증 없이 GET 접근을 허용할 경로를 여기에 추가하세요.
     private String[] AUTH_GET_WHITELIST = {
-            "/mainPage", // 메인 화면 리스트 조회
-            "/board", // 게시판 목록조회
-            "/board/{bbsId}/{nttId}", // 게시물 상세조회
-            "/boardFileAtch/{bbsId}", // 게시판 파일 첨부가능 여부 조회
-            "/schedule/daily", // 일별 일정 조회
-            "/schedule/week", // 주간 일정 조회
-            "/schedule/{schdulId}", // 일정 상세조회
-            "/image", // 갤러리 이미지보기
     };
 
     // 인증 예외 List
+    // 새 API 엔드포인트 중 인증 없이 접근을 허용할 경로를 여기에 추가하세요.
     private String[] AUTH_WHITELIST = {
             "/",
             "/error", // 에러 페이지
@@ -61,7 +55,6 @@ public class SecurityConfig {
             "/auth/login-jwt", // JWT 로그인
             "/auth/logout", // 로그아웃
             "/file", // 파일 다운로드
-            "/etc/**", // 사용자단의 회원약관,회원가입,사용자아이디 중복여부체크 URL허용
 
             /* 정적 리소스 */
             "/css/**",
@@ -137,11 +130,9 @@ public class SecurityConfig {
 
         return http
                 .csrf(AbstractHttpConfigurer::disable)
+                // 새 API에 대한 역할 기반 접근 제어 규칙을 아래에 추가하세요.
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/admin/**").hasRole("ADMIN") // 관리자 페이지는 ADMIN만 접근
-                        .requestMatchers("/members/**").hasRole("ADMIN") // 회원 관리는 ADMIN만 접근
-                        .requestMatchers("/mypage/**").hasAnyRole("ADMIN", "USER") // 마이페이지는 ADMIN, USER 모두 접근
-                        .requestMatchers("/inform/**").hasAnyRole("ADMIN", "USER") // 게시판은 ADMIN, USER 모두 접근
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers(AUTH_WHITELIST).permitAll()
                         .requestMatchers(HttpMethod.GET, AUTH_GET_WHITELIST).permitAll()
                         .anyRequest().authenticated())

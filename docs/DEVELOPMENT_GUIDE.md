@@ -1,7 +1,9 @@
 # 백엔드 개발 가이드 (AI용)
 
-> 이 문서는 egovframe-template-simple-backend 프로젝트의 코드 패턴을 기반으로,
-> AI가 새로운 기능을 개발할 때 따라야 할 규칙과 가이드라인을 정의합니다.
+> **이 프로젝트는 eGovFrame 기반 백엔드 템플릿입니다.**
+> 기존 샘플 비즈니스 코드(게시판, 일정, 회원관리)는 삭제되었으며,
+> `com/` 패키지의 인프라 코드만 남아있습니다.
+> 새로운 서비스를 처음부터 개발할 때 아래 규칙과 패턴을 따르세요.
 
 ---
 
@@ -24,7 +26,7 @@
 
 ```
 src/main/java/egovframework/
-├── com/                              # 공통 모듈
+├── com/                              # [인프라] 공통 모듈 (수정하지 않음)
 │   ├── cmm/                          # 공통 유틸, VO, 필터, 인터셉터
 │   │   ├── annotation/               # 커스텀 어노테이션
 │   │   ├── filter/                   # HTML 태그 필터
@@ -38,29 +40,23 @@ src/main/java/egovframework/
 │   ├── security/                     # Spring Security 설정
 │   └── sns/                          # SNS 로그인
 │
-└── let/                              # 비즈니스 모듈
-    ├── cop/                          # 게시판/일정 관리
-    │   ├── bbs/                      # 게시판
-    │   │   ├── controller/           # API 컨트롤러
-    │   │   ├── domain/
-    │   │   │   ├── model/            # 도메인 모델 (Board, BoardVO)
-    │   │   │   └── repository/       # DAO 클래스
-    │   │   ├── dto/
-    │   │   │   ├── request/          # 요청 DTO
-    │   │   │   └── response/         # 응답 DTO
-    │   │   ├── enums/                # Enum 클래스
-    │   │   └── service/              # 서비스 인터페이스
-    │   │       └── impl/             # 서비스 구현체
-    │   ├── com/                      # 게시판 공통
-    │   └── smt/sim/                  # 일정 관리
-    ├── main/                         # 메인 페이지
-    ├── uat/                          # 사용자 인증
-    │   ├── esm/                      # 사이트 관리자
-    │   └── uia/                      # 로그인
-    ├── uss/umt/                      # 회원 관리
-    └── utl/                          # 유틸리티
-        ├── fcc/                      # 파일, 날짜, 문자열 유틸
-        └── sim/                      # 보안 유틸
+└── let/                              # [개발] 비즈니스 모듈 (여기에 새 모듈 추가)
+    ├── uat/uia/                      # [인프라] 로그인/인증 (유지)
+    ├── utl/                          # [인프라] 유틸리티 (유지)
+    │   ├── fcc/                      # 파일, 날짜, 문자열 유틸
+    │   └── sim/                      # 보안 유틸
+    │
+    └── {새 도메인}/                    # ← 새 비즈니스 모듈을 여기에 추가
+        ├── controller/               # API 컨트롤러
+        ├── domain/
+        │   ├── model/                # 도메인 모델 (Xxx, XxxVO)
+        │   └── repository/           # DAO 클래스
+        ├── dto/
+        │   ├── request/              # 요청 DTO
+        │   └── response/             # 응답 DTO
+        ├── enums/                    # Enum 클래스
+        └── service/                  # 서비스 인터페이스
+            └── impl/                 # 서비스 구현체
 ```
 
 ---

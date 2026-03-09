@@ -1,67 +1,14 @@
 # DB 설계 지침
 
-> 이 문서는 egovframe-template-simple-backend 프로젝트의 기존 DB 스키마 패턴을 기반으로,
-> AI가 새로운 테이블을 설계하고 DB에 반영할 때 따라야 할 규칙을 정의합니다.
+> **이 프로젝트는 구조 참고용 템플릿입니다.**
+> 새로운 서비스의 DB를 처음부터 설계할 때 아래 규칙을 따르세요.
+> 기존 샘플 테이블(게시판, 일정 등)은 삭제되었으며, 인프라 테이블(사용자, 권한, 파일, 공통코드)만 유지됩니다.
 
 ---
 
-## 1. 기존 스키마 개요
+## 1. 테이블 설계 규칙
 
-### 1.1 테이블 목록 및 용도
-
-| 테이블명 | 용도 | 비고 |
-|----------|------|------|
-| `IDS` | ID 시퀀스 관리 | eGovFrame 고유 |
-| `COMTECOPSEQ` | 공통 시퀀스 관리 | - |
-| `LETTCCMMNCLCODE` | 공통 분류 코드 | 코드 그룹 |
-| `LETTCCMMNCODE` | 공통 코드 | 코드 마스터 |
-| `LETTCCMMNDETAILCODE` | 공통 상세 코드 | 코드 상세 |
-| `LETTNEMPLYRINFO` | 직원(업무사용자) 정보 | 로그인 사용 |
-| `LETTHEMPLYRINFOCHANGEDTLS` | 직원 정보 변경이력 | - |
-| `LETTNGNRLMBER` | 일반회원 정보 | - |
-| `LETTNENTRPRSMBER` | 기업회원 정보 | - |
-| `LETTNORGNZTINFO` | 조직 정보 | - |
-| `LETTNAUTHORGROUPINFO` | 권한 그룹 정보 | - |
-| `LETTNAUTHORINFO` | 권한 정보 | - |
-| `LETTNEMPLYRSCRTYESTBS` | 사용자 보안 설정 | - |
-| `LETTNBBSMASTER` | 게시판 마스터 | 게시판 설정 |
-| `LETTNBBSMASTEROPTN` | 게시판 마스터 옵션 | - |
-| `LETTNBBSUSE` | 게시판 사용 정보 | - |
-| `LETTNBBS` | 게시물 | 실제 게시글 |
-| `LETTNFILE` | 파일 마스터 | 첨부파일 그룹 |
-| `LETTNFILEDETAIL` | 파일 상세 | 실제 파일 정보 |
-| `LETTNSCHDULINFO` | 일정 정보 | 일정 관리 |
-| `COMVNUSERMASTER` | 통합 사용자 뷰 | VIEW (UNION ALL) |
-
-### 1.2 ER 관계 요약
-
-```
-LETTCCMMNCLCODE (분류코드)
-  └── LETTCCMMNCODE (코드)
-        └── LETTCCMMNDETAILCODE (상세코드)
-
-LETTNORGNZTINFO (조직)
-  └── LETTNEMPLYRINFO (직원)
-        └── LETTHEMPLYRINFOCHANGEDTLS (변경이력)
-
-LETTNAUTHORGROUPINFO (권한그룹)
-  ├── LETTNEMPLYRINFO (직원)
-  ├── LETTNGNRLMBER (일반회원)
-  └── LETTNENTRPRSMBER (기업회원)
-
-LETTNBBSMASTER (게시판마스터)
-  ├── LETTNBBSUSE (게시판사용정보)
-  └── LETTNBBS (게시물)
-
-LETTNFILE (파일마스터)
-  └── LETTNFILEDETAIL (파일상세)
-```
-
----
-
-## 2. 테이블 설계 규칙
-
-### 2.1 테이블명 규칙
+### 1.1 테이블명 규칙
 
 | 접두어 | 의미 | 사용처 |
 |--------|------|--------|
@@ -76,7 +23,7 @@ LETTNFILE (파일마스터)
 - 약어 기반 네이밍 (예: `MBER` = Member, `EMPLYR` = Employee, `ORGNZT` = Organization)
 - 언더스코어 없이 연결 (예: `LETTNEMPLYRINFO`)
 
-### 2.2 컬럼명 규칙
+### 1.2 컬럼명 규칙
 
 - **대문자 + 언더스코어** 구분
 - 약어 기반 네이밍
@@ -95,7 +42,7 @@ LETTNFILE (파일마스터)
 | `_SJ` | 제목(Subject) | `NTT_SJ` |
 | `_COURS` | 경로(Course/Path) | `FILE_STRE_COURS` |
 
-### 2.3 공통 감사(Audit) 컬럼
+### 1.3 공통 감사(Audit) 컬럼
 
 모든 테이블에 아래 컬럼을 포함합니다:
 
@@ -106,7 +53,7 @@ LAST_UPDT_PNTTM datetime DEFAULT NULL,       -- 최종 수정 시점
 LAST_UPDUSR_ID varchar(20) DEFAULT NULL      -- 최종 수정자 ID
 ```
 
-### 2.4 소프트 삭제
+### 1.4 소프트 삭제
 
 ```sql
 USE_AT char(1) NOT NULL DEFAULT 'Y'    -- 사용여부 (Y: 사용, N: 삭제)
@@ -115,7 +62,7 @@ USE_AT char(1) NOT NULL DEFAULT 'Y'    -- 사용여부 (Y: 사용, N: 삭제)
 - 실제 `DELETE`를 수행하지 않고 `USE_AT = 'N'`으로 업데이트
 - 조회 시 항상 `WHERE USE_AT = 'Y'` 조건 포함
 
-### 2.5 데이터 타입 규칙
+### 1.5 데이터 타입 규칙
 
 | 용도 | MySQL 타입 | 길이 | 비고 |
 |------|-----------|------|------|
@@ -128,19 +75,17 @@ USE_AT char(1) NOT NULL DEFAULT 'Y'    -- 사용여부 (Y: 사용, N: 삭제)
 | 파일크기 | `decimal(8,0)` | - | - |
 | 비밀번호 | `varchar(200)` | 200 | 암호화 저장 |
 
-### 2.6 PK 설계
+### 1.6 PK 설계
 
 ```sql
 -- 단일 PK
-PRIMARY KEY (EMPLYR_ID)
+PRIMARY KEY (XXX_ID)
 
 -- 복합 PK
-PRIMARY KEY (BBS_ID, NTT_ID)
-PRIMARY KEY (CODE_ID, CODE)
-PRIMARY KEY (ATCH_FILE_ID, FILE_SN)
+PRIMARY KEY (PARENT_ID, CHILD_ID)
 ```
 
-### 2.7 FK 설계
+### 1.7 FK 설계
 
 ```sql
 -- CASCADE 삭제
@@ -155,7 +100,7 @@ CONSTRAINT FK명 FOREIGN KEY (컬럼) REFERENCES 부모테이블(PK컬럼)
 
 ---
 
-## 3. 새 테이블 생성 절차
+## 2. 새 테이블 생성 절차
 
 ### Step 1: DDL 작성
 
@@ -209,9 +154,9 @@ VALUES ('초기ID', ..., 'Y', NOW(), 'SYSTEM');
 
 ---
 
-## 4. MyBatis SQL Mapper 작성 규칙
+## 3. MyBatis SQL Mapper 작성 규칙
 
-### 4.1 파일 위치
+### 3.1 파일 위치
 
 ```
 src/main/resources/egovframework/mapper/
@@ -226,7 +171,7 @@ src/main/resources/egovframework/mapper/
     └── Egov{도메인}_SQL_cubrid.xml
 ```
 
-### 4.2 필수 SQL 목록
+### 3.2 필수 SQL 목록
 
 새 도메인에 대해 다음 SQL을 작성합니다:
 
@@ -240,7 +185,7 @@ src/main/resources/egovframework/mapper/
 | `updateXxx` | 수정 | UPDATE |
 | `deleteXxx` | 삭제 (소프트) | UPDATE |
 
-### 4.3 resultMap 정의
+### 3.3 resultMap 정의
 
 ```xml
 <resultMap id="xxxList" type="egovframework.let.xxx.domain.model.XxxVO">
@@ -251,7 +196,7 @@ src/main/resources/egovframework/mapper/
 - `property`: Java 필드명 (camelCase)
 - `column`: DB 컬럼명 (UPPER_SNAKE_CASE)
 
-### 4.4 동적 쿼리 패턴
+### 3.4 동적 쿼리 패턴
 
 ```xml
 <!-- 검색 조건 -->
@@ -267,9 +212,9 @@ src/main/resources/egovframework/mapper/
 
 ---
 
-## 5. 코드 테이블 활용
+## 4. 코드 테이블 활용
 
-### 5.1 공통 코드 체계
+### 4.1 공통 코드 체계
 
 ```
 분류코드(LETTCCMMNCLCODE) → 코드(LETTCCMMNCODE) → 상세코드(LETTCCMMNDETAILCODE)
@@ -293,25 +238,7 @@ VALUES ('NEW001', '01', '상세값1', 'Y');
 
 ---
 
-## 6. 뷰(VIEW) 작성
-
-사용자 통합 조회 뷰 패턴:
-
-```sql
-CREATE OR REPLACE VIEW COMVNUSERMASTER AS
-    SELECT ESNTL_ID, MBER_ID AS USER_ID, PASSWORD, MBER_NM AS USER_NM, ...
-    FROM LETTNGNRLMBER
-  UNION ALL
-    SELECT ESNTL_ID, EMPLYR_ID, PASSWORD, USER_NM, ...
-    FROM LETTNEMPLYRINFO
-  UNION ALL
-    SELECT ESNTL_ID, ENTRPRS_MBER_ID, ENTRPRS_MBER_PASSWORD, CMPNY_NM, ...
-    FROM LETTNENTRPRSMBER;
-```
-
----
-
-## 7. DB 반영 체크리스트
+## 5. DB 반영 체크리스트
 
 새 테이블을 추가할 때:
 
