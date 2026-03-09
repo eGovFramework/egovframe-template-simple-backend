@@ -30,8 +30,8 @@
 
 | 약어 | 의미 | 예시 |
 |------|------|------|
-| `_ID` | 식별자 | `EMPLYR_ID`, `BBS_ID` |
-| `_NM` | 이름 | `USER_NM`, `BBS_NM` |
+| `_ID` | 식별자 | `EMPLYR_ID`, `PRODUCT_ID` |
+| `_NM` | 이름 | `USER_NM`, `PRODUCT_NM` |
 | `_DC` | 설명(Description) | `CODE_DC`, `ORGNZT_DC` |
 | `_CODE` | 코드 | `AUTHOR_CODE`, `EMPLYR_STTUS_CODE` |
 | `_AT` | 여부(Y/N) | `USE_AT`, `REPLY_POSBL_AT` |

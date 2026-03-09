@@ -58,8 +58,8 @@ docs/
 
 ```java
 // Path Variable
-@Parameter(name = "bbsId", description = "게시판 Id", in = ParameterIn.PATH, example = "BBSMSTR_AAAAAAAAAAAA")
-@PathVariable("bbsId") String bbsId
+@Parameter(name = "xxxId", description = "xxx ID", in = ParameterIn.PATH, example = "XXX_000000000001")
+@PathVariable("xxxId") String xxxId
 
 // 인증 사용자 (Swagger에서 숨김)
 @Parameter(hidden = true) @AuthenticationPrincipal LoginVO user
@@ -68,8 +68,8 @@ docs/
 #### DTO 필드
 
 ```java
-@Schema(description = "게시판 Id", example = "BBSMSTR_AAAAAAAAAAAA")
-private String bbsId;
+@Schema(description = "xxx ID", example = "XXX_000000000001")
+private String xxxId;
 
 @Schema(description = "페이지 번호", example = "1")
 private int pageIndex = 1;
@@ -107,7 +107,7 @@ private int pageIndex = 1;
 
 | 파라미터 | 타입 | 필수 | 위치 | 설명 |
 |----------|------|------|------|------|
-| bbsId | String | Y | Path | 게시판 ID |
+| xxxId | String | Y | Path | xxx ID |
 | pageIndex | int | N | Query | 페이지 번호 (기본: 1) |
 
 **요청 Body** (POST/PUT):
@@ -206,18 +206,18 @@ DROP TABLE LETTN...;
 `docs/schema/ERD.md`에 텍스트 기반 ER 다이어그램을 관리합니다:
 
 ```markdown
-## 도메인: 게시판
+## 도메인: {도메인명}
 
-LETTNBBSMASTER (게시판 마스터)
-  │ PK: BBS_ID
+LETTN{부모테이블} ({설명})
+  │ PK: {PK_ID}
   │
-  ├──< LETTNBBSUSE (게시판 사용 정보)
-  │     PK: BBS_ID + TRGET_ID
-  │     FK: BBS_ID → LETTNBBSMASTER.BBS_ID
+  ├──< LETTN{자식테이블1} ({설명})
+  │     PK: {PK_ID} + {PK_ID2}
+  │     FK: {FK_ID} → LETTN{부모테이블}.{PK_ID}
   │
-  └──< LETTNBBS (게시물)
-        PK: NTT_ID + BBS_ID
-        FK: BBS_ID → LETTNBBSMASTER.BBS_ID
+  └──< LETTN{자식테이블2} ({설명})
+        PK: {PK_ID}
+        FK: {FK_ID} → LETTN{부모테이블}.{PK_ID}
 ```
 
 ---

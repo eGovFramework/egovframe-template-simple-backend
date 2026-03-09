@@ -22,6 +22,24 @@
 
 ---
 
+## 1-1. 주요 인프라 클래스 import 경로
+
+새 코드 작성 시 아래 클래스를 사용합니다:
+
+| 클래스 | import 경로 | 용도 |
+|--------|-------------|------|
+| `IntermediateResultVO<T>` | `egovframework.com.cmm.service.IntermediateResultVO` | 표준 응답 래퍼 |
+| `ResultVO` | `egovframework.com.cmm.service.ResultVO` | 레거시 응답 래퍼 |
+| `ResponseCode` | `egovframework.com.cmm.ResponseCode` | 응답 코드 Enum |
+| `LoginVO` | `egovframework.com.cmm.LoginVO` | 인증된 사용자 정보 |
+| `EgovAbstractServiceImpl` | `org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl` | 서비스 구현체 부모 클래스 |
+| `EgovAbstractMapper` | `org.egovframe.rte.psl.dataaccess.EgovAbstractMapper` | DAO 부모 클래스 (MyBatis) |
+| `EgovPropertyService` | `org.egovframe.rte.fdl.property.EgovPropertyService` | 설정값 조회 서비스 |
+| `PaginationInfo` | `org.egovframe.rte.ptl.mvc.tags.ui.pagination.PaginationInfo` | 페이징 처리 |
+| `EgovIdGnrService` | `org.egovframe.rte.fdl.idgnr.EgovIdGnrService` | ID 생성 서비스 |
+
+---
+
 ## 2. 프로젝트 패키지 구조
 
 ```
@@ -382,6 +400,34 @@ private LoginVO extractUserFromJwt(HttpServletRequest request) {
 )
 ```
 
+### 5.3 SecurityConfig.java에 새 API 등록
+
+새 API를 추가한 후 `com/security/SecurityConfig.java`에서 접근 권한을 설정해야 합니다.
+
+```java
+// 1. 인증 없이 GET 접근 허용 (공개 조회 API)
+private String[] AUTH_GET_WHITELIST = {
+    "/products",              // 상품 목록 조회
+    "/products/{productId}",  // 상품 상세 조회
+};
+
+// 2. 인증 없이 모든 메서드 허용 (로그인, 정적 리소스 등)
+private String[] AUTH_WHITELIST = {
+    "/auth/login-jwt",  // 이미 등록되어 있음
+    // 새로 추가할 경로...
+};
+
+// 3. 역할 기반 접근 제어 (filterChain 메서드 내부)
+http.authorizeHttpRequests(authorize -> authorize
+    .requestMatchers("/admin/**").hasRole("ADMIN")
+    // 새 역할 기반 규칙 추가:
+    // .requestMatchers("/manager/**").hasRole("MANAGER")
+    .anyRequest().authenticated()
+);
+```
+
+**규칙**: 인증이 필요 없는 API → `AUTH_GET_WHITELIST` 또는 `AUTH_WHITELIST`에 추가. 그 외는 기본적으로 인증 필요.
+
 ---
 
 ## 6. 파일 업로드/다운로드
@@ -429,17 +475,22 @@ eGovFrame의 `EgovIdGnrService`를 사용하여 고유 ID를 생성합니다.
 
 ```java
 // Bean 설정 예시 (EgovConfigAppIdGen.java에서)
-@Bean
-public EgovIdGnrService egovIdGnrServiceBoard() {
-    return egovIdGnrBuilder
+@Bean(destroyMethod = "destroy")
+public EgovTableIdGnrServiceImpl egovXxxIdGnrService() {
+    return new EgovIdGnrBuilder()
             .setDataSource(dataSource)
-            .setEgovTablePrefix("ID")
-            .setPreFix("BBSMSTR_")
-            .setFillChar('0')
-            .setCipers(13)
-            .setTableName("BOARD")
+            .setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
+            .setBlockSize(10)
+            .setTable("IDS")
+            .setTableName("XXX_ID")       // IDS 테이블에 등록한 TABLE_NAME
+            .setPreFix("XXX_")            // 생성될 ID의 접두어
+            .setCipers(12)                // 접두어 제외 자릿수
+            .setFillChar('0')             // 빈자리 채움 문자
             .build();
 }
+
+// IDS 테이블에도 시퀀스를 등록해야 합니다:
+// INSERT INTO IDS (TABLE_NAME, NEXT_ID) VALUES ('XXX_ID', 1);
 ```
 
 ---
@@ -513,17 +564,17 @@ springdoc.packages-to-scan=egovframework
 
 ## 11. 네이밍 컨벤션
 
-| 구분 | 규칙 | 예시 |
+| 구분 | 규칙 | 예시 (도메인=Product) |
 |------|------|------|
-| Controller | `Egov{도메인}ApiController` | `EgovBBSManageApiController` |
-| Service Interface | `Egov{도메인}Service` | `EgovBBSManageService` |
-| Service Impl | `Egov{도메인}ServiceImpl` | `EgovBBSManageServiceImpl` |
-| DAO | `{도메인}DAO` 또는 `{도메인}Dao` | `BBSManageDAO` |
-| Model | `{도메인}` / `{도메인}VO` | `Board` / `BoardVO` |
-| Request DTO | `{도메인}{기능}RequestDTO` | `BbsSearchRequestDTO` |
-| Response DTO | `{도메인}{기능}ResponseDTO` | `BbsManageListResponseDTO` |
-| SQL Mapper | `Egov{도메인}_SQL_{dbType}.xml` | `EgovBoard_SQL_mysql.xml` |
-| Enum | `{도메인}{구분}` | `BbsDetailRequestType` |
+| Controller | `Egov{도메인}ApiController` | `EgovProductApiController` |
+| Service Interface | `Egov{도메인}Service` | `EgovProductService` |
+| Service Impl | `Egov{도메인}ServiceImpl` | `EgovProductServiceImpl` |
+| DAO | `{도메인}DAO` 또는 `{도메인}Dao` | `ProductDAO` |
+| Model | `{도메인}` / `{도메인}VO` | `Product` / `ProductVO` |
+| Request DTO | `{도메인}{기능}RequestDTO` | `ProductSearchRequestDTO` |
+| Response DTO | `{도메인}{기능}ResponseDTO` | `ProductListResponseDTO` |
+| SQL Mapper | `Egov{도메인}_SQL_{dbType}.xml` | `EgovProduct_SQL_mysql.xml` |
+| Enum | `{도메인}{구분}` | `ProductStatusType` |
 
 ---
 
