@@ -29,6 +29,14 @@
 		<springdoc.openapi.ui.version>2.6.0</springdoc.openapi.ui.version>
 		<commons-validator.version>1.9.0</commons-validator.version>
 		<protobuf.java.version>3.25.5</protobuf.java.version>
+		<log4j2.version>2.25.3</log4j2.version>
+		<slf4j.version>2.0.17</slf4j.version>
+		<log4jdbc.version>1.2</log4jdbc.version>
+		<jjwt.version>0.12.6</jjwt.version>
+		<icu4j.version>77.1</icu4j.version>
+		<tomcat-embed.version>10.1.52</tomcat-embed.version>
+		<commons-beanutils.version>1.11.0</commons-beanutils.version>
+		<commons-lang3.version>3.18.0</commons-lang3.version>
 	</properties>
 
 	<repositories>
@@ -207,7 +215,7 @@
 			<groupId>com.mysql</groupId>
 			<artifactId>mysql-connector-j</artifactId>
 		</dependency>
-		
+
 		<!-- CVE-2024-7254: mysql-connector-j에서 주입되는 protobuf-java 3.25.1 취약점
 		보완용 직접 주입 -->
 		<dependency>
@@ -222,11 +230,34 @@
 			<artifactId>hibernate-validator</artifactId>
 		</dependency>
 
+		<!-- Logging -->
+		<!-- CVE-2025-68161: 취약점 보완용 업데이트 -->
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>${log4j2.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-slf4j2-impl</artifactId>
+			<version>${log4j2.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>jcl-over-slf4j</artifactId>
+			<version>${slf4j.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>log4j-over-slf4j</artifactId>
+			<version>${slf4j.version}</version>
+		</dependency>
+
 		<!-- log4jdbc driver -->
 		<dependency>
 			<groupId>com.googlecode.log4jdbc</groupId>
 			<artifactId>log4jdbc</artifactId>
-			<version>1.2</version>
+			<version>${log4jdbc.version}</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>slf4j-api</artifactId>
@@ -239,13 +270,61 @@
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt</artifactId>
-			<version>0.12.6</version>
+			<version>${jjwt.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>com.ibm.icu</groupId>
 			<artifactId>icu4j</artifactId>
-			<version>77.1</version>
+			<version>${icu4j.version}</version>
+		</dependency>
+
+		<!-- CVE-2025-66614/CVE-2026-24734/CVE-2026-24733: 보안취약점 보완용 직접 주입 -->
+		<dependency>
+			<groupId>org.apache.tomcat</groupId>
+			<artifactId>tomcat-annotations-api</artifactId>
+			<version>${tomcat-embed.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.tomcat.embed</groupId>
+			<artifactId>tomcat-embed-core</artifactId>
+			<version>${tomcat-embed.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.tomcat.embed</groupId>
+			<artifactId>tomcat-embed-el</artifactId>
+			<version>${tomcat-embed.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.tomcat.embed</groupId>
+			<artifactId>tomcat-embed-jasper</artifactId>
+			<version>${tomcat-embed.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.tomcat.embed</groupId>
+			<artifactId>tomcat-embed-websocket</artifactId>
+			<version>${tomcat-embed.version}</version>
+		</dependency>
+
+		<!-- CVE-2025-48924: 보안취약점 보완용 직접 주입 -->
+		<dependency>
+			<groupId>org.apache.tomcat</groupId>
+			<artifactId>tomcat-annotations-api</artifactId>
+			<version>${tomcat-embed.version}</version>
+		</dependency>
+
+		<!-- CVE-2025-48734: 보안취약점 보완용 직접 주입 -->
+		<dependency>
+			<groupId>commons-beanutils</groupId>
+			<artifactId>commons-beanutils</artifactId>
+			<version>${commons-beanutils.version}</version>
+		</dependency>
+
+		<!-- CVE-2025-48924: 보안취약점 보완용 직접 주입 -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>${commons-lang3.version}</version>
 		</dependency>
 
 		<dependency>
