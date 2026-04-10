@@ -404,14 +404,21 @@ public class EgovMberManageApiController {
 			@ApiResponse(responseCode = "900", description = "입력값 무결성 오류")
 	})
 	@PutMapping("/mypage/update")
-	public ResultVO updateMypage(@Valid @RequestBody MberManageVO mberManageVO, BindingResult bindingResult) throws Exception {
+	public ResultVO updateMypage(@Valid @RequestBody MberManageVO mberManageVO, BindingResult bindingResult,
+			@Parameter(hidden = true) @AuthenticationPrincipal LoginVO user) throws Exception {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
+
+		if (user == null || user.getUniqId() == null) {
+			resultMap.put("resultMsg", "회원 정보를 불러올 수 없습니다. 다시 로그인해주세요.");
+			return resultVoHelper.buildFromMap(resultMap, ResponseCode.AUTH_ERROR);
+		}
 
 		if (bindingResult.hasErrors()) {
 			resultMap.put("resultMsg", "fail.common.insert");
 			return resultVoHelper.buildFromMap(resultMap, ResponseCode.SAVE_ERROR);
 		}
 
+		mberManageVO.setUniqId(user.getUniqId()); // 현재 로그인한 사용자의 정보만 수정 가능하도록 강제
 		mberManageVO.setMberSttus("P");// 회원상태는 로그인가능상태로
 		mberManageVO.setGroupId("GROUP_00000000000001");// 회원 권한그룹은 ROLE_USER상태로
 		mberManageService.updateMber(mberManageVO);
@@ -439,14 +446,21 @@ public class EgovMberManageApiController {
 	})
 	@PutMapping("/mypage/delete")
 	public ResultVO deleteMypage(@Valid @RequestBody MberManageVO mberManageVO, BindingResult bindingResult,
+			@Parameter(hidden = true) @AuthenticationPrincipal LoginVO user,
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
+
+		if (user == null || user.getUniqId() == null) {
+			resultMap.put("resultMsg", "회원 정보를 불러올 수 없습니다. 다시 로그인해주세요.");
+			return resultVoHelper.buildFromMap(resultMap, ResponseCode.AUTH_ERROR);
+		}
 
 		if (bindingResult.hasErrors()) {
 			resultMap.put("resultMsg", "fail.common.insert");
 			return resultVoHelper.buildFromMap(resultMap, ResponseCode.SAVE_ERROR);
 		}
 
+		mberManageVO.setUniqId(user.getUniqId()); // 현재 로그인한 사용자의 계정만 탈퇴 처리 가능하도록 강제
 		mberManageVO.setMberSttus("D");// 회원상태 삭제상태로
 		mberManageService.updateMber(mberManageVO);// 회원상태 탈퇴 처리
 		new SecurityContextLogoutHandler().logout(request, response, null);// 로그인 토큰값 지우기

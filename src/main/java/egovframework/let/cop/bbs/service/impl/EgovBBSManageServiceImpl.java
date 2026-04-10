@@ -67,7 +67,6 @@ public class EgovBBSManageServiceImpl extends EgovAbstractServiceImpl implements
 		BoardVO vo = bbsDeleteBoardRequestDTO.toBoardMaster(bbsDeleteBoardRequestDTO, user.getUniqId());
 		bbsMngDAO.deleteBoardArticle(vo);
 		
-		// 작성자 외 삭제 불가능하도록 기능 개선 필요
 		if (atchFileId != null && !atchFileId.trim().isEmpty()) {
 	        FileVO fvo = new FileVO();
 	        fvo.setAtchFileId(atchFileId);
