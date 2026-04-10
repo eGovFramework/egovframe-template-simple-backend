@@ -31,6 +31,7 @@ import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.com.cmm.service.FileVO;
 import egovframework.com.cmm.service.IntermediateResultVO;
 import egovframework.com.cmm.service.ResultVO;
+import egovframework.com.cmm.util.EgovUserDetailsHelper;
 import egovframework.com.cmm.util.ResultVoHelper;
 import egovframework.com.jwt.EgovJwtTokenUtil;
 import egovframework.let.cop.bbs.domain.model.BoardVO;
@@ -256,7 +257,21 @@ public class EgovBBSManageApiController {
 		if (bindingResult.hasErrors()) {
 			return resultVoHelper.buildFromResultVO(new ResultVO(), ResponseCode.INPUT_CHECK_ERROR);
 		}
-	
+
+		// 소유권 검증: 작성자 본인 또는 ADMIN만 수정 가능
+		BbsManageDetailBoardRequestDTO ownerCheckRequest = BbsManageDetailBoardRequestDTO.builder()
+				.bbsId(boardVO.getBbsId())
+				.nttId(Long.parseLong(nttId))
+				.plusCount(false)
+				.lastUpdusrId(user.getUniqId())
+				.build();
+		BbsManageDetailResponseDTO article = bbsMngService.selectBoardArticle(ownerCheckRequest);
+		boolean isAdmin = EgovUserDetailsHelper.getAuthorities().contains("ROLE_ADMIN");
+		if (article == null || article.getBoardVO() == null
+				|| (!user.getUniqId().equals(article.getBoardVO().getFrstRegisterId()) && !isAdmin)) {
+			return resultVoHelper.buildFromResultVO(new ResultVO(), ResponseCode.AUTH_ERROR);
+		}
+
 		final Map<String, MultipartFile> files = multiRequest.getFileMap();
 		if (!files.isEmpty()) {
 			if ("".equals(atchFileId)) {
@@ -453,10 +468,27 @@ public class EgovBBSManageApiController {
 		@RequestBody BbsManageDeleteBoardRequestDTO bbsDeleteBoardRequestDTO,
 		@Parameter(hidden = true) @AuthenticationPrincipal LoginVO user)
 		throws Exception {
+		// 소유권 검증: 작성자 본인 또는 ADMIN만 삭제 가능
+		BbsManageDetailBoardRequestDTO ownerCheckRequest = BbsManageDetailBoardRequestDTO.builder()
+				.bbsId(bbsId)
+				.nttId(Long.parseLong(nttId))
+				.plusCount(false)
+				.lastUpdusrId(user.getUniqId())
+				.build();
+		BbsManageDetailResponseDTO article = bbsMngService.selectBoardArticle(ownerCheckRequest);
+		boolean isAdmin = EgovUserDetailsHelper.getAuthorities().contains("ROLE_ADMIN");
+		if (article == null || article.getBoardVO() == null
+				|| (!user.getUniqId().equals(article.getBoardVO().getFrstRegisterId()) && !isAdmin)) {
+			IntermediateResultVO<Object> authError = new IntermediateResultVO<>();
+			authError.setResultCode(ResponseCode.AUTH_ERROR.getCode());
+			authError.setResultMessage(ResponseCode.AUTH_ERROR.getMessage());
+			return authError;
+		}
+
 		bbsDeleteBoardRequestDTO.setBbsId(bbsId);
 		bbsDeleteBoardRequestDTO.setNttId(Long.parseLong(nttId));
 		bbsDeleteBoardRequestDTO.setNttSj("이 글은 작성자에 의해서 삭제되었습니다.");
-		
+
 		bbsMngService.deleteBoardArticle(bbsDeleteBoardRequestDTO, user);
 
 		return IntermediateResultVO.success(null);
