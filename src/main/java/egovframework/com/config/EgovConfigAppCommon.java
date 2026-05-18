@@ -1,8 +1,12 @@
 package egovframework.com.config;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -41,6 +45,7 @@ import org.egovframe.rte.ptl.mvc.tags.ui.pagination.PaginationRenderer;
  *  -------------  ------------   ---------------------
  *   2021. 7. 20    윤주호               최초 생성
  *   2023. 5. 05    crlee              remove EgovMessageSource config
+ *   2026. 5. 13  	PHJ                보안취약점 대응
  * </pre>
  *
  */
@@ -53,6 +58,9 @@ import org.egovframe.rte.ptl.mvc.tags.ui.pagination.PaginationRenderer;
 	@ComponentScan.Filter(type = FilterType.ANNOTATION, value = Configuration.class)
 })
 public class EgovConfigAppCommon {
+
+	@Value("${Globals.crypto.algoritm}")
+	private String cryptoAlgoritm;
 
 	/**
 	 * @return AntPathMatcher 등록.  Ant 경로 패턴 경로와 일치하는지 여부를 확인
@@ -135,17 +143,23 @@ public class EgovConfigAppCommon {
 	}
 	
 	/**
-	 * 암복호화
+	 * 암복호화 — SHA-256(EGOV_CRYPTO_KEY) 를 hashedPassword 로 동적 계산
 	 * @return [EgovPasswordEncoder 설정] EgovPasswordEncoder 등록
 	 */
 	@Bean
 	public EgovPasswordEncoder egovPasswordEncoder() {
 		EgovPasswordEncoder egovPasswordEncoder = new EgovPasswordEncoder();
 		egovPasswordEncoder.setAlgorithm("SHA-256");
-		egovPasswordEncoder.setHashedPassword("gdyYs/IZqY86VcWhT8emCYfqY1ahw2vtLG+/FzNqtrQ=");
+		try {
+			MessageDigest md = MessageDigest.getInstance("SHA-256");
+			byte[] hash = md.digest(cryptoAlgoritm.getBytes(StandardCharsets.UTF_8));
+			egovPasswordEncoder.setHashedPassword(Base64.getEncoder().encodeToString(hash));
+		} catch (Exception e) {
+			throw new IllegalStateException("SHA-256 해시 계산 실패", e);
+		}
 		return egovPasswordEncoder;
 	}
-	
+
 	/**
 	 * 암복호화
 	 * @return [EgovARIACryptoServiceImpl 설정] EgovARIACryptoServiceImpl 등록

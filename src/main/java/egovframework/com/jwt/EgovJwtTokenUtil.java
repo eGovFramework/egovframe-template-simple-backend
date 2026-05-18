@@ -8,14 +8,15 @@ import java.util.Map;
 
 import javax.crypto.SecretKey;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import egovframework.com.cmm.LoginVO;
-import egovframework.com.cmm.service.EgovProperties;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 
 //security 관련 제외한 jwt util 클래스
@@ -29,13 +30,25 @@ public class EgovJwtTokenUtil implements Serializable{
 	// public static final long JWT_TOKEN_VALIDITY = 24 * 60 * 60; // 24시간 (86400초)
 	public static final long JWT_TOKEN_VALIDITY = 60 * 60; // 1시간 (3600초)
 	
-	public static final String SECRET_KEY_STRING = EgovProperties.getProperty("Globals.jwt.secret");
-	
+	@Value("${Globals.jwt.secret}")
+	private String secretKeyString;
+
+	@PostConstruct
+	private void validateSecret() {
+		// localhost 개발 편의를 위해 application.properties 의 ${EGOV_JWT_SECRET:...} 에 디폴트 placeholder 가 들어 있다.
+		// 운영 배포 전 환경변수 EGOV_JWT_SECRET 로 32자 이상 무작위 값으로 교체 필요. 미교체 시 경고 로그 출력.
+		if (secretKeyString == null || secretKeyString.length() < 32) {
+			log.warn("[SECURITY] JWT secret is null or shorter than 32 characters. Set EGOV_JWT_SECRET env var before production deployment.");
+		} else if (secretKeyString.contains("my-secret-jwt-key-for-egovframe")) {
+			log.warn("[SECURITY] Default JWT secret placeholder detected. Set EGOV_JWT_SECRET env var before production deployment.");
+		}
+	}
+
 	/**
 	 * SecretKey를 생성합니다. (io.jsonwebtoken 0.12.6 버전 호환)
 	 */
 	private SecretKey getSecretKey() {
-		return Keys.hmacShaKeyFor(SECRET_KEY_STRING.getBytes(StandardCharsets.UTF_8));
+		return Keys.hmacShaKeyFor(secretKeyString.getBytes(StandardCharsets.UTF_8));
 	}
   
 	// retrieve username from jwt token
@@ -61,7 +74,6 @@ public class EgovJwtTokenUtil implements Serializable{
 
 	//for retrieveing any information from token we will need the secret key
 	public Claims getAllClaimsFromToken(String token) {
-		log.debug("===>>> secret = "+SECRET_KEY_STRING);
 		SecretKey key = getSecretKey();
 		return Jwts.parser()
 				.verifyWith(key)
@@ -91,7 +103,6 @@ public class EgovJwtTokenUtil implements Serializable{
         claims.put("type", subject);
         claims.put("groupNm", loginVO.getGroupNm());//권한그룹으로 시프링시큐리티 사용
 
-    	log.debug("===>>> secret = "+SECRET_KEY_STRING);
     	SecretKey key = getSecretKey();
         return Jwts.builder()
         		.claims(claims)
