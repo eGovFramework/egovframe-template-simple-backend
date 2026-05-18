@@ -29,6 +29,7 @@ import lombok.extern.slf4j.Slf4j;
  *  -------    --------    ---------------------------
  *   2009.01.19  박지욱          최초 생성
  *   2011.08.31  JJY            경량환경 템플릿 커스터마이징버전 생성
+ *   2026.05.14                  보안취약점 대응 (4.3.x)
  *
  * </pre>
  */
@@ -265,6 +266,19 @@ public class EgovFileScrty {
 		hashValue = md.digest(password.getBytes());
 
 		return new String(Base64.encodeBase64(hashValue));
+    }
+
+    /**
+     * 비밀번호 이중 해싱 — 클라이언트가 1차 해싱한 값을 다시 한 번 해싱해 저장한다.
+     * DB 유출 시 저장값으로 즉시 로그인되는 위험을 막기 위해 클라이언트 해시와 저장 해시 형식을 분리.
+     *
+     * 저장값 = SHA-256(id || SHA-256(id || password)) Base64
+     *
+     * @param plaintextPassword 원 평문 비밀번호 (서버 측 신규 발급/회원가입 등)
+     * @param id salt 로 사용될 사용자 ID
+     */
+    public static String encryptPasswordTwice(String plaintextPassword, String id) throws Exception {
+        return encryptPassword(encryptPassword(plaintextPassword, id), id);
     }
 
     /**

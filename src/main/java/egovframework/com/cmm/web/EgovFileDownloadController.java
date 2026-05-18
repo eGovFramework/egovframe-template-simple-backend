@@ -10,12 +10,14 @@ import java.net.URLEncoder;
 import java.util.Base64;
 import java.util.Map;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.egovframe.rte.fdl.cmmn.exception.EgovBizException;
 import org.egovframe.rte.fdl.cryptography.EgovCryptoService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,7 +25,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import egovframework.com.cmm.EgovWebUtil;
 import egovframework.com.cmm.service.EgovFileMngService;
-import egovframework.com.cmm.service.EgovProperties;
 import egovframework.com.cmm.service.FileVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -49,6 +50,7 @@ import lombok.extern.slf4j.Slf4j;
  *   수정일      수정자           수정내용
  *  -------    --------    ---------------------------
  *   2009.3.25  이삼섭          최초 생성
+ *   2026.5.14                  보안취약점 대응 (4.3.x) — crypto key 환경변수화
  *
  * Copyright (C) 2009 by MOPAS  All right reserved.
  * </pre>
@@ -64,8 +66,23 @@ public class EgovFileDownloadController {
 	/** 암호화서비스 */
     @Resource(name="egovARIACryptoService")
     EgovCryptoService cryptoService;
-	
-	public static final String ALGORITM_KEY = EgovProperties.getProperty("Globals.crypto.algoritm");
+
+	// 다른 클래스에서 static 참조하므로 final 제거, @PostConstruct에서 초기화
+	public static String ALGORITM_KEY;
+
+	@Value("${Globals.crypto.algoritm}")
+	private String cryptoAlgoritmKey;
+
+	@PostConstruct
+	private void initAlgoritmKey() {
+		// 26.05.14 국정원 보안취약점 조치 : 운영 배포 전 환경변수 EGOV_CRYPTO_KEY 로 16자 이상 무작위 값 주입 필수
+		if (cryptoAlgoritmKey == null || cryptoAlgoritmKey.length() < 16) {
+			log.warn("[SECURITY] Globals.crypto.algoritm is null or shorter than 16 characters. Set EGOV_CRYPTO_KEY env var before production deployment.");
+		} else if ("egovframe".equals(cryptoAlgoritmKey)) {
+			log.warn("[SECURITY] Default crypto key placeholder ('egovframe') detected. Set EGOV_CRYPTO_KEY env var before production deployment.");
+		}
+		ALGORITM_KEY = cryptoAlgoritmKey;
+	}
 
 	/**
 	 * 브라우저 구분 얻기.

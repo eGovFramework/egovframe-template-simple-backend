@@ -19,6 +19,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
  * DATE              AUTHOR             NOTE
  * -----------------------------------------------------------
  * 2023/07/13        crlee       최초 생성
+ * 2026/05/14 					보안취약점 대응 (4.3.x)
  */
 public class CustomAuthenticationPrincipalResolver implements HandlerMethodArgumentResolver {
 
@@ -37,7 +38,8 @@ public class CustomAuthenticationPrincipalResolver implements HandlerMethodArgum
                 authentication.getPrincipal() == null ||
                 "anonymousUser".equals(authentication.getPrincipal())
         ) {
-            return new LoginVO();
+            // 익명/미인증: null 반환. 컨트롤러는 permitAll 경로에서 null 체크 후 처리.
+            return null;
         }
 
         return authentication.getPrincipal();

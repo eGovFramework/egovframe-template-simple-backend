@@ -26,6 +26,7 @@ import egovframework.com.cmm.interceptor.CustomAuthenticInterceptor;
  *   수정일              수정자               수정내용
  *  -------------  ------------   ---------------------
  *   2021. 7. 20    윤주호               최초 생성
+ *   2026. 5. 14                       보안취약점 대응 (4.3.x) — /auth/me 익명 허용 추가, /auth/login 제거
  * </pre>
  *
  */
@@ -49,9 +50,9 @@ public class EgovConfigWebDispatcherServlet implements WebMvcConfigurer {
 			.addPathPatterns(
 				"/auth/*")
 			.excludePathPatterns(
-				"/auth/login",
 				"/auth/login-jwt",
-				"/auth/logout"
+				"/auth/logout",
+				"/auth/me"   // 익명 호출 가능 — 컨트롤러가 직접 401 응답을 만든다
 				);
 		registry.addInterceptor(new CustomAuthenticInterceptor())
 			.addPathPatterns(

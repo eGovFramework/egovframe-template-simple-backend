@@ -113,12 +113,11 @@ public class EgovSiteManagerApiController {
 		String new_password = param.get("new_password");
 		String login_id = user.getId();
 		Map<String,Object> resultMap = new HashMap<String,Object>();
-		resultMap.put("old_password", EgovFileScrty.encryptPassword(old_password, login_id));
-		resultMap.put("new_password", EgovFileScrty.encryptPassword(new_password, login_id));
+		// 26.05.14 국정원 보안취약점 조치 : 저장 형식 = 이중해시. old/new 모두 동일 형식으로 비교/저장.
+		resultMap.put("old_password", EgovFileScrty.encryptPasswordTwice(old_password, login_id));
+		resultMap.put("new_password", EgovFileScrty.encryptPasswordTwice(new_password, login_id));
 		resultMap.put("login_id", login_id);
-		log.debug("===>>> loginVO.getId() = "+login_id);
 		Integer result = siteManagerService.updateAdminPassword(resultMap); //저장성공 시 1, 실패 시 0 반환
-		log.debug("===>>> result = "+result);
 		if(result > 0) {
 			resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
 			resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());

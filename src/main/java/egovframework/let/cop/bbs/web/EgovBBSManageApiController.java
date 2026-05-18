@@ -32,13 +32,13 @@ import egovframework.com.cmm.service.EgovFileMngService;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.com.cmm.service.FileVO;
 import egovframework.com.cmm.service.ResultVO;
+import egovframework.com.cmm.util.EgovUserDetailsHelper;
 import egovframework.com.cmm.web.EgovFileDownloadController;
 import egovframework.com.jwt.EgovJwtTokenUtil;
 import egovframework.let.cop.bbs.service.BoardMasterVO;
 import egovframework.let.cop.bbs.service.BoardVO;
 import egovframework.let.cop.bbs.service.EgovBBSAttributeManageService;
 import egovframework.let.cop.bbs.service.EgovBBSManageService;
-import egovframework.let.utl.fcc.service.EgovStringUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -66,6 +66,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
  *  2009.03.19  이삼섭          최초 생성
  *  2009.06.29  한성곤	       2단계 기능 추가 (댓글관리, 만족도조사)
  *  2011.08.31  JJY            경량환경 템플릿 커스터마이징버전 생성
+ *  2026.05.14                  보안취약점 대응 (4.3.x) — 게시물 수정/삭제 소유권 검증
  *
  *  </pre>
  */
@@ -193,16 +194,18 @@ public class EgovBBSManageApiController {
 			) @RequestParam Map<String, Object> commandMap, 
 			@Parameter(hidden = true) @AuthenticationPrincipal LoginVO user)
 		throws Exception {
+		// permitAll 경로 — 익명 접근 가능, user 가 null 일 수 있음
+		String uniqId = (user != null) ? user.getUniqId() : null;
 		ResultVO resultVO = new ResultVO();
 		BoardVO boardVO = new BoardVO();
-		
+
 		boardVO.setBbsId((String)commandMap.get("bbsId"));
 		boardVO.setSearchCnd((String)commandMap.get("searchCnd"));
 		boardVO.setSearchWrd((String)commandMap.get("searchWrd"));
 
 		BoardMasterVO vo = new BoardMasterVO();
 		vo.setBbsId(boardVO.getBbsId());
-		vo.setUniqId(user.getUniqId());
+		vo.setUniqId(uniqId);
 
 		BoardMasterVO master = bbsAttrbService.selectBBSMasterInf(vo);
 
@@ -256,10 +259,12 @@ public class EgovBBSManageApiController {
 			@PathVariable("nttId") String nttId,
 			@Parameter(hidden = true) @AuthenticationPrincipal LoginVO user)
 		throws Exception {
+		// permitAll 경로 — 익명 접근 가능, user 가 null 일 수 있음
+		String uniqId = (user != null) ? user.getUniqId() : null;
 
 		ResultVO resultVO = new ResultVO();
 		BoardVO boardVO = new BoardVO();
-		
+
 		boardVO.setBbsId(bbsId);
 		boardVO.setNttId(Long.parseLong(nttId));
 
@@ -274,7 +279,7 @@ public class EgovBBSManageApiController {
 		}
 		////-------------------------------
 
-		boardVO.setLastUpdusrId(user.getUniqId());
+		boardVO.setLastUpdusrId(uniqId);
 		BoardVO vo = bbsMngService.selectBoardArticle(boardVO);
 
 		//----------------------------
@@ -283,15 +288,15 @@ public class EgovBBSManageApiController {
 		BoardMasterVO master = new BoardMasterVO();
 
 		master.setBbsId(boardVO.getBbsId());
-		master.setUniqId(user.getUniqId());
+		master.setUniqId(uniqId);
 
 		BoardMasterVO masterVo = bbsAttrbService.selectBBSMasterInf(master);
-		
+
 		//model.addAttribute("brdMstrVO", masterVo);
 
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("boardVO", vo);
-		resultMap.put("sessionUniqId", user.getUniqId());
+		resultMap.put("sessionUniqId", uniqId);
 		resultMap.put("brdMstrVO", masterVo);
 		resultMap.put("user", user);
 
@@ -348,16 +353,13 @@ public class EgovBBSManageApiController {
 		throws Exception {
 		ResultVO resultVO = new ResultVO();
 
-		// step 1. request header에서 토큰을 가져온다.
-		String jwtToken = EgovStringUtil.isNullToString(request.getHeader(HEADER_STRING));
-        // step 2. 토큰에 내용이 있는지 확인해서 id값을 가져옴
-		String uniqId = jwtTokenUtil.getInfoFromToken("uniqId",jwtToken);
-		String userNm = jwtTokenUtil.getInfoFromToken("name",jwtToken);
-		// 사용자권한 처리
-		LoginVO user = new LoginVO();
-		user.setUniqId(uniqId); //고정값(USRCNFRM_00000000000)에서 로그인 시 사용자 고유ID값으로 변경
+		// 26.05.14 국정원 보안취약점 조치 : SecurityContext 에서 인증된 LoginVO 추출
+		// (JWT 가 httpOnly 쿠키로 옮겨가면서 헤더 직접 파싱이 빈 토큰을 jjwt 에 넘겨 IllegalArgumentException 발생)
+		LoginVO user = extractUserFromJwt(request);
 
-		String atchFileId = boardVO.getAtchFileId().replaceAll("\\s", "");
+		// 26.05.14 국정원 보안취약점 조치 : atchFileId null 체크 추가
+		String rawAtchFileId = boardVO.getAtchFileId();
+		String atchFileId = rawAtchFileId != null ? rawAtchFileId.replaceAll("\\s", "") : "";
 
 		beanValidator.validate(boardVO, bindingResult);
 		if (bindingResult.hasErrors()) {
@@ -367,7 +369,21 @@ public class EgovBBSManageApiController {
 
 			return resultVO;
 		}
-	
+
+		// 26.05.14 국정원 보안취약점 조치 : 소유권 검증 — 작성자 본인 또는 ADMIN만 수정 가능
+		BoardVO ownerCheckVO = new BoardVO();
+		ownerCheckVO.setBbsId(boardVO.getBbsId());
+		ownerCheckVO.setNttId(Long.parseLong(nttId));
+		ownerCheckVO.setPlusCount(false);
+		BoardVO article = bbsMngService.selectBoardArticle(ownerCheckVO);
+		boolean isAdmin = EgovUserDetailsHelper.getAuthorities().contains("ROLE_ADMIN");
+		if (article == null
+				|| (!user.getUniqId().equals(article.getFrstRegisterId()) && !isAdmin)) {
+			resultVO.setResultCode(ResponseCode.AUTH_ERROR.getCode());
+			resultVO.setResultMessage(ResponseCode.AUTH_ERROR.getMessage());
+			return resultVO;
+		}
+
 		final Map<String, MultipartFile> files = multiRequest.getFileMap();
 		if (!files.isEmpty()) {
 			if ("".equals(atchFileId)) {
@@ -385,7 +401,7 @@ public class EgovBBSManageApiController {
 
 		boardVO.setNttId(Long.parseLong(nttId));
 		boardVO.setLastUpdusrId(user.getUniqId());
-		boardVO.setNtcrNm(userNm); // jwt토큰값으로 추가. dummy 오류 수정 (익명이 아닌 경우 validator 처리를 위해 dummy로 지정됨) 
+		boardVO.setNtcrNm(user.getName()); // jwt토큰값으로 추가. dummy 오류 수정 (익명이 아닌 경우 validator 처리를 위해 dummy로 지정됨)
 		boardVO.setPassword(EgovFileScrty.encryptPassword("", user.getUniqId())); // dummy 오류 수정 (익명이 아닌 경우 validator 처리를 위해 dummy로 지정됨)
 		boardVO.setNttCn(unscript(boardVO.getNttCn())); // XSS 방지
 
@@ -426,14 +442,8 @@ public class EgovBBSManageApiController {
 		throws Exception {
 		ResultVO resultVO = new ResultVO();
 
-		// step 1. request header에서 토큰을 가져온다.
-		String jwtToken = EgovStringUtil.isNullToString(request.getHeader(HEADER_STRING));
-        // step 2. 토큰에 내용이 있는지 확인해서 id값을 가져옴
-		String uniqId = jwtTokenUtil.getInfoFromToken("uniqId",jwtToken);
-		String userNm = jwtTokenUtil.getInfoFromToken("name",jwtToken);
-		// 사용자권한 처리
-		LoginVO user = new LoginVO();
-		user.setUniqId(uniqId); //고정값(USRCNFRM_00000000000)에서 로그인 시 사용자 고유ID값으로 변경
+		// 26.05.14 국정원 보안취약점 조치 : SecurityContext 에서 인증된 LoginVO 추출
+		LoginVO user = extractUserFromJwt(request);
 
 		beanValidator.validate(boardVO, bindingResult);
 		if (bindingResult.hasErrors()) {
@@ -442,7 +452,7 @@ public class EgovBBSManageApiController {
 
 			return resultVO;
 		}
-	
+
 		List<FileVO> result = null;
 		String atchFileId = "";
 
@@ -455,7 +465,7 @@ public class EgovBBSManageApiController {
 		boardVO.setFrstRegisterId(user.getUniqId());
 		boardVO.setBbsId(boardVO.getBbsId());
 
-		boardVO.setNtcrNm(userNm); //jwt토큰값으로 추가. dummy 오류 수정 (익명이 아닌 경우 validator 처리를 위해 dummy로 지정됨)
+		boardVO.setNtcrNm(user.getName()); //jwt토큰값으로 추가. dummy 오류 수정 (익명이 아닌 경우 validator 처리를 위해 dummy로 지정됨)
 		boardVO.setPassword(EgovFileScrty.encryptPassword("", user.getUniqId())); // dummy 오류 수정 (익명이 아닌 경우 validator 처리를 위해 dummy로 지정됨)
 		// board.setNttCn(unscript(board.getNttCn())); // XSS 방지
 
@@ -496,14 +506,8 @@ public class EgovBBSManageApiController {
 		throws Exception {
 		ResultVO resultVO = new ResultVO();
 
-		// step 1. request header에서 토큰을 가져온다.
-		String jwtToken = EgovStringUtil.isNullToString(request.getHeader(HEADER_STRING));
-        // step 2. 토큰에 내용이 있는지 확인해서 id값을 가져옴
-		String uniqId = jwtTokenUtil.getInfoFromToken("uniqId",jwtToken);
-		String userNm = jwtTokenUtil.getInfoFromToken("name",jwtToken);
-		// 사용자권한 처리
-		LoginVO user = new LoginVO();
-		user.setUniqId(uniqId); //고정값(USRCNFRM_00000000000)에서 로그인 시 사용자 고유ID값으로 변경
+		// 26.05.14 국정원 보안취약점 조치 : SecurityContext 에서 인증된 LoginVO 추출
+		LoginVO user = extractUserFromJwt(request);
 
 		beanValidator.validate(boardVO, bindingResult);
 		if (bindingResult.hasErrors()) {
@@ -512,7 +516,7 @@ public class EgovBBSManageApiController {
 
 			return resultVO;
 		}
-		
+
 		final Map<String, MultipartFile> files = multiRequest.getFileMap();
 		String atchFileId = "";
 
@@ -529,7 +533,7 @@ public class EgovBBSManageApiController {
 		boardVO.setSortOrdr(boardVO.getSortOrdr());
 		boardVO.setReplyLc(Integer.toString(Integer.parseInt(boardVO.getReplyLc()) + 1));
 
-		boardVO.setNtcrNm(userNm); //jwt토큰값으로 추가. dummy 오류 수정 (익명이 아닌 경우 validator 처리를 위해 dummy로 지정됨)
+		boardVO.setNtcrNm(user.getName()); //jwt토큰값으로 추가. dummy 오류 수정 (익명이 아닌 경우 validator 처리를 위해 dummy로 지정됨)
 		boardVO.setPassword(EgovFileScrty.encryptPassword("", user.getUniqId())); // dummy 오류 수정 (익명이 아닌 경우 validator 처리를 위해 dummy로 지정됨)
 
 		boardVO.setNttCn(unscript(boardVO.getNttCn())); // XSS 방지
@@ -579,8 +583,22 @@ public class EgovBBSManageApiController {
 		boardVO.setNttId(Long.parseLong(nttId));
 		boardVO.setLastUpdusrId(user.getUniqId());
 
+		// 26.05.14 국정원 보안취약점 조치 : 소유권 검증 — 작성자 본인 또는 ADMIN만 삭제 가능
+		BoardVO ownerCheckVO = new BoardVO();
+		ownerCheckVO.setBbsId(bbsId);
+		ownerCheckVO.setNttId(Long.parseLong(nttId));
+		ownerCheckVO.setPlusCount(false);
+		BoardVO article = bbsMngService.selectBoardArticle(ownerCheckVO);
+		boolean isAdmin = EgovUserDetailsHelper.getAuthorities().contains("ROLE_ADMIN");
+		if (article == null
+				|| (!user.getUniqId().equals(article.getFrstRegisterId()) && !isAdmin)) {
+			resultVO.setResultCode(ResponseCode.AUTH_ERROR.getCode());
+			resultVO.setResultMessage(ResponseCode.AUTH_ERROR.getMessage());
+			return resultVO;
+		}
+
 		bbsMngService.deleteBoardArticle(boardVO);
-		
+
 		resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
 		resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());
 
@@ -617,7 +635,19 @@ public class EgovBBSManageApiController {
 
 		return ret;
 	}
-	
-	
+
+	/**
+	 * 26.05.14 국정원 보안취약점 조치 : SecurityContext에서 인증된 사용자 정보를 LoginVO로 반환한다.
+	 * JwtAuthenticationFilter가 이미 SecurityContext에 LoginVO를 설정하므로
+	 * Authorization 헤더를 직접 파싱하지 않는다. (JWT가 httpOnly 쿠키로 이동하면서
+	 * 헤더 직접 파싱 시 빈 토큰을 jjwt 에 넘겨 IllegalArgumentException 발생하던 버그 회피)
+	 */
+	private LoginVO extractUserFromJwt(HttpServletRequest request) {
+		Object principal = EgovUserDetailsHelper.getAuthenticatedUser();
+		if (principal instanceof LoginVO) {
+			return (LoginVO) principal;
+		}
+		return new LoginVO();
+	}
 
 }

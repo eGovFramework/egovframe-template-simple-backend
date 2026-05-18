@@ -30,11 +30,11 @@ import egovframework.com.cmm.LoginVO;
 import egovframework.com.cmm.ResponseCode;
 import egovframework.com.cmm.service.EgovCmmUseService;
 import egovframework.com.cmm.service.ResultVO;
+import egovframework.com.cmm.util.EgovUserDetailsHelper;
 import egovframework.com.jwt.EgovJwtTokenUtil;
 import egovframework.let.uss.umt.service.EgovMberManageService;
 import egovframework.let.uss.umt.service.MberManageVO;
 import egovframework.let.uss.umt.service.UserDefaultVO;
-import egovframework.let.utl.fcc.service.EgovStringUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.Explode;
@@ -429,11 +429,11 @@ public class EgovMberManageApiController {
 	})
 	@GetMapping("/mypage/update")
 	public ResultVO updateMypageView(HttpServletRequest req) throws Exception {
-		// step 1. request header에서 토큰을 가져온다.
-		String jwtToken = EgovStringUtil.isNullToString(req.getHeader(HEADER_STRING));
-        // step 2. 토큰에 내용이 있는지 확인해서 id값을 가져옴
-		String uniqId = jwtTokenUtil.getInfoFromToken("uniqId",jwtToken);
-		
+		// 26.05.14 국정원 보안취약점 조치 : SecurityContext 에서 인증된 LoginVO 추출
+		// (JWT 가 httpOnly 쿠키로 옮겨가면서 헤더 직접 파싱이 빈 토큰을 jjwt 에 넘겨 IllegalArgumentException 발생)
+		LoginVO user = extractUserFromJwt(req);
+		String uniqId = user.getUniqId();
+
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		ResultVO resultVO = new ResultVO();
 
@@ -684,5 +684,18 @@ public class EgovMberManageApiController {
 			resultVO.setResult(resultMap);
 		}
 		return resultVO;
+	}
+
+	/**
+	 * 26.05.14 국정원 보안취약점 조치 : SecurityContext에서 인증된 사용자 정보를 LoginVO로 반환한다.
+	 * JwtAuthenticationFilter가 이미 SecurityContext에 LoginVO를 설정하므로
+	 * Authorization 헤더를 직접 파싱하지 않는다.
+	 */
+	private LoginVO extractUserFromJwt(HttpServletRequest request) {
+		Object principal = EgovUserDetailsHelper.getAuthenticatedUser();
+		if (principal instanceof LoginVO) {
+			return (LoginVO) principal;
+		}
+		return new LoginVO();
 	}
 }

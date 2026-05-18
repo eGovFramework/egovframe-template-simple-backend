@@ -20,6 +20,8 @@
 		<spring.maven.artifact.version>5.3.37</spring.maven.artifact.version>
 		<org.egovframe.rte.version>4.3.0</org.egovframe.rte.version>
         <selenium.version>4.13.0</selenium.version>
+        <!-- 26.05.14 국정원 보안취약점 조치 : jjwt 0.9.1 → 0.12.6 업그레이드 (JDK 1.8 호환 확인) -->
+        <jjwt.version>0.12.6</jjwt.version>
 	</properties>
 
 	<repositories>
@@ -353,7 +355,7 @@
 		<dependency>
     		<groupId>io.jsonwebtoken</groupId>
     		<artifactId>jjwt</artifactId>
-    		<version>0.9.1</version>
+    		<version>${jjwt.version}</version>
 		</dependency>
 
 		<dependency>

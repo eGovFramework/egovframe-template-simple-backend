@@ -27,6 +27,7 @@ import org.springframework.stereotype.Service;
  *  -------    --------    ---------------------------
  *   2009.04.10  JJY            최초 생성
  *   2011.08.31  JJY            경량환경 템플릿 커스터마이징버전 생성
+ *   2026.05.14                  보안취약점 대응 (4.3.x) — 회원 비밀번호 저장 이중해시 적용
  *
  * </pre>
  */
@@ -52,8 +53,9 @@ public class EgovMberManageServiceImpl extends EgovAbstractServiceImpl implement
 		//고유아이디 셋팅
 		String uniqId = idgenService.getNextStringId();
 		mberManageVO.setUniqId(uniqId);
-		//패스워드 암호화
-		String pass = EgovFileScrty.encryptPassword(mberManageVO.getPassword(), mberManageVO.getMberId());
+		// 저장 형식 = SHA-256(id || SHA-256(id || password))
+		// 로그인 시 클라이언트가 1차 해싱하므로 저장값도 이중해시 형식을 유지해야 매칭됨.
+		String pass = EgovFileScrty.encryptPasswordTwice(mberManageVO.getPassword(), mberManageVO.getMberId());
 		mberManageVO.setPassword(pass);
 
 		int result = mberManageDAO.insertMber(mberManageVO);
@@ -101,9 +103,10 @@ public class EgovMberManageServiceImpl extends EgovAbstractServiceImpl implement
 	public void updateMber(MberManageVO mberManageVO) throws Exception {
 		//패스워드 암호화
 		if(mberManageVO.getPassword().isEmpty() || mberManageVO.getPassword().equals("")) {
-			//업데이트 시 암호가 공백이면 암호화 과정 건너띈다. 
+			//업데이트 시 암호가 공백이면 암호화 과정 건너띈다.
 		} else {
-			String pass = EgovFileScrty.encryptPassword(mberManageVO.getPassword(), mberManageVO.getMberId());
+			// 저장 형식 = 이중해시
+			String pass = EgovFileScrty.encryptPasswordTwice(mberManageVO.getPassword(), mberManageVO.getMberId());
 			mberManageVO.setPassword(pass);
 		}
 		mberManageDAO.updateMber(mberManageVO);
