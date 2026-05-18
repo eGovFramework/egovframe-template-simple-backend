@@ -42,6 +42,7 @@ import lombok.extern.slf4j.Slf4j;
  *  2023.04.15  김일국     최초 생성
  *  2023.04.20  김일국     리액트에서 사용할 공통인증메서드 추가
  *	2024.07.17	김일국	 @RequestParam 에서 @RequestBody로 변경
+ *	2026.05.13	PHJ	 	 보안취약점 대응
  *  </pre>
  */
 @Slf4j
@@ -112,12 +113,11 @@ public class EgovSiteManagerApiController {
 		String new_password = param.get("new_password");
 		String login_id = user.getId();
 		Map<String,Object> resultMap = new HashMap<String,Object>();
-		resultMap.put("old_password", EgovFileScrty.encryptPassword(old_password, login_id));
-		resultMap.put("new_password", EgovFileScrty.encryptPassword(new_password, login_id));
+		// 저장 형식 = 이중해시. old/new 모두 동일 형식으로 비교/저장.
+		resultMap.put("old_password", EgovFileScrty.encryptPasswordTwice(old_password, login_id));
+		resultMap.put("new_password", EgovFileScrty.encryptPasswordTwice(new_password, login_id));
 		resultMap.put("login_id", login_id);
-		log.debug("===>>> loginVO.getId() = "+login_id);
 		Integer result = siteManagerService.updateAdminPassword(resultMap); //저장성공 시 1, 실패 시 0 반환
-		log.debug("===>>> result = "+result);
 		if(result > 0) {
 			resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
 			resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());

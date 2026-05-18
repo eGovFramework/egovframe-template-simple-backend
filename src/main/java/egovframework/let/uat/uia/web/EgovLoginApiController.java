@@ -1,10 +1,14 @@
 package egovframework.let.uat.uia.web;
 
+import java.time.Duration;
 import java.util.HashMap;
 
 import org.egovframe.rte.fdl.cmmn.trace.LeaveaTrace;
 import org.egovframe.rte.fdl.property.EgovPropertyService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +21,12 @@ import egovframework.com.cmm.ResponseCode;
 import egovframework.com.cmm.service.ResultVO;
 import egovframework.com.jwt.EgovJwtTokenUtil;
 import egovframework.let.uat.uia.service.EgovLoginService;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -42,6 +52,7 @@ import lombok.extern.slf4j.Slf4j;
  *  2009.03.06  박지욱     최초 생성
  *  2011.08.31  JJY            경량환경 템플릿 커스터마이징버전 생성
  *  2025.11.10             JWT 기반 로그인으로 전환, 세션 기반 로그인 제거
+ *  2026.05.13             보안취약점 대응
  *
  *  </pre>
  */
@@ -70,6 +81,11 @@ public class EgovLoginApiController {
 	@Autowired
     private EgovJwtTokenUtil jwtTokenUtil;
 
+	@Value("${Globals.jwt.cookieSecure:false}")
+	private boolean cookieSecure;
+
+	private static final String ACCESS_TOKEN_COOKIE = "ACCESS_TOKEN";
+
 	/**
 	 * JWT 기반 로그인을 처리한다
 	 * @param loginVO - 아이디, 비밀번호가 담긴 LoginVO
@@ -87,42 +103,45 @@ public class EgovLoginApiController {
 			@ApiResponse(responseCode = "300", description = "로그인 실패")
 	})
 	@PostMapping(value = "/auth/login-jwt")
-	public HashMap<String, Object> actionLoginJWT(@RequestBody LoginVO loginVO, HttpServletRequest request) throws Exception {
+	public HashMap<String, Object> actionLoginJWT(@RequestBody LoginVO loginVO,
+			HttpServletRequest request, HttpServletResponse response) throws Exception {
 		HashMap<String, Object> resultMap = new HashMap<String, Object>();
 
-		// 1. JWT 로그인 처리
 		LoginVO loginResultVO = loginService.actionLogin(loginVO);
-		
+
 		if (loginResultVO != null && loginResultVO.getId() != null && !loginResultVO.getId().equals("")) {
-			if(loginResultVO.getGroupNm().equals("ROLE_ADMIN")) {//로그인 결과에서 스프링시큐리티용 그룹명값에 따른 권한부여
+			if (loginResultVO.getGroupNm().equals("ROLE_ADMIN")) {
 				loginResultVO.setUserSe("ADM");
-	        }
-			log.debug("===>>> loginResultVO.getUserSe() = "+loginResultVO.getUserSe());
-			log.debug("===>>> loginResultVO.getId() = "+loginResultVO.getId());
-			log.debug("===>>> loginResultVO.getPassword() = "+loginResultVO.getPassword());
-			log.debug("===>>> loginResultVO.getGroupNm() = "+loginResultVO.getGroupNm());//로그인 결과에서 스프링시큐리티용 그룹명값 출력
-			
+			}
 			String jwtToken = jwtTokenUtil.generateToken(loginResultVO);
-			
-			String username = jwtTokenUtil.getUserSeFromToken(jwtToken);
-	    	log.debug("Dec jwtToken username = "+username);
-	    	String groupnm = jwtTokenUtil.getInfoFromToken("groupNm", jwtToken);
-	    	log.debug("Dec jwtToken groupnm = "+groupnm);//생성한 토큰에서 스프링시큐리티용 그룹명값 출력
-	    	// JWT 토큰을 클라이언트에 반환
-	    	// 클라이언트는 이후 모든 요청의 Authorization 헤더에 JWT 토큰을 포함하여 전송
-	    	// JwtAuthenticationFilter가 토큰을 검증하고 SecurityContext에 인증 정보를 설정
-	    	
-			resultMap.put("resultVO", loginResultVO);
-			resultMap.put("jToken", jwtToken);
+
+			// JWT를 httpOnly Secure 쿠키로 발급 — JS에서 접근 불가
+			ResponseCookie cookie = ResponseCookie.from(ACCESS_TOKEN_COOKIE, jwtToken)
+					.httpOnly(true)
+					.secure(cookieSecure)
+					.sameSite("Strict")
+					.path("/")
+					.maxAge(Duration.ofSeconds(EgovJwtTokenUtil.JWT_TOKEN_VALIDITY))
+					.build();
+			response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+
+			// 응답 본문에는 표시·UI 분기용 최소 정보만 포함 (토큰 미포함)
+			HashMap<String, Object> userInfo = new HashMap<>();
+			userInfo.put("id",     loginResultVO.getId());
+			userInfo.put("name",   loginResultVO.getName());
+			userInfo.put("userSe", loginResultVO.getUserSe());
+			userInfo.put("uniqId", loginResultVO.getUniqId()); // 게시물 작성자 본인 확인용 (비밀 정보 아님)
+
+			resultMap.put("resultVO", userInfo);
 			resultMap.put("resultCode", "200");
 			resultMap.put("resultMessage", "성공 !!!");
-			
+
 		} else {
 			resultMap.put("resultVO", loginResultVO);
 			resultMap.put("resultCode", "300");
 			resultMap.put("resultMessage", egovMessageSource.getMessage("fail.common.login"));
 		}
-		
+
 		return resultMap;
 	}
 
@@ -145,11 +164,67 @@ public class EgovLoginApiController {
 
 		ResultVO resultVO = new ResultVO();
 
+		// SecurityContext 초기화
 		new SecurityContextLogoutHandler().logout(request, response, null);
+
+		// ACCESS_TOKEN 쿠키 삭제
+		ResponseCookie expiredCookie = ResponseCookie.from(ACCESS_TOKEN_COOKIE, "")
+				.httpOnly(true)
+				.secure(cookieSecure)
+				.sameSite("Strict")
+				.path("/")
+				.maxAge(Duration.ZERO)
+				.build();
+		response.addHeader(HttpHeaders.SET_COOKIE, expiredCookie.toString());
 
 		resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
 		resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());
 
 		return resultVO;
+	}
+
+	/**
+	 * 현재 인증된 사용자 정보 + 권한 목록을 반환한다.
+	 * 프론트엔드 AuthContext가 앱 시작 시 호출하여 라우트 가드·메뉴 분기에 사용.
+	 * 인증되지 않은 호출은 SecurityConfig에 의해 401 응답된다.
+	 */
+	@Operation(
+			summary = "현재 사용자 정보",
+			description = "인증된 사용자의 ID/이름/권한을 반환 (라우트 가드용)",
+			security = {@SecurityRequirement(name = "Authorization")},
+			tags = {"EgovLoginApiController"}
+	)
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "조회 성공"),
+			@ApiResponse(responseCode = "401", description = "인증되지 않음")
+	})
+	@GetMapping(value = "/auth/me")
+	public HashMap<String, Object> getCurrentUser() {
+		HashMap<String, Object> resultMap = new HashMap<>();
+
+		// permitAll 로 익명 호출도 도달함 — anonymous 인 경우 principal 은 "anonymousUser" String.
+		// LoginVO 가 아닌 케이스를 401 로 분기.
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		if (auth == null || !(auth.getPrincipal() instanceof LoginVO user)
+				|| user.getId() == null || user.getId().isEmpty()) {
+			resultMap.put("resultCode", "401");
+			resultMap.put("resultMessage", "not authenticated");
+			return resultMap;
+		}
+
+		List<String> roles = auth.getAuthorities().stream()
+				.map(GrantedAuthority::getAuthority)
+				.collect(Collectors.toList());
+
+		resultMap.put("resultVO", Map.of(
+				"id",     user.getId(),
+				"name",   user.getName() == null ? "" : user.getName(),
+				"userSe", user.getUserSe() == null ? "" : user.getUserSe(),
+				"uniqId", user.getUniqId() == null ? "" : user.getUniqId(),
+				"roles",  roles
+		));
+		resultMap.put("resultCode", "200");
+		resultMap.put("resultMessage", "성공");
+		return resultMap;
 	}
 }

@@ -1,7 +1,10 @@
 package egovframework.com.security;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,9 +15,9 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.context.NullSecurityContextRepository;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.channel.ChannelProcessingFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.csrf.CsrfFilter;
+import org.springframework.security.web.session.DisableEncodeUrlFilter;
 import org.springframework.util.unit.DataSize;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -36,6 +39,7 @@ import jakarta.servlet.MultipartConfigElement;
  * DATE AUTHOR NOTE
  * -----------------------------------------------------------
  * 2023/06/10 crlee 최초 생성
+ * 2026/05/13 보안취약점 대응
  */
 @Configuration
 @EnableWebSecurity
@@ -60,6 +64,7 @@ public class SecurityConfig {
             "/login/**",
             "/auth/login-jwt", // JWT 로그인
             "/auth/logout", // 로그아웃
+            "/auth/me", // 현재 사용자 조회 — 익명 호출 시 컨트롤러가 401 응답을 직접 반환 (라우트 가드/메뉴 분기용)
             "/file", // 파일 다운로드
             "/etc/**", // 사용자단의 회원약관,회원가입,사용자아이디 중복여부체크 URL허용
 
@@ -80,9 +85,10 @@ public class SecurityConfig {
             "/webjars/**", // Swagger UI 정적 리소스
 
     };
-    private static final String[] ORIGINS_WHITELIST = {
-            "http://localhost:3000",
-    };
+    // application.properties의 Globals.Allow.Origin 값을 사용하며,
+    // 환경별로 콤마로 구분된 복수 Origin 지정 가능 (예: "https://a.com,https://b.com")
+    @Value("${Globals.Allow.Origin:http://localhost:3000}")
+    private String allowedOrigins;
 
     @Bean
     public JwtAuthenticationFilter authenticationTokenFilterBean() throws Exception {
@@ -93,11 +99,17 @@ public class SecurityConfig {
     protected CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.setAllowedOriginPatterns(Arrays.asList("*"));
-        configuration.setAllowedMethods(Arrays.asList("HEAD", "POST", "GET", "DELETE", "PUT", "PATCH"));
-        configuration.setAllowedOrigins(Arrays.asList(ORIGINS_WHITELIST));
-        configuration.setAllowedHeaders(Arrays.asList("*"));
+        // 명시적 Origin 목록만 허용 — setAllowedOriginPatterns("*") + credentials 동시 사용 금지
+        List<String> origins = Arrays.stream(allowedOrigins.split(","))
+                .map(String::trim)
+                .filter(s -> !s.isEmpty())
+                .collect(Collectors.toList());
+        configuration.setAllowedOrigins(origins);
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE"));
+        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-Requested-With"));
+        configuration.setExposedHeaders(List.of("Authorization"));
         configuration.setAllowCredentials(true);
+        configuration.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
@@ -151,7 +163,7 @@ public class SecurityConfig {
                         securityContext.securityContextRepository(new NullSecurityContextRepository()))
                 .requestCache(requestCache -> requestCache.disable())
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .addFilterBefore(characterEncodingFilter(), ChannelProcessingFilter.class)
+                .addFilterBefore(characterEncodingFilter(), DisableEncodeUrlFilter.class)
                 .addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(multipartFilter(), CsrfFilter.class)
                 .exceptionHandling(exceptionHandling -> exceptionHandling

@@ -1,7 +1,9 @@
 package egovframework.com.jwt;
 
 public class InvalidJwtException extends RuntimeException {
-    public InvalidJwtException(String message, Throwable cause) {
+    private static final long serialVersionUID = 8805378080076099368L;
+
+	public InvalidJwtException(String message, Throwable cause) {
         super(message, cause);
     }
 

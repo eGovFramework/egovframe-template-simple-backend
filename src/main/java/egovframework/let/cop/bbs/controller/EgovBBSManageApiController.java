@@ -33,7 +33,6 @@ import egovframework.com.cmm.service.IntermediateResultVO;
 import egovframework.com.cmm.service.ResultVO;
 import egovframework.com.cmm.util.EgovUserDetailsHelper;
 import egovframework.com.cmm.util.ResultVoHelper;
-import egovframework.com.jwt.EgovJwtTokenUtil;
 import egovframework.let.cop.bbs.domain.model.BoardVO;
 import egovframework.let.cop.bbs.dto.request.BbsSearchRequestDTO;
 import egovframework.let.cop.bbs.dto.request.BbsManageDeleteBoardRequestDTO;
@@ -41,7 +40,6 @@ import egovframework.let.cop.bbs.dto.response.BbsFileAtchResponseDTO;
 import egovframework.let.cop.bbs.enums.BbsDetailRequestType;
 import egovframework.let.cop.bbs.service.EgovBBSAttributeManageService;
 import egovframework.let.cop.bbs.service.EgovBBSManageService;
-import egovframework.let.utl.fcc.service.EgovStringUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -71,6 +69,7 @@ import lombok.RequiredArgsConstructor;
  *  2009.06.29  한성곤	         2단계 기능 추가 (댓글관리, 만족도조사)
  *  2011.08.31  JJY              경량환경 템플릿 커스터마이징버전 생성
  *  2024.04.06  김재섭(nirsa)     생성자 주입 전환, 불필요한 필드 제거, ResultVoHelper 적용 및 1차 코드 리팩토링
+ *  2026.05.13  PHJ              보안취약점 대응
  *
  *  </pre>
  */
@@ -78,8 +77,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Tag(name="EgovBBSManageApiController",description = "게시물 관리")
 public class EgovBBSManageApiController {
-	public static final String HEADER_STRING = "Authorization";
-    private final EgovJwtTokenUtil jwtTokenUtil;
     private final EgovFileMngUtil fileUtil;
     private final ResultVoHelper resultVoHelper;
     private final EgovBBSManageService bbsMngService;
@@ -150,7 +147,9 @@ public class EgovBBSManageApiController {
 	public IntermediateResultVO<BbsManageListResponseDTO> selectBoardArticles(@ModelAttribute BbsSearchRequestDTO bbsSearchRequestDTO,
 																				 @Parameter(hidden = true) @AuthenticationPrincipal LoginVO user)
 		throws Exception {
-		BbsFileAtchResponseDTO attributeDetailResponse = bbsAttrbService.selectBBSMasterInf(bbsSearchRequestDTO.getBbsId(), user.getUniqId(), BbsDetailRequestType.DETAIL);
+		// permitAll 경로 — 익명 접근 가능, user 가 null 일 수 있음
+		String uniqId = (user != null) ? user.getUniqId() : null;
+		BbsFileAtchResponseDTO attributeDetailResponse = bbsAttrbService.selectBBSMasterInf(bbsSearchRequestDTO.getBbsId(), uniqId, BbsDetailRequestType.DETAIL);
 
 		PaginationInfo paginationInfo = new PaginationInfo();
 		paginationInfo.setCurrentPageNo(bbsSearchRequestDTO.getPageIndex());
@@ -189,11 +188,13 @@ public class EgovBBSManageApiController {
 			@PathVariable("nttId") String nttId,
 			@Parameter(hidden = true) @AuthenticationPrincipal LoginVO user)
 		throws Exception {
+		// permitAll 경로 — 익명 접근 가능, user 가 null 일 수 있음
+		String uniqId = (user != null) ? user.getUniqId() : null;
 		BbsManageDetailBoardRequestDTO bbsManageDetailBoardRequestDTO = BbsManageDetailBoardRequestDTO.builder()
 				.bbsId(bbsId)
 				.nttId(Long.parseLong(nttId))
 				.plusCount(true)
-				.lastUpdusrId(user.getUniqId())
+				.lastUpdusrId(uniqId)
 				.build();
 		
 		//---------------------------------
@@ -207,12 +208,12 @@ public class EgovBBSManageApiController {
 		//----------------------------
 		// template 처리 (기본 BBS template 지정  포함)
 		//----------------------------
-		BbsFileAtchResponseDTO bbsFileAtchResponseDTO = bbsAttrbService.selectBBSMasterInf(bbsManageDetailBoardRequestDTO.getBbsId(), user.getUniqId(), BbsDetailRequestType.LIST);
+		BbsFileAtchResponseDTO bbsFileAtchResponseDTO = bbsAttrbService.selectBBSMasterInf(bbsManageDetailBoardRequestDTO.getBbsId(), uniqId, BbsDetailRequestType.LIST);
 
 		BbsManageDetailResponseDTO bbsManageDetailResponseDTO = bbsMngService.selectBoardArticle(bbsManageDetailBoardRequestDTO)
 				.toBuilder()
 				.brdMstrVO(bbsFileAtchResponseDTO)
-				.sessionUniqId(user.getUniqId())
+				.sessionUniqId(uniqId)
 				.user(user)
 				.build();
 
@@ -291,7 +292,7 @@ public class EgovBBSManageApiController {
 		boardVO.setLastUpdusrId(user.getUniqId());
 		boardVO.setNtcrNm(user.getName()); // jwt토큰값으로 추가. dummy 오류 수정 (익명이 아닌 경우 validator 처리를 위해 dummy로 지정됨) 
 		boardVO.setPassword(EgovFileScrty.encryptPassword("", user.getUniqId())); // dummy 오류 수정 (익명이 아닌 경우 validator 처리를 위해 dummy로 지정됨)
-		boardVO.setNttCn(unscript(boardVO.getNttCn())); // XSS 방지
+		// XSS 방지: HTMLTagFilter 가 모든 폼 입력 파라미터(<, >, &, ", ')를 자동 escape
 
 		bbsMngService.updateBoardArticle(boardVO);
 
@@ -344,10 +345,10 @@ public class EgovBBSManageApiController {
 		boardVO.setBbsId(boardVO.getBbsId());
 		boardVO.setNtcrNm(user.getName()); //jwt토큰값으로 추가. dummy 오류 수정 (익명이 아닌 경우 validator 처리를 위해 dummy로 지정됨)
 		boardVO.setPassword(EgovFileScrty.encryptPassword("", user.getUniqId())); // dummy 오류 수정 (익명이 아닌 경우 validator 처리를 위해 dummy로 지정됨)
-		// board.setNttCn(unscript(board.getNttCn())); // XSS 방지
+		// XSS 방지: HTMLTagFilter 가 모든 폼 입력 파라미터(<, >, &, ", ')를 자동 escape
 
 		bbsMngService.insertBoardArticle(boardVO);
-		
+
 		return resultVoHelper.buildFromMap(new HashMap<String, Object>(), ResponseCode.SUCCESS);
 	}
 
@@ -406,8 +407,7 @@ public class EgovBBSManageApiController {
 
 		boardVO.setNtcrNm(user.getName()); //jwt토큰값으로 추가. dummy 오류 수정 (익명이 아닌 경우 validator 처리를 위해 dummy로 지정됨)
 		boardVO.setPassword(EgovFileScrty.encryptPassword("", user.getUniqId())); // dummy 오류 수정 (익명이 아닌 경우 validator 처리를 위해 dummy로 지정됨)
-
-		boardVO.setNttCn(unscript(boardVO.getNttCn())); // XSS 방지
+		// XSS 방지: HTMLTagFilter 가 모든 폼 입력 파라미터(<, >, &, ", ')를 자동 escape
 
 		bbsMngService.insertBoardArticle(boardVO);
 
@@ -500,53 +500,17 @@ public class EgovBBSManageApiController {
 	 * @param data
 	 * @return
 	 */
-	protected String unscript(String data) {
-		if (data == null || data.trim().equals("")) {
-			return "";
-		}
-
-		String ret = data;
-
-		ret = ret.replaceAll("<(S|s)(C|c)(R|r)(I|i)(P|p)(T|t)", "&lt;script");
-		ret = ret.replaceAll("</(S|s)(C|c)(R|r)(I|i)(P|p)(T|t)", "&lt;/script");
-
-		ret = ret.replaceAll("<(O|o)(B|b)(J|j)(E|e)(C|c)(T|t)", "&lt;object");
-		ret = ret.replaceAll("</(O|o)(B|b)(J|j)(E|e)(C|c)(T|t)", "&lt;/object");
-
-		ret = ret.replaceAll("<(A|a)(P|p)(P|p)(L|l)(E|e)(T|t)", "&lt;applet");
-		ret = ret.replaceAll("</(A|a)(P|p)(P|p)(L|l)(E|e)(T|t)", "&lt;/applet");
-
-		ret = ret.replaceAll("<(E|e)(M|m)(B|b)(E|e)(D|d)", "&lt;embed");
-		ret = ret.replaceAll("</(E|e)(M|m)(B|b)(E|e)(D|d)", "&lt;embed");
-
-		ret = ret.replaceAll("<(F|f)(O|o)(R|r)(M|m)", "&lt;form");
-		ret = ret.replaceAll("</(F|f)(O|o)(R|r)(M|m)", "&lt;form");
-
-		return ret;
-	}
-	
 	/**
-	 * JWT 토큰에서 사용자 정보를 추출하여 LoginVO 객체를 반환한다.
-	 * 
-	 * <p>
-	 * Authorization 헤더에 포함된 JWT 토큰에서 사용자 고유 식별자(uniqId)를 추출하여,
-	 * 인증된 사용자 정보를 LoginVO 형태로 반환한다.
-	 * 고정 값 : USRCNFRM_00000000000
-	 * </p>
-	 *
-	 * @param request HttpServletRequest 객체 (Authorization 헤더 포함)
-	 * @return LoginVO 사용자 고유 ID가 설정된 로그인 정보 객체
+	 * SecurityContext에서 인증된 사용자 정보를 LoginVO로 반환한다.
+	 * JwtAuthenticationFilter가 이미 SecurityContext에 LoginVO를 설정하므로
+	 * Authorization 헤더를 직접 파싱하지 않는다.
 	 */
 	private LoginVO extractUserFromJwt(HttpServletRequest request) {
-	    String jwtToken = EgovStringUtil.isNullToString(request.getHeader(HEADER_STRING));
-	    String uniqId = jwtTokenUtil.getInfoFromToken("uniqId", jwtToken);
-		String userNm = jwtTokenUtil.getInfoFromToken("name",jwtToken);
-
-	    LoginVO user = new LoginVO();
-	    user.setUniqId(uniqId);
-	    user.setName(userNm);
-
-	    return user;
+	    Object principal = EgovUserDetailsHelper.getAuthenticatedUser();
+	    if (principal instanceof LoginVO) {
+	        return (LoginVO) principal;
+	    }
+	    return new LoginVO();
 	}
 
 }
