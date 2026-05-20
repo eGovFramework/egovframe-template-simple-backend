@@ -18,6 +18,7 @@ import org.springframework.context.annotation.PropertySources;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.support.lob.DefaultLobHandler;
+import org.mybatis.spring.annotation.MapperScan;
 
 /**
  * @ClassName : EgovConfigAppMapper.java
@@ -33,10 +34,11 @@ import org.springframework.jdbc.support.lob.DefaultLobHandler;
  *   수정일              수정자               수정내용
  *  -------------  ------------   ---------------------
  *   2021. 7. 20    윤주호               최초 생성
+ *   2026. 05. 20   dasomel            MapperScan 어노테이션 추가
  * </pre>
- *
  */
 @Configuration
+@MapperScan(basePackages = "egovframework", annotationClass = org.egovframe.rte.psl.dataaccess.mapper.EgovMapper.class)
 @PropertySources({
 	@PropertySource("classpath:/application.properties")
 })

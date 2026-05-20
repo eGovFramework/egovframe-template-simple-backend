@@ -55,6 +55,14 @@ public class ComDefaultCodeVO implements Serializable {
      * toString 메소드를 대치한다.
      */
     public String toString() {
-	return ToStringBuilder.reflectionToString(this);
-    }
+		return ToStringBuilder.reflectionToString(this);
+	}
+
+	public String getDetailConditionValue() {
+		return this.detailCondition;
+	}
+
+	public void setDetailConditionValue(String detailConditionValue) {
+		this.detailCondition = detailConditionValue;
+	}
 }
