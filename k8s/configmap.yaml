@@ -9,4 +9,5 @@ data:
   # Non-secret Spring configuration overrides — credentials come from a Secret.
   SPRING_PROFILES_ACTIVE: "prod"
   SPRING_DATASOURCE_URL: "jdbc:mysql://mysql:3306/egovdb?useSSL=false&allowPublicKeyRetrieval=true"
-  MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE: "health,info"
+  MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE: "health"
+  MANAGEMENT_ENDPOINT_HEALTH_PROBES_ENABLED: "true"
