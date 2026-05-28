@@ -2,11 +2,11 @@ package egovframework.let.cop.com.service.impl;
 
 import java.util.List;
 
-import egovframework.let.cop.com.service.UserInfVO;
-
-import org.egovframe.rte.psl.dataaccess.EgovAbstractMapper;
+import jakarta.annotation.Resource;
 
 import org.springframework.stereotype.Repository;
+
+import egovframework.let.cop.com.service.UserInfVO;
 
 /**
  * 협업 활용 사용자 정보 조회를 위한 데이터 접근 클래스
@@ -26,7 +26,10 @@ import org.springframework.stereotype.Repository;
  * </pre>
  */
 @Repository("EgovUserInfManageDAO")
-public class EgovUserInfManageDAO extends EgovAbstractMapper {
+public class EgovUserInfManageDAO {
+
+    @Resource(name = "EgovUserInfManageMapper")
+    private EgovUserInfManageMapper egovUserInfManageMapper;
 
     /**
      * 사용자 정보에 대한 목록을 조회한다.
@@ -35,9 +38,9 @@ public class EgovUserInfManageDAO extends EgovAbstractMapper {
      * @return
      * @throws Exception
      */
-	public List<UserInfVO> selectUserList(UserInfVO userVO) throws Exception {
-		return selectList("EgovUserInfManageDAO.selectUserList", userVO);
-	}
+    public List<UserInfVO> selectUserList(UserInfVO userVO) throws Exception {
+        return egovUserInfManageMapper.selectUserList(userVO);
+    }
 
     /**
      * 사용자 정보에 대한 목록 전체 건수를 조회한다.
@@ -47,7 +50,7 @@ public class EgovUserInfManageDAO extends EgovAbstractMapper {
      * @throws Exception
      */
     public int selectUserListCnt(UserInfVO userVO) throws Exception {
-    	return (Integer)selectOne("EgovUserInfManageDAO.selectUserListCnt", userVO);
+        return egovUserInfManageMapper.selectUserListCnt(userVO);
     }
 
     /**
@@ -58,8 +61,8 @@ public class EgovUserInfManageDAO extends EgovAbstractMapper {
      * @throws Exception
      */
     public List<UserInfVO> selectCmmntyUserList(UserInfVO userVO) throws Exception {
-		return selectList("EgovUserInfManageDAO.selectCmmntyUserList", userVO);
-	}
+        return egovUserInfManageMapper.selectCmmntyUserList(userVO);
+    }
 
     /**
      * 커뮤니티 사용자 목록에 대한 전체 건수를 조회한다.
@@ -69,7 +72,7 @@ public class EgovUserInfManageDAO extends EgovAbstractMapper {
      * @throws Exception
      */
     public int selectCmmntyUserListCnt(UserInfVO userVO) throws Exception {
-    	return (Integer)selectOne("EgovUserInfManageDAO.selectCmmntyUserListCnt", userVO);
+        return egovUserInfManageMapper.selectCmmntyUserListCnt(userVO);
     }
 
     /**
@@ -80,8 +83,8 @@ public class EgovUserInfManageDAO extends EgovAbstractMapper {
      * @throws Exception
      */
     public List<UserInfVO> selectCmmntyMngrList(UserInfVO userVO) throws Exception {
-		return selectList("EgovUserInfManageDAO.selectCmmntyMngrList", userVO);
-	}
+        return egovUserInfManageMapper.selectCmmntyMngrList(userVO);
+    }
 
     /**
      * 커뮤니티 관리자 목록에 대한 전체 건수를 조회한다.
@@ -91,7 +94,7 @@ public class EgovUserInfManageDAO extends EgovAbstractMapper {
      * @throws Exception
      */
     public int selectCmmntyMngrListCnt(UserInfVO userVO) throws Exception {
-    	return (Integer)selectOne("EgovUserInfManageDAO.selectCmmntyMngrListCnt", userVO);
+        return egovUserInfManageMapper.selectCmmntyMngrListCnt(userVO);
     }
 
     /**
@@ -102,8 +105,8 @@ public class EgovUserInfManageDAO extends EgovAbstractMapper {
      * @throws Exception
      */
     public List<UserInfVO> selectClubUserList(UserInfVO userVO) throws Exception {
-		return selectList("EgovUserInfManageDAO.selectClubUserList", userVO);
-	}
+        return egovUserInfManageMapper.selectClubUserList(userVO);
+    }
 
     /**
      * 동호회 사용자 목록에 대한 전체 건수를 조회한다.
@@ -113,7 +116,7 @@ public class EgovUserInfManageDAO extends EgovAbstractMapper {
      * @throws Exception
      */
     public int selectClubUserListCnt(UserInfVO userVO) throws Exception {
-    	return (Integer)selectOne("EgovUserInfManageDAO.selectClubUserListCnt", userVO);
+        return egovUserInfManageMapper.selectClubUserListCnt(userVO);
     }
 
     /**
@@ -124,8 +127,8 @@ public class EgovUserInfManageDAO extends EgovAbstractMapper {
      * @throws Exception
      */
     public List<UserInfVO> selectClubOprtrList(UserInfVO userVO) throws Exception {
-		return selectList("EgovUserInfManageDAO.selectClubOprtrList", userVO);
-	}
+        return egovUserInfManageMapper.selectClubOprtrList(userVO);
+    }
 
     /**
      * 동호회 운영자 목록에 대한 전체 건수를 조회한다.
@@ -135,7 +138,7 @@ public class EgovUserInfManageDAO extends EgovAbstractMapper {
      * @throws Exception
      */
     public int selectClubOprtrListCnt(UserInfVO userVO) throws Exception {
-    	return (Integer)selectOne("EgovUserInfManageDAO.selectClubOprtrListCnt", userVO);
+        return egovUserInfManageMapper.selectClubOprtrListCnt(userVO);
     }
 
     /**
@@ -146,8 +149,8 @@ public class EgovUserInfManageDAO extends EgovAbstractMapper {
      * @throws Exception
      */
     public List<UserInfVO> selectAllClubUser(UserInfVO userVO) throws Exception {
-		return selectList("EgovUserInfManageDAO.selectAllClubUser", userVO);
-	}
+        return egovUserInfManageMapper.selectAllClubUser(userVO);
+    }
 
     /**
      * 커뮤니티에 대한 모든 사용자 목록을 조회한다.
@@ -157,6 +160,6 @@ public class EgovUserInfManageDAO extends EgovAbstractMapper {
      * @throws Exception
      */
     public List<UserInfVO> selectAllCmmntyUser(UserInfVO userVO) throws Exception {
-		return selectList("EgovUserInfManageDAO.selectAllCmmntyUser", userVO);
-	}
+        return egovUserInfManageMapper.selectAllCmmntyUser(userVO);
+    }
 }
