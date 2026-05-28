@@ -2,11 +2,10 @@ package egovframework.let.uat.esm.service.impl;
 
 import java.util.Map;
 
-import jakarta.annotation.Resource;
-import org.springframework.stereotype.Repository;
+import org.egovframe.rte.psl.dataaccess.mapper.EgovMapper;
 
 /**
- * 사이트관리자의 로그인 비밀번호를 변경 처리하는 비즈니스 구현 클래스
+ * 사이트관리자의 로그인 비밀번호를 변경 처리하는 매퍼 인터페이스
  * @author 공통서비스 개발팀
  * @since 2023.04.15
  * @version 1.0
@@ -21,11 +20,8 @@ import org.springframework.stereotype.Repository;
  *
  *  </pre>
  */
-@Repository("siteManagerDAO")
-public class SiteManagerDAO {
-
-	@Resource(name = "siteManagerMapper")
-	private SiteManagerMapper siteManagerMapper;
+@EgovMapper
+public interface SiteManagerMapper {
 
 	/**
 	 * 기존 비번과 비교하여 변경된 비밀번호를 저장한다.
@@ -33,7 +29,6 @@ public class SiteManagerDAO {
 	 * @return 성공시 1
 	 * @exception Exception
 	 */
-	public Integer updateAdminPassword(Map<?, ?> map) throws Exception {
-		return siteManagerMapper.updateAdminPassword(map);
-	}
+	Integer updateAdminPassword(Map<?, ?> map) throws Exception;
+
 }

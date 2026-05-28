@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="mberManageDAO">
+<mapper namespace="egovframework.let.uss.umt.service.impl.MberManageMapper">
 	<resultMap id="stplatMap" type="egovframework.let.uss.umt.service.StplatVO">
         <result property="useStplatId"         column="USE_STPLAT_ID" />
         <result property="useStplatCn"         column="USE_STPLAT_CN" />

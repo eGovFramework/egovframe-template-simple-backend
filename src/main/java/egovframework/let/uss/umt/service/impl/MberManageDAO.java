@@ -2,7 +2,7 @@ package egovframework.let.uss.umt.service.impl;
 
 import java.util.List;
 
-import org.egovframe.rte.psl.dataaccess.EgovAbstractMapper;
+import jakarta.annotation.Resource;
 
 import egovframework.let.uss.umt.service.MberManageVO;
 import egovframework.let.uss.umt.service.UserDefaultVO;
@@ -27,16 +27,18 @@ import org.springframework.stereotype.Repository;
  * </pre>
  */
 @Repository("mberManageDAO")
-public class MberManageDAO extends EgovAbstractMapper{
+public class MberManageDAO {
+
+    @Resource(name = "mberManageMapper")
+    private MberManageMapper mberManageMapper;
 
     /**
      * 기 등록된 특정 일반회원의 정보를 데이터베이스에서 읽어와 화면에 출력
      * @param userSearchVO 검색조건
      * @return List<MberManageVO> 기업회원 목록정보
      */
-    @SuppressWarnings("unchecked")
-	public List<MberManageVO> selectMberList(UserDefaultVO userSearchVO){
-        return selectList("mberManageDAO.selectMberList", userSearchVO);
+    public List<MberManageVO> selectMberList(UserDefaultVO userSearchVO) {
+        return mberManageMapper.selectMberList(userSearchVO);
     }
 
     /**
@@ -45,15 +47,15 @@ public class MberManageDAO extends EgovAbstractMapper{
      * @return int 일반회원총갯수
      */
     public int selectMberListTotCnt(UserDefaultVO userSearchVO) {
-        return selectOne("mberManageDAO.selectMberListTotCnt", userSearchVO);
+        return mberManageMapper.selectMberListTotCnt(userSearchVO);
     }
 
     /**
      * 화면에 조회된 일반회원의 정보를 데이터베이스에서 삭제
      * @param delId 삭제 대상 일반회원아이디
      */
-    public void deleteMber(String delId){
-        delete("mberManageDAO.deleteMber_S", delId);
+    public void deleteMber(String delId) {
+        mberManageMapper.deleteMber_S(delId);
     }
 
     /**
@@ -61,25 +63,25 @@ public class MberManageDAO extends EgovAbstractMapper{
      * @param mberManageVO 일반회원 등록정보
      * @return String 등록결과
      */
-    public int insertMber(MberManageVO mberManageVO){
-        return insert("mberManageDAO.insertMber_S", mberManageVO);
+    public int insertMber(MberManageVO mberManageVO) {
+        return mberManageMapper.insertMber_S(mberManageVO);
     }
 
     /**
-     * 기 등록된 사용자 중 검색조건에 맞는일반회원의 정보를 데이터베이스에서 읽어와 화면에 출력
+     * 기 등록된 사용자 중 검색조건에 맞는 일반회원의 정보를 데이터베이스에서 읽어와 화면에 출력
      * @param mberId 상세조회대상 일반회원아이디
      * @return MberManageVO 일반회원 상세정보
      */
-    public MberManageVO selectMber(String mberId){
-        return (MberManageVO) selectOne("mberManageDAO.selectMber_S", mberId);
+    public MberManageVO selectMber(String mberId) {
+        return mberManageMapper.selectMber_S(mberId);
     }
 
     /**
-     * 화면에 조회된일반회원의 기본정보를 수정하여 항목의 정합성을 체크하고 수정된 데이터를 데이터베이스에 반영
+     * 화면에 조회된 일반회원의 기본정보를 수정하여 항목의 정합성을 체크하고 수정된 데이터를 데이터베이스에 반영
      * @param mberManageVO 일반회원수정정보
      */
-    public void updateMber(MberManageVO mberManageVO){
-        update("mberManageDAO.updateMber_S",mberManageVO);
+    public void updateMber(MberManageVO mberManageVO) {
+        mberManageMapper.updateMber_S(mberManageVO);
     }
 
     /**
@@ -87,8 +89,8 @@ public class MberManageDAO extends EgovAbstractMapper{
      * @param stplatId 일반회원약관아이디
      * @return List 일반회원약관정보
      */
-	public List<?> selectStplat(String stplatId){
-    	return selectList("mberManageDAO.selectStplat_S", stplatId);
+    public List<?> selectStplat(String stplatId) {
+        return mberManageMapper.selectStplat_S(stplatId);
     }
 
     /**
@@ -96,7 +98,7 @@ public class MberManageDAO extends EgovAbstractMapper{
      * @param passVO 기업회원수정정보(비밀번호)
      */
     public void updatePassword(MberManageVO passVO) {
-        update("mberManageDAO.updatePassword_S", passVO);
+        mberManageMapper.updatePassword_S(passVO);
     }
 
     /**
@@ -104,8 +106,8 @@ public class MberManageDAO extends EgovAbstractMapper{
      * @param mberManageVO 일반회원암호 조회조건정보
      * @return MberManageVO 일반회원 암호정보
      */
-    public MberManageVO selectPassword(MberManageVO mberManageVO){
-    	return (MberManageVO) selectOne("mberManageDAO.selectPassword_S", mberManageVO);
+    public MberManageVO selectPassword(MberManageVO mberManageVO) {
+        return mberManageMapper.selectPassword_S(mberManageVO);
     }
 
     /**
@@ -113,8 +115,8 @@ public class MberManageDAO extends EgovAbstractMapper{
      * @param checkId 중복체크대상 아이디
      * @return int 사용가능여부(아이디 사용회수 )
      */
-    public int checkIdDplct(String checkId){
-        return (Integer)selectOne("mberManageDAO.checkIdDplct_S", checkId);
+    public int checkIdDplct(String checkId) {
+        return mberManageMapper.checkIdDplct_S(checkId);
     }
 
 }
