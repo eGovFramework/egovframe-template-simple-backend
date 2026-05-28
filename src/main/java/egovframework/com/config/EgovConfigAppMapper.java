@@ -7,6 +7,7 @@ import jakarta.annotation.PostConstruct;
 import javax.sql.DataSource;
 
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.egovframe.rte.psl.dataaccess.mapper.MapperConfigurer;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -93,5 +94,13 @@ public class EgovConfigAppMapper {
 	public SqlSessionTemplate egovSqlSessionTemplate(@Qualifier("sqlSession") SqlSessionFactory sqlSession) {
 		SqlSessionTemplate sqlSessionTemplate = new SqlSessionTemplate(sqlSession);
 		return sqlSessionTemplate;
+	}
+
+	@Bean
+	public MapperConfigurer cmmUseMapperConfigurer() {
+		MapperConfigurer mapperConfigurer = new MapperConfigurer();
+		mapperConfigurer.setBasePackage("egovframework.com.cmm.service.impl");
+		mapperConfigurer.setSqlSessionFactoryBeanName("sqlSession");
+		return mapperConfigurer;
 	}
 }

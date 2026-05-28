@@ -2,7 +2,8 @@ package egovframework.com.cmm.service.impl;
 
 import java.util.List;
 
-import org.egovframe.rte.psl.dataaccess.EgovAbstractMapper;
+import jakarta.annotation.Resource;
+
 import org.springframework.stereotype.Repository;
 
 import egovframework.com.cmm.ComDefaultCodeVO;
@@ -24,7 +25,10 @@ import egovframework.com.cmm.service.CmmnDetailCode;
  *
  */
 @Repository("cmmUseDAO")
-public class CmmUseDAO extends EgovAbstractMapper {
+public class CmmUseDAO {
+
+    @Resource(name = "cmmUseMapper")
+    private CmmUseMapper cmmUseMapper;
 
     /**
      * 주어진 조건에 따른 공통코드를 불러온다.
@@ -34,8 +38,8 @@ public class CmmUseDAO extends EgovAbstractMapper {
      * @throws Exception
      */
     public List<CmmnDetailCode> selectCmmCodeDetail(ComDefaultCodeVO vo) throws Exception {
-		return selectList("CmmUseDAO.selectCmmCodeDetail", vo);
-	}
+        return cmmUseMapper.selectCmmCodeDetail(vo);
+    }
 
     /**
      * 공통코드로 사용할 조직정보를 불러온다.
@@ -45,8 +49,8 @@ public class CmmUseDAO extends EgovAbstractMapper {
      * @throws Exception
      */
     public List<CmmnDetailCode> selectOgrnztIdDetail(ComDefaultCodeVO vo) throws Exception {
-		return selectList("CmmUseDAO.selectOgrnztIdDetail", vo);
-	}
+        return cmmUseMapper.selectOgrnztIdDetail(vo);
+    }
 
     /**
      * 공통코드로 사용할그룹정보를 불러온다.
@@ -56,6 +60,7 @@ public class CmmUseDAO extends EgovAbstractMapper {
      * @throws Exception
      */
     public List<CmmnDetailCode> selectGroupIdDetail(ComDefaultCodeVO vo) throws Exception {
-		return selectList("CmmUseDAO.selectGroupIdDetail", vo);
-	}
+        return cmmUseMapper.selectGroupIdDetail(vo);
+    }
+
 }
