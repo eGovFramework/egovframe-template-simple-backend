@@ -1,9 +1,9 @@
 package egovframework.let.cop.bbs.domain.repository;
+
 import java.util.Iterator;
 import java.util.List;
 
-import org.egovframe.rte.psl.dataaccess.EgovAbstractMapper;
-
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Repository;
 
 import egovframework.let.cop.bbs.domain.model.Board;
@@ -27,7 +27,10 @@ import egovframework.let.cop.bbs.domain.model.BoardVO;
  *  </pre>
  */
 @Repository("BBSManageDAO")
-public class BBSManageDAO extends EgovAbstractMapper {
+public class BBSManageDAO {
+
+    @Resource
+    private BBSManageMapper bbsManageMapper;
 
     /**
      * 게시판에 게시물을 등록 한다.
@@ -36,10 +39,10 @@ public class BBSManageDAO extends EgovAbstractMapper {
      * @throws Exception
      */
     public void insertBoardArticle(Board board) throws Exception {
-	long nttId = (Long)selectOne("BBSManageDAO.selectMaxNttId");
+	long nttId = bbsManageMapper.selectMaxNttId();
 	board.setNttId(nttId);
 
-	insert("BBSManageDAO.insertBoardArticle", board);
+	bbsManageMapper.insertBoardArticle(board);
     }
 
     /**
@@ -49,22 +52,22 @@ public class BBSManageDAO extends EgovAbstractMapper {
      * @throws Exception
      */
     public long replyBoardArticle(Board board) throws Exception {
-	long nttId = (Long)selectOne("BBSManageDAO.selectMaxNttId");
+	long nttId = bbsManageMapper.selectMaxNttId();
 	board.setNttId(nttId);
 
-	insert("BBSManageDAO.replyBoardArticle", board);
+	bbsManageMapper.replyBoardArticle(board);
 
 	//----------------------------------------------------------
 	// 현재 글 이후 게시물에 대한 NTT_NO를 증가 (정렬을 추가하기 위해)
 	//----------------------------------------------------------
 	//String parentId = board.getParnts();
-	long nttNo = (Long)selectOne("BBSManageDAO.getParentNttNo", board);
+	long nttNo = bbsManageMapper.getParentNttNo(board);
 
 	board.setNttNo(nttNo);
-	update("BBSManageDAO.updateOtherNttNo", board);
+	bbsManageMapper.updateOtherNttNo(board);
 
 	board.setNttNo(nttNo + 1);
-	update("BBSManageDAO.updateNttNo", board);
+	bbsManageMapper.updateNttNo(board);
 
 	return nttId;
     }
@@ -77,7 +80,7 @@ public class BBSManageDAO extends EgovAbstractMapper {
      * @throws Exception
      */
     public BoardVO selectBoardArticle(BoardVO boardVO) throws Exception {
-    	return (BoardVO)selectOne("BBSManageDAO.selectBoardArticle", boardVO);
+    	return bbsManageMapper.selectBoardArticle(boardVO);
     }
 
     /**
@@ -88,7 +91,7 @@ public class BBSManageDAO extends EgovAbstractMapper {
      * @throws Exception
      */
     public List<BoardVO> selectBoardArticleList(BoardVO boardVO) throws Exception {
-		return selectList("BBSManageDAO.selectBoardArticleList", boardVO);
+		return bbsManageMapper.selectBoardArticleList(boardVO);
 	}
 
     /**
@@ -99,7 +102,7 @@ public class BBSManageDAO extends EgovAbstractMapper {
      * @throws Exception
      */
     public int selectBoardArticleListCnt(BoardVO boardVO) throws Exception {
-    	return (Integer)selectOne("BBSManageDAO.selectBoardArticleListCnt", boardVO);
+    	return bbsManageMapper.selectBoardArticleListCnt(boardVO);
     }
 
     /**
@@ -109,7 +112,7 @@ public class BBSManageDAO extends EgovAbstractMapper {
      * @throws Exception
      */
     public void updateBoardArticle(Board board) throws Exception {
-    	update("BBSManageDAO.updateBoardArticle", board);
+    	bbsManageMapper.updateBoardArticle(board);
     }
 
     /**
@@ -119,7 +122,7 @@ public class BBSManageDAO extends EgovAbstractMapper {
      * @throws Exception
      */
     public void deleteBoardArticle(Board board) throws Exception {
-    	update("BBSManageDAO.deleteBoardArticle", board);
+    	bbsManageMapper.deleteBoardArticle(board);
     }
 
     /**
@@ -129,7 +132,7 @@ public class BBSManageDAO extends EgovAbstractMapper {
      * @throws Exception
      */
     public void updateInqireCo(BoardVO boardVO) throws Exception {
-    	update("BBSManageDAO.updateInqireCo", boardVO);
+    	bbsManageMapper.updateInqireCo(boardVO);
     }
 
     /**
@@ -140,7 +143,7 @@ public class BBSManageDAO extends EgovAbstractMapper {
      * @throws Exception
      */
     public int selectMaxInqireCo(BoardVO boardVO) throws Exception {
-    	return (Integer)selectOne("BBSManageDAO.selectMaxInqireCo", boardVO);
+    	return bbsManageMapper.selectMaxInqireCo(boardVO);
     }
 
     /**
@@ -151,7 +154,7 @@ public class BBSManageDAO extends EgovAbstractMapper {
      * @throws Exception
      */
     public List<BoardVO> selectNoticeListForSort(Board board) throws Exception {
-		return selectList("BBSManageDAO.selectNoticeListForSort", board);
+		return bbsManageMapper.selectNoticeListForSort(board);
 	}
 
     /**
@@ -165,7 +168,7 @@ public class BBSManageDAO extends EgovAbstractMapper {
 	Iterator<BoardVO> iter = sortList.iterator();
 	while (iter.hasNext()) {
 	    vo = iter.next();
-	    update("BBSManageDAO.updateSortOrder", vo);
+	    bbsManageMapper.updateSortOrder(vo);
 	}
     }
 
@@ -177,7 +180,7 @@ public class BBSManageDAO extends EgovAbstractMapper {
      * @throws Exception
      */
     public long selectNoticeItemForSort(Board board) throws Exception {
-    	return (Long)selectOne("BBSManageDAO.selectNoticeItemForSort", board);
+    	return bbsManageMapper.selectNoticeItemForSort(board);
     }
 
     /**
@@ -188,7 +191,7 @@ public class BBSManageDAO extends EgovAbstractMapper {
      * @throws Exception
      */
     public List<BoardVO> selectGuestList(BoardVO boardVO) throws Exception {
-		return selectList("BBSManageDAO.selectGuestList", boardVO);
+		return bbsManageMapper.selectGuestList(boardVO);
 	}
 
     /**
@@ -199,7 +202,7 @@ public class BBSManageDAO extends EgovAbstractMapper {
      * @throws Exception
      */
     public int selectGuestListCnt(BoardVO boardVO) throws Exception {
-    	return (Integer)selectOne("BBSManageDAO.selectGuestListCnt", boardVO);
+    	return bbsManageMapper.selectGuestListCnt(boardVO);
     }
 
     /**
@@ -209,7 +212,7 @@ public class BBSManageDAO extends EgovAbstractMapper {
      * @throws Exception
      */
     public void deleteGuestList(BoardVO boardVO) throws Exception {
-    	update("BBSManageDAO.deleteGuestList", boardVO);
+    	bbsManageMapper.deleteGuestList(boardVO);
     }
 
     /**
@@ -220,6 +223,6 @@ public class BBSManageDAO extends EgovAbstractMapper {
      * @throws Exception
      */
     public String getPasswordInf(Board board) throws Exception {
-    	return (String)selectOne("BBSManageDAO.getPasswordInf", board);
+    	return bbsManageMapper.getPasswordInf(board);
     }
 }
