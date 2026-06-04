@@ -2,10 +2,9 @@ package egovframework.let.uss.umt.service;
 
 import java.io.Serializable;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  * 사용자정보 VO클래스로서일반회원, 기업회원, 업무사용자의  비지니스로직 처리시 기타조건성 항목을 구성한다.
@@ -26,6 +25,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
+@ToString
 public class UserDefaultVO implements Serializable {
 
 	/**
@@ -63,11 +63,5 @@ public class UserDefaultVO implements Serializable {
     /** recordCountPerPage */
     private int recordCountPerPage = 10;
 
-	/**
-     * toString 메소드를 대치한다.
-     */
-    public String toString() {
-    	return ToStringBuilder.reflectionToString(this);
-    }
 
 }
