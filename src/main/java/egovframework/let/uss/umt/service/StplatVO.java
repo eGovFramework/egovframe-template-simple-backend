@@ -2,10 +2,9 @@ package egovframework.let.uss.umt.service;
 
 import java.io.Serializable;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  * 가입약관VO클래스로서가입약관확인시 비지니스로직 처리용 항목을 구성한다.
@@ -26,6 +25,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
+@ToString
 public class StplatVO implements Serializable {
 	/**
 	 * serialVersionUID
@@ -40,12 +40,5 @@ public class StplatVO implements Serializable {
 
     /** 정보동의안내*/
     private String infoProvdAgeCn;
-
-	/**
-     * toString 메소드를 대치한다.
-     */
-    public String toString() {
-    	return ToStringBuilder.reflectionToString(this);
-    }
 
 }
