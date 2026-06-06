@@ -78,6 +78,13 @@ spec:
           volumeMounts:
             - name: tmp
               mountPath: /tmp
+            # logback-spring.xml은 logging.file.path(기본 ./log → /app/log)에 로그 파일을 기록한다.
+            # readOnlyRootFilesystem: true 환경에서 /app/log 쓰기가 막혀 기동에 실패하므로
+            # 쓰기 가능한 emptyDir 볼륨을 마운트한다.
+            - name: app-log
+              mountPath: /app/log
       volumes:
         - name: tmp
+          emptyDir: {}
+        - name: app-log
           emptyDir: {}
