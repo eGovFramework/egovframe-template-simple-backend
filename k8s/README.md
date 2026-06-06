@@ -8,7 +8,10 @@
 |------|------|
 | `configmap.yaml` | 애플리케이션 설정(프로파일, DB URL 등) |
 | `service.yaml` | ClusterIP 서비스(포트 8080) |
-| `deployment.yaml` | 애플리케이션 Deployment(레플리카 2, 롤링 업데이트) |
+| `deployment.yaml` | 애플리케이션 Deployment(레플리카 2, 롤링 업데이트, 로그용 emptyDir 마운트) |
+
+> 컨테이너 기동 시 `docker-entrypoint.sh`(리포 루트)가 `DB_*` 환경변수를 앱이 실제로 읽는
+> `Globals.*` 키로 매핑합니다. 자세한 내용은 아래 "DB 설정" 절을 참고하세요.
 
 ## 사전 조건
 
@@ -31,9 +34,33 @@ docker push <registry>/egovframe-template-simple-backend:5.0.0
 image: <registry>/egovframe-template-simple-backend:5.0.0
 ```
 
-## DB 시크릿 생성
+## DB 설정 (중요)
 
-`deployment.yaml`은 `egovframe-template-simple-backend-db` 이름의 Secret에서 DB 자격증명을 읽습니다.
+이 애플리케이션의 DataSource(`EgovConfigAppDatasource`)는 Spring 표준 키
+(`SPRING_DATASOURCE_*`)가 **아니라** `application.properties`의 `Globals.DbType` 및
+`Globals.<dbtype>.Url/UserName/Password/DriverClassName` 값만 읽습니다.
+따라서 `SPRING_DATASOURCE_URL` 같은 환경변수를 주입해도 DB가 교체되지 않고
+내장 HSQL로 기동됩니다.
+
+이를 해결하기 위해 컨테이너 기동 스크립트(`docker-entrypoint.sh`)가
+아래 환경변수를 받아 `Globals.*` 키로 매핑한 오버라이드 properties 파일을 생성하고
+Spring의 `spring.config.additional-location`으로 추가 로딩합니다.
+
+| 환경변수 | 매핑되는 키 | 예시 |
+|----------|-------------|------|
+| `DB_TYPE` | `Globals.DbType` | `mysql` |
+| `DB_URL` | `Globals.<dbtype>.Url` | `jdbc:mysql://mysql:3306/egovdb` |
+| `DB_USERNAME` | `Globals.<dbtype>.UserName` | `egov` |
+| `DB_PASSWORD` | `Globals.<dbtype>.Password` | (Secret) |
+| `DB_DRIVER_CLASS_NAME` | `Globals.<dbtype>.DriverClassName` | (미지정 시 DB 타입별 기본값) |
+
+- `DB_TYPE`이 비어 있으면(기본) 내장 HSQL로 기동합니다.
+- `DB_TYPE=mysql` 등으로 외부 DB를 지정하면 위 매핑값으로 DataSource가 구성됩니다.
+- 직접 매핑 지점을 수정하려면 `src/main/resources/application.properties`의
+  `Globals.DbType`(22행 부근)과 `Globals.<dbtype>.Url/UserName/Password`(36행 이후)를
+  변경한 뒤 이미지를 재빌드하면 됩니다. 다만 컨테이너 환경에서는 위 환경변수 주입을 권장합니다.
+
+설정값은 `configmap.yaml`(`DB_TYPE`, `DB_URL`)과 Secret(`username`, `password`)에서 주입됩니다.
 배포 전 아래 명령으로 Secret을 생성하세요.
 
 ```bash
@@ -41,6 +68,33 @@ kubectl create secret generic egovframe-template-simple-backend-db \
   --from-literal=username=<DB_USER> \
   --from-literal=password=<DB_PASSWORD>
 ```
+
+## 외부 DB 스키마 적재 (필수)
+
+내장 HSQL은 기동 시 `classpath:/db/shtdb.sql`이 자동 적재되지만,
+**외부 DB(MySQL 등)는 스키마(DDL)와 초기 데이터(DML)를 직접 적재해야** 합니다.
+적재하지 않으면 테이블 부재로 런타임 오류가 발생합니다.
+
+리포지토리 `DATABASE/` 디렉터리에 DB별 스크립트가 제공됩니다.
+
+| DB | DDL | DML |
+|----|-----|-----|
+| MySQL | `DATABASE/all_sht_ddl_mysql.sql` | `DATABASE/all_sht_data_mysql.sql` |
+| Oracle | `DATABASE/all_sht_ddl_oracle.sql` | `DATABASE/all_sht_data_oracle.sql` |
+| Tibero | `DATABASE/all_sht_ddl_tibero.sql` | `DATABASE/all_sht_data_tibero.sql` |
+| Altibase | `DATABASE/all_sht_ddl_altibase.sql` | `DATABASE/all_sht_data_altibase.sql` |
+| CUBRID | `DATABASE/all_sht_ddl_cubrid.sql` | `DATABASE/all_sht_data_cubrid.sql` |
+
+MySQL 예시(클러스터 외부에서 DB에 직접 접속하여 적재):
+
+```bash
+mysql -h <DB_HOST> -u <DB_USER> -p <DB_NAME> < DATABASE/all_sht_ddl_mysql.sql
+mysql -h <DB_HOST> -u <DB_USER> -p <DB_NAME> < DATABASE/all_sht_data_mysql.sql
+```
+
+> 참고: `docker-compose.yml`은 MySQL 컨테이너의 `/docker-entrypoint-initdb.d`에
+> 위 DDL/DML을 마운트하여 최초 기동 시 자동 적재합니다. Kubernetes에서는 관리형/외부 DB를
+> 사용하는 경우가 일반적이므로, 위 수동 적재 또는 별도 Job/initContainer로 적재하세요.
 
 ## 배포
 
@@ -99,7 +153,8 @@ curl http://localhost:8080/actuator/health
 | 키 | 기본값 | 설명 |
 |----|--------|------|
 | `SPRING_PROFILES_ACTIVE` | `prod` | Spring 프로파일 |
-| `SPRING_DATASOURCE_URL` | MySQL 로컬 | DB 접속 URL |
+| `DB_TYPE` | `mysql` | DB 종류(`Globals.DbType`로 매핑). 비우면 내장 HSQL |
+| `DB_URL` | MySQL 로컬 | DB 접속 URL(`Globals.<dbtype>.Url`로 매핑) |
 
 ## 삭제
 

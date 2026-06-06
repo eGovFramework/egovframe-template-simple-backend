@@ -6,10 +6,12 @@ services:
     ports:
       - "8080:8080"
     environment:
+      # DB_* 값은 docker-entrypoint.sh가 Globals.DbType / Globals.<dbtype>.* 로 매핑한다.
       - SPRING_PROFILES_ACTIVE=prod
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/${MYSQL_DATABASE:-egovdb}?useSSL=false&allowPublicKeyRetrieval=true
-      - SPRING_DATASOURCE_USERNAME=${MYSQL_USER:-egov}
-      - SPRING_DATASOURCE_PASSWORD=${MYSQL_PASSWORD:?MYSQL_PASSWORD must be set in .env}
+      - DB_TYPE=mysql
+      - DB_URL=jdbc:mysql://mysql-db:3306/${MYSQL_DATABASE:-egovdb}?useSSL=false&allowPublicKeyRetrieval=true
+      - DB_USERNAME=${MYSQL_USER:-egov}
+      - DB_PASSWORD=${MYSQL_PASSWORD:?MYSQL_PASSWORD must be set in .env}
     depends_on:
       mysql-db:
         condition: service_healthy
@@ -30,6 +32,10 @@ services:
       --collation-server=utf8mb4_unicode_ci
     volumes:
       - mysql-data:/var/lib/mysql
+      # 최초 기동(빈 데이터 볼륨) 시 알파벳 순으로 실행되어 스키마(DDL) → 데이터(DML)를 적재한다.
+      # 볼륨에 데이터가 이미 있으면 MySQL이 init 스크립트를 건너뛰므로, 재적재하려면 볼륨을 삭제한다.
+      - ./DATABASE/all_sht_ddl_mysql.sql:/docker-entrypoint-initdb.d/01-ddl.sql:ro
+      - ./DATABASE/all_sht_data_mysql.sql:/docker-entrypoint-initdb.d/02-data.sql:ro
     healthcheck:
       test: [ "CMD-SHELL", "mysql --protocol=TCP -h 127.0.0.1 -u root --password=$$MYSQL_ROOT_PASSWORD -e 'SELECT 1' || exit 1" ]
       interval: 5s

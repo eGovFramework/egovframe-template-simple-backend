@@ -38,12 +38,13 @@ spec:
             - configMapRef:
                 name: egovframe-template-simple-backend
           env:
-            - name: SPRING_DATASOURCE_USERNAME
+            # DB 자격증명 — docker-entrypoint.sh가 Globals.<dbtype>.UserName/Password 로 매핑한다.
+            - name: DB_USERNAME
               valueFrom:
                 secretKeyRef:
                   name: egovframe-template-simple-backend-db
                   key: username
-            - name: SPRING_DATASOURCE_PASSWORD
+            - name: DB_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: egovframe-template-simple-backend-db

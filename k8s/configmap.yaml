@@ -6,8 +6,10 @@ metadata:
     app.kubernetes.io/name: egovframe-template-simple-backend
     app.kubernetes.io/part-of: egovframe-template
 data:
-  # Non-secret Spring configuration overrides — credentials come from a Secret.
+  # 비밀이 아닌 설정값 — DB 자격증명(DB_USERNAME/DB_PASSWORD)은 Secret에서 주입된다.
+  # 아래 DB_* 값은 docker-entrypoint.sh가 Globals.DbType / Globals.<dbtype>.Url 로 매핑한다.
   SPRING_PROFILES_ACTIVE: "prod"
-  SPRING_DATASOURCE_URL: "jdbc:mysql://mysql:3306/egovdb?useSSL=false&allowPublicKeyRetrieval=true"
+  DB_TYPE: "mysql"
+  DB_URL: "jdbc:mysql://mysql:3306/egovdb?useSSL=false&allowPublicKeyRetrieval=true"
   MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE: "health"
   MANAGEMENT_ENDPOINT_HEALTH_PROBES_ENABLED: "true"
