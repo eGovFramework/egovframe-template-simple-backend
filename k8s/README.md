@@ -96,6 +96,28 @@ mysql -h <DB_HOST> -u <DB_USER> -p <DB_NAME> < DATABASE/all_sht_data_mysql.sql
 > 위 DDL/DML을 마운트하여 최초 기동 시 자동 적재합니다. Kubernetes에서는 관리형/외부 DB를
 > 사용하는 경우가 일반적이므로, 위 수동 적재 또는 별도 Job/initContainer로 적재하세요.
 
+## 지원 DB 범위
+
+이 Docker/Kubernetes 배포 구성(`docker-compose.yml`, `docker-entrypoint.sh`,
+`configmap.yaml` 등)에서 **기본 배선 및 동작 검증이 완료된 DB**는 다음 두 가지입니다.
+
+| DB | 구성 | 비고 |
+|----|------|------|
+| **HSQL** (내장) | `DB_TYPE` 미지정 시 기본값 | 별도 DB 서버 불필요, 개발·데모 용도 |
+| **MySQL** | `DB_TYPE=mysql` + ConfigMap/Secret | `docker-compose.yml`·ConfigMap 기본값 |
+
+위 DDL/DML 표에 나열된 Oracle, Tibero, Altibase, CUBRID용 스크립트는 **base 템플릿
+리포지토리(`DATABASE/` 디렉터리)에서 제공하는 것**으로, 해당 DB를 사용하려면 다음
+절차가 추가로 필요합니다.
+
+1. **JDBC 드라이버 의존성 추가** — `pom.xml`에 해당 DB 드라이버를 추가하고 이미지를 재빌드합니다.
+2. **DDL/DML 적재** — 위 표의 스크립트를 대상 DB에 수동 적재합니다.
+3. **환경변수 설정** — `DB_TYPE`, `DB_URL`, `DB_DRIVER_CLASS_NAME` 등을 ConfigMap/Secret에 맞게 지정합니다.
+4. **`application.properties` 확인** — `Globals.<dbtype>.DriverClassName` 등 키가 올바르게 매핑되는지 확인합니다.
+
+> 자세한 DB 확장 설정은 base 템플릿의 `application.properties` 및
+> `src/main/java/egovframework/com/config/EgovConfigAppDatasource.java`를 참고하세요.
+
 ## 배포
 
 ```bash
