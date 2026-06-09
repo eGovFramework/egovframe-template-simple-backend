@@ -6,12 +6,14 @@
 
 | 파일 | 설명 |
 |------|------|
-| `configmap.yaml` | 애플리케이션 설정(프로파일, DB URL 등) |
+| `configmap.yaml` | 애플리케이션 설정(프로파일, DB URL, 파일 저장 경로 등) |
 | `service.yaml` | ClusterIP 서비스(포트 8080) |
-| `deployment.yaml` | 애플리케이션 Deployment(레플리카 2, 롤링 업데이트, 로그용 emptyDir 마운트) |
+| `pvc.yaml` | 게시판 첨부파일 영속 저장소(ReadWriteOnce, 1Gi) |
+| `deployment.yaml` | 애플리케이션 Deployment(레플리카 1, Recreate 전략, 로그용 emptyDir·첨부파일용 PVC 마운트) |
 
-> 컨테이너 기동 시 `docker-entrypoint.sh`(리포 루트)가 `DB_*` 환경변수를 앱이 실제로 읽는
-> `Globals.*` 키로 매핑합니다. 자세한 내용은 아래 "DB 설정" 절을 참고하세요.
+> 컨테이너 기동 시 `docker-entrypoint.sh`(리포 루트)가 `DB_*`·`FILE_STORE_PATH` 환경변수를
+> 앱이 실제로 읽는 `Globals.*` 키로 매핑합니다. 자세한 내용은 아래 "DB 설정", "파일 업로드
+> 저장소" 절을 참고하세요.
 
 ## 사전 조건
 
@@ -118,6 +120,27 @@ mysql -h <DB_HOST> -u <DB_USER> -p <DB_NAME> < DATABASE/all_sht_data_mysql.sql
 > 자세한 DB 확장 설정은 base 템플릿의 `application.properties` 및
 > `src/main/java/egovframework/com/config/EgovConfigAppDatasource.java`를 참고하세요.
 
+## 파일 업로드 저장소 (중요)
+
+게시판 첨부파일은 앱이 `Globals.fileStorePath` 경로에 저장합니다. base 템플릿 기본값은
+상대경로 `./files`인데, 이 값은 `readOnlyRootFilesystem: true` 환경에서 서블릿 임시
+디렉터리 기준으로 풀려 쓰기에 실패합니다(첨부 업로드 시 `FileNotFoundException` → 500).
+
+본 구성은 이를 다음과 같이 해결합니다.
+
+- `configmap.yaml`의 `FILE_STORE_PATH=/app/files`를 `docker-entrypoint.sh`가
+  `Globals.fileStorePath`(절대경로)로 매핑합니다.
+- `pvc.yaml`(ReadWriteOnce, 1Gi)을 `deployment.yaml`의 `/app/files`에 마운트하여,
+  쓰기 가능하고 Pod 재시작 후에도 보존되는 영속 저장소를 제공합니다.
+
+> **레플리카와 스토리지** — `ReadWriteOnce` PVC는 하나의 Pod만 마운트할 수 있으므로
+> `replicas: 1` + `strategy: Recreate`로 구성했습니다. 다중 레플리카로 확장하려면
+> `ReadWriteMany`를 지원하는 스토리지(NFS, CephFS, 클라우드 파일스토리지 등)로
+> `pvc.yaml`의 `accessModes`를 변경하고 `replicas`를 늘리세요.
+
+저장 경로를 바꾸려면 `configmap.yaml`의 `FILE_STORE_PATH`와 `deployment.yaml`의
+`app-files` 볼륨 `mountPath`를 동일하게 맞추면 됩니다.
+
 ## 배포
 
 ```bash
@@ -126,6 +149,7 @@ kubectl create namespace egovframe
 
 # 매니페스트 적용
 kubectl apply -f k8s/configmap.yaml -n egovframe
+kubectl apply -f k8s/pvc.yaml       -n egovframe
 kubectl apply -f k8s/service.yaml   -n egovframe
 kubectl apply -f k8s/deployment.yaml -n egovframe
 ```

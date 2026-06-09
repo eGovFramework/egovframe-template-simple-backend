@@ -12,6 +12,11 @@ services:
       - DB_URL=jdbc:mysql://mysql-db:3306/${MYSQL_DATABASE:-egovdb}?useSSL=false&allowPublicKeyRetrieval=true
       - DB_USERNAME=${MYSQL_USER:-egov}
       - DB_PASSWORD=${MYSQL_PASSWORD:?MYSQL_PASSWORD must be set in .env}
+      # 게시판 첨부파일 저장 경로 — docker-entrypoint.sh가 Globals.fileStorePath 로 매핑한다.
+      - FILE_STORE_PATH=/app/files
+    volumes:
+      # 첨부파일을 컨테이너 재생성 후에도 보존하기 위한 영속 볼륨.
+      - app-files:/app/files
     depends_on:
       mysql-db:
         condition: service_healthy
@@ -46,3 +51,4 @@ services:
 
 volumes:
   mysql-data: {}
+  app-files: {}
