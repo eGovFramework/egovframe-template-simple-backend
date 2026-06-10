@@ -31,7 +31,7 @@
 	<!-- 메인페이지/일정관리조회 -->  
 	<select id="selectIndvdlSchdulManageMainList" parameterType="java.util.Map" resultType="egovMap">
 		SELECT 
-			DATE_FORMAT(sysdate(),'%Y-%m-%d') TO_DAY, 
+			DATE_FORMAT(NOW(),'%Y-%m-%d') TO_DAY,
 			A.SCHDUL_ID,
 			A.SCHDUL_SE,
 			A.SCHDUL_DEPT_ID,
@@ -56,9 +56,9 @@
 		
 		
 		AND ( 
-		 ( SUBSTRING(A.SCHDUL_BEGINDE,1,8) &gt; DATE_FORMAT(sysdate(),'%Y%m%d') AND SUBSTRING(A.SCHDUL_BEGINDE,1,8) &lt;= DATE_FORMAT(sysdate(),'%Y%m%d'))
+		 ( SUBSTRING(A.SCHDUL_BEGINDE,1,8) &gt; DATE_FORMAT(NOW(),'%Y%m%d') AND SUBSTRING(A.SCHDUL_BEGINDE,1,8) &lt;= DATE_FORMAT(NOW(),'%Y%m%d'))
 		OR
-		 ( SUBSTRING(A.SCHDUL_ENDDE,1,8) &gt;DATE_FORMAT(sysdate(),'%Y%m%d') AND SUBSTRING(A.SCHDUL_BEGINDE,1,8) &lt;= DATE_FORMAT(sysdate(),'%Y%m%d'))
+		 ( SUBSTRING(A.SCHDUL_ENDDE,1,8) &gt;DATE_FORMAT(NOW(),'%Y%m%d') AND SUBSTRING(A.SCHDUL_BEGINDE,1,8) &lt;= DATE_FORMAT(NOW(),'%Y%m%d'))
 		) 
 		
 		
@@ -232,7 +232,7 @@
 			SCHDUL_CHARGER_ID=#{schdulChargerId},
 			ATCH_FILE_ID=#{atchFileId},
 			REPTIT_SE_CODE=#{reptitSeCode},
-			LAST_UPDT_PNTTM = sysdate(),
+			LAST_UPDT_PNTTM = NOW(),
 			LAST_UPDUSR_ID = #{lastUpdusrId}
 		WHERE SCHDUL_ID = #{schdulId}
 	</update>
@@ -300,9 +300,9 @@
 			#{schdulChargerId},
 			#{atchFileId},
 			#{reptitSeCode},    
-			sysdate(),
+			NOW(),
 			#{frstRegisterId},
-			sysdate(),
+			NOW(),
 			#{lastUpdusrId} 
 		)
 

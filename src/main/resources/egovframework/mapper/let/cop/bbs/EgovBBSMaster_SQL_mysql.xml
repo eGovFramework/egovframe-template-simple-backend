@@ -53,7 +53,7 @@
 			VALUES
 			( #{bbsId}, #{bbsTyCode}, #{bbsAttrbCode}, #{bbsNm}, #{bbsIntrcn}, 
 			  #{replyPosblAt}, #{fileAtchPosblAt}, #{posblAtchFileNumber}, 
-			  #{posblAtchFileSize}, #{tmplatId}, #{useAt}, #{frstRegisterId}, SYSDATE()  
+			  #{posblAtchFileSize}, #{tmplatId}, #{useAt}, #{frstRegisterId}, NOW()
 			 )			
 		
 	</insert>
@@ -157,7 +157,7 @@
 				ATCH_POSBL_FILE_SIZE = #{posblAtchFileSize},
 				TMPLAT_ID = #{tmplatId},		
 				LAST_UPDUSR_ID = #{lastUpdusrId},
-				LAST_UPDT_PNTTM = SYSDATE()
+				LAST_UPDT_PNTTM = NOW()
 			WHERE BBS_ID = #{bbsId}
  		
  	</update>
@@ -167,7 +167,7 @@
 			UPDATE LETTNBBSMASTER SET 
 				USE_AT = 'N',
 				LAST_UPDUSR_ID = #{lastUpdusrId},
-				LAST_UPDT_PNTTM = SYSDATE()
+				LAST_UPDT_PNTTM = NOW()
 			WHERE BBS_ID = #{bbsId}
  		
  	</update>
