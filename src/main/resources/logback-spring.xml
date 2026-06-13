@@ -8,9 +8,9 @@
 	<property name="LOG_PATH" value="${logging.file.path}" />
 	<!-- 로그 파일 이름 -->
 	<property name="LOG_FILE_NAME" value="${logging.file.name}" />
-	<!-- 로그 출력 패턴 -->
+	<!-- 로그 출력 패턴 (traceId/spanId 는 Micrometer Tracing 이 MDC 에 주입한 값) -->
 	<property name="LOG_PATTERN"
-		value="%-5level %d{yy-MM-dd HH:mm:ss}[%thread] [%logger{0}:%line] - %msg%n" />
+		value="%-5level %d{yy-MM-dd HH:mm:ss}[%thread] [%X{traceId:-},%X{spanId:-}] [%logger{0}:%line] - %msg%n" />
 	<!-- 로그 용량 -->
 	<property name="LOG_MAX_FILE_SIZE" value="${logging.rollingpolicy.maxFileSize}" />
 	<!-- 로그 보관주기 -->
@@ -27,7 +27,7 @@
 		class="ch.qos.logback.core.ConsoleAppender">
 		<layout class="ch.qos.logback.classic.PatternLayout">
 			<Pattern>
-				[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} : %30logger{5} - %msg%n
+				[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%X{traceId:-},%X{spanId:-}] : %30logger{5} - %msg%n
 			</Pattern>
 		</layout>
 	</appender>
