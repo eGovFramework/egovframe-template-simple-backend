@@ -1,0 +1,54 @@
+services:
+  app:
+    build: .
+    image: egovframe-template-simple-backend:${APP_VERSION:-5.0.0}
+    container_name: egov-simple-backend
+    ports:
+      - "8080:8080"
+    environment:
+      # DB_* 값은 docker-entrypoint.sh가 Globals.DbType / Globals.<dbtype>.* 로 매핑한다.
+      - SPRING_PROFILES_ACTIVE=prod
+      - DB_TYPE=mysql
+      - DB_URL=jdbc:mysql://mysql-db:3306/${MYSQL_DATABASE:-egovdb}?useSSL=false&allowPublicKeyRetrieval=true
+      - DB_USERNAME=${MYSQL_USER:-egov}
+      - DB_PASSWORD=${MYSQL_PASSWORD:?MYSQL_PASSWORD must be set in .env}
+      # 게시판 첨부파일 저장 경로 — docker-entrypoint.sh가 Globals.fileStorePath 로 매핑한다.
+      - FILE_STORE_PATH=/app/files
+    volumes:
+      # 첨부파일을 컨테이너 재생성 후에도 보존하기 위한 영속 볼륨.
+      - app-files:/app/files
+    depends_on:
+      mysql-db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  mysql-db:
+    image: mysql:${MYSQL_VERSION:-8.0.39}
+    container_name: mysql-db
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?MYSQL_ROOT_PASSWORD must be set in .env}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-egovdb}
+      MYSQL_USER: ${MYSQL_USER:-egov}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:?MYSQL_PASSWORD must be set in .env}
+    command: >
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
+    volumes:
+      - mysql-data:/var/lib/mysql
+      # 최초 기동(빈 데이터 볼륨) 시 알파벳 순으로 실행되어 스키마(DDL) → 데이터(DML)를 적재한다.
+      # 볼륨에 데이터가 이미 있으면 MySQL이 init 스크립트를 건너뛰므로, 재적재하려면 볼륨을 삭제한다.
+      - ./DATABASE/all_sht_ddl_mysql.sql:/docker-entrypoint-initdb.d/01-ddl.sql:ro
+      - ./DATABASE/all_sht_data_mysql.sql:/docker-entrypoint-initdb.d/02-data.sql:ro
+    healthcheck:
+      test: [ "CMD-SHELL", "mysql --protocol=TCP -h 127.0.0.1 -u root --password=$$MYSQL_ROOT_PASSWORD -e 'SELECT 1' || exit 1" ]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 10s
+    restart: unless-stopped
+
+volumes:
+  mysql-data: {}
+  app-files: {}
