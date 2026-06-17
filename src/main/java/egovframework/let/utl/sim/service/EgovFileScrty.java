@@ -29,6 +29,7 @@ import lombok.extern.slf4j.Slf4j;
  *  -------    --------    ---------------------------
  *   2009.01.19  박지욱          최초 생성
  *   2011.08.31  JJY            경량환경 템플릿 커스터마이징버전 생성
+ *   2026.05.13  PHJ            보안취약점 대응
  *
  * </pre>
  */
@@ -198,7 +199,7 @@ public class EgovFileScrty {
 	public static String decode(String data) throws Exception {
 		return new String(decodeBinary(data));
 	}
-
+	
     /**
      * 비밀번호를 암호화하는 기능(복호화가 되면 안되므로 SHA-256 인코딩 방식 적용).
      *
@@ -207,8 +208,11 @@ public class EgovFileScrty {
      * @param data 암호화할 비밀번호
      * @return String result 암호화된 비밀번호
      * @exception Exception
-     * @Deprecated 부분 이클립스에서 에러표시가 나와서 주석처리
      */
+	// 26.03.04 KISA 보안취약점 조치
+	// deprecated 메서드 전체 주석 처리
+	/*
+    @Deprecated
     public static String encryptPassword(String data) throws Exception {
 
 		if (data == null) {
@@ -220,7 +224,7 @@ public class EgovFileScrty {
 		plainText = data.getBytes();
 
 		MessageDigest md = MessageDigest.getInstance("SHA-256");
-
+		*/
 		// 변경 시 기존 hash 값에 검증 불가.. => deprecated 시키고 유지
 		/*
 	    // Random 방식의 salt 추가
@@ -232,14 +236,16 @@ public class EgovFileScrty {
 	    md.update(randomBytes);
 
 		*/
-		hashValue = md.digest(plainText);
+		// hashValue = md.digest(plainText);
 
 		/*
 		BASE64Encoder encoder = new BASE64Encoder();
 		return encoder.encode(hashValue);
 		*/
+		/*
 		return new String(Base64.encodeBase64(hashValue));
     }
+    */
 
     /**
      * 비밀번호를 암호화하는 기능(복호화가 되면 안되므로 SHA-256 인코딩 방식 적용)
@@ -265,6 +271,19 @@ public class EgovFileScrty {
 		hashValue = md.digest(password.getBytes());
 
 		return new String(Base64.encodeBase64(hashValue));
+    }
+
+    /**
+     * 비밀번호 이중 해싱 — 클라이언트가 1차 해싱한 값을 다시 한 번 해싱해 저장한다.
+     * DB 유출 시 저장값으로 즉시 로그인되는 위험을 막기 위해 클라이언트 해시와 저장 해시 형식을 분리.
+     *
+     * 저장값 = SHA-256(id || SHA-256(id || password)) Base64
+     *
+     * @param plaintextPassword 원 평문 비밀번호 (서버 측 신규 발급/회원가입 등)
+     * @param id salt 로 사용될 사용자 ID
+     */
+    public static String encryptPasswordTwice(String plaintextPassword, String id) throws Exception {
+        return encryptPassword(encryptPassword(plaintextPassword, id), id);
     }
 
     /**

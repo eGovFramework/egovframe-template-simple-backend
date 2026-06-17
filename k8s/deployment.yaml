@@ -1,0 +1,99 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: egovframe-template-simple-backend
+  labels:
+    app.kubernetes.io/name: egovframe-template-simple-backend
+    app.kubernetes.io/part-of: egovframe-template
+spec:
+  # 업로드 파일 저장소(pvc.yaml)가 ReadWriteOnce PVC이므로 단일 레플리카로 둔다.
+  # RollingUpdate는 교체 시 두 번째 Pod가 같은 RWO PVC를 마운트하지 못해 멈추므로
+  # Recreate 전략을 사용한다. 다중 레플리카 확장 시 RWX 스토리지가 필요하다(README 참조).
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: egovframe-template-simple-backend
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: egovframe-template-simple-backend
+        app.kubernetes.io/part-of: egovframe-template
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+      containers:
+        - name: app
+          # Replace with your registry/tag, e.g. ghcr.io/<org>/egovframe-template-simple-backend:5.0.0
+          image: egovframe-template-simple-backend:5.0.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: egovframe-template-simple-backend
+          env:
+            # DB 자격증명 — docker-entrypoint.sh가 Globals.<dbtype>.UserName/Password 로 매핑한다.
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: egovframe-template-simple-backend-db
+                  key: username
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: egovframe-template-simple-backend-db
+                  key: password
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "512Mi"
+            limits:
+              cpu: "1000m"
+              memory: "1Gi"
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: http
+            initialDelaySeconds: 20
+            periodSeconds: 10
+            failureThreshold: 6
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: http
+            initialDelaySeconds: 60
+            periodSeconds: 20
+            failureThreshold: 3
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+            # logback-spring.xml은 logging.file.path(기본 ./log → /app/log)에 로그 파일을 기록한다.
+            # readOnlyRootFilesystem: true 환경에서 /app/log 쓰기가 막혀 기동에 실패하므로
+            # 쓰기 가능한 emptyDir 볼륨을 마운트한다.
+            - name: app-log
+              mountPath: /app/log
+            # 게시판 첨부파일 저장 경로(Globals.fileStorePath=/app/files, configmap FILE_STORE_PATH).
+            # readOnlyRootFilesystem: true 환경에서 쓰기 가능한 영속 볼륨(PVC)을 마운트한다.
+            # emptyDir이면 Pod 재시작 시 첨부파일이 소실되므로 PVC를 사용한다.
+            - name: app-files
+              mountPath: /app/files
+      volumes:
+        - name: tmp
+          emptyDir: {}
+        - name: app-log
+          emptyDir: {}
+        - name: app-files
+          persistentVolumeClaim:
+            claimName: egovframe-template-simple-backend-files

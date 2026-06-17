@@ -9,8 +9,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import egovframework.let.cop.bbs.service.BoardMaster;
-import egovframework.let.cop.bbs.service.BoardMasterVO;
+import egovframework.let.cop.bbs.dto.request.BbsAttributeInsertRequestDTO;
+import egovframework.let.cop.bbs.dto.response.BbsAttributeDetailResponseDTO;
+import egovframework.let.cop.bbs.dto.response.BbsFileAtchResponseDTO;
+import egovframework.let.cop.bbs.enums.BbsDetailRequestType;
 import egovframework.let.cop.bbs.service.EgovBBSAttributeManageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,27 +39,30 @@ class EgovBBSUseInfoManageServiceImplTestInsertBBSMastetInfTest {
 	@Test
 	void test() throws Exception {
 		// given
-		final BoardMaster boardMaster = new BoardMaster();
-
 		final String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("uuuu-MM-dd'T'HH:mm:ss.SSSSSSSSS"));
-
-		boardMaster.setBbsNm("test 이백행 게시판명 " + now);
-
-		boardMaster.setPosblAtchFileSize("0");
-
+		
+		final BbsAttributeInsertRequestDTO bbsInsertRequestDTO = new BbsAttributeInsertRequestDTO();
+		bbsInsertRequestDTO.setBbsNm("test 이백행 게시판명 " + now);
+		bbsInsertRequestDTO.setPosblAtchFileSize("0");
+		bbsInsertRequestDTO.setBbsAttrbCode("BBSA02");
+		bbsInsertRequestDTO.setBbsTyCode("BBST01");
+		bbsInsertRequestDTO.setFileAtchPosblAt("Y");
+		bbsInsertRequestDTO.setUseAt("Y");
+		bbsInsertRequestDTO.setFrstRegisterId("admin");
+		
 		// when
-		final String result = egovBBSAttributeManageService.insertBBSMastetInf(boardMaster);
+		final String resultBbsId = egovBBSAttributeManageService.insertBBSMastetInf(bbsInsertRequestDTO);
 
 		// then
-		final BoardMasterVO resultBoardMasterVO = egovBBSAttributeManageService.selectBBSMasterInf(boardMaster);
-
+		final BbsFileAtchResponseDTO response = egovBBSAttributeManageService.selectBBSMasterInf(resultBbsId, null, BbsDetailRequestType.DETAIL);
+		String responseBbsId = ((BbsAttributeDetailResponseDTO) response).getBbsId();
 		if (log.isDebugEnabled()) {
-			log.debug("result={}", result);
-			log.debug("resultBoardMasterVO={}", resultBoardMasterVO);
-			log.debug("getBbsId={}", resultBoardMasterVO.getBbsId());
+			log.debug("result={}", resultBbsId);
+			log.debug("resultBoardMasterVO={}", response);
+			log.debug("getBbsId={}", responseBbsId);
 		}
 
-		assertEquals(result, resultBoardMasterVO.getBbsId(), "신규 게시판 속성정보를 생성한다.");
+		assertEquals(resultBbsId, responseBbsId, "신규 게시판 속성정보를 생성한다.");
 	}
 
 }

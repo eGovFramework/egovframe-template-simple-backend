@@ -2,6 +2,17 @@ package egovframework.let.cop.bbs.service;
 
 import java.util.Map;
 
+import egovframework.com.cmm.LoginVO;
+import egovframework.let.cop.bbs.domain.model.Board;
+import egovframework.let.cop.bbs.domain.model.BoardVO;
+import egovframework.let.cop.bbs.dto.request.BbsManageDeleteBoardRequestDTO;
+import egovframework.let.cop.bbs.dto.request.BbsManageDetailBoardRequestDTO;
+import egovframework.let.cop.bbs.dto.request.BbsSearchRequestDTO;
+import egovframework.let.cop.bbs.dto.response.BbsManageDetailItemResponseDTO;
+import egovframework.let.cop.bbs.dto.response.BbsManageDetailResponseDTO;
+import egovframework.let.cop.bbs.dto.response.BbsManageListResponseDTO;
+import org.egovframe.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
+
 /**
  * 게시물 관리를 위한 서비스 인터페이스  클래스
  * @author 공통 서비스 개발팀 이삼섭
@@ -27,7 +38,7 @@ public interface EgovBBSManageService {
 	 * @param Board
 	 * @exception Exception Exception
 	 */
-	public void deleteBoardArticle(Board Board)
+	public void deleteBoardArticle(BbsManageDeleteBoardRequestDTO bbsDeleteBoardRequestDTO, LoginVO user)
 	  throws Exception;
 
 	/**
@@ -62,21 +73,22 @@ public interface EgovBBSManageService {
 	 * 게시물 대하여 상세 내용을 조회 한다.
 	 * @return
 	 * 
-	 * @param boardVO
+	 * @param bbsManageDetailBoardRequestDTO
 	 * @exception Exception Exception
 	 */
-	public BoardVO selectBoardArticle(BoardVO boardVO)
+	public BbsManageDetailResponseDTO selectBoardArticle(BbsManageDetailBoardRequestDTO bbsManageDetailBoardRequestDTO)
 	  throws Exception;
 
 	/**
 	 * 조건에 맞는 게시물 목록을 조회 한다.
 	 * @return
 	 * 
-	 * @param boardVO
+	 * @param bbsSearchRequestDTO
+	 * @param paginationInfo
 	 * @param attrbFlag
 	 * @exception Exception Exception
 	 */
-	public Map<String, Object> selectBoardArticles(BoardVO boardVO, String attrbFlag)
+	public BbsManageListResponseDTO selectBoardArticles(BbsSearchRequestDTO bbsSearchRequestDTO, PaginationInfo paginationInfo, String attrbFlag)
 	  throws Exception;
 
 	/**

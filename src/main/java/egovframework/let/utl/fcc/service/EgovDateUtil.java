@@ -243,6 +243,7 @@ public class EgovDateUtil {
 			else
 				return false;
 		} catch (ParseException e) {
+			log.warn("Invalid date provided: year={}, month={}, day={}", year, month, day);
 			return false;
 		}
 	}
@@ -259,33 +260,37 @@ public class EgovDateUtil {
 	public static String convertDate(String strSource, String fromDateFormat, String toDateFormat, String strTimeZone) {
 		SimpleDateFormat simpledateformat = null;
 		Date date = null;
-		String _fromDateFormat = "";
-		String _toDateFormat = "";
+		String actualFromDateFormat = "";
+		String actualToDateFormat = "";
 
 		if (EgovStringUtil.isNullToString(strSource).trim().equals("")) {
 			return "";
 		}
-		if (EgovStringUtil.isNullToString(fromDateFormat).trim().equals(""))
-			_fromDateFormat = "yyyyMMddHHmmss"; // default값
-		if (EgovStringUtil.isNullToString(toDateFormat).trim().equals(""))
-			_toDateFormat = "yyyy-MM-dd HH:mm:ss"; // default값
+		
+		if (EgovStringUtil.isNullToString(fromDateFormat).trim().equals("")) {
+			actualFromDateFormat = "yyyyMMddHHmmss"; // default값
+		} else {
+			actualFromDateFormat = fromDateFormat;
+		}
+
+		if (EgovStringUtil.isNullToString(toDateFormat).trim().equals("")) {
+			actualToDateFormat = "yyyy-MM-dd HH:mm:ss"; // default값
+		} else {
+			actualToDateFormat = toDateFormat;
+		}
 
 		try {
-			simpledateformat = new SimpleDateFormat(_fromDateFormat, Locale.getDefault());
+			simpledateformat = new SimpleDateFormat(actualFromDateFormat, Locale.getDefault());
 			date = simpledateformat.parse(strSource);
 			if (!EgovStringUtil.isNullToString(strTimeZone).trim().equals("")) {
 				simpledateformat.setTimeZone(TimeZone.getTimeZone(strTimeZone));
 			}
-			simpledateformat = new SimpleDateFormat(_toDateFormat, Locale.getDefault());
+			simpledateformat = new SimpleDateFormat(actualToDateFormat, Locale.getDefault());
 		} catch (ParseException exception) {
-			log.debug("{}", exception);
-		}
-		if (simpledateformat.format(date) != null) {
-			return simpledateformat.format(date);
-		} else {
+			log.error("Failed to parse date string: {}", strSource, exception);
 			return "";
 		}
-
+		return simpledateformat.format(date);
 	}
 
 	/**

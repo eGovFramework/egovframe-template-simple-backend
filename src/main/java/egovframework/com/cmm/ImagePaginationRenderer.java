@@ -2,7 +2,7 @@ package egovframework.com.cmm;
 
 import org.egovframe.rte.ptl.mvc.tags.ui.pagination.AbstractPaginationRenderer;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 
 import org.springframework.web.context.ServletContextAware;
 /**
@@ -39,7 +39,7 @@ public class ImagePaginationRenderer extends AbstractPaginationRenderer implemen
 	}
 
 	
-
+    @Override
 	public void setServletContext(ServletContext servletContext) {
 		this.servletContext = servletContext;
 		initVariables();

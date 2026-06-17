@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<Configuration scan="true">
+
+	<property resource="application.properties" />
+
+	<!-- 로그 파일이 저장될 경로 -->
+	<property name="LOG_PATH" value="${logging.file.path}" />
+	<!-- 로그 파일 이름 -->
+	<property name="LOG_FILE_NAME" value="${logging.file.name}" />
+	<!-- 로그 출력 패턴 -->
+	<property name="LOG_PATTERN"
+		value="%-5level %d{yy-MM-dd HH:mm:ss}[%thread] [%logger{0}:%line] - %msg%n" />
+	<!-- 로그 용량 -->
+	<property name="LOG_MAX_FILE_SIZE"
+		value="${logging.rollingpolicy.maxFileSize}" />
+	<!-- 로그 보관주기 -->
+	<property name="LOG_MAX_HISTORY"
+		value="${logging.rollingpolicy.maxHistory}" />
+
+	<!-- 로그 레벨 -->
+	<!-- 1) ERROR : 오류 메시지 표시 2) WARN : 경고성 메시지 표시 3) INFO : 정보성 메시지 표시 4) DEBUG 
+		: 디버깅하기 위한 메시지 표시 5) TRACE : Debug보다 훨씬 상세한 메시지 표시 아래에서는 info로 설정하였는데, 이 
+		경우엔 INFO 보다 위에 있는 DEBUG와 TRACE는 표시하지 않는다. -->
+	<property name="LOG_LEVEL" value="${logging.root.level}" />
+
+	<!-- CONSOLE에 로그 출력 세팅 -->
+	<appender name="CONSOLE"
+		class="ch.qos.logback.core.ConsoleAppender">
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<Pattern>
+				[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} : %30logger{5} -
+				%msg%n
+			</Pattern>
+		</layout>
+	</appender>
+
+	<!-- File에 로그 출력 세팅 -->
+	<appender name="FILE"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<!-- 파일 경로 설정 -->
+		<file>${LOG_PATH}/${LOG_FILE_NAME}.log</file>
+
+		<!-- 출력패턴 설정 -->
+		<encoder
+			class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<pattern>${LOG_PATTERN}</pattern>
+		</encoder>
+
+		<!-- Rolling 정책 -->
+		<rollingPolicy
+			class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- .gz,.zip 등을 넣으면 자동 일자별 로그파일 압축 -->
+			<fileNamePattern>${LOG_PATH}/${LOG_FILE_NAME}.%d{yyyy-MM-dd}_%i.log
+			</fileNamePattern>
+			<timeBasedFileNamingAndTriggeringPolicy
+				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<!-- 파일당 최고 용량 kb, mb, gb -->
+				<maxFileSize>${LOG_MAX_FILE_SIZE}</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+			<!-- 일자별 로그파일 최대 보관주기(~일), 해당 설정일 이상된 파일은 자동으로 제거 -->
+			<maxHistory>${LOG_MAX_HISTORY}</maxHistory>
+			<!--<MinIndex>1</MinIndex> <MaxIndex>10</MaxIndex> -->
+		</rollingPolicy>
+	</appender>
+
+	<logger name="java.sql" level="${LOG_LEVEL}" />
+	<logger name="egovframework" level="${LOG_LEVEL}" />
+	<logger name="org.egovframe" level="${LOG_LEVEL}" />
+	<logger name="jdbc.sqltiming" level="${LOG_LEVEL}" />
+	<logger name="org.springframework" level="${LOG_LEVEL}" />
+
+
+	<!-- 로그 전역 세팅 -->
+	<root level="${LOG_LEVEL}">
+		<!-- 위에 설정한 콘솔 설정 추가 -->
+		<appender-ref ref="CONSOLE" />
+
+		<!-- 위에 설정한 파일 설정 추가 -->
+		<appender-ref ref="FILE" />
+	</root>
+</Configuration>

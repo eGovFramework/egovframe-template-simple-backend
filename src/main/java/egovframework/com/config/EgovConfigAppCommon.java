@@ -1,8 +1,12 @@
 package egovframework.com.config;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -11,7 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.util.AntPathMatcher;
-import org.springframework.web.multipart.commons.CommonsMultipartResolver;
+import org.springframework.web.multipart.MultipartResolver;
 
 import egovframework.com.cmm.EgovComTraceHandler;
 import egovframework.com.cmm.ImagePaginationRenderer;
@@ -21,8 +25,8 @@ import org.egovframe.rte.fdl.cmmn.trace.LeaveaTrace;
 import org.egovframe.rte.fdl.cmmn.trace.handler.TraceHandler;
 import org.egovframe.rte.fdl.cmmn.trace.manager.DefaultTraceHandleManager;
 import org.egovframe.rte.fdl.cmmn.trace.manager.TraceHandlerService;
-import org.egovframe.rte.fdl.cryptography.EgovPasswordEncoder;
-import org.egovframe.rte.fdl.cryptography.impl.EgovARIACryptoServiceImpl;
+import org.egovframe.rte.fdl.crypto.EgovPasswordEncoder;
+import org.egovframe.rte.fdl.crypto.impl.EgovARIACryptoServiceImpl;
 import org.egovframe.rte.ptl.mvc.tags.ui.pagination.DefaultPaginationManager;
 import org.egovframe.rte.ptl.mvc.tags.ui.pagination.PaginationRenderer;
 
@@ -41,6 +45,7 @@ import org.egovframe.rte.ptl.mvc.tags.ui.pagination.PaginationRenderer;
  *  -------------  ------------   ---------------------
  *   2021. 7. 20    윤주호               최초 생성
  *   2023. 5. 05    crlee              remove EgovMessageSource config
+ *   2026. 5. 13  	PHJ                보안취약점 대응
  * </pre>
  *
  */
@@ -53,6 +58,9 @@ import org.egovframe.rte.ptl.mvc.tags.ui.pagination.PaginationRenderer;
 	@ComponentScan.Filter(type = FilterType.ANNOTATION, value = Configuration.class)
 })
 public class EgovConfigAppCommon {
+
+	@Value("${Globals.crypto.algoritm}")
+	private String cryptoAlgoritm;
 
 	/**
 	 * @return AntPathMatcher 등록.  Ant 경로 패턴 경로와 일치하는지 여부를 확인
@@ -116,47 +124,42 @@ public class EgovConfigAppCommon {
 	}
 
 	/**
-	 * @return [MultipartResolver 설정] CommonsMultipartResolver 등록
-	 */
-	@Bean
-	public CommonsMultipartResolver springRegularCommonsMultipartResolver() {
-		CommonsMultipartResolver commonsMultipartResolver = new CommonsMultipartResolver();
-		commonsMultipartResolver.setMaxUploadSize(100000000);
-		commonsMultipartResolver.setMaxInMemorySize(100000000);
-		commonsMultipartResolver.setSupportedMethods("POST","PUT");
-		return commonsMultipartResolver;
-	}
-
-	/**
 	 * 확장자 제한 : globals.properties > Globals.fileUpload.Extensions로 설정
-	 * @return [MultipartResolver 설정] EgovMultipartResolver 등록
+	 * @return [MultipartResolver 설정] EgovMultipartResolver 등록 (StandardServletMultipartResolver 기반)
+	 * 
+	 * 참고: 파일 크기 제한은 application.properties에서 설정 가능:
+	 * - spring.servlet.multipart.max-file-size=100MB
+	 * - spring.servlet.multipart.max-request-size=100MB
 	 */
 	@Bean
 	public EgovMultipartResolver localMultiCommonsMultipartResolver() {
 		EgovMultipartResolver egovMultipartResolver = new EgovMultipartResolver();
-		egovMultipartResolver.setMaxUploadSize(100000000);
-		egovMultipartResolver.setMaxInMemorySize(100000000);
-		egovMultipartResolver.setSupportedMethods("POST","PUT");
 		return egovMultipartResolver;
 	}
 	
 	@Bean
-	public CommonsMultipartResolver multipartResolver() {
+	public MultipartResolver multipartResolver() {
 		return localMultiCommonsMultipartResolver();
 	}
 	
 	/**
-	 * 암복호화
+	 * 암복호화 — SHA-256(EGOV_CRYPTO_KEY) 를 hashedPassword 로 동적 계산
 	 * @return [EgovPasswordEncoder 설정] EgovPasswordEncoder 등록
 	 */
 	@Bean
 	public EgovPasswordEncoder egovPasswordEncoder() {
 		EgovPasswordEncoder egovPasswordEncoder = new EgovPasswordEncoder();
 		egovPasswordEncoder.setAlgorithm("SHA-256");
-		egovPasswordEncoder.setHashedPassword("gdyYs/IZqY86VcWhT8emCYfqY1ahw2vtLG+/FzNqtrQ=");
+		try {
+			MessageDigest md = MessageDigest.getInstance("SHA-256");
+			byte[] hash = md.digest(cryptoAlgoritm.getBytes(StandardCharsets.UTF_8));
+			egovPasswordEncoder.setHashedPassword(Base64.getEncoder().encodeToString(hash));
+		} catch (Exception e) {
+			throw new IllegalStateException("SHA-256 해시 계산 실패", e);
+		}
 		return egovPasswordEncoder;
 	}
-	
+
 	/**
 	 * 암복호화
 	 * @return [EgovARIACryptoServiceImpl 설정] EgovARIACryptoServiceImpl 등록

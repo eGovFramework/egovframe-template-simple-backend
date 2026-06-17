@@ -8,7 +8,6 @@ import javax.sql.DataSource;
 import org.springframework.aop.Advisor;
 import org.springframework.aop.aspectj.AspectJExpressionPointcut;
 import org.springframework.aop.support.DefaultPointcutAdvisor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
@@ -39,8 +38,11 @@ import org.springframework.transaction.interceptor.TransactionInterceptor;
 @Configuration
 public class EgovConfigAppTransaction {
 
-	@Autowired
-	DataSource dataSource;
+    private final DataSource dataSource;
+
+    public EgovConfigAppTransaction(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
 
 	@Bean
 	public DataSourceTransactionManager txManager() {

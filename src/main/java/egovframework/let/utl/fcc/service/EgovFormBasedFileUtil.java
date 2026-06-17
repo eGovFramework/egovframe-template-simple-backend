@@ -13,7 +13,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 
 import egovframework.com.cmm.EgovWebUtil;
 import egovframework.com.cmm.util.EgovResourceCloseHelper;
@@ -114,75 +114,6 @@ public class EgovFormBasedFileUtil {
 
 		return size;
 	}
-
-	/**
-	 * 파일을 Upload 처리한다. (삭제)
-	 * EgovFileUploadUtil.uploadFilesExt(확장자 확인) 대체
-	 *
-	 * @param request
-	 * @param where
-	 * @param maxFileSize
-	 * @return
-	 * @throws Exception
-	 */
-	/*
-	public static List<EgovFormBasedFileVo> uploadFiles(HttpServletRequest request, String where, long maxFileSize) throws Exception {
-		List<EgovFormBasedFileVo> list = new ArrayList<EgovFormBasedFileVo>();
-
-		// Check that we have a file upload request
-		boolean isMultipart = ServletFileUpload.isMultipartContent(request);
-
-		if (isMultipart) {
-			// Create a new file upload handler
-			ServletFileUpload upload = new ServletFileUpload();
-			upload.setFileSizeMax(maxFileSize); // SizeLimitExceededException
-
-			// Parse the request
-			FileItemIterator iter = upload.getItemIterator(request);
-			while (iter.hasNext()) {
-				FileItemStream item = iter.next();
-				String name = item.getFieldName();
-				InputStream stream = item.openStream();
-				if (item.isFormField()) {
-					log.info("Form field '{}' with value '{}' detected.", name, Streams.asString(stream));
-				} else {
-					log.info("File field '{}' with file name '{}' detected.", name, item.getName());
-
-					if ("".equals(item.getName())) {
-						continue;
-					}
-
-					// Process the input stream
-					EgovFormBasedFileVo vo = new EgovFormBasedFileVo();
-
-					String tmp = item.getName();
-
-					if (tmp.lastIndexOf("\\") >= 0) {
-						tmp = tmp.substring(tmp.lastIndexOf("\\") + 1);
-					}
-
-					vo.setFileName(tmp);
-					vo.setContentType(item.getContentType());
-					vo.setServerSubPath(getTodayString());
-					vo.setPhysicalName(getPhysicalFileName());
-
-					if (tmp.lastIndexOf(".") >= 0) {
-						vo.setPhysicalName(vo.getPhysicalName() + tmp.substring(tmp.lastIndexOf(".")));
-					}
-
-					long size = saveFile(stream, new File(EgovWebUtil.filePathBlackList(where) + SEPERATOR + vo.getServerSubPath() + SEPERATOR + vo.getPhysicalName()));
-
-					vo.setSize(size);
-
-					list.add(vo);
-				}
-			}
-		} else {
-			throw new IOException("form's 'enctype' attribute have to be 'multipart/form-data'");
-		}
-
-		return list;
-	}*/
 
 	/**
 	 * 파일을 Download 처리한다.

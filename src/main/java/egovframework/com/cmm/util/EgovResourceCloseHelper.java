@@ -37,7 +37,7 @@ public class EgovResourceCloseHelper {
 				try {
 					resource.close();
 				} catch (IOException ignore) {//KISA 보안약점 조치 (2018-10-29, 윤창원)
-					EgovBasicLogger.ignore("Occurred IOException to close resource is ingored!!");
+					EgovBasicLogger.ignore("Occurred IOException to close resource is ignored!!");
 				}
 			}
 		}
@@ -54,19 +54,19 @@ public class EgovResourceCloseHelper {
 					try {
 						((ResultSet)object).close();
 					} catch (SQLException ignore) {//KISA 보안약점 조치 (2018-10-29, 윤창원)
-						EgovBasicLogger.ignore("Occurred SQLException to close resource is ingored!!");
+						EgovBasicLogger.ignore("Occurred SQLException to close resource is ignored!!");
 					}
 				} else if (object instanceof Statement) {
 					try {
 						((Statement)object).close();
 					} catch (SQLException ignore) {//KISA 보안약점 조치 (2018-10-29, 윤창원)
-						EgovBasicLogger.ignore("Occurred SQLException to close resource is ingored!!");
+						EgovBasicLogger.ignore("Occurred SQLException to close resource is ignored!!");
 					}
 				} else if (object instanceof Connection) {
 					try {
 						((Connection)object).close();
 					} catch (SQLException ignore) {
-						EgovBasicLogger.ignore("Occurred SQLException to close resource is ingored!!");
+						EgovBasicLogger.ignore("Occurred SQLException to close resource is ignored!!");
 					}
 				} else {
 					throw new IllegalArgumentException("Wrapper type is not found : " + object.toString());
@@ -84,13 +84,13 @@ public class EgovResourceCloseHelper {
 			try {
 				socket.shutdownOutput();
 			} catch (IOException ignore) {
-				EgovBasicLogger.ignore("Occurred IOException to close resource is ingored!!");
+				EgovBasicLogger.ignore("Occurred IOException to close resource is ignored!!");
 			}
 			
 			try {
 				socket.close();
 			} catch (IOException ignore) {
-				EgovBasicLogger.ignore("Occurred IOException to close resource is ingored!!");
+				EgovBasicLogger.ignore("Occurred IOException to close resource is ignored!!");
 			}
 		}
 		
@@ -98,7 +98,7 @@ public class EgovResourceCloseHelper {
 			try {
 				server.close();
 			} catch (IOException ignore) {
-				EgovBasicLogger.ignore("Occurred IOException to close resource is ingored!!");
+				EgovBasicLogger.ignore("Occurred IOException to close resource is ignored!!");
 			}
 		}
 	}
@@ -114,13 +114,13 @@ public class EgovResourceCloseHelper {
 				try {
 					socket.shutdownOutput();
 				} catch (IOException ignore) {
-					EgovBasicLogger.ignore("Occurred IOException to close resource is ingored!!");
+					EgovBasicLogger.ignore("Occurred IOException to close resource is ignored!!");
 				}
 				
 				try {
 					socket.close();
 				} catch (IOException ignore) {
-					EgovBasicLogger.ignore("Occurred IOException to close resource is ingored!!");
+					EgovBasicLogger.ignore("Occurred IOException to close resource is ignored!!");
 				}
 			}
 		}

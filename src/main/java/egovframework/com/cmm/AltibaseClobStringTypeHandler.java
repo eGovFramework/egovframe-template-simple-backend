@@ -40,8 +40,8 @@ import lombok.extern.slf4j.Slf4j;
  * large enough binary type will work.
  *
  * @author Juergen Hoeller
- * @since 1.1.5
  * @see org.springframework.orm.ibatis.SqlMapClientFactoryBean#setLobHandler
+ * @since 1.1.5
  */
 @Slf4j
 @SuppressWarnings("deprecation")
@@ -71,35 +71,26 @@ public class AltibaseClobStringTypeHandler extends AbstractLobTypeHandler {
 	}
 
 
-	@Override
-	protected Object getResultInternal(ResultSet rs, int index, LobHandler lobHandler)
-			throws SQLException {
+    @Override
+    protected Object getResultInternal(ResultSet rs, int index, LobHandler lobHandler)
+            throws SQLException {
 
-		StringBuffer read_data = new StringBuffer("");
-	    int read_length;
+        char[] buf = new char[1024];
+        StringBuilder readData = new StringBuilder(buf.length);
 
-		char [] buf = new char[1024];
+        Reader rd = lobHandler.getClobAsCharacterStream(rs, index);
+        int readLength;
+        try (Reader r = rd) {
+            while ((readLength = r.read(buf)) != -1) {
+                readData.append(buf, 0, readLength);
+            }
+        } catch (IOException ie) {
+            log.debug("ie: {}", ie);//SQLException sqle = new SQLException(ie.getMessage());
+            //throw sqle;
+            // 2011.10.10 보안점검 후속조치
+        }
+        return readData.toString();
 
-		Reader rd =  lobHandler.getClobAsCharacterStream(rs, index);
-	    try {
-			while( (read_length=rd.read(buf))  != -1) {
-				read_data.append(buf, 0, read_length);
-			}
-	    } catch (IOException ie) {
-	    	log.debug("ie: {}", ie);//SQLException sqle = new SQLException(ie.getMessage());
-	    	//throw sqle;
-    	// 2011.10.10 보안점검 후속조치
-	    } finally {
-		    
-			try {
-			    rd.close();
-			} catch (IOException ignore) {
-				log.debug("IGNORE: {}", ignore.getMessage());
-			}
-		    
-		}
-
-	    return read_data.toString();
 
 		//return lobHandler.getClobAsString(rs, index);
 	}

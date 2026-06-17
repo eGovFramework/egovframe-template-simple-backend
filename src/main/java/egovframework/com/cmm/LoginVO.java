@@ -2,7 +2,7 @@ package egovframework.com.cmm;
 
 import java.io.Serializable;
 
-import javax.validation.constraints.Email;
+import jakarta.validation.constraints.Email;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
@@ -81,4 +81,6 @@ public class LoginVO implements Serializable{
 	
 	@Schema(description = "그룹명") //권한 그룹명 추가
 	private String groupNm;
+	
+	
 }

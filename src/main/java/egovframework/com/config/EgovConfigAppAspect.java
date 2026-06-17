@@ -1,6 +1,5 @@
 package egovframework.com.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -36,9 +35,6 @@ import org.egovframe.rte.fdl.cmmn.exception.manager.ExceptionHandlerService;
 @EnableAspectJAutoProxy
 public class EgovConfigAppAspect {
 
-	@Autowired
-	AntPathMatcher antPathMatcher;
-
 	@Bean
 	public EgovComExcepHndlr egovHandler() {
 		EgovComExcepHndlr egovComExcepHndlr = new EgovComExcepHndlr();
@@ -52,7 +48,7 @@ public class EgovConfigAppAspect {
 	}
 
 	@Bean
-	public DefaultExceptionHandleManager defaultExceptionHandleManager(ExceptionHandler egovHandler) {
+    public DefaultExceptionHandleManager defaultExceptionHandleManager(ExceptionHandler egovHandler, AntPathMatcher antPathMatcher) {
 		DefaultExceptionHandleManager defaultExceptionHandleManager = new DefaultExceptionHandleManager();
 		defaultExceptionHandleManager.setReqExpMatcher(antPathMatcher);
 		defaultExceptionHandleManager.setPatterns(new String[] {"**service.impl.*"});
@@ -61,7 +57,7 @@ public class EgovConfigAppAspect {
 	}
 
 	@Bean
-	public DefaultExceptionHandleManager otherExceptionHandleManager() {
+    public DefaultExceptionHandleManager otherExceptionHandleManager(AntPathMatcher antPathMatcher) {
 		DefaultExceptionHandleManager defaultExceptionHandleManager = new DefaultExceptionHandleManager();
 		defaultExceptionHandleManager.setReqExpMatcher(antPathMatcher);
 		defaultExceptionHandleManager.setPatterns(new String[] {"**service.impl.*"});

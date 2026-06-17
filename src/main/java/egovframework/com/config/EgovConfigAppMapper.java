@@ -2,13 +2,13 @@ package egovframework.com.config;
 
 import java.io.IOException;
 
-import javax.annotation.PostConstruct;
+import egovframework.com.cmm.util.EgovBasicLogger;
+import jakarta.annotation.PostConstruct;
 import javax.sql.DataSource;
 
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -41,11 +41,15 @@ import org.springframework.jdbc.support.lob.DefaultLobHandler;
 	@PropertySource("classpath:/application.properties")
 })
 public class EgovConfigAppMapper {
-	@Autowired
-	DataSource dataSource;
 
-	@Autowired
-	Environment env;
+    private final DataSource dataSource;
+
+    private final Environment env;
+
+    public EgovConfigAppMapper(DataSource dataSource, Environment env) {
+        this.dataSource = dataSource;
+        this.env = env;
+    }
 
 	private String dbType;
 
@@ -76,7 +80,10 @@ public class EgovConfigAppMapper {
 				pathMatchingResourcePatternResolver
 					.getResources("classpath:/egovframework/mapper/let/**/*_" + dbType + ".xml"));
 		} catch (IOException e) {
-			// TODO Exception 처리 필요
+			// 26.03.04 KISA 보안취약점 조치
+			// 구체적인 Exception 명시
+			EgovBasicLogger.debug("Mapper 파일 로딩 중 오류가 발생했습니다.", e);
+			throw new IllegalStateException("Mapper 파일 로딩 중 오류가 발생했습니다.", e);
 		}
 
 		return sqlSessionFactoryBean;
