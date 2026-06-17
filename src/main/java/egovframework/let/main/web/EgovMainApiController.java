@@ -7,12 +7,14 @@ import jakarta.annotation.Resource;
 
 import org.egovframe.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import egovframework.com.cmm.ResponseCode;
 import egovframework.com.cmm.service.ResultVO;
 import egovframework.let.cop.bbs.dto.request.BbsSearchRequestDTO;
 import egovframework.let.cop.bbs.dto.response.BbsManageListResponseDTO;
 import egovframework.let.cop.bbs.service.EgovBBSManageService;
+import egovframework.let.main.service.EgovRAGService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -43,7 +45,29 @@ public class EgovMainApiController {
 	 */
 	@Resource(name = "EgovBBSManageService")
     private EgovBBSManageService bbsMngService;
-
+	
+	private final EgovRAGService ragService; // RAGService 주입
+	public EgovMainApiController(EgovRAGService ragService) {
+        this.ragService = ragService; // RAG 기능때문에 추가
+    }
+	/**
+	 * RAG 기능으로 README.md 파일의 질문조회 후 답변
+	 * @return MD 형식의 응답 문자열
+	 *
+	 * @throws Exception
+	 */
+	@Operation(
+			summary = "RAG Chat",
+			description = "RAG 기능으로 README.md 파일의 질문조회 후 답변",
+			tags = {"EgovMainApiController"}
+	)
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "조회 성공")
+	})
+	@GetMapping("/api/gemini/rag_chat")
+    public String ragChat(@RequestParam(value = "prompt") String prompt) {
+        return ragService.answer(prompt, 3);// 검색 시 유사도Top3에 따라 조정
+    }
 	/**
 	 * 템플릿 메인 페이지 조회
 	 * @return 메인페이지 정보 Map [key : 항목명]
