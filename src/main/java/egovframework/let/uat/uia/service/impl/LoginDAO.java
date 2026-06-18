@@ -20,6 +20,7 @@ import org.springframework.stereotype.Repository;
  *  -------    --------    ---------------------------
  *  2009.03.06  박지욱          최초 생성
  *  2011.08.31  JJY            경량환경 템플릿 커스터마이징버전 생성
+ *  2026.06.18  이백행          [2026년 컨트리뷰션] DAO 반환값 추가
  *
  *  </pre>
  */
@@ -61,7 +62,7 @@ public class LoginDAO extends EgovAbstractMapper {
 	 * @param vo LoginVO
 	 * @exception Exception
 	 */
-	public void updatePassword(LoginVO vo) throws Exception {
-		update("loginDAO.updatePassword", vo);
+	public int updatePassword(LoginVO vo) throws Exception {
+		return update("loginDAO.updatePassword", vo);
 	}
 }
