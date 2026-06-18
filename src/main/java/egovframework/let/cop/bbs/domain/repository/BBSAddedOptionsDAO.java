@@ -19,6 +19,7 @@ import egovframework.let.cop.bbs.domain.model.BoardMasterVO;
  *  -------    --------    ---------------------------
  *  2009.06.26  한성곤          최초 생성
  *  2011.08.31  JJY            경량환경 템플릿 커스터마이징버전 생성 
+ *  2026.06.18  이백행          [2026년 컨트리뷰션] DAO 반환값 추가
  *  
  *  </pre>
  */
@@ -48,7 +49,7 @@ public class BBSAddedOptionsDAO extends EgovAbstractMapper {
      * 
      * @param BoardMaster
      */
-    public void updateAddedOptionsInf(BoardMaster boardMaster) throws Exception {
-	update("BBSAddedOptionsDAO.updateAddedOptionsInf", boardMaster);
+    public int updateAddedOptionsInf(BoardMaster boardMaster) throws Exception {
+	return update("BBSAddedOptionsDAO.updateAddedOptionsInf", boardMaster);
     }
 }
