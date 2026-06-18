@@ -24,6 +24,7 @@ import org.springframework.stereotype.Repository;
  *   2009.04.10  JJY            최초 생성
  *   2011.08.31  JJY            경량환경 템플릿 커스터마이징버전 생성
  *	 2024.07.23	 김일국			스프링부트용으로 커스터마이징
+ *	 2026.06.18  이백행            [2026년 컨트리뷰션] DAO 반환값 추가
  * </pre>
  */
 @Repository("mberManageDAO")
@@ -52,8 +53,8 @@ public class MberManageDAO extends EgovAbstractMapper{
      * 화면에 조회된 일반회원의 정보를 데이터베이스에서 삭제
      * @param delId 삭제 대상 일반회원아이디
      */
-    public void deleteMber(String delId){
-        delete("mberManageDAO.deleteMber_S", delId);
+    public int deleteMber(String delId){
+        return delete("mberManageDAO.deleteMber_S", delId);
     }
 
     /**
@@ -78,8 +79,8 @@ public class MberManageDAO extends EgovAbstractMapper{
      * 화면에 조회된일반회원의 기본정보를 수정하여 항목의 정합성을 체크하고 수정된 데이터를 데이터베이스에 반영
      * @param mberManageVO 일반회원수정정보
      */
-    public void updateMber(MberManageVO mberManageVO){
-        update("mberManageDAO.updateMber_S",mberManageVO);
+    public int updateMber(MberManageVO mberManageVO){
+        return update("mberManageDAO.updateMber_S",mberManageVO);
     }
 
     /**
@@ -95,8 +96,8 @@ public class MberManageDAO extends EgovAbstractMapper{
      * 일반회원 암호수정
      * @param passVO 기업회원수정정보(비밀번호)
      */
-    public void updatePassword(MberManageVO passVO) {
-        update("mberManageDAO.updatePassword_S", passVO);
+    public int updatePassword(MberManageVO passVO) {
+        return update("mberManageDAO.updatePassword_S", passVO);
     }
 
     /**
