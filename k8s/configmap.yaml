@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: egovframe-template-simple-backend
+  labels:
+    app.kubernetes.io/name: egovframe-template-simple-backend
+    app.kubernetes.io/part-of: egovframe-template
+data:
+  # 비밀이 아닌 설정값 — DB 자격증명(DB_USERNAME/DB_PASSWORD)은 Secret에서 주입된다.
+  # 아래 DB_* 값은 docker-entrypoint.sh가 Globals.DbType / Globals.<dbtype>.Url 로 매핑한다.
+  SPRING_PROFILES_ACTIVE: "prod"
+  DB_TYPE: "mysql"
+  DB_URL: "jdbc:mysql://mysql:3306/egovdb?useSSL=false&allowPublicKeyRetrieval=true"
+  # 게시판 첨부파일 저장 경로 — docker-entrypoint.sh가 Globals.fileStorePath 로 매핑한다.
+  # deployment.yaml의 app-files 볼륨(PVC) 마운트 경로와 일치해야 한다.
+  FILE_STORE_PATH: "/app/files"
+  MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE: "health"
+  MANAGEMENT_ENDPOINT_HEALTH_PROBES_ENABLED: "true"
