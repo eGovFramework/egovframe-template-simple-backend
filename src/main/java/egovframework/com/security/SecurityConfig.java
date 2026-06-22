@@ -84,6 +84,11 @@ public class SecurityConfig {
             "/swagger-ui/**",
             "/webjars/**", // Swagger UI 정적 리소스
 
+            /* actuator 헬스 프로브 — k8s readiness/liveness 및 Docker HEALTHCHECK 전용 */
+            "/actuator/health",
+            "/actuator/health/readiness",
+            "/actuator/health/liveness",
+
     };
     // application.properties의 Globals.Allow.Origin 값을 사용하며,
     // 환경별로 콤마로 구분된 복수 Origin 지정 가능 (예: "https://a.com,https://b.com")
