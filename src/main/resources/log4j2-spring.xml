@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 이 프로젝트의 SLF4J 바인딩은 Log4j2(log4j-slf4j2-impl)이다. logback 은 pom 에서 제외되므로
+     로깅 설정은 본 파일로 한다. (구 logback-spring.xml 은 바인딩 불일치로 미적용 상태였음 → 제거)
+     파일명에 -spring 접미사를 두어 Spring Boot 의 Log4j2 확장(spring: 룩업, 프로파일)을 사용한다. -->
+<Configuration status="WARN" monitorInterval="60">
+
+	<Properties>
+		<!-- application.properties 의 logging.* 값을 Spring 환경에서 읽는다(기본값 fallback 포함). -->
+		<Property name="LOG_PATH">${spring:logging.file.path:-./log}</Property>
+		<Property name="LOG_FILE_NAME">${spring:logging.file.name:-backend}</Property>
+		<Property name="LOG_MAX_FILE_SIZE">${spring:logging.rollingpolicy.maxFileSize:-10MB}</Property>
+		<Property name="LOG_MAX_HISTORY">${spring:logging.rollingpolicy.maxHistory:-30}</Property>
+		<Property name="LOG_LEVEL">${spring:logging.root.level:-INFO}</Property>
+
+		<!-- 콘솔 패턴: 구 logback CONSOLE 패턴과 동일 의도 -->
+		<Property name="CONSOLE_PATTERN">[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} : %30logger{5} - %msg%n</Property>
+		<!-- 파일 패턴: 구 logback LOG_PATTERN 과 동일 의도. %logger{0}(클래스 단순명)은 Log4j2 에서 %logger{1} 로 대응. -->
+		<Property name="FILE_PATTERN">%-5level %d{yy-MM-dd HH:mm:ss}[%thread] [%logger{1}:%line] - %msg%n</Property>
+	</Properties>
+
+	<Appenders>
+		<!-- CONSOLE에 로그 출력 세팅 -->
+		<Console name="CONSOLE" target="SYSTEM_OUT">
+			<PatternLayout pattern="${CONSOLE_PATTERN}"/>
+		</Console>
+
+		<!-- File에 로그 출력 세팅 (일자별 + 용량별 롤오버) -->
+		<RollingFile name="FILE"
+				fileName="${LOG_PATH}/${LOG_FILE_NAME}.log"
+				filePattern="${LOG_PATH}/${LOG_FILE_NAME}.%d{yyyy-MM-dd}_%i.log">
+			<PatternLayout pattern="${FILE_PATTERN}"/>
+			<Policies>
+				<!-- 구 SizeAndTimeBasedFNATP 대응: 날짜 경계 + maxFileSize 도달 시 롤오버 -->
+				<TimeBasedTriggeringPolicy/>
+				<SizeBasedTriggeringPolicy size="${LOG_MAX_FILE_SIZE}"/>
+			</Policies>
+			<!-- 구 logback maxHistory(일) 대응: 보관주기 경과 파일 자동 삭제 -->
+			<DefaultRolloverStrategy>
+				<Delete basePath="${LOG_PATH}" maxDepth="1">
+					<IfFileName glob="${LOG_FILE_NAME}.*.log"/>
+					<IfLastModified age="${LOG_MAX_HISTORY}d"/>
+				</Delete>
+			</DefaultRolloverStrategy>
+		</RollingFile>
+	</Appenders>
+
+	<Loggers>
+		<Logger name="java.sql" level="${LOG_LEVEL}"/>
+		<Logger name="egovframework" level="${LOG_LEVEL}"/>
+		<Logger name="org.egovframe" level="${LOG_LEVEL}"/>
+		<Logger name="jdbc.sqltiming" level="${LOG_LEVEL}"/>
+		<Logger name="org.springframework" level="${LOG_LEVEL}"/>
+
+		<!-- 로그 전역 세팅 -->
+		<Root level="${LOG_LEVEL}">
+			<AppenderRef ref="CONSOLE"/>
+			<AppenderRef ref="FILE"/>
+		</Root>
+	</Loggers>
+</Configuration>
