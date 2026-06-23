@@ -8,11 +8,13 @@ import java.util.stream.Collectors;
 import jakarta.annotation.Resource;
 
 import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
+import org.egovframe.rte.fdl.cmmn.exception.BaseRuntimeException;
 import org.egovframe.rte.fdl.idgnr.EgovIdGnrService;
 import org.egovframe.rte.fdl.property.EgovPropertyService;
 import org.egovframe.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 import org.springframework.stereotype.Service;
 
+import egovframework.com.cmm.EgovMessageSource;
 import egovframework.let.cop.bbs.domain.model.BoardMaster;
 import egovframework.let.cop.bbs.domain.model.BoardMasterVO;
 import egovframework.let.cop.bbs.domain.repository.BBSAddedOptionsDAO;
@@ -48,6 +50,7 @@ import lombok.extern.slf4j.Slf4j;
  *  2009.06.26	한성곤		   2단계 기능 추가 (댓글관리, 만족도조사)
  *  2011.08.31  JJY            경량환경 템플릿 커스터마이징버전 생성
  *  2025.06.16  김재섭(nirsa)   서비스 로직 이동 및 생성자 주입 방식 변경
+ *  2026.06.23  이백행          [2026년 컨트리뷰션] DAO 반환값 추가
  *  </pre>
  */
 @Slf4j
@@ -58,6 +61,7 @@ public class EgovBBSAttributeManageServiceImpl extends EgovAbstractServiceImpl i
     private final BBSUseInfoManageDAO bbsUseDAO;
     private final EgovUserInfManageService userService;
     private final EgovPropertyService propertyService;
+    private final EgovMessageSource egovMessageSource;
 
     //---------------------------------
     // 2009.06.26 : 2단계 기능 추가
@@ -77,12 +81,24 @@ public class EgovBBSAttributeManageServiceImpl extends EgovAbstractServiceImpl i
     	BoardMaster boardMaster = new BoardMaster();
     	boardMaster.setUniqId(UniqId);
     	boardMaster.setBbsId(bbsId);
-		attrbMngDAO.deleteBBSMasterInf(boardMaster);
+		int result = attrbMngDAO.deleteBBSMasterInf(boardMaster);
+		if (log.isDebugEnabled()) {
+			log.debug("result={}", result);
+		}
+		if (result == 0) {
+			throw new BaseRuntimeException(egovMessageSource.getMessage("fail.common.update"));
+		}
 	
 		BoardUseInf bdUseInf = new BoardUseInf();
 		bdUseInf.setBbsId(boardMaster.getBbsId());
 		bdUseInf.setLastUpdusrId(boardMaster.getLastUpdusrId());
-		bbsUseDAO.deleteBBSUseInfByBoardId(bdUseInf);
+		int result2 = bbsUseDAO.deleteBBSUseInfByBoardId(bdUseInf);
+		if (log.isDebugEnabled()) {
+			log.debug("result2={}", result2);
+		}
+		if (result2 == 0) {
+			throw new BaseRuntimeException(egovMessageSource.getMessage("fail.common.update"));
+		}
     }
 
     /**
@@ -113,7 +129,13 @@ public class EgovBBSAttributeManageServiceImpl extends EgovAbstractServiceImpl i
 		    bdUseInf.setFrstRegisterId(boardMaster.getFrstRegisterId());
 		    bdUseInf.setUseAt("Y");
 	
-		    bbsUseDAO.insertBBSUseInf(bdUseInf);
+		    int result = bbsUseDAO.insertBBSUseInf(bdUseInf);
+			if (log.isDebugEnabled()) {
+				log.debug("result={}", result);
+			}
+			if (result == 0) {
+				throw new BaseRuntimeException(egovMessageSource.getMessage("fail.common.insert"));
+			}
 	
 		    UserInfVO userVO = new UserInfVO();
 		    userVO.setTrgetId(boardMaster.getTrgetId());
@@ -251,7 +273,13 @@ public class EgovBBSAttributeManageServiceImpl extends EgovAbstractServiceImpl i
          * @return BoardMaster 도메인 객체
          */
     	BoardMaster boardMaster = bbsAttributeUpdateRequestDTO.toBoardMaster(); 
-		attrbMngDAO.updateBBSMasterInf(boardMaster);
+		int result = attrbMngDAO.updateBBSMasterInf(boardMaster);
+		if (log.isDebugEnabled()) {
+			log.debug("result={}", result);
+		}
+		if (result == 0) {
+			throw new BaseRuntimeException(egovMessageSource.getMessage("fail.common.update"));
+		}
 	
 		//---------------------------------
 		// 2009.06.26 : 2단계 기능 추가

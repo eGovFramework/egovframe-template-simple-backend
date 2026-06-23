@@ -5,13 +5,17 @@ import java.util.List;
 import java.util.Map;
 
 import jakarta.annotation.Resource;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.stereotype.Service;
 
+import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngService;
 import egovframework.com.cmm.service.FileVO;
 
 import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
+import org.egovframe.rte.fdl.cmmn.exception.BaseRuntimeException;
 
 /**
  * @Class Name : EgovFileMngServiceImpl.java
@@ -21,6 +25,7 @@ import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
  *    수정일       수정자         수정내용
  *    -------        -------     -------------------
  *    2009. 3. 25.     이삼섭    최초생성
+ *    2026. 6. 23.     이백행    [2026년 컨트리뷰션] DAO 반환값 추가
  *
  * @author 공통 서비스 개발팀 이삼섭
  * @since 2009. 3. 25.
@@ -29,10 +34,14 @@ import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
  *
  */
 @Service("EgovFileMngService")
+@RequiredArgsConstructor
+@Slf4j
 public class EgovFileMngServiceImpl extends EgovAbstractServiceImpl implements EgovFileMngService {
 
     @Resource(name = "FileManageDAO")
     private FileManageDAO fileMngDAO;
+
+    private final EgovMessageSource egovMessageSource;
 
     /**
      * 여러 개의 파일을 삭제한다.
@@ -104,7 +113,13 @@ public class EgovFileMngServiceImpl extends EgovAbstractServiceImpl implements E
      */
     @Override
 	public void deleteFileInf(FileVO fvo) throws Exception {
-	fileMngDAO.deleteFileInf(fvo);
+	int result = fileMngDAO.deleteFileInf(fvo);
+	if (log.isDebugEnabled()) {
+		log.debug("result={}", result);
+	}
+	if (result == 0) {
+		throw new BaseRuntimeException(egovMessageSource.getMessage("fail.common.delete"));
+	}
     }
 
     /**
@@ -134,7 +149,13 @@ public class EgovFileMngServiceImpl extends EgovAbstractServiceImpl implements E
      */
     @Override
 	public void deleteAllFileInf(FileVO fvo) throws Exception {
-	fileMngDAO.deleteAllFileInf(fvo);
+	int result = fileMngDAO.deleteAllFileInf(fvo);
+	if (log.isDebugEnabled()) {
+		log.debug("result={}", result);
+	}
+	if (result == 0) {
+        throw new BaseRuntimeException(egovMessageSource.getMessage("fail.common.update"));
+	}
     }
 
     /**

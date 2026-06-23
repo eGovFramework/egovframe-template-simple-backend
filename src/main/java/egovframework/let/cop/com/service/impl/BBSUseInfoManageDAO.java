@@ -23,6 +23,7 @@ import org.springframework.stereotype.Repository;
  *  -------     --------    ---------------------------
  *   2009.04.02  이삼섭          최초 생성
  *   2011.05.31  JJY           경량환경 커스터마이징버전 생성
+ *   2026.06.23  이백행          [2026년 컨트리뷰션] DAO 반환값 추가
  *
  * </pre>
  */
@@ -35,8 +36,8 @@ public class BBSUseInfoManageDAO extends EgovAbstractMapper {
      * @param bdUseInf
      * @throws Exception
      */
-    public void deleteBBSUseInf(BoardUseInf bdUseInf) throws Exception {
-    	update("BBSUseInfoManageDAO.deleteBBSUseInf", bdUseInf);
+    public int deleteBBSUseInf(BoardUseInf bdUseInf) throws Exception {
+    	return update("BBSUseInfoManageDAO.deleteBBSUseInf", bdUseInf);
     }
 
     /**
@@ -65,8 +66,8 @@ public class BBSUseInfoManageDAO extends EgovAbstractMapper {
      * @param bdUseInf
      * @throws Exception
      */
-    public void deleteAllBBSUseInfByCmmnty(BoardUseInfVO bdUseVO) throws Exception {
-    	update("BBSUseInfoManageDAO.deleteAllBBSUseInfByCmmnty", bdUseVO);
+    public int deleteAllBBSUseInfByCmmnty(BoardUseInfVO bdUseVO) throws Exception {
+    	return update("BBSUseInfoManageDAO.deleteAllBBSUseInfByCmmnty", bdUseVO);
     }
 
     /**
@@ -75,8 +76,8 @@ public class BBSUseInfoManageDAO extends EgovAbstractMapper {
      * @param bdUseInf
      * @throws Exception
      */
-    public void deleteAllBBSUseInfByClub(BoardUseInfVO bdUseVO) throws Exception {
-    	update("BBSUseInfoManageDAO.deleteAllBBSUseInfByClub", bdUseVO);
+    public int deleteAllBBSUseInfByClub(BoardUseInfVO bdUseVO) throws Exception {
+    	return update("BBSUseInfoManageDAO.deleteAllBBSUseInfByClub", bdUseVO);
     }
 
     /**
@@ -85,8 +86,8 @@ public class BBSUseInfoManageDAO extends EgovAbstractMapper {
      * @param bdUseInf
      * @throws Exception
      */
-    public void insertBBSUseInf(BoardUseInf bdUseInf) throws Exception {
-    	insert("BBSUseInfoManageDAO.insertBBSUseInf", bdUseInf);
+    public int insertBBSUseInf(BoardUseInf bdUseInf) throws Exception {
+    	return insert("BBSUseInfoManageDAO.insertBBSUseInf", bdUseInf);
     }
 
     /**
@@ -127,8 +128,8 @@ public class BBSUseInfoManageDAO extends EgovAbstractMapper {
      * @param bdUseInf
      * @throws Exception
      */
-    public void updateBBSUseInf(BoardUseInf bdUseInf) throws Exception {
-    	update("BBSUseInfoManageDAO.updateBBSUseInf", bdUseInf);
+    public int updateBBSUseInf(BoardUseInf bdUseInf) throws Exception {
+    	return update("BBSUseInfoManageDAO.updateBBSUseInf", bdUseInf);
     }
 
     /**
@@ -137,8 +138,8 @@ public class BBSUseInfoManageDAO extends EgovAbstractMapper {
      * @param bdUseInf
      * @throws Exception
      */
-    public void deleteBBSUseInfByBoardId(BoardUseInf bdUseInf) throws Exception {
-    	update("BBSUseInfoManageDAO.deleteBBSUseInfByBoardId", bdUseInf);
+    public int deleteBBSUseInfByBoardId(BoardUseInf bdUseInf) throws Exception {
+    	return update("BBSUseInfoManageDAO.deleteBBSUseInfByBoardId", bdUseInf);
     }
 
     /**
@@ -169,7 +170,7 @@ public class BBSUseInfoManageDAO extends EgovAbstractMapper {
      * @param bdUseInf
      * @throws Exception
      */
-    public void updateBBSUseInfByTrget(BoardUseInf bdUseInf) throws Exception {
-    	update("BBSUseInfoManageDAO.updateBBSUseInfByTrget", bdUseInf);
+    public int updateBBSUseInfByTrget(BoardUseInf bdUseInf) throws Exception {
+    	return update("BBSUseInfoManageDAO.updateBBSUseInfByTrget", bdUseInf);
     }
 }

@@ -22,6 +22,7 @@ import egovframework.let.cop.bbs.dto.request.BbsAttributeUpdateRequestDTO;
  *  -------    --------    ---------------------------
  *  2009.03.12  이삼섭          최초 생성
  *  2011.08.31  JJY            경량환경 템플릿 커스터마이징버전 생성
+ *  2026.06.23  이백행          [2026년 컨트리뷰션] DAO 반환값 추가
  *
  *  </pre>
  */
@@ -33,8 +34,8 @@ public class BBSAttributeManageDAO extends EgovAbstractMapper {
      *
      * @param BoardMaster
      */
-    public void deleteBBSMasterInf(BoardMaster boardMaster) throws Exception {
-    	update("BBSAttributeManageDAO.deleteBBSMasterInf", boardMaster);
+    public int deleteBBSMasterInf(BoardMaster boardMaster) throws Exception {
+    	return update("BBSAttributeManageDAO.deleteBBSMasterInf", boardMaster);
     }
 
     /**
@@ -80,8 +81,8 @@ public class BBSAttributeManageDAO extends EgovAbstractMapper {
      *
      * @param BoardMaster
      */
-    public void updateBBSMasterInf(BoardMaster boardMaster) throws Exception {
-    	update("BBSAttributeManageDAO.updateBBSMasterInf", boardMaster);
+    public int updateBBSMasterInf(BoardMaster boardMaster) throws Exception {
+    	return update("BBSAttributeManageDAO.updateBBSMasterInf", boardMaster);
     }
 
     /**

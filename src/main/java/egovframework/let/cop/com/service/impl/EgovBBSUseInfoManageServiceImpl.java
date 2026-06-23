@@ -5,13 +5,17 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import egovframework.com.cmm.EgovMessageSource;
 import egovframework.let.cop.com.service.BoardUseInf;
 import egovframework.let.cop.com.service.BoardUseInfVO;
 import egovframework.let.cop.com.service.EgovBBSUseInfoManageService;
 
 import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
+import org.egovframe.rte.fdl.cmmn.exception.BaseRuntimeException;
 
 import jakarta.annotation.Resource;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.stereotype.Service;
 
@@ -29,14 +33,19 @@ import org.springframework.stereotype.Service;
  *  -------    --------    ---------------------------
  *   2009.04.02  이삼섭          최초 생성
  *   2011.08.31  JJY            경량환경 템플릿 커스터마이징버전 생성 
+ *   2026.06.23  이백행          [2026년 컨트리뷰션] DAO 반환값 추가
  *
  * </pre>
  */
 @Service("EgovBBSUseInfoManageService")
+@RequiredArgsConstructor
+@Slf4j
 public class EgovBBSUseInfoManageServiceImpl extends EgovAbstractServiceImpl implements EgovBBSUseInfoManageService {
 	
     @Resource(name = "BBSUseInfoManageDAO")
     private BBSUseInfoManageDAO bbsUseDAO;
+
+    private final EgovMessageSource egovMessageSource;
 
     /**
      * 게시판 사용 정보를 삭제한다.
@@ -45,7 +54,13 @@ public class EgovBBSUseInfoManageServiceImpl extends EgovAbstractServiceImpl imp
      */
     @Override
     public void deleteBBSUseInf(BoardUseInf bdUseInf) throws Exception {
-	bbsUseDAO.deleteBBSUseInf(bdUseInf);
+	int result = bbsUseDAO.deleteBBSUseInf(bdUseInf);
+	if (log.isDebugEnabled()) {
+		log.debug("result={}", result);
+	}
+	if (result == 0) {
+		throw new BaseRuntimeException(egovMessageSource.getMessage("fail.common.update"));
+	}
     }
 
     /**
@@ -55,7 +70,13 @@ public class EgovBBSUseInfoManageServiceImpl extends EgovAbstractServiceImpl imp
      */
     @Override
     public void insertBBSUseInf(BoardUseInf bdUseInf) throws Exception {
-	bbsUseDAO.insertBBSUseInf(bdUseInf);
+	int result = bbsUseDAO.insertBBSUseInf(bdUseInf);
+	if (log.isDebugEnabled()) {
+		log.debug("result={}", result);
+	}
+	if (result == 0) {
+		throw new BaseRuntimeException(egovMessageSource.getMessage("fail.common.insert"));
+	}
     }
 
     /**
@@ -84,7 +105,13 @@ public class EgovBBSUseInfoManageServiceImpl extends EgovAbstractServiceImpl imp
      */
     @Override
     public void updateBBSUseInf(BoardUseInf bdUseInf) throws Exception {
-	bbsUseDAO.updateBBSUseInf(bdUseInf);
+	int result = bbsUseDAO.updateBBSUseInf(bdUseInf);
+	if (log.isDebugEnabled()) {
+		log.debug("result={}", result);
+	}
+	if (result == 0) {
+		throw new BaseRuntimeException(egovMessageSource.getMessage("fail.common.update"));
+	}
     }
 
     /**
@@ -115,7 +142,13 @@ public class EgovBBSUseInfoManageServiceImpl extends EgovAbstractServiceImpl imp
 	    //bdUseInf.setTrgetId(bdUseVO.getClbId());	// 사용자 ID를 넘겨야 함..
 	    bdUseInf.setTrgetId(bdUseVO.getTrgetId());
 	    
-	    bbsUseDAO.deleteBBSUseInf(bdUseInf);
+	    int result2 = bbsUseDAO.deleteBBSUseInf(bdUseInf);
+		if (log.isDebugEnabled()) {
+			log.debug("result2={}", result2);
+		}
+		if (result2 == 0) {
+			throw new BaseRuntimeException(egovMessageSource.getMessage("fail.common.update"));
+		}
 	}
     }
 
@@ -138,7 +171,13 @@ public class EgovBBSUseInfoManageServiceImpl extends EgovAbstractServiceImpl imp
 	    //bdUseInf.setTrgetId(bdUseVO.getCmmntyId());	// 사용자 ID를 넘겨야 함..
 	    bdUseInf.setTrgetId(bdUseVO.getTrgetId());
 	    
-	    bbsUseDAO.deleteBBSUseInf(bdUseInf);
+	    int result2 = bbsUseDAO.deleteBBSUseInf(bdUseInf);
+		if (log.isDebugEnabled()) {
+			log.debug("result2={}", result2);
+		}
+		if (result2 == 0) {
+			throw new BaseRuntimeException(egovMessageSource.getMessage("fail.common.update"));
+		}
 	}
     }
 
@@ -149,7 +188,13 @@ public class EgovBBSUseInfoManageServiceImpl extends EgovAbstractServiceImpl imp
      */
     @Override
     public void deleteAllBBSUseInfByClub(BoardUseInfVO bdUseVO) throws Exception {
-	bbsUseDAO.deleteAllBBSUseInfByClub(bdUseVO);
+	int result = bbsUseDAO.deleteAllBBSUseInfByClub(bdUseVO);
+	if (log.isDebugEnabled()) {
+		log.debug("result={}", result);
+	}
+	if (result == 0) {
+		throw new BaseRuntimeException(egovMessageSource.getMessage("fail.common.update"));
+	}
     }
 
     /**
@@ -159,7 +204,13 @@ public class EgovBBSUseInfoManageServiceImpl extends EgovAbstractServiceImpl imp
      */
     @Override
     public void deleteAllBBSUseInfByCmmnty(BoardUseInfVO bdUseVO) throws Exception {
-	bbsUseDAO.deleteAllBBSUseInfByCmmnty(bdUseVO);
+	int result = bbsUseDAO.deleteAllBBSUseInfByCmmnty(bdUseVO);
+	if (log.isDebugEnabled()) {
+		log.debug("result={}", result);
+	}
+	if (result == 0) {
+		throw new BaseRuntimeException(egovMessageSource.getMessage("fail.common.update"));
+	}
     }
 
     /**
@@ -169,7 +220,13 @@ public class EgovBBSUseInfoManageServiceImpl extends EgovAbstractServiceImpl imp
      */
     @Override
     public void deleteBBSUseInfByBoardId(BoardUseInf bdUseInf) throws Exception {
-	bbsUseDAO.deleteBBSUseInfByBoardId(bdUseInf);
+	int result = bbsUseDAO.deleteBBSUseInfByBoardId(bdUseInf);
+	if (log.isDebugEnabled()) {
+		log.debug("result={}", result);
+	}
+	if (result == 0) {
+		throw new BaseRuntimeException(egovMessageSource.getMessage("fail.common.update"));
+	}
     }
 
     /**
@@ -195,6 +252,12 @@ public class EgovBBSUseInfoManageServiceImpl extends EgovAbstractServiceImpl imp
      */
     @Override
     public void updateBBSUseInfByTrget(BoardUseInf bdUseInf) throws Exception {
-	bbsUseDAO.updateBBSUseInfByTrget(bdUseInf);
+	int result = bbsUseDAO.updateBBSUseInfByTrget(bdUseInf);
+	if (log.isDebugEnabled()) {
+		log.debug("result={}", result);
+	}
+	if (result == 0) {
+		throw new BaseRuntimeException(egovMessageSource.getMessage("fail.common.update"));
+	}
     }
 }

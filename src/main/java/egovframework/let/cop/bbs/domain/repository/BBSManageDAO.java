@@ -23,6 +23,7 @@ import egovframework.let.cop.bbs.domain.model.BoardVO;
  *  -------    --------    ---------------------------
  *  2009.03.19  이삼섭          최초 생성
  *  2011.08.31  JJY            경량환경 템플릿 커스터마이징버전 생성
+ *  2026.06.23  이백행          [2026년 컨트리뷰션] DAO 반환값 추가
  *
  *  </pre>
  */
@@ -35,11 +36,11 @@ public class BBSManageDAO extends EgovAbstractMapper {
      * @param board
      * @throws Exception
      */
-    public void insertBoardArticle(Board board) throws Exception {
+    public int insertBoardArticle(Board board) throws Exception {
 	long nttId = (Long)selectOne("BBSManageDAO.selectMaxNttId");
 	board.setNttId(nttId);
 
-	insert("BBSManageDAO.insertBoardArticle", board);
+	return insert("BBSManageDAO.insertBoardArticle", board);
     }
 
     /**
@@ -108,8 +109,8 @@ public class BBSManageDAO extends EgovAbstractMapper {
      * @param board
      * @throws Exception
      */
-    public void updateBoardArticle(Board board) throws Exception {
-    	update("BBSManageDAO.updateBoardArticle", board);
+    public int updateBoardArticle(Board board) throws Exception {
+    	return update("BBSManageDAO.updateBoardArticle", board);
     }
 
     /**
@@ -118,8 +119,8 @@ public class BBSManageDAO extends EgovAbstractMapper {
      * @param board
      * @throws Exception
      */
-    public void deleteBoardArticle(Board board) throws Exception {
-    	update("BBSManageDAO.deleteBoardArticle", board);
+    public int deleteBoardArticle(Board board) throws Exception {
+    	return update("BBSManageDAO.deleteBoardArticle", board);
     }
 
     /**
@@ -128,8 +129,8 @@ public class BBSManageDAO extends EgovAbstractMapper {
      * @param board
      * @throws Exception
      */
-    public void updateInqireCo(BoardVO boardVO) throws Exception {
-    	update("BBSManageDAO.updateInqireCo", boardVO);
+    public int updateInqireCo(BoardVO boardVO) throws Exception {
+    	return update("BBSManageDAO.updateInqireCo", boardVO);
     }
 
     /**
@@ -208,8 +209,8 @@ public class BBSManageDAO extends EgovAbstractMapper {
      * @param boardVO
      * @throws Exception
      */
-    public void deleteGuestList(BoardVO boardVO) throws Exception {
-    	update("BBSManageDAO.deleteGuestList", boardVO);
+    public int deleteGuestList(BoardVO boardVO) throws Exception {
+    	return update("BBSManageDAO.deleteGuestList", boardVO);
     }
 
     /**

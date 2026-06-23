@@ -16,6 +16,7 @@ import egovframework.com.cmm.service.FileVO;
  *    수정일       수정자         수정내용
  *    -------        -------     -------------------
  *    2009. 3. 25.     이삼섭    최초생성
+ *    2026. 6. 23.     이백행    [2026년 컨트리뷰션] DAO 반환값 추가
  *
  * @author 공통 서비스 개발팀 이삼섭
  * @since 2009. 3. 25.
@@ -98,8 +99,8 @@ public class FileManageDAO extends EgovAbstractMapper {
 	 * @param fvo
 	 * @throws Exception
 	 */
-	public void deleteFileInf(FileVO fvo) throws Exception {
-		delete("FileManageDAO.deleteFileDetail", fvo);
+	public int deleteFileInf(FileVO fvo) throws Exception {
+		return delete("FileManageDAO.deleteFileDetail", fvo);
 	}
 
 	/**
@@ -141,8 +142,8 @@ public class FileManageDAO extends EgovAbstractMapper {
 	 * @param fvo
 	 * @throws Exception
 	 */
-	public void deleteAllFileInf(FileVO fvo) throws Exception {
-		update("FileManageDAO.deleteCOMTNFILE", fvo);
+	public int deleteAllFileInf(FileVO fvo) throws Exception {
+		return update("FileManageDAO.deleteCOMTNFILE", fvo);
 	}
 
 	/**

@@ -15,10 +15,12 @@ import egovframework.let.cop.bbs.dto.response.BbsManageDetailResponseDTO;
 import egovframework.let.cop.bbs.dto.response.BbsManageListItemResponseDTO;
 import egovframework.let.cop.bbs.dto.response.BbsManageListResponseDTO;
 import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
+import org.egovframe.rte.fdl.cmmn.exception.BaseRuntimeException;
 import org.egovframe.rte.fdl.crypto.EgovCryptoService;
 import org.egovframe.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 import org.springframework.stereotype.Service;
 
+import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.LoginVO;
 import egovframework.com.cmm.service.EgovFileMngService;
 import egovframework.com.cmm.service.FileVO;
@@ -29,6 +31,7 @@ import egovframework.let.cop.bbs.dto.request.BbsManageDeleteBoardRequestDTO;
 import egovframework.let.cop.bbs.service.EgovBBSManageService;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 게시물 관리를 위한 서비스 구현 클래스
@@ -45,16 +48,18 @@ import lombok.RequiredArgsConstructor;
  *  2009.03.19  이삼섭          최초 생성
  *  2011.08.31  JJY            경량환경 템플릿 커스터마이징버전 생성
  *  2025.06.16  김재섭(nirsa)   서비스 로직 이동 및 생성자 주입 방식 변경
+ *  2026.06.23  이백행          [2026년 컨트리뷰션] DAO 반환값 추가
  *
  *  </pre>
  */
 @Service("EgovBBSManageService")
 @RequiredArgsConstructor
+@Slf4j
 public class EgovBBSManageServiceImpl extends EgovAbstractServiceImpl implements EgovBBSManageService {
 	private final BBSManageDAO bbsMngDAO;
 	private final EgovFileMngService fileService;
 	private final EgovCryptoService cryptoService;
-
+	private final EgovMessageSource egovMessageSource;
 
 	/**
 	 * 게시물 한 건을 삭제 한다.
@@ -65,7 +70,13 @@ public class EgovBBSManageServiceImpl extends EgovAbstractServiceImpl implements
 	public void deleteBoardArticle(BbsManageDeleteBoardRequestDTO bbsDeleteBoardRequestDTO, LoginVO user) throws Exception {
 		String atchFileId = bbsDeleteBoardRequestDTO.getAtchFileId();
 		BoardVO vo = bbsDeleteBoardRequestDTO.toBoardMaster(bbsDeleteBoardRequestDTO, user.getUniqId());
-		bbsMngDAO.deleteBoardArticle(vo);
+		int result = bbsMngDAO.deleteBoardArticle(vo);
+		if (log.isDebugEnabled()) {
+			log.debug("result={}", result);
+		}
+		if (result == 0) {
+			throw new BaseRuntimeException(egovMessageSource.getMessage("fail.common.update"));
+		}
 		
 		if (atchFileId != null && !atchFileId.trim().isEmpty()) {
 	        FileVO fvo = new FileVO();
@@ -97,7 +108,13 @@ public class EgovBBSManageServiceImpl extends EgovAbstractServiceImpl implements
 			board.setReplyLc("0");
 			board.setReplyAt("N");
 
-			bbsMngDAO.insertBoardArticle(board);
+			int result = bbsMngDAO.insertBoardArticle(board);
+			if (log.isDebugEnabled()) {
+				log.debug("result={}", result);
+			}
+			if (result == 0) {
+				throw new BaseRuntimeException(egovMessageSource.getMessage("fail.common.insert"));
+			}
 		}
 	}
 
@@ -114,7 +131,13 @@ public class EgovBBSManageServiceImpl extends EgovAbstractServiceImpl implements
 			int iniqireCo = bbsMngDAO.selectMaxInqireCo(boardVO);
 
 			boardVO.setInqireCo(iniqireCo);
-			bbsMngDAO.updateInqireCo(boardVO);
+			int result = bbsMngDAO.updateInqireCo(boardVO);
+			if (log.isDebugEnabled()) {
+				log.debug("result={}", result);
+			}
+			if (result == 0) {
+				throw new BaseRuntimeException(egovMessageSource.getMessage("fail.common.update"));
+			}
 		}
 
 		BoardVO vo = bbsMngDAO.selectBoardArticle(boardVO);
@@ -200,7 +223,13 @@ public class EgovBBSManageServiceImpl extends EgovAbstractServiceImpl implements
 	 */
 	@Override
 	public void updateBoardArticle(Board board) throws Exception {
-		bbsMngDAO.updateBoardArticle(board);
+		int result = bbsMngDAO.updateBoardArticle(board);
+		if (log.isDebugEnabled()) {
+			log.debug("result={}", result);
+		}
+		if (result == 0) {
+			throw new BaseRuntimeException(egovMessageSource.getMessage("fail.common.update"));
+		}
 	}
 
 	/**
@@ -210,7 +239,13 @@ public class EgovBBSManageServiceImpl extends EgovAbstractServiceImpl implements
 	 */
 	@Override
 	public void deleteGuestList(BoardVO boardVO) throws Exception {
-		bbsMngDAO.deleteGuestList(boardVO);
+		int result = bbsMngDAO.deleteGuestList(boardVO);
+		if (log.isDebugEnabled()) {
+			log.debug("result={}", result);
+		}
+		if (result == 0) {
+			throw new BaseRuntimeException(egovMessageSource.getMessage("fail.common.update"));
+		}
 	}
 
 	/**

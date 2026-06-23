@@ -1,5 +1,6 @@
 package egovframework.let.uat.uia.service.impl;
 
+import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.LoginVO;
 import egovframework.let.uat.uia.service.EgovLoginService;
 import egovframework.let.utl.fcc.service.EgovNumberUtil;
@@ -7,8 +8,11 @@ import egovframework.let.utl.fcc.service.EgovStringUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
 import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
+import org.egovframe.rte.fdl.cmmn.exception.BaseRuntimeException;
 
 import jakarta.annotation.Resource;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.stereotype.Service;
 
@@ -27,14 +31,19 @@ import org.springframework.stereotype.Service;
  *  2009.03.06  박지욱          최초 생성
  *  2011.08.31  JJY            경량환경 템플릿 커스터마이징버전 생성
  *  2026.05.13  PHJ            보안취약점 대응
+ *  2026.06.23  이백행          [2026년 컨트리뷰션] DAO 반환값 추가
  *
  *  </pre>
  */
 @Service("loginService")
+@RequiredArgsConstructor
+@Slf4j
 public class EgovLoginServiceImpl extends EgovAbstractServiceImpl implements EgovLoginService {
 
 	@Resource(name = "loginDAO")
 	private LoginDAO loginDAO;
+
+	private final EgovMessageSource egovMessageSource;
 
 	/**
 	 * 일반 로그인을 처리한다
@@ -121,7 +130,13 @@ public class EgovLoginServiceImpl extends EgovAbstractServiceImpl implements Ego
 		pwVO.setId(vo.getId());
 		pwVO.setPassword(enpassword);
 		pwVO.setUserSe(vo.getUserSe());
-		loginDAO.updatePassword(pwVO);
+		int result2 = loginDAO.updatePassword(pwVO);
+		if (log.isDebugEnabled()) {
+			log.debug("result2={}", result2);
+		}
+		if (result2 == 0) {
+			throw new BaseRuntimeException(egovMessageSource.getMessage("fail.common.update"));
+		}
 
 		return result;
 	}
