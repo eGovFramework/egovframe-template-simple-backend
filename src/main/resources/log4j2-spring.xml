@@ -13,9 +13,9 @@
 		<Property name="LOG_LEVEL">${spring:logging.root.level:-INFO}</Property>
 
 		<!-- 콘솔 패턴: traceId/spanId는 Micrometer Tracing이 MDC에 주입 -->
-		<Property name="CONSOLE_PATTERN">[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%X{traceId:-},%X{spanId:-}] : %30logger{5} - %msg%n</Property>
+		<Property name="CONSOLE_PATTERN">[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%X{traceId},%X{spanId}] : %30logger{5} - %msg%n</Property>
 		<!-- 파일 패턴: traceId/spanId는 Micrometer Tracing이 MDC에 주입 -->
-		<Property name="FILE_PATTERN">%-5level %d{yy-MM-dd HH:mm:ss}[%thread] [%X{traceId:-},%X{spanId:-}] [%logger{1}:%line] - %msg%n</Property>
+		<Property name="FILE_PATTERN">%-5level %d{yy-MM-dd HH:mm:ss}[%thread] [%X{traceId},%X{spanId}] [%logger{1}:%line] - %msg%n</Property>
 	</Properties>
 
 	<Appenders>
