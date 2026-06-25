@@ -12,10 +12,10 @@
 		<Property name="LOG_MAX_HISTORY">${spring:logging.rollingpolicy.maxHistory:-30}</Property>
 		<Property name="LOG_LEVEL">${spring:logging.root.level:-INFO}</Property>
 
-		<!-- 콘솔 패턴: 구 logback CONSOLE 패턴과 동일 의도 -->
-		<Property name="CONSOLE_PATTERN">[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} : %30logger{5} - %msg%n</Property>
-		<!-- 파일 패턴: 구 logback LOG_PATTERN 과 동일 의도. %logger{0}(클래스 단순명)은 Log4j2 에서 %logger{1} 로 대응. -->
-		<Property name="FILE_PATTERN">%-5level %d{yy-MM-dd HH:mm:ss}[%thread] [%logger{1}:%line] - %msg%n</Property>
+		<!-- 콘솔 패턴: traceId/spanId는 Micrometer Tracing이 MDC에 주입 -->
+		<Property name="CONSOLE_PATTERN">[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%X{traceId},%X{spanId}] : %30logger{5} - %msg%n</Property>
+		<!-- 파일 패턴: traceId/spanId는 Micrometer Tracing이 MDC에 주입 -->
+		<Property name="FILE_PATTERN">%-5level %d{yy-MM-dd HH:mm:ss}[%thread] [%X{traceId},%X{spanId}] [%logger{1}:%line] - %msg%n</Property>
 	</Properties>
 
 	<Appenders>

@@ -341,6 +341,12 @@
 			<artifactId>selenium-java</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+		<!-- 로그-트레이스 상관관계(traceId/spanId) 표시용. 버전은 Boot BOM이 관리 -->
+		<dependency>
+			<groupId>io.micrometer</groupId>
+			<artifactId>micrometer-tracing-bridge-otel</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>
