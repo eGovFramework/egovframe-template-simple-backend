@@ -3,13 +3,15 @@ package egovframework.com.sns;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.security.SecureRandom;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -74,19 +76,52 @@ public class SnsLoginApiController {
 	@Value("${Globals.jwt.cookieSecure:false}")
 	private boolean cookieSecure;
 
-	// STATELESS 환경에서 세션 대신 인메모리 맵으로 OAuth state 관리 (TTL: 10분)
-	private static final ConcurrentHashMap<String, Long> OAUTH_STATE_STORE = new ConcurrentHashMap<>();
-	private static final long STATE_TTL_MS = 10 * 60 * 1000L;
+	// OAuth state: double-submit 쿠키로 "흐름을 시작한 브라우저"에 바인딩 (STATELESS 환경, TTL 10분)
+	// 단순 서명/저장은 "발급 사실"만 증명할 뿐 브라우저를 묶지 못하므로, URL state == 쿠키 state 대조로 검증한다.
+	private static final String OAUTH_STATE_COOKIE = "OAUTH_STATE";
+	private static final long STATE_TTL_SEC = 10 * 60L;
 
-	private void storeOAuthState(String state) {
-		long now = System.currentTimeMillis();
-		OAUTH_STATE_STORE.entrySet().removeIf(e -> now - e.getValue() > STATE_TTL_MS);
-		OAUTH_STATE_STORE.put(state, now);
+	// state 생성 + 동일 값을 브라우저 쿠키로 발급 (double-submit). 백엔드/프론트 시작 흐름 공통.
+	private String issueOAuthState(HttpServletResponse response) {
+		String state = new BigInteger(130, new SecureRandom()).toString();
+		ResponseCookie cookie = ResponseCookie.from(OAUTH_STATE_COOKIE, state)
+				.httpOnly(true).secure(cookieSecure).sameSite("Lax")
+				.path("/").maxAge(Duration.ofSeconds(STATE_TTL_SEC)).build();
+		response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+		return state;
 	}
 
-	private boolean verifyAndConsumeOAuthState(String state) {
-		Long storedAt = OAUTH_STATE_STORE.remove(state);
-		return storedAt != null && (System.currentTimeMillis() - storedAt) <= STATE_TTL_MS;
+	// 콜백 검증: URL state == 쿠키 state (상수시간 비교), 확인 즉시 쿠키 폐기(1회용)
+	private boolean verifyAndConsumeOAuthState(HttpServletRequest request, HttpServletResponse response, String queryState) {
+		String cookieState = null;
+		if (request.getCookies() != null) {
+			for (Cookie ck : request.getCookies()) {
+				if (OAUTH_STATE_COOKIE.equals(ck.getName())) {
+					cookieState = ck.getValue();
+				}
+			}
+		}
+		// 재사용 방지: 검증 즉시 쿠키 만료
+		ResponseCookie del = ResponseCookie.from(OAUTH_STATE_COOKIE, "")
+				.httpOnly(true).secure(cookieSecure).sameSite("Lax")
+				.path("/").maxAge(0).build();
+		response.addHeader(HttpHeaders.SET_COOKIE, del.toString());
+		return queryState != null && cookieState != null
+				&& MessageDigest.isEqual(queryState.getBytes(StandardCharsets.UTF_8),
+						cookieState.getBytes(StandardCharsets.UTF_8));
+	}
+
+	/**
+	 * OAuth state 발급 (SPA 직접 로그인 흐름용)
+	 * state 값을 반환하면서 동일 값을 OAUTH_STATE 쿠키로 발급한다.
+	 * @return HashMap (resultCode, state)
+	 */
+	@GetMapping("/auth/oauth-state")
+	public HashMap<String, Object> getOAuthState(HttpServletResponse response) {
+		HashMap<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("resultCode", "200");
+		resultMap.put("state", issueOAuthState(response));
+		return resultMap;
 	}
 
 	/** SNS */
@@ -114,8 +149,7 @@ public class SnsLoginApiController {
     public void getKakaoAuthUrl(HttpServletResponse response) throws IOException {
 		String clientId = KAKAO_CLIENT_ID;
 		String redirectURI = URLEncoder.encode(KAKAO_CALLBACK_URL, "UTF-8");
-		String state = new BigInteger(130, new SecureRandom()).toString();
-		storeOAuthState(state);
+		String state = issueOAuthState(response);
 	    String apiURL = "https://kauth.kakao.com/oauth/authorize?response_type=code";
 	    apiURL += "&client_id=" + clientId;
 	    apiURL += "&redirect_uri=" + redirectURI;
@@ -144,13 +178,11 @@ public class SnsLoginApiController {
 		String code  = request.getParameter("code");
 		String state = request.getParameter("state");
 
-		// state 검증 — 백엔드 /login/kakao 경유 시만 유효
-		if (state != null && OAUTH_STATE_STORE.containsKey(state)) {
-			if (!verifyAndConsumeOAuthState(state)) {
-				resultMap.put("resultCode", "401");
-				resultMap.put("resultMessage", "OAuth state 검증 실패");
-				return resultMap;
-			}
+		// state 무조건 검증 — double-submit 쿠키(OAUTH_STATE)와 URL state 대조
+		if (!verifyAndConsumeOAuthState(request, response, state)) {
+			resultMap.put("resultCode", "401");
+			resultMap.put("resultMessage", "OAuth state 검증 실패");
+			return resultMap;
 		}
 
 		//카카오 로그인 인증 시작
@@ -232,8 +264,7 @@ public class SnsLoginApiController {
     public void getNaverAuthUrl(HttpServletResponse response) throws IOException {
 		String clientId = NAVER_CLIENT_ID;
 		String redirectURI = URLEncoder.encode(NAVER_CALLBACK_URL, "UTF-8");
-	    String state = new BigInteger(130, new SecureRandom()).toString();
-	    storeOAuthState(state);
+	    String state = issueOAuthState(response);
 	    String apiURL = "https://nid.naver.com/oauth2.0/authorize?response_type=code";
 	    apiURL += "&client_id=" + clientId;
 	    apiURL += "&redirect_uri=" + redirectURI;
@@ -262,14 +293,11 @@ public class SnsLoginApiController {
 		String code  = request.getParameter("code");
 		String state = request.getParameter("state");
 
-		// state 검증 — 백엔드 /login/naver 경유 시만 유효 (프론트 직접 호출 시 스토어에 없어 실패)
-		// 프론트가 직접 Naver URL을 생성하는 경우 state 검증은 프론트 oauthState.js 에서 수행
-		if (state != null && OAUTH_STATE_STORE.containsKey(state)) {
-			if (!verifyAndConsumeOAuthState(state)) {
-				resultMap.put("resultCode", "401");
-				resultMap.put("resultMessage", "OAuth state 검증 실패");
-				return resultMap;
-			}
+		// state 무조건 검증 — double-submit 쿠키(OAUTH_STATE)와 URL state 대조
+		if (!verifyAndConsumeOAuthState(request, response, state)) {
+			resultMap.put("resultCode", "401");
+			resultMap.put("resultMessage", "OAuth state 검증 실패");
+			return resultMap;
 		}
 
 		//네이버 로그인 인증 시작

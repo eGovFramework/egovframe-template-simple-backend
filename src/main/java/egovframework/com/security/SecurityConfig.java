@@ -63,6 +63,7 @@ public class SecurityConfig {
             "/error", // 에러 페이지
             "/login/**",
             "/auth/login-jwt", // JWT 로그인
+            "/auth/oauth-state", // OAuth state 발급 (SNS 로그인 CSRF 방어용 double-submit 쿠키)
             "/auth/logout", // 로그아웃
             "/auth/me", // 현재 사용자 조회 — 익명 호출 시 컨트롤러가 401 응답을 직접 반환 (라우트 가드/메뉴 분기용)
             "/file", // 파일 다운로드
