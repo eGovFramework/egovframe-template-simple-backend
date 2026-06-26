@@ -55,6 +55,7 @@ public class SecurityConfig {
             "/schedule/week", // 주간 일정 조회
             "/schedule/{schdulId}", // 일정 상세조회
             "/image", // 갤러리 이미지보기
+            "/file", // 파일 다운로드 — GET만 공개 (2026/06/26 보안취약점 대응: POST(삭제)는 인증 요구로 전환)
     };
 
     // 인증 예외 List
@@ -66,7 +67,6 @@ public class SecurityConfig {
             "/auth/oauth-state", // OAuth state 발급 (SNS 로그인 CSRF 방어용 double-submit 쿠키)
             "/auth/logout", // 로그아웃
             "/auth/me", // 현재 사용자 조회 — 익명 호출 시 컨트롤러가 401 응답을 직접 반환 (라우트 가드/메뉴 분기용)
-            "/file", // 파일 다운로드
             "/etc/**", // 사용자단의 회원약관,회원가입,사용자아이디 중복여부체크 URL허용
 
             /* 정적 리소스 */
