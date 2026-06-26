@@ -51,7 +51,8 @@ public class EgovConfigWebDispatcherServlet implements WebMvcConfigurer {
 			.excludePathPatterns(
 				"/auth/login-jwt",
 				"/auth/logout",
-				"/auth/me"   // 익명 호출 가능 — 컨트롤러가 직접 401 응답을 만든다
+				"/auth/me",   // 익명 호출 가능 — 컨트롤러가 직접 401 응답을 만든다
+				"/auth/oauth-state"   // 익명(로그인 전) 호출 — OAuth state 발급 엔드포인트
 				);
 	}
 
