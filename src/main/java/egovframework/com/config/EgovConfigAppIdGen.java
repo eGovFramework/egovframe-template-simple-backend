@@ -24,17 +24,18 @@ import org.egovframe.rte.fdl.idgnr.impl.strategy.EgovIdGnrStrategyImpl;
  *   수정일              수정자               수정내용
  *  -------------  ------------   ---------------------
  *   2021. 7. 20    윤주호               최초 생성
+ *   2026. 6. 26    이백행               [2026년 컨트리뷰션] @Bean 메서드의 불필요한 public 접근제어자 제거
  * </pre>
  *
  */
 @Configuration
-public class EgovConfigAppIdGen {
+class EgovConfigAppIdGen {
 
     private final DataSource dataSource;
 
     private final DataSource egovDataSource;
 
-    public EgovConfigAppIdGen(
+    EgovConfigAppIdGen(
         @Qualifier("dataSource") DataSource dataSource,
         @Qualifier("egovDataSource") DataSource egovDataSource
     ) {
@@ -49,7 +50,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovFileIdGnrService() {
+	EgovTableIdGnrServiceImpl egovFileIdGnrService() {
 		EgovTableIdGnrServiceImpl egovTableIdGnrServiceImpl = new EgovTableIdGnrServiceImpl();
 		egovTableIdGnrServiceImpl.setDataSource(dataSource);
 		egovTableIdGnrServiceImpl.setStrategy(fileStrategy());
@@ -79,7 +80,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovBBSMstrIdGnrService() {
+	EgovTableIdGnrServiceImpl egovBBSMstrIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(dataSource).setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
 			.setTable("IDS")
@@ -95,7 +96,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovTmplatIdGnrService() {
+	EgovTableIdGnrServiceImpl egovTmplatIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(dataSource).setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
 			.setTable("IDS")
@@ -110,7 +111,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl deptSchdulManageIdGnrService() {
+	EgovTableIdGnrServiceImpl deptSchdulManageIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(dataSource).setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
 			.setTable("IDS")
@@ -125,7 +126,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovWikiBookmarkIdGnrService() {
+	EgovTableIdGnrServiceImpl egovWikiBookmarkIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -141,7 +142,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovRequestOfferIdGnrService() {
+	EgovTableIdGnrServiceImpl egovRequestOfferIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -157,7 +158,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovRssTagManageIdGnrService() {
+	EgovTableIdGnrServiceImpl egovRssTagManageIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -173,7 +174,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovNoteManageIdGnrService() {
+	EgovTableIdGnrServiceImpl egovNoteManageIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -189,7 +190,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovNoteTrnsmitIdGnrService() {
+	EgovTableIdGnrServiceImpl egovNoteTrnsmitIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -205,7 +206,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovNoteRecptnIdGnrService() {
+	EgovTableIdGnrServiceImpl egovNoteRecptnIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -221,7 +222,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovSystemCntcIdGnrService() {
+	EgovTableIdGnrServiceImpl egovSystemCntcIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -237,7 +238,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovCntcInsttIdGnrService() {
+	EgovTableIdGnrServiceImpl egovCntcInsttIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -253,7 +254,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovCntcSystemIdGnrService() {
+	EgovTableIdGnrServiceImpl egovCntcSystemIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -269,7 +270,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovCntcServiceIdGnrService() {
+	EgovTableIdGnrServiceImpl egovCntcServiceIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -285,7 +286,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovCntcMessageIdGnrService() {
+	EgovTableIdGnrServiceImpl egovCntcMessageIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -301,7 +302,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovCntcMessageItemIdGnrService() {
+	EgovTableIdGnrServiceImpl egovCntcMessageItemIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -317,7 +318,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovInsttCodeRecptnIdGnrService() {
+	EgovTableIdGnrServiceImpl egovInsttCodeRecptnIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setBlockSize(10)
 			.setTable("COMTECOPSEQ")
@@ -329,7 +330,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovAdministCodeRecptnIdGnrService() {
+	EgovTableIdGnrServiceImpl egovAdministCodeRecptnIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setBlockSize(10)
 			.setTable("COMTECOPSEQ")
@@ -341,7 +342,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovPopupManageIdGnrService() {
+	EgovTableIdGnrServiceImpl egovPopupManageIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -357,7 +358,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovSrchwrdManageIdGnrService() {
+	EgovTableIdGnrServiceImpl egovSrchwrdManageIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -373,7 +374,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovSrchwrdIdGnrService() {
+	EgovTableIdGnrServiceImpl egovSrchwrdIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -389,7 +390,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovAdministrationWordIdGnrService() {
+	EgovTableIdGnrServiceImpl egovAdministrationWordIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -405,7 +406,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovIndvdlInfoPolicyIdGnrService() {
+	EgovTableIdGnrServiceImpl egovIndvdlInfoPolicyIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -421,7 +422,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovUnityLinkIdGnrService() {
+	EgovTableIdGnrServiceImpl egovUnityLinkIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -437,7 +438,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovOnlineMenualIdGnrService() {
+	EgovTableIdGnrServiceImpl egovOnlineMenualIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -453,7 +454,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovOnlinePollManageIdGnrService() {
+	EgovTableIdGnrServiceImpl egovOnlinePollManageIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -469,7 +470,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovOnlinePollItemIdGnrService() {
+	EgovTableIdGnrServiceImpl egovOnlinePollItemIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -485,7 +486,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovOnlinePollResultIdGnrService() {
+	EgovTableIdGnrServiceImpl egovOnlinePollResultIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -501,7 +502,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovIdGnrService() {
+	EgovTableIdGnrServiceImpl egovIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -517,7 +518,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovNttIdGnrService() {
+	EgovTableIdGnrServiceImpl egovNttIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -533,7 +534,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovClbIdGnrService() {
+	EgovTableIdGnrServiceImpl egovClbIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -549,7 +550,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovCmmntyIdGnrService() {
+	EgovTableIdGnrServiceImpl egovCmmntyIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -565,7 +566,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovUsrCnfrmIdGnrService() {
+	EgovTableIdGnrServiceImpl egovUsrCnfrmIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -581,7 +582,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovMailMsgIdGnrService() {
+	EgovTableIdGnrServiceImpl egovMailMsgIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -597,7 +598,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovRestDeIdGnrService() {
+	EgovTableIdGnrServiceImpl egovRestDeIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -610,7 +611,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovWordDicaryIdGnrService() {
+	EgovTableIdGnrServiceImpl egovWordDicaryIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -626,7 +627,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovMgtIdGnrService() {
+	EgovTableIdGnrServiceImpl egovMgtIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -642,7 +643,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovEventInfoIdGnrService() {
+	EgovTableIdGnrServiceImpl egovEventInfoIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -658,7 +659,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovExtrlhrInfoIdGnrService() {
+	EgovTableIdGnrServiceImpl egovExtrlhrInfoIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -674,7 +675,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovQustnrTmplatManageIdGnrService() {
+	EgovTableIdGnrServiceImpl egovQustnrTmplatManageIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -690,7 +691,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovQustnrManageIdGnrService() {
+	EgovTableIdGnrServiceImpl egovQustnrManageIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -706,7 +707,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovQustnrQestnManageIdGnrService() {
+	EgovTableIdGnrServiceImpl egovQustnrQestnManageIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -722,7 +723,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovQustnrItemManageIdGnrService() {
+	EgovTableIdGnrServiceImpl egovQustnrItemManageIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -738,7 +739,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl qustnrRespondManageIdGnrService() {
+	EgovTableIdGnrServiceImpl qustnrRespondManageIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -754,7 +755,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl qustnrRespondInfoIdGnrService() {
+	EgovTableIdGnrServiceImpl qustnrRespondInfoIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -770,7 +771,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl diaryManageIdGnrService() {
+	EgovTableIdGnrServiceImpl diaryManageIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -786,7 +787,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovSiteManageIdGnrService() {
+	EgovTableIdGnrServiceImpl egovSiteManageIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -802,7 +803,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovRecomendSiteManageIdGnrService() {
+	EgovTableIdGnrServiceImpl egovRecomendSiteManageIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -818,7 +819,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovHpcmManageIdGnrService() {
+	EgovTableIdGnrServiceImpl egovHpcmManageIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -834,7 +835,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovFaqManageIdGnrService() {
+	EgovTableIdGnrServiceImpl egovFaqManageIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -850,7 +851,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovNewsManageIdGnrService() {
+	EgovTableIdGnrServiceImpl egovNewsManageIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -866,7 +867,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovNcrdIdGnrService() {
+	EgovTableIdGnrServiceImpl egovNcrdIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -882,7 +883,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovAdbkIdGnrService() {
+	EgovTableIdGnrServiceImpl egovAdbkIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -898,7 +899,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovAdbkUserIdGnrService() {
+	EgovTableIdGnrServiceImpl egovAdbkUserIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -914,7 +915,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovGroupIdGnrService() {
+	EgovTableIdGnrServiceImpl egovGroupIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -930,7 +931,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovRoleIdGnrService() {
+	EgovTableIdGnrServiceImpl egovRoleIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -946,7 +947,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovStplatManageIdGnrService() {
+	EgovTableIdGnrServiceImpl egovStplatManageIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -962,7 +963,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovCpyrhtPrtcPolicyIdGnrService() {
+	EgovTableIdGnrServiceImpl egovCpyrhtPrtcPolicyIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -978,7 +979,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovQnaManageIdGnrService() {
+	EgovTableIdGnrServiceImpl egovQnaManageIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -994,7 +995,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovCnsltManageIdGnrService() {
+	EgovTableIdGnrServiceImpl egovCnsltManageIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -1010,7 +1011,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovLoginLogIdGnrService() {
+	EgovTableIdGnrServiceImpl egovLoginLogIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -1026,7 +1027,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovSysLogIdGnrService() {
+	EgovTableIdGnrServiceImpl egovSysLogIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -1042,7 +1043,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovWebLogIdGnrService() {
+	EgovTableIdGnrServiceImpl egovWebLogIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -1058,7 +1059,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovTrsmrcvLogIdGnrService() {
+	EgovTableIdGnrServiceImpl egovTrsmrcvLogIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -1074,7 +1075,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovBannerIdGnrService() {
+	EgovTableIdGnrServiceImpl egovBannerIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -1090,7 +1091,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovLoginScrinImageIdGnrService() {
+	EgovTableIdGnrServiceImpl egovLoginScrinImageIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -1106,7 +1107,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovMainImageIdGnrService() {
+	EgovTableIdGnrServiceImpl egovMainImageIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -1122,7 +1123,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovIntnetSvcGuidanceIdGnrService() {
+	EgovTableIdGnrServiceImpl egovIntnetSvcGuidanceIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -1138,7 +1139,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovIndvdlPgeIdGnrService() {
+	EgovTableIdGnrServiceImpl egovIndvdlPgeIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -1154,7 +1155,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovReprtStatsIdGnrService() {
+	EgovTableIdGnrServiceImpl egovReprtStatsIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -1170,7 +1171,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovDtaUseStatsIdGnrService() {
+	EgovTableIdGnrServiceImpl egovDtaUseStatsIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -1186,7 +1187,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovSmsIdGnrService() {
+	EgovTableIdGnrServiceImpl egovSmsIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -1202,7 +1203,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovScrapIdGnrService() {
+	EgovTableIdGnrServiceImpl egovScrapIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -1218,7 +1219,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovDeptManageIdGnrService() {
+	EgovTableIdGnrServiceImpl egovDeptManageIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -1234,7 +1235,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovNtwrkIdGnrService() {
+	EgovTableIdGnrServiceImpl egovNtwrkIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -1250,7 +1251,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovServerEqpmnIdGnrService() {
+	EgovTableIdGnrServiceImpl egovServerEqpmnIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -1266,7 +1267,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovServerIdGnrService() {
+	EgovTableIdGnrServiceImpl egovServerIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -1282,7 +1283,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovTroblIdGnrService() {
+	EgovTableIdGnrServiceImpl egovTroblIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -1298,7 +1299,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovSynchrnServerIdGnrService() {
+	EgovTableIdGnrServiceImpl egovSynchrnServerIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -1314,7 +1315,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovMtgPlaceManageIdGnrService() {
+	EgovTableIdGnrServiceImpl egovMtgPlaceManageIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -1330,7 +1331,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovMtgPlaceResveIdGnrService() {
+	EgovTableIdGnrServiceImpl egovMtgPlaceResveIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -1346,7 +1347,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovEventManageIdGnrService() {
+	EgovTableIdGnrServiceImpl egovEventManageIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -1362,7 +1363,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovEventAtdrnIdGnrService() {
+	EgovTableIdGnrServiceImpl egovEventAtdrnIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -1378,7 +1379,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovRwardManageIdGnrService() {
+	EgovTableIdGnrServiceImpl egovRwardManageIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -1394,7 +1395,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovCtsnnManageIdGnrService() {
+	EgovTableIdGnrServiceImpl egovCtsnnManageIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -1410,7 +1411,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovAnnvrsryManageIdGnrService() {
+	EgovTableIdGnrServiceImpl egovAnnvrsryManageIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -1426,7 +1427,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovLeaderSchdulIdGnrService() {
+	EgovTableIdGnrServiceImpl egovLeaderSchdulIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -1442,7 +1443,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovDeptJobBxIdGnrService() {
+	EgovTableIdGnrServiceImpl egovDeptJobBxIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -1458,7 +1459,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovDeptJobIdGnrService() {
+	EgovTableIdGnrServiceImpl egovDeptJobIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -1474,7 +1475,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovWikMnthngReprtIdGnrService() {
+	EgovTableIdGnrServiceImpl egovWikMnthngReprtIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -1490,7 +1491,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovMemoTodoIdGnrService() {
+	EgovTableIdGnrServiceImpl egovMemoTodoIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -1506,7 +1507,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovMemoReprtIdGnrService() {
+	EgovTableIdGnrServiceImpl egovMemoReprtIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -1522,7 +1523,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovInfrmlSanctnIdGnrService() {
+	EgovTableIdGnrServiceImpl egovInfrmlSanctnIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -1538,7 +1539,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovDbMntrngLogIdGnrService() {
+	EgovTableIdGnrServiceImpl egovDbMntrngLogIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -1554,7 +1555,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovTrsmrcvMntrngLogIdGnrService() {
+	EgovTableIdGnrServiceImpl egovTrsmrcvMntrngLogIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -1570,7 +1571,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovBatchOpertIdGnrService() {
+	EgovTableIdGnrServiceImpl egovBatchOpertIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -1586,7 +1587,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovBatchSchdulIdGnrService() {
+	EgovTableIdGnrServiceImpl egovBatchSchdulIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -1602,7 +1603,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovBatchResultIdGnrService() {
+	EgovTableIdGnrServiceImpl egovBatchResultIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -1618,7 +1619,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovFileSysMntrngIdGnrService() {
+	EgovTableIdGnrServiceImpl egovFileSysMntrngIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -1634,7 +1635,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovNtwrkSvcMntrngLogIdGnrService() {
+	EgovTableIdGnrServiceImpl egovNtwrkSvcMntrngLogIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -1650,7 +1651,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovFileSysMntrngLogIdGnrService() {
+	EgovTableIdGnrServiceImpl egovFileSysMntrngLogIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -1666,7 +1667,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovProxySvcIdGnrService() {
+	EgovTableIdGnrServiceImpl egovProxySvcIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -1682,7 +1683,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovProxyLogIdGnrService() {
+	EgovTableIdGnrServiceImpl egovProxyLogIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -1698,7 +1699,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovDamManageIdGnrService() {
+	EgovTableIdGnrServiceImpl egovDamManageIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -1714,7 +1715,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovBackupOpertIdGnrService() {
+	EgovTableIdGnrServiceImpl egovBackupOpertIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -1730,7 +1731,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovBackupResultIdGnrService() {
+	EgovTableIdGnrServiceImpl egovBackupResultIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -1746,7 +1747,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovServerResrceMntrngLogIdGnrService() {
+	EgovTableIdGnrServiceImpl egovServerResrceMntrngLogIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -1762,7 +1763,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovHttpManageIdGnrService() {
+	EgovTableIdGnrServiceImpl egovHttpManageIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -1778,7 +1779,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovHttpLogManageIdGnrService() {
+	EgovTableIdGnrServiceImpl egovHttpLogManageIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -1794,7 +1795,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovProcessMonIdGnrService() {
+	EgovTableIdGnrServiceImpl egovProcessMonIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)
@@ -1810,7 +1811,7 @@ public class EgovConfigAppIdGen {
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
-	public EgovTableIdGnrServiceImpl egovProcessMonLogIdGnrService() {
+	EgovTableIdGnrServiceImpl egovProcessMonLogIdGnrService() {
 		return new EgovIdGnrBuilder().setDataSource(egovDataSource)
 			.setEgovIdGnrStrategyImpl(new EgovIdGnrStrategyImpl())
 			.setBlockSize(10)

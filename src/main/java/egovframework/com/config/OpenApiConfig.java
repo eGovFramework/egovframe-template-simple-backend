@@ -23,7 +23,7 @@ public class OpenApiConfig {
 	private static final String API_DESCRIPTION = "심플홈페이지 프로젝트 명세서";
 
 	@Bean
-	public OpenAPI api() {
+	OpenAPI api() {
 		
 		Schema<?> fileMap = new Schema<Map<String, String>>()
 				.addProperty("atchFileId", new StringSchema().example(""))

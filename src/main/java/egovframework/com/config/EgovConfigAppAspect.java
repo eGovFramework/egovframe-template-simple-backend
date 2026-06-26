@@ -28,6 +28,7 @@ import org.egovframe.rte.fdl.cmmn.exception.manager.ExceptionHandlerService;
  *   수정일              수정자               수정내용
  *  -------------  ------------   ---------------------
  *   2021. 7. 20    윤주호               최초 생성
+ *   2026. 6. 26    이백행               [2026년 컨트리뷰션] @Bean 메서드의 불필요한 public 접근제어자 제거
  * </pre>
  *
  */
@@ -36,19 +37,19 @@ import org.egovframe.rte.fdl.cmmn.exception.manager.ExceptionHandlerService;
 public class EgovConfigAppAspect {
 
 	@Bean
-	public EgovComExcepHndlr egovHandler() {
+	EgovComExcepHndlr egovHandler() {
 		EgovComExcepHndlr egovComExcepHndlr = new EgovComExcepHndlr();
 		return egovComExcepHndlr;
 	}
 
 	@Bean
-	public EgovComOthersExcepHndlr otherHandler() {
+	EgovComOthersExcepHndlr otherHandler() {
 		EgovComOthersExcepHndlr egovComOthersExcepHndlr = new EgovComOthersExcepHndlr();
 		return egovComOthersExcepHndlr;
 	}
 
 	@Bean
-    public DefaultExceptionHandleManager defaultExceptionHandleManager(ExceptionHandler egovHandler, AntPathMatcher antPathMatcher) {
+    DefaultExceptionHandleManager defaultExceptionHandleManager(ExceptionHandler egovHandler, AntPathMatcher antPathMatcher) {
 		DefaultExceptionHandleManager defaultExceptionHandleManager = new DefaultExceptionHandleManager();
 		defaultExceptionHandleManager.setReqExpMatcher(antPathMatcher);
 		defaultExceptionHandleManager.setPatterns(new String[] {"**service.impl.*"});
@@ -57,7 +58,7 @@ public class EgovConfigAppAspect {
 	}
 
 	@Bean
-    public DefaultExceptionHandleManager otherExceptionHandleManager(AntPathMatcher antPathMatcher) {
+    DefaultExceptionHandleManager otherExceptionHandleManager(AntPathMatcher antPathMatcher) {
 		DefaultExceptionHandleManager defaultExceptionHandleManager = new DefaultExceptionHandleManager();
 		defaultExceptionHandleManager.setReqExpMatcher(antPathMatcher);
 		defaultExceptionHandleManager.setPatterns(new String[] {"**service.impl.*"});
@@ -70,7 +71,7 @@ public class EgovConfigAppAspect {
 	 * Exception 발생시 후처리를 위해 표준프레임워크 실행환경의 ExceptionTransfer를 활용하도록  설정
 	 */
 	@Bean
-	public ExceptionTransfer exceptionTransfer(
+	ExceptionTransfer exceptionTransfer(
 		@Qualifier("defaultExceptionHandleManager") DefaultExceptionHandleManager defaultExceptionHandleManager,
 		@Qualifier("otherExceptionHandleManager") DefaultExceptionHandleManager otherExceptionHandleManager) {
 		ExceptionTransfer exceptionTransfer = new ExceptionTransfer();
@@ -81,7 +82,7 @@ public class EgovConfigAppAspect {
 	}
 
 	@Bean
-	public AopExceptionTransfer aopExceptionTransfer(ExceptionTransfer exceptionTransfer) {
+	AopExceptionTransfer aopExceptionTransfer(ExceptionTransfer exceptionTransfer) {
 		AopExceptionTransfer aopExceptionTransfer = new AopExceptionTransfer();
 		aopExceptionTransfer.setExceptionTransfer(exceptionTransfer);
 		return aopExceptionTransfer;

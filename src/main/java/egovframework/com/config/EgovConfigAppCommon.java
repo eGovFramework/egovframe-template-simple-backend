@@ -46,6 +46,7 @@ import org.egovframe.rte.ptl.mvc.tags.ui.pagination.PaginationRenderer;
  *   2021. 7. 20    윤주호               최초 생성
  *   2023. 5. 05    crlee              remove EgovMessageSource config
  *   2026. 5. 13  	PHJ                보안취약점 대응
+ *   2026. 6. 26    이백행               [2026년 컨트리뷰션] @Bean 메서드의 불필요한 public 접근제어자 제거
  * </pre>
  *
  */
@@ -66,7 +67,7 @@ public class EgovConfigAppCommon {
 	 * @return AntPathMatcher 등록.  Ant 경로 패턴 경로와 일치하는지 여부를 확인
 	 */
 	@Bean
-	public AntPathMatcher antPathMatcher() {
+	AntPathMatcher antPathMatcher() {
 		return new AntPathMatcher();
 	}
 
@@ -75,7 +76,7 @@ public class EgovConfigAppCommon {
 	 * @return [LeaveaTrace 설정] defaultTraceHandler 등록
 	 */
 	@Bean
-	public EgovComTraceHandler defaultTraceHandler() {
+	EgovComTraceHandler defaultTraceHandler() {
 		return new EgovComTraceHandler();
 	}
 
@@ -83,7 +84,7 @@ public class EgovConfigAppCommon {
 	 * @return [LeaveaTrace 설정] traceHandlerService 등록. TraceHandler 설정
 	 */
 	@Bean
-	public DefaultTraceHandleManager traceHandlerService() {
+	DefaultTraceHandleManager traceHandlerService() {
 		DefaultTraceHandleManager defaultTraceHandleManager = new DefaultTraceHandleManager();
 		defaultTraceHandleManager.setReqExpMatcher(antPathMatcher());
 		defaultTraceHandleManager.setPatterns(new String[] {"*"});
@@ -95,7 +96,7 @@ public class EgovConfigAppCommon {
 	 * @return [LeaveaTrace 설정] LeaveaTrace 등록
 	 */
 	@Bean
-	public LeaveaTrace leaveaTrace() {
+	LeaveaTrace leaveaTrace() {
 		LeaveaTrace leaveaTrace = new LeaveaTrace();
 		leaveaTrace.setTraceHandlerServices(new TraceHandlerService[] {traceHandlerService()});
 		return leaveaTrace;
@@ -105,7 +106,7 @@ public class EgovConfigAppCommon {
 	 * @return [ImagePaginationRenderer 설정] ImagePaginationRenderer 등록
 	 */
 	@Bean
-	public ImagePaginationRenderer imageRenderer() {
+	ImagePaginationRenderer imageRenderer() {
 		return new ImagePaginationRenderer();
 	}
 
@@ -113,7 +114,7 @@ public class EgovConfigAppCommon {
 	 * @return [ImagePaginationRenderer 설정] defaultPaginationManager 설정.
 	 */
 	@Bean
-	public DefaultPaginationManager paginationManager() {
+	DefaultPaginationManager paginationManager() {
 		DefaultPaginationManager defaultPaginationManager = new DefaultPaginationManager();
 
 		Map<String, PaginationRenderer> rendererType = new HashMap<>();
@@ -132,13 +133,13 @@ public class EgovConfigAppCommon {
 	 * - spring.servlet.multipart.max-request-size=100MB
 	 */
 	@Bean
-	public EgovMultipartResolver localMultiCommonsMultipartResolver() {
+	EgovMultipartResolver localMultiCommonsMultipartResolver() {
 		EgovMultipartResolver egovMultipartResolver = new EgovMultipartResolver();
 		return egovMultipartResolver;
 	}
 	
 	@Bean
-	public MultipartResolver multipartResolver() {
+	MultipartResolver multipartResolver() {
 		return localMultiCommonsMultipartResolver();
 	}
 	
@@ -147,7 +148,7 @@ public class EgovConfigAppCommon {
 	 * @return [EgovPasswordEncoder 설정] EgovPasswordEncoder 등록
 	 */
 	@Bean
-	public EgovPasswordEncoder egovPasswordEncoder() {
+	EgovPasswordEncoder egovPasswordEncoder() {
 		EgovPasswordEncoder egovPasswordEncoder = new EgovPasswordEncoder();
 		egovPasswordEncoder.setAlgorithm("SHA-256");
 		try {
@@ -165,7 +166,7 @@ public class EgovConfigAppCommon {
 	 * @return [EgovARIACryptoServiceImpl 설정] EgovARIACryptoServiceImpl 등록
 	 */
 	@Bean
-	public EgovARIACryptoServiceImpl egovARIACryptoService() {
+	EgovARIACryptoServiceImpl egovARIACryptoService() {
 		EgovARIACryptoServiceImpl egovARIACryptoServiceImpl = new EgovARIACryptoServiceImpl();
 		egovARIACryptoServiceImpl.setPasswordEncoder(egovPasswordEncoder());
 		egovARIACryptoServiceImpl.setBlockSize(1024);
