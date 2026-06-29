@@ -453,6 +453,14 @@ public class EgovBBSManageApiController {
 			return resultVO;
 		}
 
+		// 공지유형(BBST03) 게시판은 관리자만 글 등록 가능 — 서버측 강제
+		boolean isAdmin = EgovUserDetailsHelper.getAuthorities().contains("ROLE_ADMIN");
+		if (!isAdmin && isAdminOnlyBoard(boardVO.getBbsId())) {
+			resultVO.setResultCode(ResponseCode.AUTH_ERROR.getCode());
+			resultVO.setResultMessage(ResponseCode.AUTH_ERROR.getMessage());
+			return resultVO;
+		}
+
 		List<FileVO> result = null;
 		String atchFileId = "";
 
@@ -514,6 +522,14 @@ public class EgovBBSManageApiController {
 			resultVO.setResultCode(ResponseCode.INPUT_CHECK_ERROR.getCode());
 			resultVO.setResultMessage(ResponseCode.INPUT_CHECK_ERROR.getMessage());
 
+			return resultVO;
+		}
+
+		// 공지유형(BBST03) 게시판은 관리자만 답글 등록 가능 — 서버측 강제
+		boolean isAdmin = EgovUserDetailsHelper.getAuthorities().contains("ROLE_ADMIN");
+		if (!isAdmin && isAdminOnlyBoard(boardVO.getBbsId())) {
+			resultVO.setResultCode(ResponseCode.AUTH_ERROR.getCode());
+			resultVO.setResultMessage(ResponseCode.AUTH_ERROR.getMessage());
 			return resultVO;
 		}
 
@@ -648,6 +664,17 @@ public class EgovBBSManageApiController {
 			return (LoginVO) principal;
 		}
 		return new LoginVO();
+	}
+
+	/**
+	 * 공지유형(BBST03) 게시판 여부를 판별한다. 공지 게시판은 관리자만 글 작성이 가능하다.
+	 * 클라이언트가 전달한 값은 신뢰하지 않고, bbsId로 마스터를 재조회하여 게시판 유형 코드를 서버측에서 확인한다.
+	 */
+	private boolean isAdminOnlyBoard(String bbsId) throws Exception {
+		BoardMasterVO mvo = new BoardMasterVO();
+		mvo.setBbsId(bbsId);
+		BoardMasterVO master = bbsAttrbService.selectBBSMasterInf(mvo);
+		return master != null && "BBST03".equals(master.getBbsTyCode());
 	}
 
 }
