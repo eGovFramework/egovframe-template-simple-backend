@@ -36,6 +36,7 @@ import egovframework.com.cmm.util.ResultVoHelper;
 import egovframework.let.cop.bbs.domain.model.BoardVO;
 import egovframework.let.cop.bbs.dto.request.BbsSearchRequestDTO;
 import egovframework.let.cop.bbs.dto.request.BbsManageDeleteBoardRequestDTO;
+import egovframework.let.cop.bbs.dto.response.BbsAttributeDetailResponseDTO;
 import egovframework.let.cop.bbs.dto.response.BbsFileAtchResponseDTO;
 import egovframework.let.cop.bbs.enums.BbsDetailRequestType;
 import egovframework.let.cop.bbs.service.EgovBBSAttributeManageService;
@@ -331,7 +332,12 @@ public class EgovBBSManageApiController {
 		if (bindingResult.hasErrors()) {
 			return resultVoHelper.buildFromResultVO(new ResultVO(), ResponseCode.INPUT_CHECK_ERROR);
 		}
-	
+
+		// 공지유형(BBST03) 게시판은 관리자만 글 등록 가능 — 서버측 강제 (파일 파싱 전 검사로 orphan 방지)
+		if (!isAdmin() && isAdminOnlyBoard(boardVO.getBbsId())) {
+			return resultVoHelper.buildFromResultVO(new ResultVO(), ResponseCode.AUTH_ERROR);
+		}
+
 		List<FileVO> result = null;
 		String atchFileId = "";
 
@@ -388,7 +394,12 @@ public class EgovBBSManageApiController {
 
 			return resultVoHelper.buildFromResultVO(resultVO, ResponseCode.INPUT_CHECK_ERROR);
 		}
-		
+
+		// 공지유형(BBST03) 게시판은 관리자만 답글 등록 가능 — 서버측 강제
+		if (!isAdmin() && isAdminOnlyBoard(boardVO.getBbsId())) {
+			return resultVoHelper.buildFromResultVO(new ResultVO(), ResponseCode.AUTH_ERROR);
+		}
+
 		final Map<String, MultipartFile> files = multiRequest.getFileMap();
 		String atchFileId = "";
 
@@ -511,6 +522,24 @@ public class EgovBBSManageApiController {
 	        return (LoginVO) principal;
 	    }
 	    return new LoginVO();
+	}
+
+	/**
+	 * 현재 인증 주체가 관리자(ROLE_ADMIN) 권한을 가지는지 확인한다.
+	 */
+	private boolean isAdmin() {
+		return EgovUserDetailsHelper.getAuthorities().contains("ROLE_ADMIN");
+	}
+
+	/**
+	 * 공지유형(BBST03) 게시판 여부를 판별한다. 공지 게시판은 관리자만 글 작성이 가능하다.
+	 * 클라이언트가 전달한 값은 신뢰하지 않고, bbsId로 마스터를 재조회하여 게시판 유형 코드를 서버측에서 확인한다.
+	 */
+	private boolean isAdminOnlyBoard(String bbsId) throws Exception {
+		BbsFileAtchResponseDTO master = bbsAttrbService.selectBBSMasterInf(bbsId, null, BbsDetailRequestType.DETAIL);
+		String bbsTyCode = (master instanceof BbsAttributeDetailResponseDTO)
+				? ((BbsAttributeDetailResponseDTO) master).getBbsTyCode() : null;
+		return "BBST03".equals(bbsTyCode);
 	}
 
 }
