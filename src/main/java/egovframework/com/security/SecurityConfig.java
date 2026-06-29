@@ -155,6 +155,16 @@ public class SecurityConfig {
                         .antMatchers("/members/**").hasRole("ADMIN") // 회원 관리는 ADMIN만 접근
                         .antMatchers("/mypage/**").hasAnyRole("ADMIN", "USER") // 마이페이지는 ADMIN, USER 모두 접근
                         .antMatchers("/inform/**").hasAnyRole("ADMIN", "USER") // 게시판은 ADMIN, USER 모두 접근
+                        // 2026 보안취약점 대응 — 관리자 전용 사이트관리 API 서버측 역할검사 강제(프론트 라우트가드 의존 제거)
+                        // 일정: 공개 조회(GET /schedule/daily,/week,/{id})는 AUTH_GET_WHITELIST 로 유지, 쓰기 및 admin 전용 GET(month)만 ADMIN
+                        .antMatchers(HttpMethod.GET,    "/schedule/month").hasRole("ADMIN")
+                        .antMatchers(HttpMethod.POST,   "/schedule").hasRole("ADMIN")
+                        .antMatchers(HttpMethod.PUT,    "/schedule/**").hasRole("ADMIN")
+                        .antMatchers(HttpMethod.DELETE, "/schedule/**").hasRole("ADMIN")
+                        // 게시판 속성(bbsMaster)·사용설정(bbsUseInf)은 공개 읽기가 없는 관리자 전용 → 경로 전체 ADMIN
+                        .antMatchers("/bbsMaster/**").hasRole("ADMIN")
+                        .antMatchers("/bbsUseInf/**").hasRole("ADMIN")
+                        .antMatchers("/notUsedBbsMaster").hasRole("ADMIN")
                         .antMatchers(AUTH_WHITELIST).permitAll()
                         .antMatchers(HttpMethod.GET, AUTH_GET_WHITELIST).permitAll()
                         .anyRequest().authenticated())
