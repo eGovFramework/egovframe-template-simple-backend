@@ -40,6 +40,7 @@ import jakarta.servlet.MultipartConfigElement;
  * -----------------------------------------------------------
  * 2023/06/10 crlee 최초 생성
  * 2026/05/13 보안취약점 대응
+ * 2026/06/26 이백행 [2026년 컨트리뷰션] @Bean 메서드의 불필요한 public 접근제어자 제거
  */
 @Configuration
 @EnableWebSecurity
@@ -97,7 +98,7 @@ public class SecurityConfig {
     private String allowedOrigins;
 
     @Bean
-    public JwtAuthenticationFilter authenticationTokenFilterBean() throws Exception {
+    JwtAuthenticationFilter authenticationTokenFilterBean() throws Exception {
         return new JwtAuthenticationFilter();
     }
 
@@ -123,7 +124,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public CharacterEncodingFilter characterEncodingFilter() {
+    CharacterEncodingFilter characterEncodingFilter() {
         CharacterEncodingFilter characterEncodingFilter = new CharacterEncodingFilter();
         characterEncodingFilter.setEncoding("UTF-8");
         characterEncodingFilter.setForceEncoding(true);
@@ -131,19 +132,19 @@ public class SecurityConfig {
     }
 
     @Bean
-    public HTMLTagFilter htmlTagFilter() {
+    HTMLTagFilter htmlTagFilter() {
         return new HTMLTagFilter();
     }
 
     // 멀티파트 필터 빈
     @Bean
-    public MultipartFilter multipartFilter() {
+    MultipartFilter multipartFilter() {
         return new MultipartFilter();
     }
 
     // 서블릿 컨테이너에 멀티파트 구성을 제공하기 위한 설정
     @Bean
-    public MultipartConfigElement multipartConfigElement() {
+    MultipartConfigElement multipartConfigElement() {
         MultipartConfigFactory factory = new MultipartConfigFactory();
         factory.setMaxRequestSize(DataSize.ofMegabytes(100L));
         factory.setMaxFileSize(DataSize.ofMegabytes(100L));

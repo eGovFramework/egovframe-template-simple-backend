@@ -32,6 +32,7 @@ import org.springframework.transaction.interceptor.TransactionInterceptor;
  *   수정일              수정자               수정내용
  *  -------------  ------------   ---------------------
  *   2021. 7. 20    윤주호               최초 생성
+ *   2026. 6. 26    이백행               [2026년 컨트리뷰션] @Bean 메서드의 불필요한 public 접근제어자 제거
  * </pre>
  *
  */
@@ -45,7 +46,7 @@ public class EgovConfigAppTransaction {
     }
 
 	@Bean
-	public DataSourceTransactionManager txManager() {
+	DataSourceTransactionManager txManager() {
 		DataSourceTransactionManager dataSourceTransactionManager = new DataSourceTransactionManager();
 		dataSourceTransactionManager.setDataSource(dataSource);
 		return dataSourceTransactionManager;
@@ -56,7 +57,7 @@ public class EgovConfigAppTransaction {
 	// -------------------------------------------------------------
 
 	@Bean
-	public TransactionInterceptor txAdvice(DataSourceTransactionManager txManager) {
+	TransactionInterceptor txAdvice(DataSourceTransactionManager txManager) {
 		TransactionInterceptor txAdvice = new TransactionInterceptor();
 		txAdvice.setTransactionManager(txManager);
 		txAdvice.setTransactionAttributeSource(getNameMatchTransactionAttributeSource());
@@ -85,7 +86,7 @@ public class EgovConfigAppTransaction {
 	// -------------------------------------------------------------
 
 	@Bean
-	public Advisor txAdvisor(DataSourceTransactionManager txManager) {
+	Advisor txAdvisor(DataSourceTransactionManager txManager) {
 		AspectJExpressionPointcut pointcut = new AspectJExpressionPointcut();
 		pointcut.setExpression(
 			"execution(* egovframework.let..impl.*Impl.*(..)) or execution(* egovframework.com..*Impl.*(..))");

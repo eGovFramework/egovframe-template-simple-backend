@@ -14,6 +14,7 @@ import org.springframework.context.support.ReloadableResourceBundleMessageSource
  * DATE              AUTHOR             NOTE
  * -----------------------------------------------------------
  * 2023/05/05        crlee       최초 생성
+ * 2026/06/26        이백행       [2026년 컨트리뷰션] @Bean 메서드의 불필요한 public 접근제어자 제거
  */
 @Configuration
 public class EgovConfigAppMsg {
@@ -22,7 +23,7 @@ public class EgovConfigAppMsg {
      * @return [Resource 설정] 메세지 Properties 경로 설정
      */
     @Bean
-    public ReloadableResourceBundleMessageSource messageSource() {
+    ReloadableResourceBundleMessageSource messageSource() {
         ReloadableResourceBundleMessageSource reloadableResourceBundleMessageSource = new ReloadableResourceBundleMessageSource();
 
         reloadableResourceBundleMessageSource.setBasenames(
@@ -37,7 +38,7 @@ public class EgovConfigAppMsg {
      * @return [Resource 설정] 메세지 소스 등록
      */
     @Bean
-    public EgovMessageSource egovMessageSource() {
+    EgovMessageSource egovMessageSource() {
         EgovMessageSource egovMessageSource = new EgovMessageSource();
         egovMessageSource.setReloadableResourceBundleMessageSource(messageSource());
         return egovMessageSource;
