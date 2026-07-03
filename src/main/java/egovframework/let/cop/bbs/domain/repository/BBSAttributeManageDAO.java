@@ -33,7 +33,7 @@ public class BBSAttributeManageDAO extends EgovAbstractMapper {
      *
      * @param BoardMaster
      */
-    public void deleteBBSMasterInf(BoardMaster boardMaster) throws Exception {
+    public void deleteBBSMasterInf(BoardMaster boardMaster) {
     	update("BBSAttributeManageDAO.deleteBBSMasterInf", boardMaster);
     }
 
@@ -42,7 +42,7 @@ public class BBSAttributeManageDAO extends EgovAbstractMapper {
      *
      * @param BoardMaster
      */
-    public int insertBBSMasterInf(BoardMaster boardMaster) throws Exception {
+    public int insertBBSMasterInf(BoardMaster boardMaster) {
     	return insert("BBSAttributeManageDAO.insertBBSMasterInf", boardMaster);
     }
 
@@ -51,7 +51,7 @@ public class BBSAttributeManageDAO extends EgovAbstractMapper {
      *
      * @param BoardMasterVO
      */
-    public BoardMasterVO selectBBSMasterInf(BoardMaster searchVO) throws Exception {
+    public BoardMasterVO selectBBSMasterInf(BoardMaster searchVO) {
     	return (BoardMasterVO)selectOne("BBSAttributeManageDAO.selectBBSMasterInf", searchVO);
     }
 
@@ -60,7 +60,7 @@ public class BBSAttributeManageDAO extends EgovAbstractMapper {
      *
      * @param BoardMasterVO
      */
-    public List<BoardMasterVO> selectBBSMasterInfs(BoardMasterVO vo) throws Exception {
+    public List<BoardMasterVO> selectBBSMasterInfs(BoardMasterVO vo) {
 		return selectList("BBSAttributeManageDAO.selectBBSMasterInfs", vo);
 	}
 
@@ -69,9 +69,8 @@ public class BBSAttributeManageDAO extends EgovAbstractMapper {
      *
      * @param vo
      * @return
-     * @throws Exception
      */
-    public int selectBBSMasterInfsCnt(BoardMasterVO vo) throws Exception {
+    public int selectBBSMasterInfsCnt(BoardMasterVO vo) {
     	return (Integer)selectOne("BBSAttributeManageDAO.selectBBSMasterInfsCnt", vo);
     }
 
@@ -80,7 +79,7 @@ public class BBSAttributeManageDAO extends EgovAbstractMapper {
      *
      * @param BoardMaster
      */
-    public void updateBBSMasterInf(BoardMaster boardMaster) throws Exception {
+    public void updateBBSMasterInf(BoardMaster boardMaster) {
     	update("BBSAttributeManageDAO.updateBBSMasterInf", boardMaster);
     }
 
@@ -89,7 +88,7 @@ public class BBSAttributeManageDAO extends EgovAbstractMapper {
      *
      * @param BoardMasterVO
      */
-    public boolean validateTemplate(BoardMasterVO vo) throws Exception {
+    public boolean validateTemplate(BoardMasterVO vo) {
     	return true;
     }
 
@@ -98,13 +97,12 @@ public class BBSAttributeManageDAO extends EgovAbstractMapper {
      *
      * @param vo
      * @return
-     * @throws Exception
      */
-    public List<BoardMasterVO> selectAllBBSMasteInf(BoardMasterVO vo) throws Exception {
+    public List<BoardMasterVO> selectAllBBSMasteInf(BoardMasterVO vo) {
 		// 커뮤니티, 동호회의 게시판이 나오지 않도록 LETTNBBSUSE 테이블과 Join 필요
 		return selectList("BBSAttributeManageDAO.selectAllBBSMaster", vo);
 	}
-    public List<BoardMasterVO> selectAllBBSMasteInf(BbsAttributeUpdateRequestDTO bbsAttributeUpdateRequestDTO) throws Exception {
+    public List<BoardMasterVO> selectAllBBSMasteInf(BbsAttributeUpdateRequestDTO bbsAttributeUpdateRequestDTO) {
     	return selectList("BBSAttributeManageDAO.selectAllBBSMaster", bbsAttributeUpdateRequestDTO);
     }
 
@@ -113,7 +111,7 @@ public class BBSAttributeManageDAO extends EgovAbstractMapper {
      *
      * @param BoardMasterVO
      */
-    public List<BoardMasterVO> selectBdMstrListByTrget(BoardMasterVO vo) throws Exception {
+    public List<BoardMasterVO> selectBdMstrListByTrget(BoardMasterVO vo) {
 		return selectList("BBSAttributeManageDAO.selectBdMstrListByTrget", vo);
 	}
 
@@ -122,9 +120,8 @@ public class BBSAttributeManageDAO extends EgovAbstractMapper {
      *
      * @param vo
      * @return
-     * @throws Exception
      */
-    public int selectBdMstrListCntByTrget(BoardMasterVO vo) throws Exception {
+    public int selectBdMstrListCntByTrget(BoardMasterVO vo) {
     	return (Integer)selectOne("BBSAttributeManageDAO.selectBdMstrListCntByTrget", vo);
     }
 
@@ -133,9 +130,8 @@ public class BBSAttributeManageDAO extends EgovAbstractMapper {
      *
      * @param vo
      * @return
-     * @throws Exception
      */
-    public List<BoardMasterVO> selectAllBdMstrByTrget(BoardMasterVO vo) throws Exception {
+    public List<BoardMasterVO> selectAllBdMstrByTrget(BoardMasterVO vo) {
 		return selectList("BBSAttributeManageDAO.selectAllBdMstrByTrget", vo);
 	}
 
@@ -144,7 +140,7 @@ public class BBSAttributeManageDAO extends EgovAbstractMapper {
      *
      * @param BoardMasterVO
      */
-    public List<BoardMasterVO> selectNotUsedBdMstrList(BoardMasterVO vo) throws Exception {
+    public List<BoardMasterVO> selectNotUsedBdMstrList(BoardMasterVO vo) {
 		return selectList("BBSAttributeManageDAO.selectNotUsedBdMstrList", vo);
 	}
 
@@ -153,9 +149,8 @@ public class BBSAttributeManageDAO extends EgovAbstractMapper {
      *
      * @param vo
      * @return
-     * @throws Exception
      */
-	public int selectNotUsedBdMstrListCnt(BoardMasterVO vo) throws Exception {
+	public int selectNotUsedBdMstrListCnt(BoardMasterVO vo) {
 		return (Integer)selectOne("BBSAttributeManageDAO.selectNotUsedBdMstrListCnt", vo);
     }
 }

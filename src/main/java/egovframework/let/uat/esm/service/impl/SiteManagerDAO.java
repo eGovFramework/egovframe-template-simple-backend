@@ -27,9 +27,8 @@ public class SiteManagerDAO extends EgovAbstractMapper {
 	 * 기존 비번과 비교하여 변경된 비밀번호를 저장한다.
 	 * @param map데이터 String: login_id, old_password, new_password
 	 * @return 성공시 1 
-	 * @exception Exception
 	 */
-	public Integer updateAdminPassword(Map<?, ?> map) throws Exception {
+	public Integer updateAdminPassword(Map<?, ?> map) {
 		return update("siteManagerDAO.updateAdminPassword", map);
 	}
 }

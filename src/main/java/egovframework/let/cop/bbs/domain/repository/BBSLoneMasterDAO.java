@@ -33,7 +33,7 @@ public class BBSLoneMasterDAO extends EgovAbstractMapper {
      *
      * @param BoardMaster
      */
-    public void deleteMaster(BoardMaster boardMaster) throws Exception {
+    public void deleteMaster(BoardMaster boardMaster) {
     	update("BBSLoneMasterDAO.deleteMaster", boardMaster);
     }
 
@@ -42,7 +42,7 @@ public class BBSLoneMasterDAO extends EgovAbstractMapper {
      *
      * @param BoardMaster
      */
-    public int insertMaster(BoardMaster boardMaster) throws Exception {
+    public int insertMaster(BoardMaster boardMaster) {
     	return insert("BBSLoneMasterDAO.insertMaster", boardMaster);
     }
 
@@ -51,7 +51,7 @@ public class BBSLoneMasterDAO extends EgovAbstractMapper {
      *
      * @param BoardMasterVO
      */
-    public BoardMasterVO selectMaster(BoardMaster vo) throws Exception {
+    public BoardMasterVO selectMaster(BoardMaster vo) {
     	return (BoardMasterVO)selectOne("BBSLoneMasterDAO.selectMaster", vo);
     }
 
@@ -60,7 +60,7 @@ public class BBSLoneMasterDAO extends EgovAbstractMapper {
      *
      * @param BoardMasterVO
      */
-    public List<BoardMasterVO> selectMasterList(BoardMasterVO vo) throws Exception {
+    public List<BoardMasterVO> selectMasterList(BoardMasterVO vo) {
 		return selectList("BBSLoneMasterDAO.selectMasterList", vo);
 	}
 
@@ -69,9 +69,8 @@ public class BBSLoneMasterDAO extends EgovAbstractMapper {
      *
      * @param vo
      * @return
-     * @throws Exception
      */
-    public int selectMasterListCnt(BoardMasterVO vo) throws Exception {
+    public int selectMasterListCnt(BoardMasterVO vo) {
     	return (Integer)selectOne("BBSLoneMasterDAO.selectMasterListCnt", vo);
     }
 
@@ -80,7 +79,7 @@ public class BBSLoneMasterDAO extends EgovAbstractMapper {
      *
      * @param BoardMaster
      */
-    public void updateMaster(BoardMaster boardMaster) throws Exception {
+    public void updateMaster(BoardMaster boardMaster) {
     	update("BBSLoneMasterDAO.updateMaster", boardMaster);
     }
 }

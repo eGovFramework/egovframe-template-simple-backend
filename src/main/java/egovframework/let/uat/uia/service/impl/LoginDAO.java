@@ -30,9 +30,8 @@ public class LoginDAO extends EgovAbstractMapper {
 	 * 일반 로그인을 처리한다
 	 * @param vo LoginVO
 	 * @return LoginVO
-	 * @exception Exception
 	 */
-	public LoginVO actionLogin(LoginVO vo) throws Exception {
+	public LoginVO actionLogin(LoginVO vo) {
 		return (LoginVO) selectOne("loginDAO.actionLogin", vo);
 	}
 
@@ -40,9 +39,8 @@ public class LoginDAO extends EgovAbstractMapper {
 	 * 아이디를 찾는다.
 	 * @param vo LoginVO
 	 * @return LoginVO
-	 * @exception Exception
 	 */
-	public LoginVO searchId(LoginVO vo) throws Exception {
+	public LoginVO searchId(LoginVO vo) {
 		return (LoginVO) selectOne("loginDAO.searchId", vo);
 	}
 
@@ -50,18 +48,16 @@ public class LoginDAO extends EgovAbstractMapper {
 	 * 비밀번호를 찾는다.
 	 * @param vo LoginVO
 	 * @return LoginVO
-	 * @exception Exception
 	 */
-	public LoginVO searchPassword(LoginVO vo) throws Exception {
+	public LoginVO searchPassword(LoginVO vo) {
 		return (LoginVO) selectOne("loginDAO.searchPassword", vo);
 	}
 
 	/**
 	 * 변경된 비밀번호를 저장한다.
 	 * @param vo LoginVO
-	 * @exception Exception
 	 */
-	public void updatePassword(LoginVO vo) throws Exception {
+	public void updatePassword(LoginVO vo) {
 		update("loginDAO.updatePassword", vo);
 	}
 }
