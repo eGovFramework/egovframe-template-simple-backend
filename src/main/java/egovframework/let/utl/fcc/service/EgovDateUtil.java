@@ -308,43 +308,21 @@ public class EgovDateUtil {
 	public static String formatDate(String sDate, String ch) {
 		String dateStr = validChkDate(sDate);
 
+		// validChkDate가 8자리(혹은 하이픈 제거 후 8자리)만 반환하므로 str은 항상 8자리이다.
 		String str = dateStr.trim();
-		String yyyy = "";
-		String mm = "";
-		String dd = "";
-
-		if (str.length() == 8) {
-			yyyy = str.substring(0, 4);
-			if (yyyy.equals("0000"))
-				return "";
-
-			mm = str.substring(4, 6);
-			if (mm.equals("00"))
-				return yyyy;
-
-			dd = str.substring(6, 8);
-			if (dd.equals("00"))
-				return yyyy + ch + mm;
-
-			return yyyy + ch + mm + ch + dd;
-		} else if (str.length() == 6) {
-			yyyy = str.substring(0, 4);
-			if (yyyy.equals("0000"))
-				return "";
-
-			mm = str.substring(4, 6);
-			if (mm.equals("00"))
-				return yyyy;
-
-			return yyyy + ch + mm;
-		} else if (str.length() == 4) {
-			yyyy = str.substring(0, 4);
-			if (yyyy.equals("0000"))
-				return "";
-			else
-				return yyyy;
-		} else
+		String yyyy = str.substring(0, 4);
+		if (yyyy.equals("0000"))
 			return "";
+
+		String mm = str.substring(4, 6);
+		if (mm.equals("00"))
+			return yyyy;
+
+		String dd = str.substring(6, 8);
+		if (dd.equals("00"))
+			return yyyy + ch + mm;
+
+		return yyyy + ch + mm + ch + dd;
 	}
 
 	/**
@@ -359,7 +337,8 @@ public class EgovDateUtil {
 	 */
 	public static String formatTime(String sTime, String ch) {
 		String timeStr = validChkTime(sTime);
-		return timeStr.substring(0, 2) + ch + timeStr.substring(2, 4) + ch + timeStr.substring(4, 6);
+		// validChkTime이 4자리(HHmm)만 반환하므로 초 단위 분기는 도달할 수 없다.
+		return timeStr.substring(0, 2) + ch + timeStr.substring(2, 4);
 	}
 
 	/**
