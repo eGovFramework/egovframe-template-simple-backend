@@ -380,9 +380,9 @@ public class EgovDateUtil {
 	 * <p>입력받은 연도가 윤년인지 아닌지 검사한다.</p>
 	 *
 	 * <pre>
-	 * DateUtil.isLeapYear(2004) = false
-	 * DateUtil.isLeapYear(2005) = true
-	 * DateUtil.isLeapYear(2006) = true
+	 * DateUtil.isLeapYear(2004) = true
+	 * DateUtil.isLeapYear(2005) = false
+	 * DateUtil.isLeapYear(2006) = false
 	 * </pre>
 	 *
 	 * @param  year 연도
@@ -390,9 +390,9 @@ public class EgovDateUtil {
 	 */
 	public static boolean isLeapYear(int year) {
 		if (year % 4 == 0 && year % 100 != 0 || year % 400 == 0) {
-			return false;
+			return true;
 		}
-		return true;
+		return false;
 	}
 
 	/**
