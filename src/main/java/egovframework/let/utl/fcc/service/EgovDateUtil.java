@@ -398,7 +398,7 @@ public class EgovDateUtil {
 				+ ((date < 10) ? "0" + Integer.toString(date) : Integer.toString(date));
 
 		if (!"".equals(dateType))
-			strDate = convertDate(strDate, "yyyyMMdd", dateType);
+			strDate = convertDate(strDate, "yyyyMMdd", dateType, "");
 
 		return strDate;
 	}

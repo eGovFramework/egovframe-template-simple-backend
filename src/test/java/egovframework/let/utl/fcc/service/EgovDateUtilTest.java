@@ -21,4 +21,10 @@ class EgovDateUtilTest {
 		assertEquals("15:12", EgovDateUtil.formatTime("1512", ":"));
 	}
 
+	@Test
+	void getCurrentDate_포맷지정시예외없이변환된날짜를반환한다() {
+		String result = EgovDateUtil.getCurrentDate("yyyy-MM-dd");
+		assertTrue(result.matches("\\d{4}-\\d{2}-\\d{2}"));
+	}
+
 }
