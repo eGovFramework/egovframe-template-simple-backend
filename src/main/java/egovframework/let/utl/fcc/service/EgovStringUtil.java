@@ -253,6 +253,7 @@ public class EgovStringUtil {
 			if (srcStr.indexOf(chA) >= 0) {
 				preStr = srcStr.substring(0, srcStr.indexOf(chA));
 				nextStr = srcStr.substring(srcStr.indexOf(chA) + 1, srcStr.length());
+				rtnStr.setLength(0);
 				srcStr = rtnStr.append(preStr).append(object).append(nextStr).toString();
 			}
 		}
