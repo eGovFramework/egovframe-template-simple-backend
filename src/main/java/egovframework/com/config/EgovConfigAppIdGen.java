@@ -29,7 +29,7 @@ import org.egovframe.rte.fdl.idgnr.impl.strategy.EgovIdGnrStrategyImpl;
  *
  */
 @Configuration
-class EgovConfigAppIdGen {
+public class EgovConfigAppIdGen {
 
     private final DataSource dataSource;
 
