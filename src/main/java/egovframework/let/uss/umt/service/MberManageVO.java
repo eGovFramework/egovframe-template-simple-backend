@@ -9,7 +9,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * 일반회원VO클래스로서 일반회원관리 비지니스로직 처리용 항목을 구성한다.
+ * 일반회원VO클래스로서 일반회원관리 비즈니스로직 처리용 항목을 구성한다.
  * @author 공통서비스 개발팀 조재영
  * @since 2009.04.10
  * @version 1.0

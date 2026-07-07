@@ -7,7 +7,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 /**
- * 사용자정보 VO클래스로서일반회원, 기업회원, 업무사용자의  비지니스로직 처리시 기타조건성 항목을 구성한다.
+ * 사용자정보 VO클래스로서일반회원, 기업회원, 업무사용자의  비즈니스로직 처리시 기타조건성 항목을 구성한다.
  * @author 공통서비스 개발팀 조재영
  * @since 2009.04.10
  * @version 1.0
@@ -48,7 +48,7 @@ public class UserDefaultVO implements Serializable {
     /** 현재페이지 */
     private int pageIndex = 1;
 
-    /** 페이지갯수 */
+    /** 페이지개수 */
     private int pageUnit = 10;
 
     /** 페이지사이즈 */
