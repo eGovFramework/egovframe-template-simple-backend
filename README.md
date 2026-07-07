@@ -7,6 +7,7 @@
 ![workflow](https://github.com/eGovFramework/egovframe-template-simple-backend/actions/workflows/maven.yml/badge.svg)
 
 ※ 본 프로젝트는 기존 JSP 뷰 방식에서 벗어나 BackEnd와 FrontEnd를 분리한 아키텍처를 제공하는 예시 프로젝트입니다. 실제 구현 시 참고용으로 활용하시기 바랍니다.
+※ AI-RAG기능 사용 시 인증/제한 없는 데모, 노출·과금은 도입자 책임이며, 운영 전 접근통제 및 rate limit 가 필요 합니다.
 
 ---
 

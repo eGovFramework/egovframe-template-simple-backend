@@ -57,6 +57,7 @@ public class SecurityConfig {
             "/schedule/{schdulId}", // 일정 상세조회
             "/image", // 갤러리 이미지보기
             "/file", // 파일 다운로드 — GET만 공개 (2026/06/26 보안취약점 대응: POST(삭제)는 인증 요구로 전환)
+            "/api/gemini/rag_chat", // RAG 챗봇 응답
     };
 
     // 인증 예외 List
