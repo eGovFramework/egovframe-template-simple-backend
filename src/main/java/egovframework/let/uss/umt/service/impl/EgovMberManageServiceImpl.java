@@ -14,7 +14,7 @@ import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 /**
- * 일반회원관리에 관한비지니스클래스를 정의한다.
+ * 일반회원관리에 관한비즈니스클래스를 정의한다.
  * @author 공통서비스 개발팀 조재영
  * @since 2009.04.10
  * @version 1.0
@@ -85,9 +85,9 @@ public class EgovMberManageServiceImpl extends EgovAbstractServiceImpl implement
 	}
 
     /**
-     * 일반회원 총 갯수를 조회한다.
+     * 일반회원 총 개수를 조회한다.
      * @param userSearchVO 검색조건
-     * @return 일반회원총갯수(int)
+     * @return 일반회원총개수(int)
      */
     @Override
 	public int selectMberListTotCnt(UserDefaultVO userSearchVO) {
