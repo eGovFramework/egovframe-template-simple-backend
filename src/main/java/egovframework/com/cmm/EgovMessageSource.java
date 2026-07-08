@@ -44,16 +44,16 @@ public class EgovMessageSource extends ReloadableResourceBundleMessageSource imp
 	}
 
 	/**
-	 * Default Locale 정의된 메세지 조회
-	 * @param code - 메세지 코드
+	 * Default Locale 정의된 메시지 조회
+	 * @param code - 메시지 코드
 	 * @return String
 	 */	
 	public String getMessage(String code) {
 		return this.getMessage(code, Locale.getDefault());
 	}
 	/**
-	 * 정의된 메세지 조회
-	 * @param code - 메세지 코드
+	 * 정의된 메시지 조회
+	 * @param code - 메시지 코드
 	 * @param locale - locale 설정
 	 * @return String
 	 */

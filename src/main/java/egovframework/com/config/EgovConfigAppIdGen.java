@@ -578,7 +578,7 @@ public class EgovConfigAppIdGen {
 			.build();
 	}
 
-	/** 메일 메세지 ID Generation  Config
+	/** 메일 메시지 ID Generation  Config
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")

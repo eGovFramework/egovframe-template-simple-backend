@@ -58,7 +58,7 @@ public class EgovSiteManagerApiController {
 	 * 리액트에서 사이트관리자에 접근하는 토큰값 위변조 방지용으로 서버에서 비교한다.
 	 * @param map데이터: String old_password, new_password
 	 * @param request - 토큰값으로 인증된 사용자를 확인하기 위한 HttpServletRequest
-	 * @return result - JWT 토큰값 비교결과 코드와 메세지
+	 * @return result - JWT 토큰값 비교결과 코드와 메시지
 	 * @exception Exception
 	 */
 	@Operation(

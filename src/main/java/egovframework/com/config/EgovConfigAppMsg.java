@@ -20,7 +20,7 @@ import org.springframework.context.support.ReloadableResourceBundleMessageSource
 public class EgovConfigAppMsg {
 
     /**
-     * @return [Resource 설정] 메세지 Properties 경로 설정
+     * @return [Resource 설정] 메시지 Properties 경로 설정
      */
     @Bean
     ReloadableResourceBundleMessageSource messageSource() {
@@ -35,7 +35,7 @@ public class EgovConfigAppMsg {
     }
 
     /**
-     * @return [Resource 설정] 메세지 소스 등록
+     * @return [Resource 설정] 메시지 소스 등록
      */
     @Bean
     EgovMessageSource egovMessageSource() {
