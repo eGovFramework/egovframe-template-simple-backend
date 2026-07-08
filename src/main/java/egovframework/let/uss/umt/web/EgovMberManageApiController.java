@@ -1,5 +1,6 @@
 package egovframework.let.uss.umt.web;
 
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +11,9 @@ import jakarta.validation.Valid;
 
 import org.egovframe.rte.fdl.property.EgovPropertyService;
 import org.egovframe.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.validation.BindingResult;
@@ -67,6 +71,10 @@ public class EgovMberManageApiController {
 
 	private EgovJwtTokenUtil jwtTokenUtil;
 	public static final String HEADER_STRING = "Authorization";
+	private static final String ACCESS_TOKEN_COOKIE = "ACCESS_TOKEN";
+
+	@Value("${Globals.jwt.cookieSecure:false}")
+	private boolean cookieSecure;
 
 	private final EgovMberManageService mberManageService;
 	private final EgovCmmUseService cmmUseService;
@@ -418,6 +426,14 @@ public class EgovMberManageApiController {
 			return resultVoHelper.buildFromMap(resultMap, ResponseCode.SAVE_ERROR);
 		}
 
+		// 보안취약점 대응 — 탈퇴('D') 계정의 자가 재활성화 차단.
+		// 소프트 삭제된 계정은 JWT 만료 전까지 유효하므로, 상태 변경 전 서버측에서 현재 회원상태를 재확인한다.
+		MberManageVO currentMber = mberManageService.selectMber(user.getUniqId());
+		if (currentMber == null || "D".equals(currentMber.getMberSttus())) {
+			resultMap.put("resultMsg", "탈퇴 처리된 계정은 정보를 수정할 수 없습니다.");
+			return resultVoHelper.buildFromMap(resultMap, ResponseCode.AUTH_ERROR);
+		}
+
 		mberManageVO.setUniqId(user.getUniqId()); // 현재 로그인한 사용자의 정보만 수정 가능하도록 강제
 		mberManageVO.setMberSttus("P");// 회원상태는 로그인가능상태로
 		mberManageVO.setGroupId("GROUP_00000000000001");// 회원 권한그룹은 ROLE_USER상태로
@@ -463,7 +479,11 @@ public class EgovMberManageApiController {
 		mberManageVO.setUniqId(user.getUniqId()); // 현재 로그인한 사용자의 계정만 탈퇴 처리 가능하도록 강제
 		mberManageVO.setMberSttus("D");// 회원상태 삭제상태로
 		mberManageService.updateMber(mberManageVO);// 회원상태 탈퇴 처리
-		new SecurityContextLogoutHandler().logout(request, response, null);// 로그인 토큰값 지우기
+		new SecurityContextLogoutHandler().logout(request, response, null);// SecurityContext 정리
+		// 보안취약점 대응 — 탈퇴 시 ACCESS_TOKEN 쿠키를 실제로 만료 (SecurityContextLogoutHandler만으로는 stateless JWT 쿠키가 브라우저에 잔존)
+		ResponseCookie expiredCookie = ResponseCookie.from(ACCESS_TOKEN_COOKIE, "")
+				.httpOnly(true).secure(cookieSecure).sameSite("Strict").path("/").maxAge(Duration.ZERO).build();
+		response.addHeader(HttpHeaders.SET_COOKIE, expiredCookie.toString());
 
 		// Exception 없이 진행시 수정성공메시지
 		resultMap.put("resultMsg", "success.common.update");
