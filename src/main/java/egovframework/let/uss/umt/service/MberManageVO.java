@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
@@ -62,7 +64,9 @@ public class MberManageVO extends UserDefaultVO implements Serializable{
 	@Schema(description = "그룹 ID")
 	private String groupId="";
 
-	@Schema(description = "주민등록번호")
+	// 보안취약점 대응 — 주민등록번호는 응답에 직렬화하지 않음(입력만 허용)
+	@Schema(description = "주민등록번호", accessMode = Schema.AccessMode.WRITE_ONLY)
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	private String ihidnum="";
 
 	@Schema(description = "성별코드")
@@ -86,7 +90,9 @@ public class MberManageVO extends UserDefaultVO implements Serializable{
 	@Schema(description = "핸드폰번호")
 	private String moblphonNo="";
 
-	@Schema(description = "비밀번호")
+	// 보안취약점 대응 — 비밀번호(해시)는 응답에 직렬화하지 않음(입력만 허용)
+	@Schema(description = "비밀번호", accessMode = Schema.AccessMode.WRITE_ONLY)
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	private String password;
 
 	@Schema(description = "비밀번호 정답")

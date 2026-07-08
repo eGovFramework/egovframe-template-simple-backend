@@ -1,5 +1,6 @@
 package egovframework.let.uss.umt.web;
 
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +12,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.egovframe.rte.fdl.property.EgovPropertyService;
 import org.egovframe.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.validation.BindingResult;
@@ -70,6 +74,10 @@ public class EgovMberManageApiController {
 	@Autowired
     private EgovJwtTokenUtil jwtTokenUtil;
     public static final String HEADER_STRING = "Authorization";
+    private static final String ACCESS_TOKEN_COOKIE = "ACCESS_TOKEN";
+
+    @Value("${Globals.jwt.cookieSecure:false}")
+    private boolean cookieSecure;
     
 	/** mberManageService */
 	@Resource(name = "mberManageService")
@@ -465,7 +473,7 @@ public class EgovMberManageApiController {
 			@ApiResponse(responseCode = "900", description = "입력값 무결성 오류")
 	})
 	@PutMapping("/mypage/update")
-	public ResultVO updateMypage(@RequestBody MberManageVO mberManageVO, BindingResult bindingResult) throws Exception {
+	public ResultVO updateMypage(@RequestBody MberManageVO mberManageVO, BindingResult bindingResult, HttpServletRequest request) throws Exception {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		ResultVO resultVO = new ResultVO();
 
@@ -475,6 +483,19 @@ public class EgovMberManageApiController {
 			resultVO.setResultCode(ResponseCode.SAVE_ERROR.getCode());
 			resultVO.setResultMessage(ResponseCode.SAVE_ERROR.getMessage());
 		} else {
+			// 보안취약점 대응 — 요청 본문의 uniqId를 신뢰하지 않고 인증 주체의 uniqId만 사용(수평 IDOR 차단),
+			// 탈퇴('D') 계정은 토큰 만료 전까지 유효하므로 상태 변경 전 서버측에서 현재 회원상태를 재확인해 재활성화를 차단한다.
+			LoginVO user = extractUserFromJwt(request);
+			String uniqId = user.getUniqId();
+			MberManageVO currentMber = (uniqId == null || uniqId.isEmpty()) ? null : mberManageService.selectMber(uniqId);
+			if (currentMber == null || "D".equals(currentMber.getMberSttus())) {
+				resultMap.put("resultMsg", "탈퇴 처리된 계정은 정보를 수정할 수 없습니다.");
+				resultVO.setResultCode(ResponseCode.AUTH_ERROR.getCode());
+				resultVO.setResultMessage(ResponseCode.AUTH_ERROR.getMessage());
+				resultVO.setResult(resultMap);
+				return resultVO;
+			}
+			mberManageVO.setUniqId(uniqId);//인증 주체 본인 계정만 수정 가능하도록 강제
 			mberManageVO.setMberSttus("P");//회원상태는 로그인가능상태로
 			mberManageVO.setGroupId("GROUP_00000000000001");//회원 권한그룹은 ROLE_USER상태로
 			mberManageService.updateMber(mberManageVO);
@@ -518,7 +539,11 @@ public class EgovMberManageApiController {
 		} else {
 			mberManageVO.setMberSttus("D");//회원상태 삭제상태로
 			mberManageService.updateMber(mberManageVO);//회원상태 탈퇴 처리
-			new SecurityContextLogoutHandler().logout(request, response, null);//로그인 토큰값 지우기
+			new SecurityContextLogoutHandler().logout(request, response, null);//SecurityContext 정리
+			// 보안취약점 대응 — 탈퇴 시 ACCESS_TOKEN 쿠키를 실제로 만료 (SecurityContextLogoutHandler만으로는 stateless JWT 쿠키가 브라우저에 잔존)
+			ResponseCookie expiredCookie = ResponseCookie.from(ACCESS_TOKEN_COOKIE, "")
+					.httpOnly(true).secure(cookieSecure).sameSite("Strict").path("/").maxAge(Duration.ZERO).build();
+			response.addHeader(HttpHeaders.SET_COOKIE, expiredCookie.toString());
 			//Exception 없이 진행시 수정성공메시지
 			resultMap.put("resultMsg", "success.common.update");
 			resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
