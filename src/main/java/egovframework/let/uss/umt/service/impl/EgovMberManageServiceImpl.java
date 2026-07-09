@@ -50,7 +50,7 @@ public class EgovMberManageServiceImpl extends EgovAbstractServiceImpl implement
 	 */
 	@Override
 	public int insertMber(MberManageVO mberManageVO) throws Exception  {
-		//고유아이디 셋팅
+		//고유아이디 세팅
 		String uniqId = idgenService.getNextStringId();
 		mberManageVO.setUniqId(uniqId);
 		// 저장 형식 = SHA-256(id || SHA-256(id || password))
