@@ -65,7 +65,7 @@ public class EgovMainApiController {
 		ResultVO resultVO = new ResultVO();
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 
-		// 공지사항 메인 컨텐츠 조회 시작 ---------------------------------
+		// 공지사항 메인 콘텐츠 조회 시작 ---------------------------------
 		PaginationInfo paginationInfo = new PaginationInfo();
 
 		paginationInfo.setCurrentPageNo(1);
