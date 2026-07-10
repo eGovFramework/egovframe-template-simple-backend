@@ -38,7 +38,7 @@ true 설정 : CG-LIB로만 구현
 
 우리가 작성하는 코드 혹은 프로그램을 **핵심 로직** + **공통 로직(반복적으로 쓰이는 로직, 부가 기능)** 으로 나눠 볼 수 있다.
 
-핵심 로직(비지니스 로직, 서비스 로직)과 공통 관심사(로깅,트랜잭션, security)를 분리하기 위해..
+핵심 로직(비즈니스 로직, 서비스 로직)과 공통 관심사(로깅,트랜잭션, security)를 분리하기 위해..
 
 관심을 분리 함으로써 부가적인 공통 관심사를 AOP를 통해 효율적으로 관리, **소스상 결합은 발생하지 않는다.**
 
@@ -46,11 +46,11 @@ true 설정 : CG-LIB로만 구현
 
 #### Separation of Concerns 
 
-비지니스 로직을 Core Concerns + Cross-cutting Concerns 로 나눌 수 있다.
+비즈니스 로직을 Core Concerns + Cross-cutting Concerns 로 나눌 수 있다.
 
 #### Core Concerns
 업무의 주된 flow.
-핵심 비지니스 로직.
+핵심 비즈니스 로직.
 
 #### Cross-cutting Concerns 
 공통, 반복되는 코드(로직)
@@ -65,7 +65,7 @@ true 설정 : CG-LIB로만 구현
 Cross-cutting Concerns을 구현한 객체. 공통로직을 담은 클래스.
 
 #### JoinPoint (???)
-모든 비지니스 메소드. 공통 관심사를 적용할 수 있는 대상이 되는 메소드.
+모든 비즈니스 메소드. 공통 관심사를 적용할 수 있는 대상이 되는 메소드.
 Spring AOP에서는 각 객체의 메소드.
 
 #### **PointCut** 
@@ -128,12 +128,12 @@ Advice와 Target이 결합되어서 Proxy를 만드는 과정
 
 
 advice의 동작 시점
-	* Before : 비지니스 메소드 실행 전 동작 ; <aop:before>
+	* Before : 비즈니스 메소드 실행 전 동작 ; <aop:before>
 	* After
-		* After Returning : 비지니스 메소드가 성공적으로 리턴되면 동작 ; <aop:after-returning>
-		* After Throwing : 비지니스 메소드 실행 중 예외가 발생하면 동작(try~catch 블록에서 catch 블록에 해당) ; <aop:after-throwing>
+		* After Returning : 비즈니스 메소드가 성공적으로 리턴되면 동작 ; <aop:after-returning>
+		* After Throwing : 비즈니스 메소드 실행 중 예외가 발생하면 동작(try~catch 블록에서 catch 블록에 해당) ; <aop:after-throwing>
 		* After : 실행 된 후 무조건 실행(try~catch~finally 블록에서 finally 블록에 해당) ; <aop:after>
-	* Around : 비지니스 메소드 실행 전후에 처리할 로직을 삽입할 수 있음 <aop::after-around>
+	* Around : 비즈니스 메소드 실행 전후에 처리할 로직을 삽입할 수 있음 <aop::after-around>
 
 ``` ```
 ``` ```
