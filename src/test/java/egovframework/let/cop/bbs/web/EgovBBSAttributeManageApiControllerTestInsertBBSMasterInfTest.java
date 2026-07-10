@@ -18,11 +18,15 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.List;
 
 import egovframework.let.cop.bbs.domain.model.BoardMaster;
 import egovframework.let.cop.bbs.dto.request.BbsAttributeInsertRequestDTO;
 import egovframework.let.cop.bbs.service.EgovBBSAttributeManageService;
+import egovframework.let.utl.sim.service.EgovFileScrty;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -155,18 +159,42 @@ class EgovBBSAttributeManageApiControllerTestInsertBBSMasterInfTest {
 		final JwtRequest jwtRequest = new JwtRequest();
 		jwtRequest.setUserSe("USR");
 		jwtRequest.setId("admin");
-		jwtRequest.setPassword("1");
+		// 프론트엔드(passwordHash.js)와 동일하게 1차 해시하여 전송 (서버가 2차 해시로 저장값과 비교)
+		// (admin/Admin@1234 은 README·시드에 공개된 샘플 계정 — 운영 비밀 아님)
+		jwtRequest.setPassword(clientHashedPassword("admin", "Admin@1234"));
 		HttpEntity<JwtRequest> request = new HttpEntity<>(jwtRequest, headers);
-//		final JwtResponse jwtResponse = restTemplate.postForObject("/auth/login-jwt", request, JwtResponse.class);
-		final String content = restTemplate.postForObject("/auth/login-jwt", request, String.class);
-		final String content2 = content.substring(content.indexOf("\"jToken\":\"") + 10);
-		final String content3 = content2.substring(0, content2.indexOf("\""));
-//		final ObjectMapper mapper = new ObjectMapper();
-//		mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-//		final JwtResponse jwtResponse = mapper.readValue(content, JwtResponse.class);
+
+		// JWT 는 응답 본문이 아니라 httpOnly ACCESS_TOKEN 쿠키로 발급된다. Set-Cookie 에서 추출.
+		final ResponseEntity<String> response = restTemplate.postForEntity("/auth/login-jwt", request, String.class);
 		final JwtResponse jwtResponse = new JwtResponse();
-		jwtResponse.setJToken(content3);
+		jwtResponse.setJToken(extractAccessToken(response.getHeaders()));
 		return jwtResponse;
+	}
+
+	private static final String ACCESS_TOKEN_COOKIE = "ACCESS_TOKEN";
+
+	private String extractAccessToken(HttpHeaders responseHeaders) {
+		final List<String> setCookies = responseHeaders.get(HttpHeaders.SET_COOKIE);
+		if (setCookies == null) {
+			return null;
+		}
+		for (String cookie : setCookies) {
+			if (cookie.startsWith(ACCESS_TOKEN_COOKIE + "=")) {
+				final String value = cookie.substring((ACCESS_TOKEN_COOKIE + "=").length());
+				final int semi = value.indexOf(';');
+				return semi >= 0 ? value.substring(0, semi) : value;
+			}
+		}
+		return null;
+	}
+
+	private static String clientHashedPassword(String id, String rawPassword) {
+		try {
+			// 프론트엔드 passwordHash.js 와 동일한 1차 해시 = EgovFileScrty.encryptPassword(raw, id)
+			return EgovFileScrty.encryptPassword(rawPassword, id);
+		} catch (Exception e) {
+			throw new IllegalStateException(e);
+		}
 	}
 
 }
