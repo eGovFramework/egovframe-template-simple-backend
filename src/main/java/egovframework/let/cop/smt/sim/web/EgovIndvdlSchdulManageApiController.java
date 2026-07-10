@@ -187,7 +187,7 @@ public class EgovIndvdlSchdulManageApiController {
 			_atchFileId = fileMngService.insertFileInfs(_result); //파일이 생성되고나면 생성된 첨부파일 ID를 리턴한다.
 		}
 
-		// 리턴받은 첨부파일ID를 셋팅한다..
+		// 리턴받은 첨부파일ID를 세팅한다..
 		indvdlSchdulManageVO.setAtchFileId(_atchFileId); // 첨부파일 ID
 
 		//아이디 설정
@@ -362,7 +362,7 @@ public class EgovIndvdlSchdulManageApiController {
 				List<FileVO> _result = fileUtil.parseFileInf(files, "DSCH_", 0, _atchFileId, "");
 				_atchFileId = fileMngService.insertFileInfs(_result);
 
-				// 첨부파일 ID 셋팅
+				// 첨부파일 ID 세팅
 				indvdlSchdulManageVO.setAtchFileId(_atchFileId); // 첨부파일 ID
 
 			} else {

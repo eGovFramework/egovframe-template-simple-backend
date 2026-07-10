@@ -1135,7 +1135,7 @@ public class EgovConfigAppIdGen {
 			.build();
 	}
 
-	/** 마이페이지 컨텐츠 ID Generation  Config
+	/** 마이페이지 콘텐츠 ID Generation  Config
 	 * @return
 	 */
 	@Bean(destroyMethod = "destroy")
