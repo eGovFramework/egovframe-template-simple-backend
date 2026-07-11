@@ -46,7 +46,7 @@ import jakarta.servlet.MultipartConfigElement;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    // Http Methpd : Get 인증예외 List
+    // Http Method : Get 인증예외 List
     private String[] AUTH_GET_WHITELIST = {
             "/mainPage", // 메인 화면 리스트 조회
             "/board", // 게시판 목록조회
