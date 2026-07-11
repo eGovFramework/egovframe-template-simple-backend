@@ -33,7 +33,6 @@ import egovframework.com.cmm.ResponseCode;
 import egovframework.com.cmm.service.EgovCmmUseService;
 import egovframework.com.cmm.service.ResultVO;
 import egovframework.com.cmm.util.ResultVoHelper;
-import egovframework.com.jwt.EgovJwtTokenUtil;
 import egovframework.let.cop.bbs.dto.request.BbsSearchRequestDTO;
 import egovframework.let.uss.umt.service.EgovMberManageService;
 import egovframework.let.uss.umt.service.MberManageVO;
@@ -69,8 +68,6 @@ import lombok.RequiredArgsConstructor;
 @Tag(name = "EgovMberManageApiController", description = "회원 관리")
 public class EgovMberManageApiController {
 
-	private EgovJwtTokenUtil jwtTokenUtil;
-	public static final String HEADER_STRING = "Authorization";
 	private static final String ACCESS_TOKEN_COOKIE = "ACCESS_TOKEN";
 
 	@Value("${Globals.jwt.cookieSecure:false}")
@@ -617,4 +614,6 @@ public class EgovMberManageApiController {
 
 		return resultVoHelper.buildFromMap(resultMap, ResponseCode.SUCCESS);
 	}
+
+
 }
