@@ -196,7 +196,7 @@ java -jar <jar파일명> --spring.profiles.active=<profile명>
 |--------------------------------|----------------------------------------------------------------------------------------|--------------------------------------------------------------------------------|
 | Configuration 설정과 Bean 등록      | [Docs/configuration-setting-bean-regist.md](Docs/configuration-setting-bean-regist.md) | 자바 기반 @Configuration/@Bean 규칙과 컴포넌트 스캔·메시지소스 등 Bean 등록 요령                      |
 | Aspect 설정                      | [Docs/context-aspect.md](Docs/context-aspect.md)                                       | @EnableAspectJAutoProxy로 프록시 기반 AOP 활성화 및 AOP 개념·옵션 요약                         |
-| conext-aspect 설정 변환            | [Docs/context-aspect-convert.md](Docs/context-aspect-convert.md)                       | 예외 처리 AOP(context-aspect.xml) 를 JavaConfig로 변환하는 방법(Handler/패턴/매니저 등록)         |
+| context-aspect 설정 변환            | [Docs/context-aspect-convert.md](Docs/context-aspect-convert.md)                       | 예외 처리 AOP(context-aspect.xml) 를 JavaConfig로 변환하는 방법(Handler/패턴/매니저 등록)         |
 | context-common-convert 설정 변환   | [Docs/context-common-convert.md](Docs/context-common-convert.md)                       | 컴포넌트 스캔·메시지소스 등 공통 Bean을 context-common.xml에서 JavaConfig로 이전                   |
 | context-datasource.xml 설정 변환   | [Docs/context-datasource-convert.md](Docs/context-datasource-convert.md)               | HSQL 내장 DB·DBCP BasicDataSource 등 데이터소스 설정을 JavaConfig로 변환                     |
 | [참고] Context Hierarchy(확인 필요)  | [Docs/context-hierarchy.md](Docs/context-hierarchy.md)                                 | Root/Servlet WebApplicationContext 계층 구조와 역할·로딩 방식 정리                          |
