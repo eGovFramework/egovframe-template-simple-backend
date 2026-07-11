@@ -61,7 +61,7 @@ import lombok.extern.slf4j.Slf4j;
 @Tag(name="EgovLoginApiController",description = "로그인 관련")
 public class EgovLoginApiController {
 
-	/** EgovLoginService */
+	/** EgovLoginService yhlee53*/
 	@Resource(name = "loginService")
 	private EgovLoginService loginService;
 
