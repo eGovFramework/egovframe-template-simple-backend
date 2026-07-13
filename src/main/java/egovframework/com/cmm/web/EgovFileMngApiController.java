@@ -3,7 +3,6 @@ package egovframework.com.cmm.web;
 import java.util.Base64;
 
 import jakarta.annotation.Resource;
-import jakarta.servlet.http.HttpServletRequest;
 
 import org.egovframe.rte.fdl.crypto.EgovCryptoService;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -86,7 +85,7 @@ public class EgovFileMngApiController {
 			@ApiResponse(responseCode = "403", description = "권한 없음")
 	})
     @PostMapping(value ="/file")
-    public ResultVO deleteFileInf(HttpServletRequest request, @RequestBody FileDeleteRequest req) throws Exception {
+    public ResultVO deleteFileInf(@RequestBody FileDeleteRequest req) throws Exception {
     	ResultVO resultVO = new ResultVO();
 
     	// 암호화된 atchFileId 를 복호화 (2022.12.06) - 파일아이디가 유추 불가능하도록 조치
