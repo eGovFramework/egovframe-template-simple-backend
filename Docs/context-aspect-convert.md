@@ -72,7 +72,7 @@ public DefaultExceptionHandleManager defaultExceptionHandleManager(ExceptionHand
 
 템플릿 내에서 Exception 발생시 실제 처리를 위한 클래스 설정
 
-<conext-aspect.xml>
+<context-aspect.xml>
 
 ```xml
 <bean id="exceptionTransfer" class="egovframework.rte.fdl.cmmn.aspect.ExceptionTransfer">
