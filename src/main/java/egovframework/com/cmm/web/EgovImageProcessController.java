@@ -1,11 +1,11 @@
 package egovframework.com.cmm.web;
 
 import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Base64;
+import java.util.Locale;
 import java.util.Map;
 
 import jakarta.annotation.Resource;
@@ -120,39 +120,30 @@ public class EgovImageProcessController extends HttpServlet {
 		
 		// Try-with-resources를 이용한 자원 해제 처리 (try 구문에 선언한 리소스를 자동 반납)
 		// try에 전달할 수 있는 자원은 java.lang.AutoCloseable 인터페이스의 구현 객체로 한정
-		try (FileInputStream fis = new FileInputStream(file);
-		     BufferedInputStream in = new BufferedInputStream(fis);
-		     ByteArrayOutputStream bStream = new ByteArrayOutputStream();) {
-			
-			int imgByte;
-			while ((imgByte = in.read()) != -1) {
-				bStream.write(imgByte);
-			}
-
-			String type = "";
-
-			if (fvo.getFileExtsn() != null && !"".equals(fvo.getFileExtsn())) {
-				if ("jpg".equals(fvo.getFileExtsn().toLowerCase())) {
-					type = "image/jpeg";
-				} else {
-					type = "image/" + fvo.getFileExtsn().toLowerCase();
-				}
-				type = "image/" + fvo.getFileExtsn().toLowerCase();
-
-			} else {
-				log.debug("Image fileType is null.");
-			}
-
-			response.setHeader("Content-Type", type);
-			response.setContentLength(bStream.size());
-
-			bStream.writeTo(response.getOutputStream());
-
-			response.getOutputStream().flush();
-			response.getOutputStream().close();
+		try (BufferedInputStream in = new BufferedInputStream(new FileInputStream(file))) {
+			response.setContentType(getImageContentType(fvo.getFileExtsn()));
+			response.setContentLengthLong(file.length());
+			in.transferTo(response.getOutputStream());
+			response.flushBuffer();
 
 		} catch (IOException e) {
 			log.debug("{}", e);
 		}
+	}
+
+	private String getImageContentType(String fileExtsn) {
+		if (fileExtsn == null || fileExtsn.isBlank()) {
+			log.debug("Image fileType is null.");
+			return "application/octet-stream";
+		}
+
+		return switch (fileExtsn.toLowerCase(Locale.ROOT)) {
+			case "jpg", "jpeg" -> "image/jpeg";
+			case "png" -> "image/png";
+			case "gif" -> "image/gif";
+			case "bmp" -> "image/bmp";
+			case "webp" -> "image/webp";
+			default -> "application/octet-stream";
+		};
 	}
 }
