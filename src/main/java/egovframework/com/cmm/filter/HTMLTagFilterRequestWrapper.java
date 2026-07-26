@@ -34,7 +34,7 @@ public class HTMLTagFilterRequestWrapper extends HttpServletRequestWrapper {
 		
 		for (int i = 0; i < values.length; i++) {			
 			if (values[i] != null) {				
-				StringBuffer strBuff = new StringBuffer();
+				StringBuilder strBuff = new StringBuilder();
 				for (int j = 0; j < values[i].length(); j++) {
 					char c = values[i].charAt(j);
 					switch (c) {
@@ -75,7 +75,7 @@ public class HTMLTagFilterRequestWrapper extends HttpServletRequestWrapper {
 			return null;
 		}
 		
-		StringBuffer strBuff = new StringBuffer();
+		StringBuilder strBuff = new StringBuilder();
 
 		for (int i = 0; i < value.length(); i++) {
 			char c = value.charAt(i);

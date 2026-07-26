@@ -134,7 +134,7 @@ public class EgovFileDownloadController {
 		} else if (browser.equals("Opera")) {
 			encodedFilename = "\"" + new String(filename.getBytes("UTF-8"), "8859_1") + "\"";
 		} else if (browser.equals("Chrome")) {
-			StringBuffer sb = new StringBuffer();
+			StringBuilder sb = new StringBuilder();
 			for (int i = 0; i < filename.length(); i++) {
 				char c = filename.charAt(i);
 				if (c > '~') {

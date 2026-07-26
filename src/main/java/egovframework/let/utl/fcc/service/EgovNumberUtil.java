@@ -169,7 +169,7 @@ public class EgovNumberUtil {
 		String subject = String.valueOf(cnvrSrcNumber);
 		String object = String.valueOf(cnvrTrgtNumber);
 
-		StringBuffer rtnStr = new StringBuffer();
+		StringBuilder rtnStr = new StringBuilder();
 		String preStr = "";
 		String nextStr = source;
 
