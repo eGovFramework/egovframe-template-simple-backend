@@ -133,14 +133,15 @@ public class EgovConfigAppCommon {
 	 * - spring.servlet.multipart.max-request-size=100MB
 	 */
 	@Bean
-	EgovMultipartResolver localMultiCommonsMultipartResolver() {
-		EgovMultipartResolver egovMultipartResolver = new EgovMultipartResolver();
-		return egovMultipartResolver;
+	EgovMultipartResolver localMultiCommonsMultipartResolver(
+			@Value("${Globals.fileUpload.Extensions}") String whiteListFileUploadExtensions) {
+		return new EgovMultipartResolver(whiteListFileUploadExtensions);
 	}
 	
 	@Bean
-	MultipartResolver multipartResolver() {
-		return localMultiCommonsMultipartResolver();
+	MultipartResolver multipartResolver(
+			@Value("${Globals.fileUpload.Extensions}") String whiteListFileUploadExtensions) {
+		return localMultiCommonsMultipartResolver(whiteListFileUploadExtensions);
 	}
 	
 	/**
