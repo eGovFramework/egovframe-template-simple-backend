@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
  *    수정일       수정자         수정내용
  *    -------        -------     -------------------
  *    2009. 3. 11.     이삼섭
+ *   2026-08-01  이백행          [2026년 컨트리뷰션] 불필요한 예외 제거
  *
  * @author 공통 서비스 개발팀 이삼섭
  * @since 2009. 3. 11.
@@ -44,7 +45,7 @@ public class EgovCmmUseServiceImpl extends EgovAbstractServiceImpl implements Eg
 	 * @throws Exception
 	 */
 	@Override
-	public List<CmmnDetailCode> selectCmmCodeDetail(ComDefaultCodeVO vo) throws Exception {
+	public List<CmmnDetailCode> selectCmmCodeDetail(ComDefaultCodeVO vo) {
 		return cmmUseDAO.selectCmmCodeDetail(vo);
 	}
 
@@ -56,7 +57,7 @@ public class EgovCmmUseServiceImpl extends EgovAbstractServiceImpl implements Eg
 	 * @throws Exception
 	 */
 	@Override
-	public Map<String, List<CmmnDetailCode>> selectCmmCodeDetails(List<?> voList) throws Exception {
+	public Map<String, List<CmmnDetailCode>> selectCmmCodeDetails(List<?> voList) {
 		ComDefaultCodeVO vo;
 		Map<String, List<CmmnDetailCode>> map = new HashMap<String, List<CmmnDetailCode>>();
 
@@ -77,7 +78,7 @@ public class EgovCmmUseServiceImpl extends EgovAbstractServiceImpl implements Eg
 	 * @throws Exception
 	 */
 	@Override
-	public List<CmmnDetailCode> selectOgrnztIdDetail(ComDefaultCodeVO vo) throws Exception {
+	public List<CmmnDetailCode> selectOgrnztIdDetail(ComDefaultCodeVO vo) {
 		return cmmUseDAO.selectOgrnztIdDetail(vo);
 	}
 
@@ -89,7 +90,7 @@ public class EgovCmmUseServiceImpl extends EgovAbstractServiceImpl implements Eg
 	 * @throws Exception
 	 */
 	@Override
-	public List<CmmnDetailCode> selectGroupIdDetail(ComDefaultCodeVO vo) throws Exception {
+	public List<CmmnDetailCode> selectGroupIdDetail(ComDefaultCodeVO vo) {
 		return cmmUseDAO.selectGroupIdDetail(vo);
 	}
 }

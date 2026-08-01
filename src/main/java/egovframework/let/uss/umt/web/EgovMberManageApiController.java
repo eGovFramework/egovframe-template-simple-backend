@@ -60,6 +60,7 @@ import lombok.RequiredArgsConstructor;
  *  -------    --------    ---------------------------
  *   2009.04.10  조재영          최초 생성
  *   2024.07.22  김일국          Boot 템플릿 커스터마이징버전 생성
+ *   2026-08-01  이백행          [2026년 컨트리뷰션] 불필요한 예외 제거
  *
  *      </pre>
  */
@@ -95,7 +96,7 @@ public class EgovMberManageApiController {
 	public ResultVO selectMberList(
 			@ModelAttribute BbsSearchRequestDTO boardMasterSearchVO,
 			@Parameter(hidden = true) @AuthenticationPrincipal LoginVO user)
-			throws Exception {
+ {
 
 		MberManageVO userSearchVO = new MberManageVO();
 
@@ -163,7 +164,7 @@ public class EgovMberManageApiController {
 	})
 	@GetMapping("/members/insert")
 	public ResultVO insertMberView(UserDefaultVO userSearchVO, MberManageVO mberManageVO)
-			throws Exception {
+ {
 
 		ComDefaultCodeVO vo = new ComDefaultCodeVO();
 		Map<String, Object> resultMap = new HashMap<String, Object>();
@@ -247,7 +248,7 @@ public class EgovMberManageApiController {
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
 	})
 	@GetMapping("/members/update/{uniqId}")
-	public ResultVO updateMberView(@PathVariable("uniqId") String uniqId, UserDefaultVO userSearchVO) throws Exception {
+	public ResultVO updateMberView(@PathVariable("uniqId") String uniqId, UserDefaultVO userSearchVO) {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		ComDefaultCodeVO vo = new ComDefaultCodeVO();
 
@@ -339,7 +340,7 @@ public class EgovMberManageApiController {
 			@ApiResponse(responseCode = "900", description = "입력값 무결성 오류")
 	})
 	@DeleteMapping("/members/delete/{uniqId}")
-	public ResultVO deleteMber(@PathVariable("uniqId") String uniqId, UserDefaultVO userSearchVO) throws Exception {
+	public ResultVO deleteMber(@PathVariable("uniqId") String uniqId, UserDefaultVO userSearchVO) {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		mberManageService.deleteMber(uniqId);
 		// Exception 없이 진행시 삭제성공메시지
@@ -361,7 +362,7 @@ public class EgovMberManageApiController {
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
 	})
 	@GetMapping("/mypage")
-	public ResultVO selectMypageView(@Parameter(hidden = true) @AuthenticationPrincipal LoginVO user) throws Exception {
+	public ResultVO selectMypageView(@Parameter(hidden = true) @AuthenticationPrincipal LoginVO user) {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 
 		if (user == null || user.getId() == null) {
@@ -534,7 +535,7 @@ public class EgovMberManageApiController {
 	})
 	@GetMapping("/etc/member_insert")
 	public ResultVO sbscrbMberView(UserDefaultVO userSearchVO, MberManageVO mberManageVO,
-			@RequestParam Map<String, Object> commandMap) throws Exception {
+			@RequestParam Map<String, Object> commandMap) {
 
 		ComDefaultCodeVO vo = new ComDefaultCodeVO();
 		Map<String, Object> resultMap = new HashMap<String, Object>();
@@ -573,7 +574,7 @@ public class EgovMberManageApiController {
 			@ApiResponse(responseCode = "200", description = "조회 성공"),
 	})
 	@GetMapping("/etc/member_agreement")
-	public ResultVO sbscrbEntrprsMber() throws Exception {
+	public ResultVO sbscrbEntrprsMber() {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		// 회원용 약관 아이디 설정
 		String stplatId = "STPLAT_0000000000001";

@@ -45,6 +45,7 @@ import lombok.RequiredArgsConstructor;
  *  2009.03.19  이삼섭          최초 생성
  *  2011.08.31  JJY            경량환경 템플릿 커스터마이징버전 생성
  *  2025.06.16  김재섭(nirsa)   서비스 로직 이동 및 생성자 주입 방식 변경
+ *   2026-08-01  이백행          [2026년 컨트리뷰션] 불필요한 예외 제거
  *
  *  </pre>
  */
@@ -62,7 +63,7 @@ public class EgovBBSManageServiceImpl extends EgovAbstractServiceImpl implements
 	 * @see egovframework.let.cop.bbs.brd.service.EgovBBSManageService#deleteBoardArticle(egovframework.let.cop.bbs.domain.model.brd.service.Board)
 	 */
 	@Override
-	public void deleteBoardArticle(BbsManageDeleteBoardRequestDTO bbsDeleteBoardRequestDTO, LoginVO user) throws Exception {
+	public void deleteBoardArticle(BbsManageDeleteBoardRequestDTO bbsDeleteBoardRequestDTO, LoginVO user) {
 		String atchFileId = bbsDeleteBoardRequestDTO.getAtchFileId();
 		BoardVO vo = bbsDeleteBoardRequestDTO.toBoardMaster(bbsDeleteBoardRequestDTO, user.getUniqId());
 		bbsMngDAO.deleteBoardArticle(vo);
@@ -80,7 +81,7 @@ public class EgovBBSManageServiceImpl extends EgovAbstractServiceImpl implements
 	 * @see egovframework.let.cop.bbs.brd.service.EgovBBSManageService#insertBoardArticle(egovframework.let.cop.bbs.domain.model.brd.service.Board)
 	 */
 	@Override
-	public void insertBoardArticle(Board board) throws Exception {
+	public void insertBoardArticle(Board board) {
 		// SORT_ORDR는 부모글의 소트 오더와 같게, NTT_NO는 순서대로 부여
 
 		if ("Y".equals(board.getReplyAt())) {
@@ -107,7 +108,7 @@ public class EgovBBSManageServiceImpl extends EgovAbstractServiceImpl implements
 	 * @see egovframework.let.cop.bbs.brd.service.EgovBBSManageService#selectBoardArticle(egovframework.let.cop.bbs.domain.model.brd.service.BoardVO)
 	 */
 	@Override
-	public BbsManageDetailResponseDTO selectBoardArticle(BbsManageDetailBoardRequestDTO bbsManageDetailBoardRequestDTO) throws Exception {
+	public BbsManageDetailResponseDTO selectBoardArticle(BbsManageDetailBoardRequestDTO bbsManageDetailBoardRequestDTO) {
 		BoardVO boardVO = bbsManageDetailBoardRequestDTO.toBoardVO();
 
 		if (boardVO.isPlusCount()) {
@@ -146,7 +147,7 @@ public class EgovBBSManageServiceImpl extends EgovAbstractServiceImpl implements
 	 * @see egovframework.let.cop.bbs.brd.service.EgovBBSManageService#selectBoardArticles(egovframework.let.cop.bbs.domain.model.brd.service.BoardVO)
 	 */
 	@Override
-	public BbsManageListResponseDTO selectBoardArticles(BbsSearchRequestDTO bbsSearchRequestDTO, PaginationInfo paginationInfo, String attrbFlag) throws Exception {
+	public BbsManageListResponseDTO selectBoardArticles(BbsSearchRequestDTO bbsSearchRequestDTO, PaginationInfo paginationInfo, String attrbFlag) {
 		BoardVO boardVO = new BoardVO();
 		boardVO.setPageIndex(bbsSearchRequestDTO.getPageIndex());
 		boardVO.setBbsId(bbsSearchRequestDTO.getBbsId());
@@ -199,7 +200,7 @@ public class EgovBBSManageServiceImpl extends EgovAbstractServiceImpl implements
 	 * @see egovframework.let.cop.bbs.brd.service.EgovBBSManageService#updateBoardArticle(egovframework.let.cop.bbs.domain.model.brd.service.Board)
 	 */
 	@Override
-	public void updateBoardArticle(Board board) throws Exception {
+	public void updateBoardArticle(Board board) {
 		bbsMngDAO.updateBoardArticle(board);
 	}
 
@@ -209,7 +210,7 @@ public class EgovBBSManageServiceImpl extends EgovAbstractServiceImpl implements
 	 * @see egovframework.let.cop.bbs.brd.service.EgovBBSManageService#deleteGuestList(egovframework.let.cop.bbs.domain.model.brd.service.BoardVO)
 	 */
 	@Override
-	public void deleteGuestList(BoardVO boardVO) throws Exception {
+	public void deleteGuestList(BoardVO boardVO) {
 		bbsMngDAO.deleteGuestList(boardVO);
 	}
 
@@ -219,7 +220,7 @@ public class EgovBBSManageServiceImpl extends EgovAbstractServiceImpl implements
 	 * @see egovframework.let.cop.bbs.brd.service.EgovBBSManageService#selectGuestList(egovframework.let.cop.bbs.domain.model.brd.service.BoardVO)
 	 */
 	@Override
-	public Map<String, Object> selectGuestList(BoardVO boardVO) throws Exception {
+	public Map<String, Object> selectGuestList(BoardVO boardVO) {
 		List<BoardVO> result = bbsMngDAO.selectGuestList(boardVO);
 		int cnt = bbsMngDAO.selectGuestListCnt(boardVO);
 
@@ -239,7 +240,7 @@ public class EgovBBSManageServiceImpl extends EgovAbstractServiceImpl implements
 	 * @throws Exception
 	 */
 	@Override
-	public String getPasswordInf(Board board) throws Exception {
+	public String getPasswordInf(Board board) {
 		return bbsMngDAO.getPasswordInf(board);
 	}
 }

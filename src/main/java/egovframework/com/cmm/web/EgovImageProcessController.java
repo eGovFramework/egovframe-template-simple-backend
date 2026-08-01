@@ -42,6 +42,7 @@ import lombok.extern.slf4j.Slf4j;
  *    -------        -------     -------------------
  *    2009. 4. 2.     이삼섭
  *    2011.08.31.     JJY        경량환경 템플릿 커스터마이징버전 생성
+ *   2026-08-01  이백행          [2026년 컨트리뷰션] 불필요한 예외 제거
  *
  * @author 공통 서비스 개발팀 이삼섭
  * @since 2009. 4. 2.
@@ -96,7 +97,7 @@ public class EgovImageProcessController extends HttpServlet {
 					style = ParameterStyle.FORM,
 					explode = Explode.TRUE
 			) @RequestParam Map<String, Object> commandMap,
-		HttpServletResponse response) throws Exception {
+		HttpServletResponse response) {
 
 		// 암호화된 atchFileId 를 복호화. (2022.12.06 추가) - 파일아이디가 유추 불가능하도록 조치
 		String param_atchFileId = (String) commandMap.get("atchFileId");

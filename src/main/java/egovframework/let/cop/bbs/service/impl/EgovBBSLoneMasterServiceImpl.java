@@ -31,6 +31,7 @@ import org.springframework.stereotype.Service;
  *  -------    --------    ---------------------------
  *  2009.08.25  한성곤          최초 생성
  *  2011.08.31  JJY            경량환경 템플릿 커스터마이징버전 생성 
+ *   2026-08-01  이백행          [2026년 컨트리뷰션] 불필요한 예외 제거
  *  
  *  </pre>
  */
@@ -49,7 +50,7 @@ public class EgovBBSLoneMasterServiceImpl extends EgovAbstractServiceImpl implem
     /**
      * 등록된 게시판 속성정보를 삭제한다.
      */
-    public void deleteMaster(BoardMaster boardMaster) throws Exception {
+    public void deleteMaster(BoardMaster boardMaster) {
 		masterDAO.deleteMaster(boardMaster);
 		
 		BoardUseInf bdUseInf = new BoardUseInf();
@@ -89,14 +90,14 @@ public class EgovBBSLoneMasterServiceImpl extends EgovAbstractServiceImpl implem
     /**
      * 게시판 속성정보 한 건을 상세조회한다.
      */
-    public BoardMasterVO selectMaster(BoardMaster searchVO) throws Exception {
+    public BoardMasterVO selectMaster(BoardMaster searchVO) {
     	return masterDAO.selectMaster(searchVO);
     }
 
     /**
      * 게시판 속성 정보의 목록을 조회 한다.
      */
-    public Map<String, Object> selectMasterList(BoardMasterVO searchVO) throws Exception {
+    public Map<String, Object> selectMasterList(BoardMasterVO searchVO) {
 		List<BoardMasterVO> result = masterDAO.selectMasterList(searchVO);
 		int cnt = masterDAO.selectMasterListCnt(searchVO);
 		
@@ -111,7 +112,7 @@ public class EgovBBSLoneMasterServiceImpl extends EgovAbstractServiceImpl implem
     /**
      * 게시판 속성정보를 수정한다.
      */
-    public void updateMaster(BoardMaster boardMaster) throws Exception {
+    public void updateMaster(BoardMaster boardMaster) {
     	masterDAO.updateMaster(boardMaster);
     }
 }

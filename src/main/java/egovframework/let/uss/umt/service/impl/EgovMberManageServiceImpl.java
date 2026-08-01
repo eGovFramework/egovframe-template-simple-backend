@@ -28,6 +28,7 @@ import org.springframework.stereotype.Service;
  *   2009.04.10  JJY            최초 생성
  *   2011.08.31  JJY            경량환경 템플릿 커스터마이징버전 생성
  *   2026.05.13  PHJ            보안취약점 대응
+ *   2026-08-01  이백행          [2026년 컨트리뷰션] 불필요한 예외 제거
  *
  * </pre>
  */
@@ -49,7 +50,7 @@ public class EgovMberManageServiceImpl extends EgovAbstractServiceImpl implement
 	 * @throws Exception
 	 */
 	@Override
-	public int insertMber(MberManageVO mberManageVO) throws Exception  {
+	public int insertMber(MberManageVO mberManageVO) throws Exception {
 		//고유아이디 세팅
 		String uniqId = idgenService.getNextStringId();
 		mberManageVO.setUniqId(uniqId);

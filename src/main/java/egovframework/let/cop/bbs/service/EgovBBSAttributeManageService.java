@@ -28,6 +28,7 @@ import egovframework.let.cop.bbs.enums.BbsDetailRequestType;
  *  -------    --------    ---------------------------
  *  2009.03.12  이삼섭          최초 생성
  *  2011.08.31  JJY            경량환경 템플릿 커스터마이징버전 생성 
+ *   2026-08-01  이백행          [2026년 컨트리뷰션] 불필요한 예외 제거
  *  
  *  </pre>
  */
@@ -41,7 +42,7 @@ public interface EgovBBSAttributeManageService {
 	 * @exception Exception Exception
 	 */
 	public void deleteBBSMasterInf(String UniqId, String bbsId)
-	  throws Exception;
+;
 
 	/**
 	 * 신규 게시판 속성정보를 생성한다.
@@ -62,7 +63,7 @@ public interface EgovBBSAttributeManageService {
 	 * @exception Exception Exception
 	 */
 	public List<BoardMasterVO> selectAllBBSMasteInf(BoardMasterVO vo)
-	  throws Exception;
+;
 
 	/**
 	 * 커뮤니티, 동호회에서 사용중인 게시판 속성 정보의 목록을 전체조회 한다.
@@ -72,7 +73,7 @@ public interface EgovBBSAttributeManageService {
 	 * @exception Exception Exception
 	 */
 	public List<BoardMasterVO> selectAllBdMstrByTrget(BoardMasterVO vo)
-	  throws Exception;
+;
 
 	/**
 	 * 게시판 속성정보 한 건을 상세조회한다.
@@ -86,7 +87,7 @@ public interface EgovBBSAttributeManageService {
 	 * @exception Exception Exception
 	 */
 	public BbsFileAtchResponseDTO selectBBSMasterInf(String bbsId, String uniqId, BbsDetailRequestType requestType)
-	  throws Exception;
+;
 
 	/**
 	 * 게시판 속성 정보의 목록을 조회 한다.
@@ -96,7 +97,7 @@ public interface EgovBBSAttributeManageService {
 	 * @exception Exception Exception
 	 */
 	public BbsAttributeListResponseDTO selectBBSMasterInfs(BbsSearchRequestDTO bbsAttributeSearchRequestDTO, PaginationInfo paginationInfo)
-	  throws Exception;
+;
 
 	/**
 	 * 사용중인 게시판 속성 정보의 목록을 조회 한다.
@@ -106,7 +107,7 @@ public interface EgovBBSAttributeManageService {
 	 * @exception Exception Exception
 	 */
 	public Map<String, Object> selectBdMstrListByTrget(BoardMasterVO vo)
-	  throws Exception;
+;
 
 	/**
 	 * 사용중이지 않은 게시판 속성 정보의 목록을 조회 한다.
@@ -116,7 +117,7 @@ public interface EgovBBSAttributeManageService {
 	 * @exception Exception Exception
 	 */
 	public Map<String, Object> selectNotUsedBdMstrList(BoardMasterVO vo)
-	  throws Exception;
+;
 
 	/**
 	 * 게시판 속성정보를 수정한다.
@@ -126,7 +127,7 @@ public interface EgovBBSAttributeManageService {
 	 * @exception Exception Exception
 	 */
 	public void updateBBSMasterInf(BbsAttributeUpdateRequestDTO bbsAttributeUpdateRequestDTO)
-	  throws Exception;
+;
 
 	/**
 	 * 템플릿의 유효여부를 점검한다.
@@ -136,6 +137,6 @@ public interface EgovBBSAttributeManageService {
 	 * @exception Exception Exception
 	 */
 	public void validateTemplate(BoardMasterVO searchVO)
-	  throws Exception;
+;
 
 }

@@ -16,6 +16,7 @@ import egovframework.com.cmm.service.CmmnDetailCode;
  *    수정일       수정자         수정내용
  *    -------        -------     -------------------
  *    2009. 3. 11.     이삼섭
+ *   2026-08-01  이백행          [2026년 컨트리뷰션] 불필요한 예외 제거
  *
  * @author 공통 서비스 개발팀 이삼섭
  * @since 2009. 3. 11.
@@ -33,7 +34,7 @@ public class CmmUseDAO extends EgovAbstractMapper {
      * @return
      * @throws Exception
      */
-    public List<CmmnDetailCode> selectCmmCodeDetail(ComDefaultCodeVO vo) throws Exception {
+    public List<CmmnDetailCode> selectCmmCodeDetail(ComDefaultCodeVO vo) {
 		return selectList("CmmUseDAO.selectCmmCodeDetail", vo);
 	}
 
@@ -44,7 +45,7 @@ public class CmmUseDAO extends EgovAbstractMapper {
      * @return
      * @throws Exception
      */
-    public List<CmmnDetailCode> selectOgrnztIdDetail(ComDefaultCodeVO vo) throws Exception {
+    public List<CmmnDetailCode> selectOgrnztIdDetail(ComDefaultCodeVO vo) {
 		return selectList("CmmUseDAO.selectOgrnztIdDetail", vo);
 	}
 
@@ -55,7 +56,7 @@ public class CmmUseDAO extends EgovAbstractMapper {
      * @return
      * @throws Exception
      */
-    public List<CmmnDetailCode> selectGroupIdDetail(ComDefaultCodeVO vo) throws Exception {
+    public List<CmmnDetailCode> selectGroupIdDetail(ComDefaultCodeVO vo) {
 		return selectList("CmmUseDAO.selectGroupIdDetail", vo);
 	}
 }

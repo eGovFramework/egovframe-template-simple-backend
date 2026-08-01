@@ -28,6 +28,7 @@ import org.springframework.stereotype.Service;
  *  -------    --------    ---------------------------
  *   2009.04.06  이삼섭          최초 생성
  *   2011.08.31  JJY            경량환경 템플릿 커스터마이징버전 생성 
+ *   2026-08-01  이백행          [2026년 컨트리뷰션] 불필요한 예외 제거
  *
  * </pre>
  */
@@ -42,7 +43,7 @@ public class EgovUserInfManageServiceImpl extends EgovAbstractServiceImpl implem
      * 
      * @see egovframework.let.cop.com.service.EgovUserInfManageService#selectClubOprtrList(egovframework.let.cop.com.service.UserInfVO)
      */
-    public Map<String, Object> selectClubOprtrList(UserInfVO userVO) throws Exception {
+    public Map<String, Object> selectClubOprtrList(UserInfVO userVO) {
 	List<UserInfVO> result = userInfDAO.selectClubOprtrList(userVO);
 	int cnt = userInfDAO.selectClubOprtrListCnt(userVO);
 	
@@ -59,7 +60,7 @@ public class EgovUserInfManageServiceImpl extends EgovAbstractServiceImpl implem
      * 
      * @see egovframework.let.cop.com.service.EgovUserInfManageService#selectClubUserList(egovframework.let.cop.com.service.UserInfVO)
      */
-    public Map<String, Object> selectClubUserList(UserInfVO userVO) throws Exception {
+    public Map<String, Object> selectClubUserList(UserInfVO userVO) {
 	List<UserInfVO> result = userInfDAO.selectClubUserList(userVO);
 	int cnt = userInfDAO.selectClubUserListCnt(userVO);
 	
@@ -76,7 +77,7 @@ public class EgovUserInfManageServiceImpl extends EgovAbstractServiceImpl implem
      * 
      * @see egovframework.let.cop.com.service.EgovUserInfManageService#selectCmmntyMngrList(egovframework.let.cop.com.service.UserInfVO)
      */
-    public Map<String, Object> selectCmmntyMngrList(UserInfVO userVO) throws Exception {
+    public Map<String, Object> selectCmmntyMngrList(UserInfVO userVO) {
 	List<UserInfVO> result = userInfDAO.selectCmmntyMngrList(userVO);
 	int cnt = userInfDAO.selectCmmntyMngrListCnt(userVO);
 	
@@ -93,7 +94,7 @@ public class EgovUserInfManageServiceImpl extends EgovAbstractServiceImpl implem
      * 
      * @see egovframework.let.cop.com.service.EgovUserInfManageService#selectCmmntyUserList(egovframework.let.cop.com.service.UserInfVO)
      */
-    public Map<String, Object> selectCmmntyUserList(UserInfVO userVO) throws Exception {
+    public Map<String, Object> selectCmmntyUserList(UserInfVO userVO) {
 	List<UserInfVO> result = userInfDAO.selectCmmntyUserList(userVO);
 	int cnt = userInfDAO.selectCmmntyUserListCnt(userVO);
 	
@@ -110,7 +111,7 @@ public class EgovUserInfManageServiceImpl extends EgovAbstractServiceImpl implem
      * 
      * @see egovframework.let.cop.com.service.EgovUserInfManageService#selectUserList(egovframework.let.cop.com.service.UserInfVO)
      */
-    public Map<String, Object> selectUserList(UserInfVO userVO) throws Exception {
+    public Map<String, Object> selectUserList(UserInfVO userVO) {
 	List<UserInfVO> result = userInfDAO.selectUserList(userVO);
 	int cnt = userInfDAO.selectUserListCnt(userVO);
 	
@@ -127,7 +128,7 @@ public class EgovUserInfManageServiceImpl extends EgovAbstractServiceImpl implem
      * 
      * @see egovframework.let.cop.com.service.EgovUserInfManageService#selectAllClubUser(egovframework.let.cop.com.service.UserInfVO)
      */
-    public List<UserInfVO> selectAllClubUser(UserInfVO userVO) throws Exception {
+    public List<UserInfVO> selectAllClubUser(UserInfVO userVO) {
 	return userInfDAO.selectAllClubUser(userVO);
     }
 
@@ -136,7 +137,7 @@ public class EgovUserInfManageServiceImpl extends EgovAbstractServiceImpl implem
      * 
      * @see egovframework.let.cop.com.service.EgovUserInfManageService#selectAllCmmntyUser(egovframework.let.cop.com.service.UserInfVO)
      */
-    public List<UserInfVO> selectAllCmmntyUser(UserInfVO userVO) throws Exception {
+    public List<UserInfVO> selectAllCmmntyUser(UserInfVO userVO) {
 	return userInfDAO.selectAllCmmntyUser(userVO);
     }
 }

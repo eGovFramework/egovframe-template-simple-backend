@@ -27,6 +27,7 @@ import org.springframework.stereotype.Service;
  *  2009.03.06  박지욱          최초 생성
  *  2011.08.31  JJY            경량환경 템플릿 커스터마이징버전 생성
  *  2026.05.13  PHJ            보안취약점 대응
+ *   2026-08-01  이백행          [2026년 컨트리뷰션] 불필요한 예외 제거
  *
  *  </pre>
  */
@@ -70,7 +71,7 @@ public class EgovLoginServiceImpl extends EgovAbstractServiceImpl implements Ego
 	 * @exception Exception
 	 */
 	@Override
-	public LoginVO searchId(LoginVO vo) throws Exception {
+	public LoginVO searchId(LoginVO vo) {
 
 		// 1. 이름, 이메일주소가 DB와 일치하는 사용자 ID를 조회한다.
 		LoginVO loginVO = loginDAO.searchId(vo);

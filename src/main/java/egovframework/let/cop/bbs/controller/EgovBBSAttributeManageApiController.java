@@ -60,6 +60,7 @@ import lombok.RequiredArgsConstructor;
  *  2009.06.26	한성곤		    2단계 기능 추가 (댓글관리, 만족도조사)
  *  2011.08.31  JJY             경량환경 템플릿 커스터마이징버전 생성
  *  2024.04.06  김재섭(nirsa)     생성자 주입 전환, 불필요한 필드 제거, ResultVoHelper 적용 및 1차 코드 리팩토링
+ *   2026-08-01  이백행          [2026년 컨트리뷰션] 불필요한 예외 제거
  *
  *  </pre>
  */
@@ -91,7 +92,7 @@ public class EgovBBSAttributeManageApiController {
 	})
 	@GetMapping(value = "/bbsMaster")
 	public IntermediateResultVO<BbsAttributeListResponseDTO> selectBBSMasterInfs(@ModelAttribute BbsSearchRequestDTO bbsSearchRequestDTO)
-		throws Exception {
+ {
 		// 1. 페이지 정보 구성
 		int pageUnit = propertyService.getInt("Globals.pageUnit");
 		int pageSize = propertyService.getInt("Globals.pageSize");
@@ -132,7 +133,7 @@ public class EgovBBSAttributeManageApiController {
 	@GetMapping(value ="/bbsMaster/{bbsId}")
 	public IntermediateResultVO<BbsFileAtchResponseDTO>  selectBBSMasterInf(@Parameter(name = "bbsId", description = "게시판 Id", in = ParameterIn.PATH, example="BBSMSTR_AAAAAAAAAAAA")
 			@PathVariable("bbsId") String bbsId)
-		throws Exception {
+ {
 		BbsFileAtchResponseDTO response = bbsAttrbService.selectBBSMasterInf(bbsId, null, BbsDetailRequestType.DETAIL);
 		
 		return IntermediateResultVO.success(response);
@@ -255,7 +256,7 @@ public class EgovBBSAttributeManageApiController {
 	public IntermediateResultVO<Object> updateBBSMasterInf(@RequestBody BbsAttributeUpdateRequestDTO bbsAttributeUpdateRequestDTO,
 										BindingResult bindingResult,
 										@Parameter(hidden = true) @AuthenticationPrincipal LoginVO loginVO
-										) throws Exception {
+										) {
 
 		if (bindingResult.hasErrors()) {
 			String bbsId = bbsAttributeUpdateRequestDTO.getBbsId();
@@ -320,7 +321,7 @@ public class EgovBBSAttributeManageApiController {
 	public IntermediateResultVO<Object> deleteBBSMasterInf(@Parameter(hidden = true) @AuthenticationPrincipal LoginVO loginVO,
 		@Parameter(name = "bbsId", description = "게시판 Id", in = ParameterIn.PATH, example="BBSMSTR_AAAAAAAAAAAA")
 		@PathVariable("bbsId") String bbsId
-		) throws Exception {
+		) {
 			bbsAttrbService.deleteBBSMasterInf(loginVO.getUniqId(), bbsId);
 
 			return IntermediateResultVO.success(null);

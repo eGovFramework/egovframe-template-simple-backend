@@ -43,6 +43,7 @@ import lombok.extern.slf4j.Slf4j;
  *  2023.04.20  김일국     리액트에서 사용할 공통인증메서드 추가
  *	2024.07.17	김일국	 @RequestParam 에서 @RequestBody로 변경
  *	2026.05.13	PHJ	 	 보안취약점 대응
+ *   2026-08-01  이백행          [2026년 컨트리뷰션] 불필요한 예외 제거
  *  </pre>
  */
 @Slf4j
@@ -72,7 +73,7 @@ public class EgovSiteManagerApiController {
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
 	})
 	@PostMapping(value = "/jwtAuthAPI")
-	public ResultVO jwtAuthentication(HttpServletRequest request) throws Exception {
+	public ResultVO jwtAuthentication(HttpServletRequest request) {
 		ResultVO resultVO = new ResultVO();
 
 		resultVO.setResultCode(ResponseCode.SUCCESS.getCode());

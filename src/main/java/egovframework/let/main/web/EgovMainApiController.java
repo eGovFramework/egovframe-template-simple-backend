@@ -31,6 +31,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
  *   수정일      수정자           수정내용
  *  -------    --------    ---------------------------
  *   2011.08.31  JJY            최초 생성
+ *   2026-08-01  이백행          [2026년 컨트리뷰션] 불필요한 예외 제거
  *
  * </pre>
  */
@@ -60,7 +61,7 @@ public class EgovMainApiController {
 	})
 	@GetMapping(value = "/mainPage")
 	public ResultVO getMgtMainPage()
-	  throws Exception{
+{
 
 		ResultVO resultVO = new ResultVO();
 		Map<String, Object> resultMap = new HashMap<String, Object>();

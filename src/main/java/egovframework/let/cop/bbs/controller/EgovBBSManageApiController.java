@@ -71,6 +71,7 @@ import lombok.RequiredArgsConstructor;
  *  2011.08.31  JJY              경량환경 템플릿 커스터마이징버전 생성
  *  2024.04.06  김재섭(nirsa)     생성자 주입 전환, 불필요한 필드 제거, ResultVoHelper 적용 및 1차 코드 리팩토링
  *  2026.05.13  PHJ              보안취약점 대응
+ *   2026-08-01  이백행          [2026년 컨트리뷰션] 불필요한 예외 제거
  *
  *  </pre>
  */
@@ -123,7 +124,7 @@ public class EgovBBSManageApiController {
 	public IntermediateResultVO<BbsFileAtchResponseDTO> selectUserBBSMasterInf(
 			@Parameter(name = "bbsId", description = "게시판 Id", in = ParameterIn.PATH, example="BBSMSTR_AAAAAAAAAAAA")
 			@PathVariable("bbsId") String bbsId)
-		throws Exception {
+ {
 		
 		BbsFileAtchResponseDTO response = bbsAttrbService.selectBBSMasterInf(bbsId, null, BbsDetailRequestType.FILE_ATCH);
 
@@ -147,7 +148,7 @@ public class EgovBBSManageApiController {
 	@GetMapping(value = "/board")
 	public IntermediateResultVO<BbsManageListResponseDTO> selectBoardArticles(@ModelAttribute BbsSearchRequestDTO bbsSearchRequestDTO,
 																				 @Parameter(hidden = true) @AuthenticationPrincipal LoginVO user)
-		throws Exception {
+ {
 		// permitAll 경로 — 익명 접근 가능, user 가 null 일 수 있음
 		String uniqId = (user != null) ? user.getUniqId() : null;
 		BbsFileAtchResponseDTO attributeDetailResponse = bbsAttrbService.selectBBSMasterInf(bbsSearchRequestDTO.getBbsId(), uniqId, BbsDetailRequestType.DETAIL);
@@ -188,7 +189,7 @@ public class EgovBBSManageApiController {
 			@Parameter(name = "nttId", description = "게시글 Id", in = ParameterIn.PATH, example="1")
 			@PathVariable("nttId") String nttId,
 			@Parameter(hidden = true) @AuthenticationPrincipal LoginVO user)
-		throws Exception {
+ {
 		// permitAll 경로 — 익명 접근 가능, user 가 null 일 수 있음
 		String uniqId = (user != null) ? user.getUniqId() : null;
 		BbsManageDetailBoardRequestDTO bbsManageDetailBoardRequestDTO = BbsManageDetailBoardRequestDTO.builder()
@@ -478,7 +479,7 @@ public class EgovBBSManageApiController {
 		@PathVariable("nttId") String nttId,
 		@RequestBody BbsManageDeleteBoardRequestDTO bbsDeleteBoardRequestDTO,
 		@Parameter(hidden = true) @AuthenticationPrincipal LoginVO user)
-		throws Exception {
+ {
 		// 소유권 검증: 작성자 본인 또는 ADMIN만 삭제 가능
 		BbsManageDetailBoardRequestDTO ownerCheckRequest = BbsManageDetailBoardRequestDTO.builder()
 				.bbsId(bbsId)
@@ -535,7 +536,7 @@ public class EgovBBSManageApiController {
 	 * 공지유형(BBST03) 게시판 여부를 판별한다. 공지 게시판은 관리자만 글 작성이 가능하다.
 	 * 클라이언트가 전달한 값은 신뢰하지 않고, bbsId로 마스터를 재조회하여 게시판 유형 코드를 서버측에서 확인한다.
 	 */
-	private boolean isAdminOnlyBoard(String bbsId) throws Exception {
+	private boolean isAdminOnlyBoard(String bbsId) {
 		BbsFileAtchResponseDTO master = bbsAttrbService.selectBBSMasterInf(bbsId, null, BbsDetailRequestType.DETAIL);
 		String bbsTyCode = (master instanceof BbsAttributeDetailResponseDTO)
 				? ((BbsAttributeDetailResponseDTO) master).getBbsTyCode() : null;

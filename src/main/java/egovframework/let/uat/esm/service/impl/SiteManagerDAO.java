@@ -18,6 +18,7 @@ import org.springframework.stereotype.Repository;
  *   수정일      수정자          수정내용
  *  -------    --------    ---------------------------
  *  2023.04.15  김일국          최초 생성
+ *   2026-08-01  이백행          [2026년 컨트리뷰션] 불필요한 예외 제거
  *
  *  </pre>
  */
@@ -29,7 +30,7 @@ public class SiteManagerDAO extends EgovAbstractMapper {
 	 * @return 성공시 1 
 	 * @exception Exception
 	 */
-	public Integer updateAdminPassword(Map<?, ?> map) throws Exception {
+	public Integer updateAdminPassword(Map<?, ?> map) {
 		return update("siteManagerDAO.updateAdminPassword", map);
 	}
 }

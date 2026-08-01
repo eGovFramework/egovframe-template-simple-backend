@@ -48,6 +48,7 @@ import lombok.extern.slf4j.Slf4j;
  *  2009.06.26	한성곤		   2단계 기능 추가 (댓글관리, 만족도조사)
  *  2011.08.31  JJY            경량환경 템플릿 커스터마이징버전 생성
  *  2025.06.16  김재섭(nirsa)   서비스 로직 이동 및 생성자 주입 방식 변경
+ *   2026-08-01  이백행          [2026년 컨트리뷰션] 불필요한 예외 제거
  *  </pre>
  */
 @Slf4j
@@ -73,7 +74,7 @@ public class EgovBBSAttributeManageServiceImpl extends EgovAbstractServiceImpl i
      *
      * @see egovframework.let.cop.bbs.brd.service.EgovBBSAttributeManageService#deleteBBSMasterInf(egovframework.let.cop.bbs.domain.model.brd.service.BoardMaster)
      */
-    public void deleteBBSMasterInf(String UniqId, String bbsId) throws Exception {
+    public void deleteBBSMasterInf(String UniqId, String bbsId) {
     	BoardMaster boardMaster = new BoardMaster();
     	boardMaster.setUniqId(UniqId);
     	boardMaster.setBbsId(bbsId);
@@ -162,7 +163,7 @@ public class EgovBBSAttributeManageServiceImpl extends EgovAbstractServiceImpl i
      *
      * @see egovframework.let.cop.bbs.brd.service.EgovBBSAttributeManageService#selectAllBBSMasteInf(egovframework.let.cop.bbs.domain.model.brd.service.BoardMasterVO)
      */
-    public List<BoardMasterVO> selectAllBBSMasteInf(BoardMasterVO vo) throws Exception {
+    public List<BoardMasterVO> selectAllBBSMasteInf(BoardMasterVO vo) {
     	return attrbMngDAO.selectAllBBSMasteInf(vo);
     }
 
@@ -171,7 +172,7 @@ public class EgovBBSAttributeManageServiceImpl extends EgovAbstractServiceImpl i
      *
      * @see egovframework.let.cop.bbs.brd.service.EgovBBSAttributeManageService#selectBBSMasterInf(egovframework.let.cop.bbs.domain.model.brd.service.BoardMasterVO)
      */
-    public BbsFileAtchResponseDTO selectBBSMasterInf(String bbsId, String uniqId, BbsDetailRequestType requestType) throws Exception {
+    public BbsFileAtchResponseDTO selectBBSMasterInf(String bbsId, String uniqId, BbsDetailRequestType requestType) {
 		//---------------------------------
 		// 2009.06.26 : 2단계 기능 추가
 		//---------------------------------
@@ -214,7 +215,7 @@ public class EgovBBSAttributeManageServiceImpl extends EgovAbstractServiceImpl i
      *
      * @see egovframework.let.cop.bbs.brd.service.EgovBBSAttributeManageService#selectBBSMasterInfs(egovframework.let.cop.bbs.domain.model.brd.service.BoardMasterVO)
      */
-    public BbsAttributeListResponseDTO selectBBSMasterInfs(BbsSearchRequestDTO bbsAttributeSearchRequestDTO, PaginationInfo paginationInfo) throws Exception {
+    public BbsAttributeListResponseDTO selectBBSMasterInfs(BbsSearchRequestDTO bbsAttributeSearchRequestDTO, PaginationInfo paginationInfo) {
 		// 도메인 모델(BoardMasterVO) 구성
     	BoardMasterVO boardMasterVO = new BoardMasterVO();
 		boardMasterVO.setSearchCnd(bbsAttributeSearchRequestDTO.getSearchCnd());
@@ -244,7 +245,7 @@ public class EgovBBSAttributeManageServiceImpl extends EgovAbstractServiceImpl i
      *
      * @see egovframework.let.cop.bbs.brd.service.EgovBBSAttributeManageService#updateBBSMasterInf(egovframework.let.cop.bbs.domain.model.brd.service.BoardMaster)
      */
-    public void updateBBSMasterInf(BbsAttributeUpdateRequestDTO bbsAttributeUpdateRequestDTO) throws Exception {
+    public void updateBBSMasterInf(BbsAttributeUpdateRequestDTO bbsAttributeUpdateRequestDTO) {
         /**
          * BbsUpdateRequestDTO → BoardMaster 변환 메서드
          * 
@@ -280,14 +281,14 @@ public class EgovBBSAttributeManageServiceImpl extends EgovAbstractServiceImpl i
      *
      * @see egovframework.let.cop.bbs.brd.service.EgovBBSAttributeManageService#validateTemplate(egovframework.let.cop.bbs.domain.model.brd.service.BoardMasterVO)
      */
-    public void validateTemplate(BoardMasterVO searchVO) throws Exception {
+    public void validateTemplate(BoardMasterVO searchVO) {
     	log.debug("validateTemplate method ignored...");
     }
 
     /**
      * 사용중인 게시판 속성 정보의 목록을 조회 한다.
      */
-    public Map<String, Object> selectBdMstrListByTrget(BoardMasterVO vo) throws Exception {
+    public Map<String, Object> selectBdMstrListByTrget(BoardMasterVO vo) {
 		List<BoardMasterVO> result = attrbMngDAO.selectBdMstrListByTrget(vo);
 		int cnt = attrbMngDAO.selectBdMstrListCntByTrget(vo);
 	
@@ -302,14 +303,14 @@ public class EgovBBSAttributeManageServiceImpl extends EgovAbstractServiceImpl i
     /**
      * 커뮤니티, 동호회에서 사용중인 게시판 속성 정보의 목록을 전체조회 한다.
      */
-    public List<BoardMasterVO> selectAllBdMstrByTrget(BoardMasterVO vo) throws Exception {
+    public List<BoardMasterVO> selectAllBdMstrByTrget(BoardMasterVO vo) {
     	return attrbMngDAO.selectAllBdMstrByTrget(vo);
     }
 
     /**
      * 사용중이지 않은 게시판 속성 정보의 목록을 조회 한다.
      */
-    public Map<String, Object> selectNotUsedBdMstrList(BoardMasterVO searchVO) throws Exception {
+    public Map<String, Object> selectNotUsedBdMstrList(BoardMasterVO searchVO) {
 		List<BoardMasterVO> result = attrbMngDAO.selectNotUsedBdMstrList(searchVO);
 		int cnt = attrbMngDAO.selectNotUsedBdMstrListCnt(searchVO);
 	

@@ -18,6 +18,7 @@ import org.egovframe.rte.psl.dataaccess.EgovAbstractMapper;
  * << 개정이력(Modification Information) >>  수정일      수정자           수정내용 -------    ---
  * -----    --------------------------- 2009.04.10  장동한          최초 생성 2011.05.31
  * JJY           경량환경 커스터마이징버전 생성
+ *   2026-08-01  이백행          [2026년 컨트리뷰션] 불필요한 예외 제거
  * </pre>
  * @author 조재영
  * @version 1.0
@@ -32,7 +33,7 @@ public class IndvdlSchdulManageDao extends EgovAbstractMapper {
 	 * @return List
 	 * @throws Exception
 	 */
-	public List<?> selectIndvdlSchdulManageMainList(Map<?, ?> map) throws Exception {
+	public List<?> selectIndvdlSchdulManageMainList(Map<?, ?> map) {
 		return selectList("IndvdlSchdulManage.selectIndvdlSchdulManageMainList", map);
 	}
 
@@ -42,7 +43,7 @@ public class IndvdlSchdulManageDao extends EgovAbstractMapper {
 	 * @return List
 	 * @throws Exception
 	 */
-	public List<?> selectIndvdlSchdulManageRetrieve(Map<?, ?> map) throws Exception {
+	public List<?> selectIndvdlSchdulManageRetrieve(Map<?, ?> map) {
 		return selectList("IndvdlSchdulManage.selectIndvdlSchdulManageRetrieve", map);
 	}
 
@@ -53,7 +54,7 @@ public class IndvdlSchdulManageDao extends EgovAbstractMapper {
 	 * @throws Exception
 	 */
 	public IndvdlSchdulManageVO selectIndvdlSchdulManageDetailVO(IndvdlSchdulManageVO indvdlSchdulManageVO)
-		throws Exception {
+ {
 		return (IndvdlSchdulManageVO)selectOne("IndvdlSchdulManage.selectIndvdlSchdulManageDetailVO",
 			indvdlSchdulManageVO);
 	}
@@ -64,7 +65,7 @@ public class IndvdlSchdulManageDao extends EgovAbstractMapper {
 	 * @return List
 	 * @throws Exception
 	 */
-	public List<?> selectIndvdlSchdulManageList(ComDefaultVO searchVO) throws Exception {
+	public List<?> selectIndvdlSchdulManageList(ComDefaultVO searchVO) {
 		return selectList("IndvdlSchdulManage.selectIndvdlSchdulManage", searchVO);
 	}
 
@@ -74,10 +75,10 @@ public class IndvdlSchdulManageDao extends EgovAbstractMapper {
 	 * @return List
 	 * @throws Exception
 	 */
-	//	public List<?> selectIndvdlSchdulManageDetail(IndvdlSchdulManageVO indvdlSchdulManageVO) throws Exception{
+	//	public List<?> selectIndvdlSchdulManageDetail(IndvdlSchdulManageVO indvdlSchdulManageVO){
 	//		return list("IndvdlSchdulManage.selectIndvdlSchdulManageDetail", indvdlSchdulManageVO);
 	//}
-	public IndvdlSchdulManageVO selectIndvdlSchdulManageDetail(IndvdlSchdulManageVO indvdlSchdulManageVO) throws Exception {
+	public IndvdlSchdulManageVO selectIndvdlSchdulManageDetail(IndvdlSchdulManageVO indvdlSchdulManageVO) {
 		return selectOne("IndvdlSchdulManage.selectIndvdlSchdulManageDetailVO", indvdlSchdulManageVO);
 	}
 
@@ -87,7 +88,7 @@ public class IndvdlSchdulManageDao extends EgovAbstractMapper {
 	 * @return int
 	 * @throws Exception
 	 */
-	public int selectIndvdlSchdulManageListCnt(ComDefaultVO searchVO) throws Exception {
+	public int selectIndvdlSchdulManageListCnt(ComDefaultVO searchVO) {
 		return (Integer)selectOne("IndvdlSchdulManage.selectIndvdlSchdulManageCnt", searchVO);
 	}
 
@@ -96,7 +97,7 @@ public class IndvdlSchdulManageDao extends EgovAbstractMapper {
 	 * @param qindvdlSchdulManageVO - 일정 정보 담김 VO
 	 * @throws Exception
 	 */
-	public void insertIndvdlSchdulManage(IndvdlSchdulManageVO indvdlSchdulManageVO) throws Exception {
+	public void insertIndvdlSchdulManage(IndvdlSchdulManageVO indvdlSchdulManageVO) {
 		insert("IndvdlSchdulManage.insertIndvdlSchdulManage", indvdlSchdulManageVO);
 	}
 
@@ -105,7 +106,7 @@ public class IndvdlSchdulManageDao extends EgovAbstractMapper {
 	 * @param indvdlSchdulManageVO - 일정 정보 담김 VO
 	 * @throws Exception
 	 */
-	public void updateIndvdlSchdulManage(IndvdlSchdulManageVO indvdlSchdulManageVO) throws Exception {
+	public void updateIndvdlSchdulManage(IndvdlSchdulManageVO indvdlSchdulManageVO) {
 		insert("IndvdlSchdulManage.updateIndvdlSchdulManage", indvdlSchdulManageVO);
 	}
 
@@ -114,7 +115,7 @@ public class IndvdlSchdulManageDao extends EgovAbstractMapper {
 	 * @param indvdlSchdulManageVO - 일정 정보 담김 VO
 	 * @throws Exception
 	 */
-	public void deleteIndvdlSchdulManage(IndvdlSchdulManageVO indvdlSchdulManageVO) throws Exception {
+	public void deleteIndvdlSchdulManage(IndvdlSchdulManageVO indvdlSchdulManageVO) {
 		// 일지 삭제
 		//delete("IndvdlSchdulManage.deleteDiaryManage", indvdlSchdulManageVO);
 		// 일정관리 삭제

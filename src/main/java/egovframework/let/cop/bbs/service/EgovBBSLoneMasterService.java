@@ -19,6 +19,7 @@ import egovframework.let.cop.bbs.domain.model.BoardMasterVO;
  *  -------    --------    ---------------------------
  *  2009.08.25  한성곤          최초 생성
  *  2011.08.31  JJY            경량환경 템플릿 커스터마이징버전 생성 
+ *   2026-08-01  이백행          [2026년 컨트리뷰션] 불필요한 예외 제거
  *  
  *  </pre>
  */
@@ -32,7 +33,7 @@ public interface EgovBBSLoneMasterService {
 	 * @exception Exception Exception
 	 */
 	public void deleteMaster(BoardMaster boardMaster)
-	  throws Exception;
+;
 
 	/**
 	 * 신규 게시판 속성정보를 생성한다.
@@ -52,7 +53,7 @@ public interface EgovBBSLoneMasterService {
 	 * @exception Exception Exception
 	 */
 	public BoardMasterVO selectMaster(BoardMaster searchVO)
-	  throws Exception;
+;
 
 	/**
 	 * 게시판 속성 정보의 목록을 조회 한다.
@@ -62,7 +63,7 @@ public interface EgovBBSLoneMasterService {
 	 * @exception Exception Exception
 	 */
 	public Map<String, Object> selectMasterList(BoardMasterVO searchVO)
-	  throws Exception;
+;
 
 	/**
 	 * 게시판 속성정보를 수정한다.
@@ -72,6 +73,6 @@ public interface EgovBBSLoneMasterService {
 	 * @exception Exception Exception
 	 */
 	public void updateMaster(BoardMaster boardMaster)
-	  throws Exception;
+;
 
 }

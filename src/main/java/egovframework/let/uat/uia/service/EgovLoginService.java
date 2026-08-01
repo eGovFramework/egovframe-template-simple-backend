@@ -16,6 +16,7 @@ import egovframework.com.cmm.LoginVO;
  *  -------    --------    ---------------------------
  *  2009.03.06  박지욱          최초 생성
  *  2011.08.31  JJY            경량환경 템플릿 커스터마이징버전 생성
+ *   2026-08-01  이백행          [2026년 컨트리뷰션] 불필요한 예외 제거
  *
  *  </pre>
  */
@@ -37,7 +38,7 @@ public interface EgovLoginService {
 	 * @param vo    LoginVO
 	 * @exception Exception Exception
 	 */
-	public LoginVO searchId(LoginVO vo) throws Exception;
+	public LoginVO searchId(LoginVO vo);
 
 	/**
 	 * 비밀번호를 찾는다.

@@ -22,6 +22,7 @@ import org.egovframe.rte.fdl.idgnr.EgovIdGnrService;
  * << 개정이력(Modification Information) >>  수정일      수정자           수정내용 -------    ---
  * -----    --------------------------- 2009.04.10  장동한          최초 생성 2011.05.31
  * JJY           경량환경 커스터마이징버전 생성
+ *   2026-08-01  이백행          [2026년 컨트리뷰션] 불필요한 예외 제거
  * </pre>
  * @author 조재영
  * @version 1.0
@@ -45,7 +46,7 @@ public class EgovIndvdlSchdulManageServiceImpl extends EgovAbstractServiceImpl i
 	 * @throws Exception
 	 */
 	@Override
-	public List<?> selectIndvdlSchdulManageMainList(Map<?, ?> map) throws Exception{
+	public List<?> selectIndvdlSchdulManageMainList(Map<?, ?> map){
 		return dao.selectIndvdlSchdulManageMainList(map);
 	}
 
@@ -56,7 +57,7 @@ public class EgovIndvdlSchdulManageServiceImpl extends EgovAbstractServiceImpl i
 	 * @throws Exception
 	 */
 	@Override
-	public List<?> selectIndvdlSchdulManageRetrieve(Map<?, ?> map) throws Exception{
+	public List<?> selectIndvdlSchdulManageRetrieve(Map<?, ?> map){
 		return dao.selectIndvdlSchdulManageRetrieve(map);
 	}
 
@@ -67,7 +68,7 @@ public class EgovIndvdlSchdulManageServiceImpl extends EgovAbstractServiceImpl i
 	 * @throws Exception
 	 */
 	@Override
-	public IndvdlSchdulManageVO selectIndvdlSchdulManageDetailVO(IndvdlSchdulManageVO indvdlSchdulManageVO) throws Exception{
+	public IndvdlSchdulManageVO selectIndvdlSchdulManageDetailVO(IndvdlSchdulManageVO indvdlSchdulManageVO){
 		return dao.selectIndvdlSchdulManageDetailVO(indvdlSchdulManageVO);
 	}
 
@@ -78,7 +79,7 @@ public class EgovIndvdlSchdulManageServiceImpl extends EgovAbstractServiceImpl i
 	 * @throws Exception
 	 */
 	@Override
-	public List<?> selectIndvdlSchdulManageList(ComDefaultVO searchVO) throws Exception{
+	public List<?> selectIndvdlSchdulManageList(ComDefaultVO searchVO){
 		return dao.selectIndvdlSchdulManageList(searchVO);
 	}
 
@@ -89,7 +90,7 @@ public class EgovIndvdlSchdulManageServiceImpl extends EgovAbstractServiceImpl i
 	 * @throws Exception
 	 */
 	@Override
-	public IndvdlSchdulManageVO selectIndvdlSchdulManageDetail(IndvdlSchdulManageVO indvdlSchdulManageVO) throws Exception{
+	public IndvdlSchdulManageVO selectIndvdlSchdulManageDetail(IndvdlSchdulManageVO indvdlSchdulManageVO){
 		return dao.selectIndvdlSchdulManageDetail(indvdlSchdulManageVO);
 	}
 
@@ -100,7 +101,7 @@ public class EgovIndvdlSchdulManageServiceImpl extends EgovAbstractServiceImpl i
 	 * @throws Exception
 	 */
 	@Override
-	public int selectIndvdlSchdulManageListCnt(ComDefaultVO searchVO) throws Exception{
+	public int selectIndvdlSchdulManageListCnt(ComDefaultVO searchVO){
 		return dao.selectIndvdlSchdulManageListCnt(searchVO);
 	}
 
@@ -123,7 +124,7 @@ public class EgovIndvdlSchdulManageServiceImpl extends EgovAbstractServiceImpl i
 	 * @throws Exception
 	 */
 	@Override
-	public void updateIndvdlSchdulManage(IndvdlSchdulManageVO indvdlSchdulManageVO) throws Exception{
+	public void updateIndvdlSchdulManage(IndvdlSchdulManageVO indvdlSchdulManageVO){
 		dao.updateIndvdlSchdulManage(indvdlSchdulManageVO);
 	}
 
@@ -133,7 +134,7 @@ public class EgovIndvdlSchdulManageServiceImpl extends EgovAbstractServiceImpl i
 	 * @throws Exception
 	 */
 	@Override
-	public void deleteIndvdlSchdulManage(IndvdlSchdulManageVO indvdlSchdulManageVO) throws Exception{
+	public void deleteIndvdlSchdulManage(IndvdlSchdulManageVO indvdlSchdulManageVO){
 		dao.deleteIndvdlSchdulManage(indvdlSchdulManageVO);
 	}
 }
