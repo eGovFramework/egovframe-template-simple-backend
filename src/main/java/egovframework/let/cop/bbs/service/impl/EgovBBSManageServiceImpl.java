@@ -16,6 +16,7 @@ import egovframework.let.cop.bbs.dto.response.BbsManageListItemResponseDTO;
 import egovframework.let.cop.bbs.dto.response.BbsManageListResponseDTO;
 import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import org.egovframe.rte.fdl.crypto.EgovCryptoService;
+import org.egovframe.rte.fdl.idgnr.EgovIdGnrService;
 import org.egovframe.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 import org.springframework.stereotype.Service;
 
@@ -54,6 +55,7 @@ public class EgovBBSManageServiceImpl extends EgovAbstractServiceImpl implements
 	private final BBSManageDAO bbsMngDAO;
 	private final EgovFileMngService fileService;
 	private final EgovCryptoService cryptoService;
+	private final EgovIdGnrService egovNttIdGnrService;
 
 
 	/**
@@ -82,6 +84,7 @@ public class EgovBBSManageServiceImpl extends EgovAbstractServiceImpl implements
 	@Override
 	public void insertBoardArticle(Board board) throws Exception {
 		// SORT_ORDR는 부모글의 소트 오더와 같게, NTT_NO는 순서대로 부여
+		board.setNttId(egovNttIdGnrService.getNextLongId());
 
 		if ("Y".equals(board.getReplyAt())) {
 			// 답글인 경우 1. Parnts를 세팅, 2.Parnts의 sortOrdr을 현재글의 sortOrdr로 가져오도록, 3.nttNo는 현재 게시판의 순서대로

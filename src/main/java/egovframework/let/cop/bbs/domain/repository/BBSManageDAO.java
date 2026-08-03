@@ -36,9 +36,6 @@ public class BBSManageDAO extends EgovAbstractMapper {
      * @throws Exception
      */
     public void insertBoardArticle(Board board) throws Exception {
-	long nttId = (Long)selectOne("BBSManageDAO.selectMaxNttId");
-	board.setNttId(nttId);
-
 	insert("BBSManageDAO.insertBoardArticle", board);
     }
 
@@ -49,8 +46,7 @@ public class BBSManageDAO extends EgovAbstractMapper {
      * @throws Exception
      */
     public long replyBoardArticle(Board board) throws Exception {
-	long nttId = (Long)selectOne("BBSManageDAO.selectMaxNttId");
-	board.setNttId(nttId);
+	long nttId = board.getNttId();
 
 	insert("BBSManageDAO.replyBoardArticle", board);
 
