@@ -50,7 +50,8 @@ import lombok.RequiredArgsConstructor;
  *   2009.04.02  이삼섭          최초 생성
  *   2011.08.31  JJY            경량환경 템플릿 커스터마이징버전 생성
  *
- * </pre>
+ *   2026-08-01  이백행          [2026년 컨트리뷰션] 불필요한 예외 제거
+* </pre>
  */
 @RestController
 @RequiredArgsConstructor
@@ -82,7 +83,7 @@ public class EgovBBSUseInfoManageApiController {
 	})
 	@GetMapping(value ="/bbsUseInf")
 	public ResultVO selectBBSUseInfs(HttpServletRequest request,
-			@ModelAttribute BbsSearchRequestDTO searchVO) throws Exception {
+			@ModelAttribute BbsSearchRequestDTO searchVO) {
 		BoardUseInfVO bdUseVO = new BoardUseInfVO();
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		
@@ -128,7 +129,7 @@ public class EgovBBSUseInfoManageApiController {
 			@ApiResponse(responseCode = "200", description = "조회 성공")
 	})
 	@GetMapping(value ="/notUsedBbsMaster")
-	public ResultVO selectNotUsedBdMstrList() throws Exception {
+	public ResultVO selectNotUsedBdMstrList() {
 		
 		BoardMasterVO boardMasterVO = new BoardMasterVO();
 		
@@ -213,7 +214,7 @@ public class EgovBBSUseInfoManageApiController {
 		BoardUseInfVO bdUseVO,
 		BindingResult bindingResult,
 		@Parameter(hidden = true) @AuthenticationPrincipal LoginVO loginVO
-	) throws Exception {
+	) {
 
 		if (bindingResult.hasErrors()) {
 			return resultVoHelper.buildFromResultVO(new ResultVO(), ResponseCode.INPUT_CHECK_ERROR);
@@ -261,7 +262,7 @@ public class EgovBBSUseInfoManageApiController {
 		@Parameter(name = "bbsId", description = "게시판 Id", in = ParameterIn.PATH, example="BBSMSTR_AAAAAAAAAAAA")
 		@PathVariable("bbsId") String bbsId,
 		@Parameter(hidden = true) @AuthenticationPrincipal LoginVO loginVO
-	) throws Exception {
+	) {
 		
 		bdUseVO.setBbsId(bbsId);
 		bbsUseService.updateBBSUseInf(bdUseVO);

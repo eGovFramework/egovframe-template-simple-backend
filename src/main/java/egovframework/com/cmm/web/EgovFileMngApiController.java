@@ -41,6 +41,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
  *   2009.03.25  이삼섭          최초 생성
  *   2011.08.31  JJY            경량환경 템플릿 커스터마이징버전 생성
  *   2026.07     보안취약점대응   F-01 Layer2 — POST /file 삭제에 소유권 검증 추가
+ *   2026-08-01  이백행          [2026년 컨트리뷰션] 불필요한 예외 제거
  *
  * </pre>
  */
@@ -85,7 +86,7 @@ public class EgovFileMngApiController {
 			@ApiResponse(responseCode = "403", description = "권한 없음")
 	})
     @PostMapping(value ="/file")
-    public ResultVO deleteFileInf(@RequestBody FileDeleteRequest req) throws Exception {
+    public ResultVO deleteFileInf(@RequestBody FileDeleteRequest req) {
     	ResultVO resultVO = new ResultVO();
 
     	// 암호화된 atchFileId 를 복호화 (2022.12.06) - 파일아이디가 유추 불가능하도록 조치
@@ -129,7 +130,7 @@ public class EgovFileMngApiController {
      * 삭제 대상과 일치할 때만 작성자를 돌려준다(타 엔티티 ID 도용 차단).
      * 컨텍스트가 없거나 atchFileId 가 일치하지 않으면 null → 호출부에서 권한 없음 처리.
      */
-    private String resolveFileOwner(FileDeleteRequest req, String decodedFileId) throws Exception {
+    private String resolveFileOwner(FileDeleteRequest req, String decodedFileId) {
     	// 1) 게시글: bbsId + nttId
     	String bbsId = req.getBbsId();
     	String nttId = req.getNttId();

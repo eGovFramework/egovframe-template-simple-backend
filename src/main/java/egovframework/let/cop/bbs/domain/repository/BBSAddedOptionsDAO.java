@@ -19,6 +19,7 @@ import egovframework.let.cop.bbs.domain.model.BoardMasterVO;
  *  -------    --------    ---------------------------
  *  2009.06.26  한성곤          최초 생성
  *  2011.08.31  JJY            경량환경 템플릿 커스터마이징버전 생성 
+ *   2026-08-01  이백행          [2026년 컨트리뷰션] 불필요한 예외 제거
  *  
  *  </pre>
  */
@@ -30,7 +31,7 @@ public class BBSAddedOptionsDAO extends EgovAbstractMapper {
      * 
      * @param BoardMaster
      */
-    public int insertAddedOptionsInf(BoardMaster boardMaster) throws Exception {
+    public int insertAddedOptionsInf(BoardMaster boardMaster) {
 	return (int)insert("BBSAddedOptionsDAO.insertAddedOptionsInf", boardMaster);
     }
     
@@ -39,7 +40,7 @@ public class BBSAddedOptionsDAO extends EgovAbstractMapper {
      * 
      * @param BoardMasterVO
      */
-    public BoardMasterVO selectAddedOptionsInf(BoardMaster searchVO) throws Exception {
+    public BoardMasterVO selectAddedOptionsInf(BoardMaster searchVO) {
 	return (BoardMasterVO)selectOne("BBSAddedOptionsDAO.selectAddedOptionsInf", searchVO);
     }
     
@@ -48,7 +49,7 @@ public class BBSAddedOptionsDAO extends EgovAbstractMapper {
      * 
      * @param BoardMaster
      */
-    public void updateAddedOptionsInf(BoardMaster boardMaster) throws Exception {
+    public void updateAddedOptionsInf(BoardMaster boardMaster) {
 	update("BBSAddedOptionsDAO.updateAddedOptionsInf", boardMaster);
     }
 }

@@ -27,6 +27,7 @@ import org.egovframe.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
  *  -------    --------    ---------------------------
  *  2009.03.19  이삼섭          최초 생성
  *  2011.08.31  JJY            경량환경 템플릿 커스터마이징버전 생성 
+ *   2026-08-01  이백행          [2026년 컨트리뷰션] 불필요한 예외 제거
  *  
  *  </pre>
  */
@@ -39,7 +40,7 @@ public interface EgovBBSManageService {
 	 * @exception Exception Exception
 	 */
 	public void deleteBoardArticle(BbsManageDeleteBoardRequestDTO bbsDeleteBoardRequestDTO, LoginVO user)
-	  throws Exception;
+;
 
 	/**
 	 * 방명록 내용을 삭제 한다.
@@ -48,7 +49,7 @@ public interface EgovBBSManageService {
 	 * @exception Exception Exception
 	 */
 	public void deleteGuestList(BoardVO boardVO)
-	  throws Exception;
+;
 
 	/**
 	 * 방명록에 대한 패스워드를 조회 한다.
@@ -58,7 +59,7 @@ public interface EgovBBSManageService {
 	 * @exception Exception Exception
 	 */
 	public String getPasswordInf(Board Board)
-	  throws Exception;
+;
 
 	/**
 	 * 게시판에 게시물 또는 답변 게시물을 등록 한다.
@@ -67,7 +68,7 @@ public interface EgovBBSManageService {
 	 * @exception Exception Exception
 	 */
 	public void insertBoardArticle(Board Board)
-	  throws Exception;
+;
 
 	/**
 	 * 게시물 대하여 상세 내용을 조회 한다.
@@ -77,7 +78,7 @@ public interface EgovBBSManageService {
 	 * @exception Exception Exception
 	 */
 	public BbsManageDetailResponseDTO selectBoardArticle(BbsManageDetailBoardRequestDTO bbsManageDetailBoardRequestDTO)
-	  throws Exception;
+;
 
 	/**
 	 * 조건에 맞는 게시물 목록을 조회 한다.
@@ -89,7 +90,7 @@ public interface EgovBBSManageService {
 	 * @exception Exception Exception
 	 */
 	public BbsManageListResponseDTO selectBoardArticles(BbsSearchRequestDTO bbsSearchRequestDTO, PaginationInfo paginationInfo, String attrbFlag)
-	  throws Exception;
+;
 
 	/**
 	 * 방명록에 대한 목록을 조회 한다.
@@ -99,7 +100,7 @@ public interface EgovBBSManageService {
 	 * @exception Exception Exception
 	 */
 	public Map<String, Object> selectGuestList(BoardVO boardVO)
-	  throws Exception;
+;
 
 	/**
 	 * 게시물 한 건의 내용을 수정 한다.
@@ -108,6 +109,6 @@ public interface EgovBBSManageService {
 	 * @exception Exception Exception
 	 */
 	public void updateBoardArticle(Board Board)
-	  throws Exception;
+;
 
 }

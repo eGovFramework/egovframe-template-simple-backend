@@ -22,6 +22,7 @@ import egovframework.let.uat.esm.service.EgovSiteManagerService;
  *   수정일      수정자          수정내용
  *  -------    --------    ---------------------------
  *  2023.04.15  김일국          최초 생성
+ *   2026-08-01  이백행          [2026년 컨트리뷰션] 불필요한 예외 제거
  *
  *  </pre>
  */
@@ -36,7 +37,7 @@ public class EgovSiteManagerServiceImpl extends EgovAbstractServiceImpl implemen
 	 * @throws Exception
 	 */
 	@Override
-	public Integer updateAdminPassword(Map<?, ?> map) throws Exception {
+	public Integer updateAdminPassword(Map<?, ?> map) {
 		return siteManagerDAO.updateAdminPassword(map);
 	}
 }

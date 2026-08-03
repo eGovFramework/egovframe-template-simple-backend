@@ -16,6 +16,7 @@ import java.util.List;
  *  -------    --------    ---------------------------
  *   2009.04.10  조재영          최초 생성
  *   2011.08.31  JJY            경량환경 템플릿 커스터마이징버전 생성
+ *   2026-08-01  이백행          [2026년 컨트리뷰션] 불필요한 예외 제거
  *
  * </pre>
  */
@@ -35,7 +36,7 @@ public interface EgovMberManageService {
 	 * @return mberManageVO 일반회원상세정보
 	 * @throws Exception
 	 */
-	public MberManageVO selectMber(String mberId) throws Exception;
+	public MberManageVO selectMber(String mberId);
 
 	/**
 	 * 기 등록된 회원 중 검색조건에 맞는 회원들의 정보를 데이터베이스에서 읽어와 화면에 출력
@@ -43,7 +44,7 @@ public interface EgovMberManageService {
 	 * @return List<MberManageVO> 일반회원목록정보
 	 * @throws Exception
 	 */
-	public List<MberManageVO> selectMberList(UserDefaultVO userSearchVO) throws Exception;
+	public List<MberManageVO> selectMberList(UserDefaultVO userSearchVO);
 
     /**
      * 일반회원 총 개수를 조회한다.
@@ -51,7 +52,7 @@ public interface EgovMberManageService {
      * @return 일반회원총개수(int)
      * @throws Exception
      */
-    public int selectMberListTotCnt(UserDefaultVO userSearchVO) throws Exception;
+    public int selectMberListTotCnt(UserDefaultVO userSearchVO);
 
 	/**
 	 * 화면에 조회된 일반회원의 기본정보를 수정하여 항목의 정합성을 체크하고 수정된 데이터를 데이터베이스에 반영
@@ -65,7 +66,7 @@ public interface EgovMberManageService {
 	 * @param checkedIdForDel 삭제대상 일반회원아이디
 	 * @throws Exception
 	 */
-	public void deleteMber(String checkedIdForDel) throws Exception;
+	public void deleteMber(String checkedIdForDel);
 
 	/**
 	 * 일반회원 약관확인
@@ -73,14 +74,14 @@ public interface EgovMberManageService {
 	 * @return 일반회원약관정보(List)
 	 * @throws Exception
 	 */
-	public List<?> selectStplat(String stplatId)  throws Exception;
+	public List<?> selectStplat(String stplatId);
 
 	/**
 	 * 일반회원암호수정
 	 * @param mberManageVO 일반회원수정정보(비밀번호)
 	 * @throws Exception
 	 */
-	public void updatePassword(MberManageVO mberManageVO) throws Exception;
+	public void updatePassword(MberManageVO mberManageVO);
 
 	/**
 	 * 일반회원이 비밀번호를 기억하지 못할 때 비밀번호를 찾을 수 있도록 함
@@ -88,7 +89,7 @@ public interface EgovMberManageService {
 	 * @return mberManageVO 일반회원암호정보
 	 * @throws Exception
 	 */
-	public MberManageVO selectPassword(MberManageVO passVO) throws Exception;
+	public MberManageVO selectPassword(MberManageVO passVO);
 
 	/**
 	 * 입력한 사용자아이디의 중복여부를 체크하여 사용가능여부를 확인
@@ -96,6 +97,6 @@ public interface EgovMberManageService {
 	 * @return 사용가능여부(아이디 사용회수 int)
 	 * @throws Exception
 	 */
-	public int checkIdDplct(String checkId) throws Exception;
+	public int checkIdDplct(String checkId);
 
 }

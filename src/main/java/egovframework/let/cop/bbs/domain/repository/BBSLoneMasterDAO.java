@@ -22,6 +22,7 @@ import egovframework.let.cop.bbs.domain.model.BoardMasterVO;
  *  -------    --------    ---------------------------
  *  2009.08.25  한성곤          최초 생성
  *  2011.08.31  JJY            경량환경 템플릿 커스터마이징버전 생성
+ *   2026-08-01  이백행          [2026년 컨트리뷰션] 불필요한 예외 제거
  *
  *  </pre>
  */
@@ -33,7 +34,7 @@ public class BBSLoneMasterDAO extends EgovAbstractMapper {
      *
      * @param BoardMaster
      */
-    public void deleteMaster(BoardMaster boardMaster) throws Exception {
+    public void deleteMaster(BoardMaster boardMaster) {
     	update("BBSLoneMasterDAO.deleteMaster", boardMaster);
     }
 
@@ -42,7 +43,7 @@ public class BBSLoneMasterDAO extends EgovAbstractMapper {
      *
      * @param BoardMaster
      */
-    public int insertMaster(BoardMaster boardMaster) throws Exception {
+    public int insertMaster(BoardMaster boardMaster) {
     	return insert("BBSLoneMasterDAO.insertMaster", boardMaster);
     }
 
@@ -51,7 +52,7 @@ public class BBSLoneMasterDAO extends EgovAbstractMapper {
      *
      * @param BoardMasterVO
      */
-    public BoardMasterVO selectMaster(BoardMaster vo) throws Exception {
+    public BoardMasterVO selectMaster(BoardMaster vo) {
     	return (BoardMasterVO)selectOne("BBSLoneMasterDAO.selectMaster", vo);
     }
 
@@ -60,7 +61,7 @@ public class BBSLoneMasterDAO extends EgovAbstractMapper {
      *
      * @param BoardMasterVO
      */
-    public List<BoardMasterVO> selectMasterList(BoardMasterVO vo) throws Exception {
+    public List<BoardMasterVO> selectMasterList(BoardMasterVO vo) {
 		return selectList("BBSLoneMasterDAO.selectMasterList", vo);
 	}
 
@@ -71,7 +72,7 @@ public class BBSLoneMasterDAO extends EgovAbstractMapper {
      * @return
      * @throws Exception
      */
-    public int selectMasterListCnt(BoardMasterVO vo) throws Exception {
+    public int selectMasterListCnt(BoardMasterVO vo) {
     	return (Integer)selectOne("BBSLoneMasterDAO.selectMasterListCnt", vo);
     }
 
@@ -80,7 +81,7 @@ public class BBSLoneMasterDAO extends EgovAbstractMapper {
      *
      * @param BoardMaster
      */
-    public void updateMaster(BoardMaster boardMaster) throws Exception {
+    public void updateMaster(BoardMaster boardMaster) {
     	update("BBSLoneMasterDAO.updateMaster", boardMaster);
     }
 }

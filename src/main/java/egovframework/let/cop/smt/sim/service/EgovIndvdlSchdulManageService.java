@@ -15,6 +15,7 @@ import egovframework.com.cmm.ComDefaultVO;
  *   -------    --------    ---------------------------
  *   2009.04.10  장동한          최초 생성
  *   2011.05.31  JJY           경량환경 커스터마이징버전 생성
+ *   2026-08-01  이백행          [2026년 컨트리뷰션] 불필요한 예외 제거
  * </pre>
  * @author 조재영
  * @version 1.0
@@ -28,7 +29,7 @@ public interface EgovIndvdlSchdulManageService {
 	 * @param indvdlSchdulManageVO    - 일정 정보 담김 VO
 	 * @exception Exception Exception
 	 */
-	public void deleteIndvdlSchdulManage(IndvdlSchdulManageVO indvdlSchdulManageVO) throws Exception;
+	public void deleteIndvdlSchdulManage(IndvdlSchdulManageVO indvdlSchdulManageVO);
 
 	/**
 	 * 일정를(을) 등록한다.
@@ -45,7 +46,7 @@ public interface EgovIndvdlSchdulManageService {
 	 * @param indvdlSchdulManageVO    - 일정 정보 담김 VO
 	 * @exception Exception Exception
 	 */
-	public IndvdlSchdulManageVO selectIndvdlSchdulManageDetail(IndvdlSchdulManageVO indvdlSchdulManageVO) throws Exception;
+	public IndvdlSchdulManageVO selectIndvdlSchdulManageDetail(IndvdlSchdulManageVO indvdlSchdulManageVO);
 
 	/**
 	 * 일정 목록을 VO(model)형식으로 조회한다.
@@ -54,7 +55,7 @@ public interface EgovIndvdlSchdulManageService {
 	 * @param indvdlSchdulManageVO    - 조회할 정보가 담긴 VO
 	 * @exception Exception Exception
 	 */
-	public IndvdlSchdulManageVO selectIndvdlSchdulManageDetailVO(IndvdlSchdulManageVO indvdlSchdulManageVO) throws Exception;
+	public IndvdlSchdulManageVO selectIndvdlSchdulManageDetailVO(IndvdlSchdulManageVO indvdlSchdulManageVO);
 
 	/**
 	 * 일정 목록을 조회한다.
@@ -63,7 +64,7 @@ public interface EgovIndvdlSchdulManageService {
 	 * @param searchVO    - 조회할 정보가 담긴 VO
 	 * @exception Exception Exception
 	 */
-	public List<?> selectIndvdlSchdulManageList(ComDefaultVO searchVO) throws Exception;
+	public List<?> selectIndvdlSchdulManageList(ComDefaultVO searchVO);
 
 	/**
 	 * 일정를(을) 목록 전체 건수를(을) 조회한다.
@@ -72,7 +73,7 @@ public interface EgovIndvdlSchdulManageService {
 	 * @param searchVO    - 조회할 정보가 담긴 VO
 	 * @exception Exception Exception
 	 */
-	public int selectIndvdlSchdulManageListCnt(ComDefaultVO searchVO) throws Exception;
+	public int selectIndvdlSchdulManageListCnt(ComDefaultVO searchVO);
 
 	/**
 	 * 메인페이지/일정관리조회
@@ -81,7 +82,7 @@ public interface EgovIndvdlSchdulManageService {
 	 * @param map    - 조회할 정보가 담긴 map
 	 * @exception Exception Exception
 	 */
-	public List<?> selectIndvdlSchdulManageMainList(Map<?, ?> map) throws Exception;
+	public List<?> selectIndvdlSchdulManageMainList(Map<?, ?> map);
 
 	/**
 	 * 일정 목록을 Map(map)형식으로 조회한다.
@@ -91,7 +92,7 @@ public interface EgovIndvdlSchdulManageService {
 	 * @param map
 	 * @exception Exception Exception
 	 */
-	public List<?> selectIndvdlSchdulManageRetrieve(Map<?, ?> map) throws Exception;
+	public List<?> selectIndvdlSchdulManageRetrieve(Map<?, ?> map);
 
 	/**
 	 * 일정를(을) 수정한다.
@@ -99,5 +100,5 @@ public interface EgovIndvdlSchdulManageService {
 	 * @param indvdlSchdulManageVO    - 일정 정보 담김 VO
 	 * @exception Exception Exception
 	 */
-	public void updateIndvdlSchdulManage(IndvdlSchdulManageVO indvdlSchdulManageVO) throws Exception;
+	public void updateIndvdlSchdulManage(IndvdlSchdulManageVO indvdlSchdulManageVO);
 }

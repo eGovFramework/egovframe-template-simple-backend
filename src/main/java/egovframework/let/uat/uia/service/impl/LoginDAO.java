@@ -20,6 +20,7 @@ import org.springframework.stereotype.Repository;
  *  -------    --------    ---------------------------
  *  2009.03.06  박지욱          최초 생성
  *  2011.08.31  JJY            경량환경 템플릿 커스터마이징버전 생성
+ *   2026-08-01  이백행          [2026년 컨트리뷰션] 불필요한 예외 제거
  *
  *  </pre>
  */
@@ -32,7 +33,7 @@ public class LoginDAO extends EgovAbstractMapper {
 	 * @return LoginVO
 	 * @exception Exception
 	 */
-	public LoginVO actionLogin(LoginVO vo) throws Exception {
+	public LoginVO actionLogin(LoginVO vo) {
 		return (LoginVO) selectOne("loginDAO.actionLogin", vo);
 	}
 
@@ -42,7 +43,7 @@ public class LoginDAO extends EgovAbstractMapper {
 	 * @return LoginVO
 	 * @exception Exception
 	 */
-	public LoginVO searchId(LoginVO vo) throws Exception {
+	public LoginVO searchId(LoginVO vo) {
 		return (LoginVO) selectOne("loginDAO.searchId", vo);
 	}
 
@@ -52,7 +53,7 @@ public class LoginDAO extends EgovAbstractMapper {
 	 * @return LoginVO
 	 * @exception Exception
 	 */
-	public LoginVO searchPassword(LoginVO vo) throws Exception {
+	public LoginVO searchPassword(LoginVO vo) {
 		return (LoginVO) selectOne("loginDAO.searchPassword", vo);
 	}
 
@@ -61,7 +62,7 @@ public class LoginDAO extends EgovAbstractMapper {
 	 * @param vo LoginVO
 	 * @exception Exception
 	 */
-	public void updatePassword(LoginVO vo) throws Exception {
+	public void updatePassword(LoginVO vo) {
 		update("loginDAO.updatePassword", vo);
 	}
 }

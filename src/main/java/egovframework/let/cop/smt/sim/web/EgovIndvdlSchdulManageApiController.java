@@ -55,6 +55,7 @@ import lombok.RequiredArgsConstructor;
  *  -------    --------    ---------------------------
  *  2009.04.10  장동한          최초 생성
  *  2011.05.31  JJY           경량환경 커스터마이징버전 생성
+ *   2026-08-01  이백행          [2026년 컨트리뷰션] 불필요한 예외 제거
  * </pre>
  * @author 조재영
  * @version 1.0
@@ -90,7 +91,7 @@ public class EgovIndvdlSchdulManageApiController {
     @GetMapping(value = "/schedule/month")
 	public ResultVO EgovIndvdlSchdulManageMonthList(
 			@ModelAttribute ScheduleSearchVO searchVO,
-			@Parameter(hidden = true) @AuthenticationPrincipal LoginVO loginVO) throws Exception {
+			@Parameter(hidden = true) @AuthenticationPrincipal LoginVO loginVO) {
 		
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 
@@ -295,7 +296,7 @@ public class EgovIndvdlSchdulManageApiController {
     public ResultVO EgovIndvdlSchdulManageDelete(
     		@Parameter(name = "schdulId", description = "일정 Id", in = ParameterIn.PATH, example="SCHDUL_0000000000001")	
     		@PathVariable("schdulId") String schdulId
-    		) throws Exception {
+		) {
 		IndvdlSchdulManageVO indvdlSchdulManageVO = new IndvdlSchdulManageVO();
 		indvdlSchdulManageVO.setSchdulId(schdulId);
 		
@@ -400,7 +401,7 @@ public class EgovIndvdlSchdulManageApiController {
 	})
     @GetMapping(value = "/schedule/daily")
     public ResultVO EgovIndvdlSchdulManageDailyList(
-    		@ModelAttribute ScheduleSearchVO searchVO) throws Exception {
+		@ModelAttribute ScheduleSearchVO searchVO) {
     	
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 
@@ -474,7 +475,7 @@ public class EgovIndvdlSchdulManageApiController {
     @GetMapping(value = "/schedule/week")
 	public ResultVO EgovIndvdlSchdulManageWeekList(
 			@ModelAttribute ScheduleSearchVO searchVO)
-		throws Exception {
+ {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 
 		//일정구분 검색 유지
