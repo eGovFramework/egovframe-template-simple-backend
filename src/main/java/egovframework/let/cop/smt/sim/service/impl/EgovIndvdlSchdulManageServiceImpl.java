@@ -8,6 +8,8 @@ import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import egovframework.com.cmm.ComDefaultVO;
+import egovframework.com.cmm.service.EgovFileMngService;
+import egovframework.com.cmm.service.FileVO;
 import egovframework.let.cop.smt.sim.service.EgovIndvdlSchdulManageService;
 import egovframework.let.cop.smt.sim.service.IndvdlSchdulManageVO;
 
@@ -36,6 +38,10 @@ public class EgovIndvdlSchdulManageServiceImpl extends EgovAbstractServiceImpl i
 
 	@Resource(name="deptSchdulManageIdGnrService")
 	private EgovIdGnrService idgenService;
+
+
+	@Resource(name="EgovFileMngService")
+	private EgovFileMngService fileService;
 
 
     /**
@@ -129,11 +135,21 @@ public class EgovIndvdlSchdulManageServiceImpl extends EgovAbstractServiceImpl i
 
     /**
 	 * 일정를(을) 삭제한다.
+	 * 일정에 등록된 첨부파일도 함께 삭제 처리한다.
 	 * @param indvdlSchdulManageVO - 조회할 정보가 담긴 VO
 	 * @throws Exception
 	 */
 	@Override
 	public void deleteIndvdlSchdulManage(IndvdlSchdulManageVO indvdlSchdulManageVO) throws Exception{
+		IndvdlSchdulManageVO schdulDetail = dao.selectIndvdlSchdulManageDetail(indvdlSchdulManageVO);
+		String atchFileId = (schdulDetail == null) ? null : schdulDetail.getAtchFileId();
+
 		dao.deleteIndvdlSchdulManage(indvdlSchdulManageVO);
+
+		if (atchFileId != null && !atchFileId.trim().isEmpty()) {
+			FileVO fvo = new FileVO();
+			fvo.setAtchFileId(atchFileId);
+			fileService.deleteAllFileInf(fvo);
+		}
 	}
 }
