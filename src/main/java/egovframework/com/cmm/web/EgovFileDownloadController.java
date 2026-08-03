@@ -196,6 +196,11 @@ public class EgovFileDownloadController {
 			fileVO.setFileSn(fileSn);
 			FileVO fvo = fileService.selectFileInf(fileVO);
 
+			// 삭제 처리된(USE_AT='N') 첨부는 조회되지 않으므로 파일 없음과 동일하게 처리한다
+			if (fvo == null) {
+				throw new EgovBizException();
+			}
+
 			String fileStreCours = EgovWebUtil.filePathBlackList(fvo.getFileStreCours());
 			String streFileNm = EgovWebUtil.filePathBlackList(fvo.getStreFileNm());
 
