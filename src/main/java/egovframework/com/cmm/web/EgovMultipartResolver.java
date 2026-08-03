@@ -23,7 +23,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.support.StandardServletMultipartResolver;
 
-import egovframework.com.cmm.service.EgovProperties;
 import egovframework.let.utl.fcc.service.EgovFileUploadUtil;
 import lombok.extern.slf4j.Slf4j;
 
@@ -50,7 +49,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class EgovMultipartResolver extends StandardServletMultipartResolver {
 
-	public EgovMultipartResolver() {
+	private final String whiteListFileUploadExtensions;
+
+	public EgovMultipartResolver(String whiteListFileUploadExtensions) {
+		this.whiteListFileUploadExtensions = whiteListFileUploadExtensions;
 	}
 
 	/**
@@ -61,8 +63,6 @@ public class EgovMultipartResolver extends StandardServletMultipartResolver {
 		MultipartHttpServletRequest multipartRequest = super.resolveMultipart(request);
 		
 		// 확장자 제한 검증
-		String whiteListFileUploadExtensions = EgovProperties.getProperty("Globals.fileUpload.Extensions");
-		
 		if (whiteListFileUploadExtensions != null && !"".equals(whiteListFileUploadExtensions)) {
 			Iterator<String> fileNames = multipartRequest.getFileNames();
 			
