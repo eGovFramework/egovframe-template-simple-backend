@@ -114,7 +114,7 @@ public class EgovImageProcessController extends HttpServlet {
 
 		// 삭제 처리된(USE_AT='N') 첨부는 조회되지 않으므로 파일 없음과 동일하게 처리한다
 		if (fvo == null) {
-			response.sendError(HttpServletResponse.SC_NOT_FOUND);
+			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 			return;
 		}
 
