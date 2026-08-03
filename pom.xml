@@ -106,10 +106,6 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.tomcat.embed</groupId>
-			<artifactId>tomcat-embed-jasper</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
 			<optional>true</optional>
@@ -210,11 +206,6 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-lang3</artifactId>
-		</dependency>
-
-		<dependency>
 			<groupId>org.hsqldb</groupId>
 			<artifactId>hsqldb</artifactId>
 		</dependency>
@@ -288,7 +279,7 @@
 			<version>${icu4j.version}</version>
 		</dependency>
 
-		<!-- CVE-2025-66614/CVE-2026-24734/CVE-2026-24733: 보안취약점 보완용 직접 주입 -->
+		<!-- CVE-2025-48924/CVE-2025-66614/CVE-2026-24734/CVE-2026-24733: 보안취약점 보완용 직접 주입 -->
 		<dependency>
 			<groupId>org.apache.tomcat</groupId>
 			<artifactId>tomcat-annotations-api</artifactId>
@@ -312,13 +303,6 @@
 		<dependency>
 			<groupId>org.apache.tomcat.embed</groupId>
 			<artifactId>tomcat-embed-websocket</artifactId>
-			<version>${tomcat-embed.version}</version>
-		</dependency>
-
-		<!-- CVE-2025-48924: 보안취약점 보완용 직접 주입 -->
-		<dependency>
-			<groupId>org.apache.tomcat</groupId>
-			<artifactId>tomcat-annotations-api</artifactId>
 			<version>${tomcat-embed.version}</version>
 		</dependency>
 
