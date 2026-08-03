@@ -2,6 +2,8 @@ package egovframework.com.cmm.web;
 
 import egovframework.com.cmm.service.EgovFileMngService;
 import egovframework.com.cmm.service.FileVO;
+import jakarta.servlet.http.HttpServletResponse;
+
 import org.egovframe.rte.fdl.crypto.EgovCryptoService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -63,5 +65,32 @@ class EgovImageProcessControllerTest {
         assertEquals("image/jpeg", response.getContentType());
         assertEquals(imageBytes.length, response.getContentLength());
         assertArrayEquals(imageBytes, response.getContentAsByteArray());
+    }
+
+    @DisplayName("삭제 처리되어 조회되지 않는 첨부는 404 를 응답한다.")
+    @Test
+    void getImageInfReturnsNotFoundWhenFileIsNotAvailable() throws Exception {
+        // given
+        EgovFileMngService fileService = mock(EgovFileMngService.class);
+        EgovCryptoService cryptoService = mock(EgovCryptoService.class);
+        EgovImageProcessController controller = new EgovImageProcessController();
+        ReflectionTestUtils.setField(controller, "fileService", fileService);
+        ReflectionTestUtils.setField(controller, "cryptoService", cryptoService);
+
+        byte[] encryptedFileId = "encrypted-file-id".getBytes(StandardCharsets.UTF_8);
+        String encodedFileId = Base64.getEncoder().encodeToString(encryptedFileId);
+        EgovFileDownloadController.ALGORITM_KEY = "test-key";
+        when(cryptoService.decrypt(eq(encryptedFileId), eq("test-key")))
+                .thenReturn("file-id".getBytes(StandardCharsets.UTF_8));
+        when(fileService.selectFileInf(any(FileVO.class))).thenReturn(null);
+
+        MockHttpServletResponse response = new MockHttpServletResponse();
+
+        // when
+        controller.getImageInf(null, new ModelMap(), Map.of("atchFileId", encodedFileId, "fileSn", "0"), response);
+
+        // then
+        assertEquals(HttpServletResponse.SC_NOT_FOUND, response.getStatus());
+        assertEquals(0, response.getContentAsByteArray().length);
     }
 }
