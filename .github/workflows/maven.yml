@@ -24,6 +24,7 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Build with Maven
-      run: mvn -B package --file pom.xml -Dmaven.test.skip=true
+      # 브라우저가 필요한 browser 태그 테스트는 러너에서 제외한다
+      run: mvn -B package --file pom.xml -DexcludedGroups=browser
     - name: list artifact
       run: ls -laR target
