@@ -72,12 +72,7 @@
 		<result property="frstRegisterId" column="FRST_REGISTER_ID"/>
 	</resultMap>
 
- 	<select id="selectMaxNttId" resultType="java.lang.Long">
- 		
-			SELECT NVL(MAX(NTT_ID),0)+1 AS NTT_ID  FROM LETTNBBS
- 		
- 	</select>
- 	
+
 	<insert id="insertBoardArticle" parameterType="egovframework.let.cop.bbs.domain.model.Board">
 		<selectKey keyProperty="nttNo" resultType="java.lang.Long"  order="BEFORE">
 			SELECT NVL(MAX(SORT_ORDR),0)+1 AS NTT_NO  FROM LETTNBBS
