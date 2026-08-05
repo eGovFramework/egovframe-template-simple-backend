@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -15,6 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@Tag("browser")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 class TestEgovLoginApiControllerSelenium {
 
