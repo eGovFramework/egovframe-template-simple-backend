@@ -4,10 +4,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,13 +18,24 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+//@EnabledOnOs(OS.LINUX)
+//@EnabledOnOs(OS.MAC)
+//@EnabledOnOs(OS.WINDOWS)
 class TestEgovLoginApiControllerSelenium {
 
 	WebDriver driver;
 
 	@BeforeEach
 	public void setup() {
-		driver = new ChromeDriver();
+		try {
+			driver = new ChromeDriver();
+//			driver = new EdgeDriver();
+//			driver = new FirefoxDriver();
+//			driver = new InternetExplorerDriver();
+//			driver = new SafariDriver();
+		} catch (WebDriverException e) {
+			Assumptions.abort("WebDriver를 실행할 수 없어 테스트를 건너뜁니다.");
+		}
 	}
 
 	@AfterEach
