@@ -3,7 +3,7 @@ package egovframework.com.config;
 import jakarta.annotation.PostConstruct;
 import javax.sql.DataSource;
 
-import org.apache.commons.dbcp2.BasicDataSource;
+import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
@@ -70,15 +70,16 @@ public class EgovConfigAppDatasource {
 	}
 
 	/**
-	 * @return [dataSource 설정] basicDataSource 설정
+	 * @return [dataSource 설정] HikariDataSource 설정
 	 */
-	private DataSource basicDataSource() {
-		BasicDataSource basicDataSource = new BasicDataSource();
-		basicDataSource.setDriverClassName(className);
-		basicDataSource.setUrl(url);
-		basicDataSource.setUsername(userName);
-		basicDataSource.setPassword(password);
-		return basicDataSource;
+	private DataSource hikariDataSource() {
+		HikariDataSource hikariDataSource = new HikariDataSource();
+		hikariDataSource.setDriverClassName(className);
+		hikariDataSource.setJdbcUrl(url);
+		hikariDataSource.setUsername(userName);
+		hikariDataSource.setPassword(password);
+		hikariDataSource.setMaximumPoolSize(10);
+		return hikariDataSource;
 	}
 
 	/**
@@ -89,7 +90,7 @@ public class EgovConfigAppDatasource {
 		if ("hsql".equals(dbType)) {
 			return dataSourceHSQL();
 		} else {
-			return basicDataSource();
+			return hikariDataSource();
 		}
 	}
 }

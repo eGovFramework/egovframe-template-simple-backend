@@ -37,6 +37,7 @@
 		<tomcat-embed.version>10.1.52</tomcat-embed.version>
 		<commons-beanutils.version>1.11.0</commons-beanutils.version>
 		<commons-lang3.version>3.18.0</commons-lang3.version>
+		<hikaricp.version>6.3.3</hikaricp.version>
 	</properties>
 
 	<repositories>
@@ -187,8 +188,9 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-dbcp2</artifactId>
+			<groupId>com.zaxxer</groupId>
+			<artifactId>HikariCP</artifactId>
+			<version>${hikaricp.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>
