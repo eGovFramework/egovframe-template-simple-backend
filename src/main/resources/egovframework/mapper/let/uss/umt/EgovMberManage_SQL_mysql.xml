@@ -146,7 +146,7 @@
                 , #{mberFxnum}
                 , #{mberEmailAdres}
                 , #{middleTelno}
-                , sysdate()
+                , NOW()
         )
     </insert>
     
