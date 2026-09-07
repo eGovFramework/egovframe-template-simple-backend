@@ -198,7 +198,7 @@ java -jar <jar파일명> --spring.profiles.active=<profile명>
 | Aspect 설정                      | [Docs/context-aspect.md](Docs/context-aspect.md)                                       | @EnableAspectJAutoProxy로 프록시 기반 AOP 활성화 및 AOP 개념·옵션 요약                         |
 | context-aspect 설정 변환            | [Docs/context-aspect-convert.md](Docs/context-aspect-convert.md)                       | 예외 처리 AOP(context-aspect.xml) 를 JavaConfig로 변환하는 방법(Handler/패턴/매니저 등록)         |
 | context-common-convert 설정 변환   | [Docs/context-common-convert.md](Docs/context-common-convert.md)                       | 컴포넌트 스캔·메시지소스 등 공통 Bean을 context-common.xml에서 JavaConfig로 이전                   |
-| context-datasource.xml 설정 변환   | [Docs/context-datasource-convert.md](Docs/context-datasource-convert.md)               | HSQL 내장 DB·DBCP BasicDataSource 등 데이터소스 설정을 JavaConfig로 변환                     |
+| 데이터소스 설정 (JavaConfig)       | [Docs/context-datasource-convert.md](Docs/context-datasource-convert.md)               | 내장 HSQL 및 외부 DB HikariCP 설정                                                    |
 | [참고] Context Hierarchy(확인 필요)  | [Docs/context-hierarchy.md](Docs/context-hierarchy.md)                                 | Root/Servlet WebApplicationContext 계층 구조와 역할·로딩 방식 정리                          |
 | context-idgen.xml 설정 변환        | [Docs/context-idgen-convert.md](Docs/context-idgen-convert.md)                         | 테이블 기반 ID 생성기(EgovTableIdGnrServiceImpl) 전략·blockSize·관리 테이블 설정 변환             |
 | context-mapper.xml 설정 변환       | [Docs/context-mapper-convert.md](Docs/context-mapper-convert.md)                       | MyBatis SqlSessionFactory/매퍼·LobHandler 설정을 XML→JavaConfig로 이전                 |

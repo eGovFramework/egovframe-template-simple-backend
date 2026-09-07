@@ -1,103 +1,37 @@
-# context-datasource.xml  설정 변환
+# 데이터소스 설정 (JavaConfig)
 
-> 데이터 소스관련 설정 사항들 다루고 있음
+데이터소스는 [EgovConfigAppDatasource.java](../src/main/java/egovframework/com/config/EgovConfigAppDatasource.java)에서 구성합니다. [application.properties](../src/main/resources/application.properties)의 `Globals.DbType`으로 사용할 DB를 선택합니다.
 
+| `Globals.DbType` | 구성 방식 |
+| --- | --- |
+| `hsql` (기본값) | 내장 HSQL DB |
+| `hsql` 이외의 값 | DB별 접속 설정을 사용하는 HikariCP |
 
+## 내장 HSQL DB
 
-내장 DB 사용시
+`EmbeddedDatabaseBuilder`로 DB를 생성하고 `classpath:/db/shtdb.sql`로 초기화합니다. 이때 `Globals.hsql.Url` 등의 외부 접속 설정은 사용하지 않습니다.
 
-<context-datasource.xml>
+## 외부 DB (HikariCP)
 
-```xml
-<jdbc:embedded-database id="dataSource-hsql" type="HSQL">
-    <jdbc:script location= "classpath:/db/shtdb.sql"/>
-</jdbc:embedded-database>
-```
+`Globals.DbType`에 지정한 DB의 접속 정보를 읽어 `HikariDataSource`를 구성합니다. 예를 들어 `mysql`을 지정하면 다음 설정을 사용합니다.
 
-<EgovConfigAppDatasource.class>
+| 설정 키 | 용도 |
+| --- | --- |
+| `Globals.mysql.DriverClassName` | JDBC 드라이버 클래스 |
+| `Globals.mysql.Url` | JDBC 접속 URL |
+| `Globals.mysql.UserName` | DB 사용자명 |
+| `Globals.mysql.Password` | DB 비밀번호 |
 
-```java
-private DataSource dataSourceHSQL() {
-    return new EmbeddedDatabaseBuilder()
-        .setType(EmbeddedDatabaseType.HSQL)
-        .setScriptEncoding("UTF8")
-        .addScript("classpath:/db/shtdb.sql")
-        //			.addScript("classpath:/otherpath/other.sql")
-        .build();
-}
-```
-
-
-
-
-다른 DB 사용시
-
-<context-datasource.xml>
-
-```xml
-<!-- mysql -->
-<bean id="dataSource-mysql" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
-    <property name="driverClassName" value="${Globals.DriverClassName}"/>
-    <property name="url" value="${Globals.Url}" />
-    <property name="username" value="${Globals.UserName}"/>
-    <property name="password" value="${Globals.Password}"/>
-</bean>
-
-<!-- Oracle -->
-<bean id="dataSource-oracle" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
-    <property name="driverClassName" value="${Globals.DriverClassName}"/>
-    <property name="url" value="${Globals.Url}" />
-    <property name="username" value="${Globals.UserName}"/>
-    <property name="password" value="${Globals.Password}"/>
-</bean>
-
-<!-- Altibase -->
-<bean id="dataSource-altibase" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
-    <property name="driverClassName" value="${Globals.DriverClassName}"/>
-    <property name="url" value="${Globals.Url}" />
-    <property name="username" value="${Globals.UserName}"/>
-    <property name="password" value="${Globals.Password}"/>
-</bean>
-
-<!-- Tibero -->
-<bean id="dataSource-tibero" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
-    <property name="driverClassName" value="${Globals.DriverClassName}"/>
-    <property name="url" value="${Globals.Url}" />
-    <property name="username" value="${Globals.UserName}"/>
-    <property name="password" value="${Globals.Password}"/>
-</bean>
-
-<!-- cubrid -->
-<bean id="dataSource-cubrid" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
-    <property name="driverClassName" value="${Globals.DriverClassName}"/>
-    <property name="url" value="${Globals.Url}" />
-    <property name="username" value="${Globals.UserName}"/>
-    <property name="password" value="${Globals.Password}"/>
-</bean>
-```
-
-<EgovConfigAppDatasource.class>
+다음은 접속 정보를 적용하는 메서드입니다. 최대 커넥션 풀 크기는 `10`으로 설정되어 있습니다.
 
 ```java
-
-@PostConstruct
-void init() {
-    dbType = env.getProperty("Globals.DbType");
-    //Exception 처리 필요
-    className = env.getProperty("Globals." + dbType + ".DriverClassName");
-    url = env.getProperty("Globals." + dbType + ".Url");
-    userName = env.getProperty("Globals." + dbType + ".UserName");
-    password = env.getProperty("Globals." + dbType + ".Password");
-}
-
-......
-
-private DataSource basicDataSource() {
-    BasicDataSource basicDataSource = new BasicDataSource();
-    basicDataSource.setDriverClassName(className);
-    basicDataSource.setUrl(url);
-    basicDataSource.setUsername(userName);
-    basicDataSource.setPassword(password);
-    return basicDataSource;
+private DataSource hikariDataSource() {
+    HikariDataSource hikariDataSource = new HikariDataSource();
+    hikariDataSource.setDriverClassName(className);
+    hikariDataSource.setJdbcUrl(url);
+    hikariDataSource.setUsername(userName);
+    hikariDataSource.setPassword(password);
+    hikariDataSource.setMaximumPoolSize(10);
+    return hikariDataSource;
 }
 ```
