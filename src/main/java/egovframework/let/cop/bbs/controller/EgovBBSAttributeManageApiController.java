@@ -184,7 +184,7 @@ public class EgovBBSAttributeManageApiController {
 		bbsAttributeInsertRequestDTO.setFrstRegisterId(loginVO.getUniqId());
 		bbsAttributeInsertRequestDTO.setUseAt("Y");
 		bbsAttributeInsertRequestDTO.setTrgetId("SYSTEMDEFAULT_REGIST");
-		bbsAttributeInsertRequestDTO.setPosblAtchFileSize(propertyService.getString("posblAtchFileSize"));
+		bbsAttributeInsertRequestDTO.setPosblAtchFileSize(propertyService.getString("Globals.posblAtchFileSize"));
 
 		bbsAttrbService.insertBBSMastetInf(bbsAttributeInsertRequestDTO);
 
@@ -265,7 +265,7 @@ public class EgovBBSAttributeManageApiController {
 		}
 
 		bbsAttributeUpdateRequestDTO.setLastUpdusrId(loginVO.getUniqId());
-		bbsAttributeUpdateRequestDTO.setPosblAtchFileSize(propertyService.getString("posblAtchFileSize"));
+		bbsAttributeUpdateRequestDTO.setPosblAtchFileSize(propertyService.getString("Globals.posblAtchFileSize"));
 		bbsAttrbService.updateBBSMasterInf(bbsAttributeUpdateRequestDTO);
 
 		return IntermediateResultVO.success(null);
