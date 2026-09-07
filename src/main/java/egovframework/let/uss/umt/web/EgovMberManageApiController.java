@@ -602,7 +602,6 @@ public class EgovMberManageApiController {
 	@GetMapping("/etc/member_checkid/{checkid}")
 	public ResultVO checkIdDplct(@PathVariable("checkid") String checkId) throws Exception {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		checkId = new String(checkId.getBytes("ISO-8859-1"), "UTF-8");
 
 		if (checkId == null || checkId.equals("")) {
 			return resultVoHelper.buildFromMap(resultMap, ResponseCode.INPUT_CHECK_ERROR);
