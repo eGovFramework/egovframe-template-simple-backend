@@ -25,16 +25,27 @@
 <EgovConfigAppProperties.class>
 
 ```java
+@Value("${Globals.fileStorePath}")
+private String fileStorePath;
+@Value("${Globals.addedOptions}")
+private String addedOptions;
+@Value("${Globals.pageUnit}")
+private String pageUnit;
+@Value("${Globals.pageSize}")
+private String pageSize;
+@Value("${Globals.posblAtchFileSize}")
+private String posblAtchFileSize;
+
 @Bean(destroyMethod = "destroy")
-public EgovPropertyServiceImpl propertiesService() {
+EgovPropertyServiceImpl propertiesService() {
     EgovPropertyServiceImpl egovPropertyServiceImpl = new EgovPropertyServiceImpl();
 
     Map<String, String> properties = new HashMap<String, String>();
-    properties.put("pageUnit", "10");
-    properties.put("pageSize", "10");
-    properties.put("posblAtchFileSize", "5242880");
-    properties.put("Globals.fileStorePath", "/user/file/sht/");
-    properties.put("Globals.addedOptions", "false");
+    properties.put("Globals.pageUnit", pageUnit);
+    properties.put("Globals.pageSize", pageSize);
+    properties.put("Globals.posblAtchFileSize", posblAtchFileSize);
+    properties.put("Globals.fileStorePath", fileStorePath);
+    properties.put("Globals.addedOptions", addedOptions);
 
     egovPropertyServiceImpl.setProperties(properties);
     return egovPropertyServiceImpl;

@@ -42,7 +42,7 @@
 
 ### 게시판
 - [LETTNBBS (게시물)](#lettnbbs-게시물)
-- [LETTNBBSMASTER (게시물 마스터)](#lettnbbsmaster-게시판-마스터)
+- [LETTNBBSMASTER (게시판 마스터)](#lettnbbsmaster-게시판-마스터)
 - [LETTNBBSMASTEROPTN (게시판 옵션)](#lettnbbsmasteroptn-게시판-옵션)
 - [LETTNBBSUSE (게시판 사용대상)](#lettnbbsuse-게시판-사용대상)
 

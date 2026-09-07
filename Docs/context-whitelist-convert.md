@@ -36,7 +36,7 @@ white list를 등록하는 설정이다.
 
 ```java
 @Bean
-	public List<String> egovPageLinkWhitelist() {
+	List<String> egovPageLinkWhitelist() {
 		List<String> whiteList = new ArrayList<String>();
 		whiteList.add("main/inc/EgovIncHeader");
 		whiteList.add("main/inc/EgovIncTopnav");

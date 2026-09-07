@@ -1,13 +1,16 @@
 # JavaConfig 변환
 
 ## 1. web.xml 변환
-기존의 web.xml에서 설정을 변환하여 EgovWebApplicationInitializer 에서 설정
+
+Spring Boot 에서는 `web.xml` / `WebApplicationInitializer` 를 직접 작성하지 않는다(Boot 가 자동 구성).
+애플리케이션 기동과 실행환경(프로파일) 초기화는 다음 클래스가 담당한다.
 
 ```
-src/main/java/egovframework/com/config/EgovWebApplicationInitializer.java
+src/main/java/egovframework/EgovBootApplication.java → @SpringBootApplication 진입점
+src/main/java/egovframework/com/config/EgovWebServletContextListener.java → spring.profiles.active 설정 리스너
 ```
 
-- [WebApplicationInitial 변환 방법](./WebApplicationInitializer-convert.md)
+- [web.xml → JavaConfig 변환 및 Boot 방식](./WebApplicationInitializer-convert.md)
 
 
 

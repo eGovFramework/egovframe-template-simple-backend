@@ -167,7 +167,7 @@ mvn spring-boot:run
 
 ### 1. [Java Config 변환](./Docs/java-config-convert.md)
 
-#### 1) web.xml을 WebApplicationInitializer 구현체로 변환
+#### 1) web.xml 설정 → Spring Boot 이용 (WebApplicationInitializer 불필요)
 
 #### 2) context-\*.xml 파일을 @Configuration 클래스로 변환
 
@@ -204,10 +204,10 @@ java -jar <jar파일명> --spring.profiles.active=<profile명>
 | context-mapper.xml 설정 변환       | [Docs/context-mapper-convert.md](Docs/context-mapper-convert.md)                       | MyBatis SqlSessionFactory/매퍼·LobHandler 설정을 XML→JavaConfig로 이전                 |
 | context-properties.xml  설정 변환  | [Docs/context-properties-convert.md](Docs/context-properties-convert.md)               | EgovPropertyService에 전역 프로퍼티(pageUnit·fileStorePath 등) 등록(JavaConfig)          |
 | context-transaction.xml  설정 변환 | [Docs/context-transaction-convert.md](Docs/context-transaction-convert.md)             | DataSourceTransactionManager·TransactionInterceptor 기반 트랜잭션 AOP 설정(JavaConfig) |
-| context-validator.xml  설정 변환   | [Docs/context-validator-convert.md](Docs/context-validator-convert.md)                 | Commons Validator 룰 파일 로딩과 BeanValidator/Factory 설정을 JavaConfig로 변환            |
+| context-validator.xml  설정 변환   | [Docs/context-validator-convert.md](Docs/context-validator-convert.md)                 | Commons Validator(XML) 변환의 일반적 방식과, 이 프로젝트가 실제 쓰는 JSR-303/Jakarta Bean Validation 정리            |
 | context-whitelist.xml  설정 변환   | [Docs/context-whitelist-convert.md](Docs/context-whitelist-convert.md)                 | 페이지 링크 화이트리스트를 util:list → List<String> Bean(JavaConfig)으로 전환                  |
 | [컨트리뷰터 참고 권장] DB 스키마 가이드       | [Docs/db-schema-guide.md](Docs/db-schema-guide.md)                                     | shtdb.sql 기반 테이블 용도·컬럼(한글)·제약·기본값을 정리한 DB 스키마 가이드                              |
 | JavaConfig 변환                  | [Docs/java-config-convert.md](Docs/java-config-convert.md)                             | web.xml 및 context-*.xml 전반을 JavaConfig로 옮기는 전체 변환 가이드(연결 문서 포함)                |
 | Servlet 개념                     | [Docs/servlet.md](Docs/servlet.md)                                                     | 서블릿/CGI 개념과 요청→서비스→응답 라이프사이클, 매핑 원리 요약                                         |
 | [참고] 순수 자바 클래스를 이용한 시동이 가능한 이유 | [Docs/WebApplicationInitializer.md](Docs/WebApplicationInitializer.md)                 | Servlet 3.x WebApplicationInitializer와 Spring의 순수 자바 부트스트랩 원리                  |
-| WebApplicationInitializer 변환   | [Docs/WebApplicationInitializer-convert.md](Docs/WebApplicationInitializer-convert.md) | web.xml의 리스너·컨텍스트·디스패처 설정을 EgovWebApplicationInitializer(JavaConfig)로 변환       |
+| WebApplicationInitializer 변환   | [Docs/WebApplicationInitializer-convert.md](Docs/WebApplicationInitializer-convert.md) | web.xml 리스너·컨텍스트·디스패처 설정의 일반적 변환 방식과, Spring Boot에서의 자동 구성 정리       |

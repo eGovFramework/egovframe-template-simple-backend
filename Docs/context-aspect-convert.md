@@ -15,17 +15,17 @@
 <bean id="otherHandler" class="egovframework.com.cmm.EgovComOthersExcepHndlr" /> 
 ```
 
-<ContextAppAspect.class>
+<EgovConfigAppAspect.class>
 
 ```java
 @Bean
-public EgovComExcepHndlr egovHandler() {
+EgovComExcepHndlr egovHandler() {
 	EgovComExcepHndlr egovComExcepHndlr = new EgovComExcepHndlr();
 	return egovComExcepHndlr;
 }
 
 @Bean
-public EgovComOthersExcepHndlr otherHandler() {
+EgovComOthersExcepHndlr otherHandler() {
 	EgovComOthersExcepHndlr egovComOthersExcepHndlr = new EgovComOthersExcepHndlr();
 	return egovComOthersExcepHndlr;
 }
@@ -55,11 +55,11 @@ public EgovComOthersExcepHndlr otherHandler() {
 </bean>
 ```
 
-<ContextAppAspect.class>
+<EgovConfigAppAspect.class>
 
 ```java
 @Bean
-public DefaultExceptionHandleManager defaultExceptionHandleManager(ExceptionHandler egovHandler) {
+DefaultExceptionHandleManager defaultExceptionHandleManager(ExceptionHandler egovHandler, AntPathMatcher antPathMatcher) {
     DefaultExceptionHandleManager defaultExceptionHandleManager = new DefaultExceptionHandleManager();
     defaultExceptionHandleManager.setReqExpMatcher(antPathMatcher);
     defaultExceptionHandleManager.setPatterns(new String[] {"**service.impl.*"});
@@ -87,11 +87,11 @@ public DefaultExceptionHandleManager defaultExceptionHandleManager(ExceptionHand
 
 
 
-<ContextAppAspect.class>
+<EgovConfigAppAspect.class>
 
 ```java
 @Bean
-public ExceptionTransfer exceptionTransfer(
+ExceptionTransfer exceptionTransfer(
     @Qualifier("defaultExceptionHandleManager") DefaultExceptionHandleManager defaultExceptionHandleManager,
     @Qualifier("otherExceptionHandleManager") DefaultExceptionHandleManager otherExceptionHandleManager) {
     

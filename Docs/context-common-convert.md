@@ -75,7 +75,6 @@ public EgovMessageSource egovMessageSource() {
 @Bean
 public ReloadableResourceBundleMessageSource messageSource() {
     ReloadableResourceBundleMessageSource reloadableResourceBundleMessageSource = new ReloadableResourceBundleMessageSource();
-    String classpath = System.getProperty("java.class.path");
     reloadableResourceBundleMessageSource.setBasenames(
         "classpath:/egovframework/message/com/message-common",
         "classpath:/org/egovframe/rte/fdl/idgnr/messages/idgnr",
@@ -141,11 +140,19 @@ multipart Resolver 설정
 <EgovConfigAppCommon.class>
 
 ```java
+// Spring 6 에서 CommonsMultipartResolver 가 제거되었다.
+// 확장자 화이트리스트(Globals.fileUpload.Extensions)를 받는 StandardServletMultipartResolver 기반
+// EgovMultipartResolver 로 등록한다. 파일 크기 제한은 application.properties 의
+// spring.servlet.multipart.max-file-size / max-request-size 로 설정한다.
 @Bean
-public CommonsMultipartResolver springRegularCommonsMultipartResolver() {
-    CommonsMultipartResolver commonsMultipartResolver = new CommonsMultipartResolver();
-    commonsMultipartResolver.setMaxUploadSize(100000000);
-    commonsMultipartResolver.setMaxInMemorySize(100000000);
-    return commonsMultipartResolver;
+EgovMultipartResolver localMultiCommonsMultipartResolver(
+        @Value("${Globals.fileUpload.Extensions}") String whiteListFileUploadExtensions) {
+    return new EgovMultipartResolver(whiteListFileUploadExtensions);
+}
+
+@Bean
+MultipartResolver multipartResolver(
+        @Value("${Globals.fileUpload.Extensions}") String whiteListFileUploadExtensions) {
+    return localMultiCommonsMultipartResolver(whiteListFileUploadExtensions);
 }
 ```
