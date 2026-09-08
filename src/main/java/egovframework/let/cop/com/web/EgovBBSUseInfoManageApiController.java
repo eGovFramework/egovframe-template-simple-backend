@@ -264,6 +264,7 @@ public class EgovBBSUseInfoManageApiController {
 	) throws Exception {
 		
 		bdUseVO.setBbsId(bbsId);
+		bdUseVO.setLastUpdusrId(loginVO.getUniqId());
 		bbsUseService.updateBBSUseInf(bdUseVO);
 
 		return resultVoHelper.buildFromMap(new HashMap<String, Object>(), ResponseCode.SUCCESS);
