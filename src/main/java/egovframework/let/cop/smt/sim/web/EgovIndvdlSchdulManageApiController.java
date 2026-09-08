@@ -213,7 +213,7 @@ public class EgovIndvdlSchdulManageApiController {
 	 */
     @Operation(
 			summary = "일정 상세조회",
-			description = "일정 목록을 상세조회",
+			description = "일정 목록을 상세조회. 대상이 없으면 ResultVO의 resultCode 404를 반환",
 			tags = {"EgovIndvdlSchdulManageApiController"}
 	)
 	@ApiResponses(value = {
@@ -229,6 +229,13 @@ public class EgovIndvdlSchdulManageApiController {
 
 		IndvdlSchdulManageVO indvdlSchdulManageVO = new IndvdlSchdulManageVO();
 		indvdlSchdulManageVO.setSchdulId(schdulId);
+
+		IndvdlSchdulManageVO scheduleDetail = egovIndvdlSchdulManageService
+			.selectIndvdlSchdulManageDetail(indvdlSchdulManageVO);
+		if (scheduleDetail == null) {
+			return resultVoHelper.buildFromMap(resultMap, ResponseCode.NOT_FOUND);
+		}
+		resultMap.put("scheduleDetail", scheduleDetail);
 
 		//일정시작일자(시)
 		resultMap.put("schdulBgndeHH", getTimeHH());
@@ -252,10 +259,6 @@ public class EgovIndvdlSchdulManageApiController {
 		voComCode.setCodeId("COM031");
 		resultMap.put("reptitSeCode", cmmUseService.selectCmmCodeDetail(voComCode));
 
-		IndvdlSchdulManageVO scheduleDetail = egovIndvdlSchdulManageService
-			.selectIndvdlSchdulManageDetail(indvdlSchdulManageVO);
-		resultMap.put("scheduleDetail", scheduleDetail);
-		
 		// 첨부파일 확인
 		if (scheduleDetail.getAtchFileId() != null && !scheduleDetail.getAtchFileId().isEmpty()) {
 			FileVO fileVO = new FileVO();
