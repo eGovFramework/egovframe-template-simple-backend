@@ -105,6 +105,9 @@ public class EgovFileMngUtil {
 	FileVO fvo;
 	long maxFileSize = propertyService.getLong("Globals.posblAtchFileSize");
 
+	// 뒤의 파일이 검증에 실패해도 앞의 파일이 저장되지 않도록 먼저 모두 검증한다.
+	validateFiles(files, maxFileSize);
+
 	while (itr.hasNext()) {
 	    Entry<String, MultipartFile> entry = itr.next();
 
@@ -128,22 +131,9 @@ public class EgovFileMngUtil {
 	    }
 	    ////------------------------------------
 	    
-		int index = orginFileName.lastIndexOf(".");
-	    if (index < 0) {
-	        throw new EgovBizException("확장자가 없는 파일은 업로드할 수 없습니다.");
-	    }
+	    int index = orginFileName.lastIndexOf(".");
 	    String fileExt = orginFileName.substring(index + 1).toLowerCase();
-
-	    // 확장자 화이트리스트 검증
-	    if (!allowedExtensions().contains(fileExt)) {
-	        throw new EgovBizException("허용되지 않는 파일 확장자입니다: " + fileExt);
-	    }
-
-	    // 파일 크기 검증
 	    long _size = file.getSize();
-	    if (_size > maxFileSize) {
-			throw new EgovBizException("파일 크기가 허용 한도(" + maxFileSize + "바이트)를 초과했습니다.");
-	    }
 
 	    // 파일명 정규화 (경로 탈출·제어문자 제거)
 	    String safeOriginFileName = orginFileName.replaceAll("[\\p{Cntrl}\\\\/:*?\"<>|]", "_");
@@ -179,6 +169,27 @@ public class EgovFileMngUtil {
 	}
 
 	return result;
+    }
+
+    private void validateFiles(Map<String, MultipartFile> files, long maxFileSize) throws EgovBizException {
+        for (MultipartFile file : files.values()) {
+            String originalFileName = file.getOriginalFilename();
+            if (originalFileName == null || originalFileName.isEmpty()) {
+                continue;
+            }
+
+            int index = originalFileName.lastIndexOf(".");
+            if (index < 0) {
+                throw new EgovBizException("확장자가 없는 파일은 업로드할 수 없습니다.");
+            }
+            String fileExt = originalFileName.substring(index + 1).toLowerCase();
+            if (!allowedExtensions().contains(fileExt)) {
+                throw new EgovBizException("허용되지 않는 파일 확장자입니다: " + fileExt);
+            }
+            if (file.getSize() > maxFileSize) {
+                throw new EgovBizException("파일 크기가 허용 한도(" + maxFileSize + "바이트)를 초과했습니다.");
+            }
+        }
     }
 
 }
