@@ -111,6 +111,12 @@ public class EgovSiteManagerApiController {
 
 		String old_password = param.get("old_password");
 		String new_password = param.get("new_password");
+		if (new_password == null || new_password.length() < 6) {
+			resultVO.setResultCode(ResponseCode.INPUT_CHECK_ERROR.getCode());
+			resultVO.setResultMessage("신규 암호는 6자 이상이어야 합니다.");
+			return resultVO;
+		}
+
 		String login_id = user.getId();
 		Map<String,Object> resultMap = new HashMap<String,Object>();
 		// 저장 형식 = 이중해시. old/new 모두 동일 형식으로 비교/저장.
