@@ -205,9 +205,8 @@ public class EgovFileDownloadController {
 			String streFileNm = EgovWebUtil.filePathBlackList(fvo.getStreFileNm());
 
 			File uFile = new File(fileStreCours, streFileNm);
-			long fSize = uFile.length();
 
-			if (fSize > 0) {
+			if (uFile.isFile()) {
 				//String mimetype = "application/x-msdownload";
 				String mimetype = "application/x-stuff";
 
