@@ -50,6 +50,12 @@ public class BbsManageDetailItemResponseDTO extends BbsDetailResponseDTO {
     @Schema(description = "부모글번호", example = "0")
     private String parnts;
 
+    @Schema(description = "게시물 정렬순서", example = "1")
+    private long sortOrdr;
+
+    @Schema(description = "답글 깊이", example = "0")
+    private String replyLc;
+
     @Schema(description = "게시물 첨부파일 아이디", example = "FILE_000000000000001")
     private String atchFileId;
 
@@ -71,6 +77,8 @@ public class BbsManageDetailItemResponseDTO extends BbsDetailResponseDTO {
                 .frstRegisterPnttm(vo.getFrstRegisterPnttm())
                 .inqireCo(vo.getInqireCo())
                 .parnts(vo.getParnts())
+                .sortOrdr(vo.getSortOrdr())
+                .replyLc(vo.getReplyLc())
                 .atchFileId(vo.getAtchFileId())
                 .build();
     }
