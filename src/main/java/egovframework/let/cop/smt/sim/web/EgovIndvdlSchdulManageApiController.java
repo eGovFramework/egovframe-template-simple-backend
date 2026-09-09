@@ -429,7 +429,7 @@ public class EgovIndvdlSchdulManageApiController {
 		int iNowMonth = calNow.get(Calendar.MONTH);
 		int iNowDay = calNow.get(Calendar.DATE);
 
-		if (strYear != null) {
+		if (strYear != null && strMonth != null && strDay != null) {
 			iNowYear = Integer.parseInt(strYear);
 			iNowMonth = Integer.parseInt(strMonth);
 			iNowDay = Integer.parseInt(strDay);
@@ -502,7 +502,7 @@ public class EgovIndvdlSchdulManageApiController {
 		int iNowMonth = calNow.get(Calendar.MONTH);
 		int iNowDate = calNow.get(Calendar.DATE);
 
-		if (strYear != null) {
+		if (strYear != null && strMonth != null && strDate != null) {
 			iNowYear = Integer.parseInt(strYear);
 			iNowMonth = Integer.parseInt(strMonth);
 			iNowDate = Integer.parseInt(strDate);
