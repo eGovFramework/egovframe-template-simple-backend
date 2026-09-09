@@ -125,6 +125,14 @@ public class EgovBBSManageServiceImpl extends EgovAbstractServiceImpl implements
 		}
 
 		BoardVO vo = bbsMngDAO.selectBoardArticle(boardVO);
+
+		// 조회 결과가 없으면 null 을 돌려준다. 호출부의 소유권 검증(article == null)이
+		// 이 값을 전제로 작성돼 있는데, 그 앞에서 DTO 변환이 NullPointerException 을 내
+		// 지금까지 그 분기에 도달하지 못했다.
+		if (vo == null) {
+			return null;
+		}
+
 		BbsManageDetailResponseDTO bbsManageDetailResponseDTO;
 
 		// 2021-06-01 신용호 추가

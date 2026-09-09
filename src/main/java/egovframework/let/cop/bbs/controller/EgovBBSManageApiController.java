@@ -211,7 +211,14 @@ public class EgovBBSManageApiController {
 		//----------------------------
 		BbsFileAtchResponseDTO bbsFileAtchResponseDTO = bbsAttrbService.selectBBSMasterInf(bbsManageDetailBoardRequestDTO.getBbsId(), uniqId, BbsDetailRequestType.LIST);
 
-		BbsManageDetailResponseDTO bbsManageDetailResponseDTO = bbsMngService.selectBoardArticle(bbsManageDetailBoardRequestDTO)
+		BbsManageDetailResponseDTO article = bbsMngService.selectBoardArticle(bbsManageDetailBoardRequestDTO);
+		if (article == null) {
+			// 존재하지 않는 게시물이다. 회원 조회(EgovMberManageApiController)와 같이
+			// 결과를 비워서 돌려준다.
+			return IntermediateResultVO.success(null);
+		}
+
+		BbsManageDetailResponseDTO bbsManageDetailResponseDTO = article
 				.toBuilder()
 				.brdMstrVO(bbsFileAtchResponseDTO)
 				.sessionUniqId(uniqId)
