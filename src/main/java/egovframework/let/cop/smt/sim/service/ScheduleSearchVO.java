@@ -15,7 +15,7 @@ public class ScheduleSearchVO {
     @Schema(description = "조회 연도", example = "2025")
     private String year;
 
-    @Schema(description = "조회 월 (1~12)", example = "5")
+    @Schema(description = "조회 월 (0~11, 1월=0)", example = "4")
     private String month;
 
     @Schema(description = "조회 일 (1~31)", example = "7")
