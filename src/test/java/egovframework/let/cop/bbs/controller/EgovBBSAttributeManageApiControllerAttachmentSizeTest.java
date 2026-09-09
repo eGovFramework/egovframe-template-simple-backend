@@ -74,7 +74,7 @@ class EgovBBSAttributeManageApiControllerAttachmentSizeTest {
             request.setBbsTyCode("BBST01");
             request.setBbsAttrbCode("BBSA02");
 
-            IntermediateResultVO<?> result = controller.updateBBSMasterInf(request,
+            IntermediateResultVO<?> result = controller.updateBBSMasterInf("BBSMSTR_000000000001", request,
                     new BeanPropertyBindingResult(request, "request"), loginVO);
 
             ArgumentCaptor<BbsAttributeUpdateRequestDTO> captor =

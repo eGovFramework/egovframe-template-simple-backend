@@ -252,13 +252,15 @@ public class EgovBBSAttributeManageApiController {
 				        )),
 				})
 	@PutMapping(value ="/bbsMaster/{bbsId}")
-	public IntermediateResultVO<Object> updateBBSMasterInf(@Valid @RequestBody BbsAttributeUpdateRequestDTO bbsAttributeUpdateRequestDTO,
+	public IntermediateResultVO<Object> updateBBSMasterInf(@PathVariable("bbsId") String bbsId,
+										@Valid @RequestBody BbsAttributeUpdateRequestDTO bbsAttributeUpdateRequestDTO,
 										BindingResult bindingResult,
 										@Parameter(hidden = true) @AuthenticationPrincipal LoginVO loginVO
 										) throws Exception {
 
+		bbsAttributeUpdateRequestDTO.setBbsId(bbsId);
+
 		if (bindingResult.hasErrors()) {
-			String bbsId = bbsAttributeUpdateRequestDTO.getBbsId();
 			BbsFileAtchResponseDTO result = bbsAttrbService.selectBBSMasterInf(bbsId, null, BbsDetailRequestType.DETAIL);
 
 			return IntermediateResultVO.inputCheckError(result);
