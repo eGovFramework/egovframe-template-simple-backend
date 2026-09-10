@@ -354,7 +354,7 @@ public class EgovMberManageApiController {
 	 * @return resultVO
 	 * @throws Exception
 	 */
-	@Operation(summary = "사용자단에서 회원정보 수정용 상세조회화면", description = "사용자단에서 회원정보 수정을 위해 회원정보를 상세조회", security = {
+	@Operation(summary = "사용자단에서 회원정보 수정용 상세조회화면", description = "사용자단에서 회원정보 수정을 위해 회원정보를 상세조회. 대상이 없으면 resultCode 404를 반환", security = {
 			@SecurityRequirement(name = "Authorization") }, tags = { "EgovMberManageApiController" })
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "조회 성공"),
@@ -374,7 +374,7 @@ public class EgovMberManageApiController {
 
 		if (result == null) {
 			resultMap.put("resultMsg", "회원 정보를 찾을 수 없습니다.");
-			return resultVoHelper.buildFromMap(resultMap, ResponseCode.SAVE_ERROR);
+			return resultVoHelper.buildFromMap(resultMap, ResponseCode.NOT_FOUND);
 		}
 
 		ComDefaultCodeVO vo = new ComDefaultCodeVO();
