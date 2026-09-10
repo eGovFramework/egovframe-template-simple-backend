@@ -20,6 +20,7 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
@@ -51,8 +52,7 @@ class EgovImageProcessControllerTest {
 
         byte[] encryptedFileId = "encrypted-file-id".getBytes(StandardCharsets.UTF_8);
         String encodedFileId = Base64.getEncoder().encodeToString(encryptedFileId);
-        EgovFileDownloadController.ALGORITM_KEY = "test-key";
-        when(cryptoService.decrypt(eq(encryptedFileId), eq("test-key")))
+        when(cryptoService.decrypt(eq(encryptedFileId), eq(EgovFileDownloadController.ALGORITM_KEY)))
                 .thenReturn("file-id".getBytes(StandardCharsets.UTF_8));
         when(fileService.selectFileInf(any(FileVO.class))).thenReturn(fileInfo);
 
@@ -79,8 +79,7 @@ class EgovImageProcessControllerTest {
 
         byte[] encryptedFileId = "encrypted-file-id".getBytes(StandardCharsets.UTF_8);
         String encodedFileId = Base64.getEncoder().encodeToString(encryptedFileId);
-        EgovFileDownloadController.ALGORITM_KEY = "test-key";
-        when(cryptoService.decrypt(eq(encryptedFileId), eq("test-key")))
+        when(cryptoService.decrypt(eq(encryptedFileId), eq(EgovFileDownloadController.ALGORITM_KEY)))
                 .thenReturn("file-id".getBytes(StandardCharsets.UTF_8));
         when(fileService.selectFileInf(any(FileVO.class))).thenReturn(null);
 
@@ -91,6 +90,47 @@ class EgovImageProcessControllerTest {
 
         // then
         assertEquals(HttpServletResponse.SC_NOT_FOUND, response.getStatus());
+        assertEquals(0, response.getContentAsByteArray().length);
+    }
+
+    @DisplayName("첨부 정보가 있어도 실제 이미지 파일이 없으면 404를 응답한다.")
+    @Test
+    void getImageInfReturnsNotFoundWhenPhysicalFileIsMissing() throws Exception {
+        assertPhysicalFileNotFound("missing.jpg");
+    }
+
+    @DisplayName("이미지 저장 경로가 디렉터리이면 404를 응답한다.")
+    @Test
+    void getImageInfReturnsNotFoundWhenPathIsDirectory() throws Exception {
+        Files.createDirectory(temporaryDirectory.resolve("directory.jpg"));
+
+        assertPhysicalFileNotFound("directory.jpg");
+    }
+
+    private void assertPhysicalFileNotFound(String storedFileName) throws Exception {
+        EgovFileMngService fileService = mock(EgovFileMngService.class);
+        EgovCryptoService cryptoService = mock(EgovCryptoService.class);
+        EgovImageProcessController controller = new EgovImageProcessController();
+        ReflectionTestUtils.setField(controller, "fileService", fileService);
+        ReflectionTestUtils.setField(controller, "cryptoService", cryptoService);
+
+        FileVO fileInfo = new FileVO();
+        fileInfo.setFileStreCours(temporaryDirectory.toString());
+        fileInfo.setStreFileNm(storedFileName);
+        fileInfo.setFileExtsn("JPG");
+        when(fileService.selectFileInf(any(FileVO.class))).thenReturn(fileInfo);
+
+        byte[] encryptedFileId = "encrypted-file-id".getBytes(StandardCharsets.UTF_8);
+        when(cryptoService.decrypt(eq(encryptedFileId), eq(EgovFileDownloadController.ALGORITM_KEY)))
+                .thenReturn("file-id".getBytes(StandardCharsets.UTF_8));
+        Map<String, Object> parameters = Map.of(
+                "atchFileId", Base64.getEncoder().encodeToString(encryptedFileId), "fileSn", "0");
+        MockHttpServletResponse response = new MockHttpServletResponse();
+
+        controller.getImageInf(null, new ModelMap(), parameters, response);
+
+        assertEquals(HttpServletResponse.SC_NOT_FOUND, response.getStatus());
+        assertNull(response.getContentType());
         assertEquals(0, response.getContentAsByteArray().length);
     }
 }
