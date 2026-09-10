@@ -58,4 +58,12 @@ public class IntermediateResultVO<T> {
 		result.setResult(data);
 		return result;
 	}
+	
+	public static <T> IntermediateResultVO<T> notFound(T data) {
+		IntermediateResultVO<T> result = new IntermediateResultVO<>();
+		result.setResultCode(ResponseCode.NOT_FOUND.getCode());
+		result.setResultMessage(ResponseCode.NOT_FOUND.getMessage());
+		result.setResult(data);
+		return result;
+	}
 }

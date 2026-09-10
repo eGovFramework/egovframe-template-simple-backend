@@ -175,7 +175,7 @@ public class EgovBBSManageApiController {
 	 */
 	@Operation(
 			summary = "게시물 상세 조회",
-			description = "게시물에 대한 상세 정보를 조회",
+			description = "게시물에 대한 상세 정보를 조회. 대상이 없으면 resultCode 404를 반환",
 			tags = {"EgovBBSManageApiController"}
 	)
 	@ApiResponses(value = {
@@ -213,9 +213,8 @@ public class EgovBBSManageApiController {
 
 		BbsManageDetailResponseDTO article = bbsMngService.selectBoardArticle(bbsManageDetailBoardRequestDTO);
 		if (article == null) {
-			// 존재하지 않는 게시물이다. 회원 조회(EgovMberManageApiController)와 같이
-			// 결과를 비워서 돌려준다.
-			return IntermediateResultVO.success(null);
+			// 존재하지 않는 게시물일 경우 - 404를 반환한다.
+			return IntermediateResultVO.notFound(null);
 		}
 
 		BbsManageDetailResponseDTO bbsManageDetailResponseDTO = article

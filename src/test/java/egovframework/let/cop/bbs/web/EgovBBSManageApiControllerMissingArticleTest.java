@@ -1,6 +1,7 @@
 package egovframework.let.cop.bbs.web;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.junit.jupiter.api.DisplayName;
@@ -28,9 +29,10 @@ class EgovBBSManageApiControllerMissingArticleTest {
     private MockMvc mockMvc;
 
     @Test
-    @DisplayName("존재하지 않는 게시물 상세 조회가 서버 오류로 끝나지 않는다")
+    @DisplayName("존재하지 않는 게시물 상세 조회는 서버 오류 없이 resultCode 404 를 반환한다")
     void missingArticleDetailDoesNotReturnServerError() throws Exception {
         mockMvc.perform(get("/board/{bbsId}/{nttId}", SEEDED_BBS_ID, "99999999"))
-                .andExpect(status().is(org.springframework.http.HttpStatus.OK.value()));
+                .andExpect(status().is(org.springframework.http.HttpStatus.OK.value()))
+                .andExpect(jsonPath("$.resultCode").value(404));
     }
 }
