@@ -158,7 +158,7 @@
 					a.NTT_CN LIKE  '%' || #{searchWrd} || '%' 		
 			</if>
 			<if test="searchCnd == 2">AND
-					b.USER_NM LIKE '%' || #{searchWrd} || '%' 		
+					IFNULL(b.USER_NM, a.NTCR_NM) LIKE '%' || #{searchWrd} || '%'
 			</if>
 					
 			ORDER BY a.SORT_ORDR DESC, NTT_NO ASC
@@ -187,7 +187,7 @@
 					a.NTT_CN LIKE '%' || #{searchWrd} || '%' 		
 			</if>	
 			<if test="searchCnd == 2">AND
-					b.USER_NM LIKE '%' || #{searchWrd} || '%' 		
+					IFNULL(b.USER_NM, a.NTCR_NM) LIKE '%' || #{searchWrd} || '%'
 			</if>			
 	</select>	
  
