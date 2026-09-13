@@ -101,10 +101,8 @@ public class EgovMberManageServiceImpl extends EgovAbstractServiceImpl implement
 	 */
 	@Override
 	public void updateMber(MberManageVO mberManageVO) throws Exception {
-		//패스워드 암호화
-		if(mberManageVO.getPassword().isEmpty() || mberManageVO.getPassword().equals("")) {
-			//업데이트 시 암호가 공백이면 암호화 과정 건너띈다.
-		} else {
+		// 비밀번호를 입력한 경우에만 암호화한다.
+		if (mberManageVO.getPassword() != null && !mberManageVO.getPassword().isEmpty()) {
 			// 저장 형식 = 이중해시
 			String pass = EgovFileScrty.encryptPasswordTwice(mberManageVO.getPassword(), mberManageVO.getMberId());
 			mberManageVO.setPassword(pass);
