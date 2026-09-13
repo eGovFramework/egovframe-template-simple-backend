@@ -1,6 +1,10 @@
 package egovframework.let.cop.smt.sim.web;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.time.format.ResolverStyle;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Calendar;
@@ -65,6 +69,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Tag(name="EgovIndvdlSchdulManageApiController",description = "일정관리")
 public class EgovIndvdlSchdulManageApiController {
+	private static final DateTimeFormatter SCHEDULE_DATE_FORMAT = DateTimeFormatter
+			.ofPattern("uuuuMMddHHmmss").withResolverStyle(ResolverStyle.STRICT);
+
 	private final EgovIndvdlSchdulManageService egovIndvdlSchdulManageService;
 	private final EgovCmmUseService cmmUseService;
 	private final EgovFileMngService fileMngService;
@@ -173,7 +180,7 @@ public class EgovIndvdlSchdulManageApiController {
 		@Parameter(hidden = true) @AuthenticationPrincipal LoginVO loginVO
 	) throws Exception {
 
-		if (bindingResult.hasErrors()) {
+		if (bindingResult.hasErrors() || !isValidSchedulePeriod(indvdlSchdulManageVO)) {
 			return resultVoHelper.buildFromResultVO(new ResultVO(), ResponseCode.INPUT_CHECK_ERROR);
 		}
 
@@ -340,7 +347,7 @@ public class EgovIndvdlSchdulManageApiController {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 
 		indvdlSchdulManageVO.setSchdulId(schdulId);
-		if (bindingResult.hasErrors()) {
+		if (bindingResult.hasErrors() || !isValidSchedulePeriod(indvdlSchdulManageVO)) {
 			return resultVoHelper.buildFromMap(resultMap, ResponseCode.INPUT_CHECK_ERROR);
 		}
 
@@ -385,6 +392,21 @@ public class EgovIndvdlSchdulManageApiController {
 		egovIndvdlSchdulManageService.updateIndvdlSchdulManage(indvdlSchdulManageVO);
 
 		return resultVoHelper.buildFromMap(resultMap, ResponseCode.SUCCESS);
+	}
+
+	private boolean isValidSchedulePeriod(IndvdlSchdulManageVO schedule) {
+		String begin = schedule.getSchdulBgnde();
+		String end = schedule.getSchdulEndde();
+		if (begin == null || end == null || !begin.matches("[0-9]{14}") || !end.matches("[0-9]{14}")) {
+			return false;
+		}
+		try {
+			LocalDateTime beginDate = LocalDateTime.parse(begin, SCHEDULE_DATE_FORMAT);
+			LocalDateTime endDate = LocalDateTime.parse(end, SCHEDULE_DATE_FORMAT);
+			return beginDate.getYear() > 0 && endDate.getYear() > 0 && !beginDate.isAfter(endDate);
+		} catch (DateTimeParseException e) {
+			return false;
+		}
 	}
 
 	/**
