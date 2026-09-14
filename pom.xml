@@ -5,8 +5,8 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>egovframework</groupId>
 	<artifactId>egovframe-boot-simple-backend</artifactId>
+	<version>5.0.2</version>
 	<packaging>jar</packaging>
-	<version>5.0.0</version>
 	<name>egovframe-boot-simple-backend</name>
 	<url>http://www.egovframe.go.kr</url>
 
@@ -21,22 +21,16 @@
 	<parent>
 		<groupId>org.egovframe.boot</groupId>
 		<artifactId>egovframe-boot-starter-parent</artifactId>
-		<version>5.0.0</version>
+		<version>5.0.1</version>
 	</parent>
 
 	<properties>
 		<java.version>17</java.version>
 		<springdoc.openapi.ui.version>2.6.0</springdoc.openapi.ui.version>
 		<protobuf.java.version>3.25.5</protobuf.java.version>
-		<log4j2.version>2.25.3</log4j2.version>
-		<slf4j.version>2.0.17</slf4j.version>
-		<log4jdbc.version>1.2</log4jdbc.version>
 		<jjwt.version>0.12.6</jjwt.version>
 		<icu4j.version>77.1</icu4j.version>
-		<tomcat-embed.version>10.1.52</tomcat-embed.version>
-		<commons-beanutils.version>1.11.0</commons-beanutils.version>
-		<commons-lang3.version>3.18.0</commons-lang3.version>
-		<hikaricp.version>6.3.3</hikaricp.version>
+		<tomcat.version>10.1.59</tomcat.version>
 	</properties>
 
 	<repositories>
@@ -189,7 +183,6 @@
 		<dependency>
 			<groupId>com.zaxxer</groupId>
 			<artifactId>HikariCP</artifactId>
-			<version>${hikaricp.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>
@@ -231,29 +224,24 @@
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-core</artifactId>
-			<version>${log4j2.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-slf4j2-impl</artifactId>
-			<version>${log4j2.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>jcl-over-slf4j</artifactId>
-			<version>${slf4j.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>log4j-over-slf4j</artifactId>
-			<version>${slf4j.version}</version>
 		</dependency>
 
 		<!-- log4jdbc driver -->
 		<dependency>
 			<groupId>com.googlecode.log4jdbc</groupId>
 			<artifactId>log4jdbc</artifactId>
-			<version>${log4jdbc.version}</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>slf4j-api</artifactId>
@@ -279,41 +267,34 @@
 		<dependency>
 			<groupId>org.apache.tomcat</groupId>
 			<artifactId>tomcat-annotations-api</artifactId>
-			<version>${tomcat-embed.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.tomcat.embed</groupId>
 			<artifactId>tomcat-embed-core</artifactId>
-			<version>${tomcat-embed.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.tomcat.embed</groupId>
 			<artifactId>tomcat-embed-el</artifactId>
-			<version>${tomcat-embed.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.tomcat.embed</groupId>
 			<artifactId>tomcat-embed-jasper</artifactId>
-			<version>${tomcat-embed.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.tomcat.embed</groupId>
 			<artifactId>tomcat-embed-websocket</artifactId>
-			<version>${tomcat-embed.version}</version>
 		</dependency>
 
 		<!-- CVE-2025-48734: 보안취약점 보완용 직접 주입 -->
 		<dependency>
 			<groupId>commons-beanutils</groupId>
 			<artifactId>commons-beanutils</artifactId>
-			<version>${commons-beanutils.version}</version>
 		</dependency>
 
 		<!-- CVE-2025-48924: 보안취약점 보완용 직접 주입 -->
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
-			<version>${commons-lang3.version}</version>
 		</dependency>
 
 		<dependency>
