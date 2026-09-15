@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="loginDAO">
+
+
+	<!-- 로그인 처리를 위한 resultMap -->
+	<resultMap id="login" type="egovframework.com.cmm.LoginVO">
+		<result property="id" column="ID"/>
+		<result property="name" column="NAME"/>
+		<result property="ihidNum" column="IHID_NUM"/>
+		<result property="email" column="EMAIL"/>
+		<result property="password" column="PASSWORD"/>
+		<result property="userSe" column="USER_SE"/>
+		<result property="orgnztId" column="ORGNZT_ID"/>
+		<result property="uniqId" column="UNIQ_ID"/>
+	</resultMap>
+	
+	<!-- 아이디 찾기를 위한 resultMap -->
+	<resultMap id="id" type="egovframework.com.cmm.LoginVO">
+		<result property="id" column="ID"/>
+	</resultMap>
+	
+	<!-- 비밀번호 처리를 위한 resultMap -->
+	<resultMap id="password" type="egovframework.com.cmm.LoginVO">
+		<result property="password" column="PASSWORD"/>
+	</resultMap>
+	
+	<!-- 일반 로그인 -->
+	<select id="actionLogin" resultMap="login">
+		<!-- 일반회원 -->
+		<if test="userSe == &quot;GNR&quot;">
+			
+			SELECT MBER_ID 				AS ID
+			     , MBER_NM 				AS NAME
+			     , PASSWORD 			AS PASSWORD
+			     , IHIDNUM 				AS IHID_NUM
+			     , MBER_EMAIL_ADRES 	AS EMAIL
+			     , 'GNR' 				AS USER_SE
+			     , '-' 					AS ORGNZT_ID
+			     , ESNTL_ID 			AS UNIQ_ID
+			  FROM LETTNGNRLMBER
+			 WHERE MBER_ID = #{id}
+			   AND PASSWORD = #{password}
+			   AND MBER_STTUS = 'P'
+			
+		</if>
+		<!-- 기업회원 -->
+		<if test="userSe == &quot;ENT&quot;">
+			
+			SELECT ENTRPRS_MBER_ID 			AS ID
+			     , CMPNY_NM 				AS NAME
+			     , ENTRPRS_MBER_PASSWORD 	AS PASSWORD
+			     , BIZRNO 					AS IHID_NUM
+			     , APPLCNT_EMAIL_ADRES 		AS EMAIL
+			     , 'ENT' 					AS USER_SE
+			     , '-' 						AS ORGNZT_ID
+			     , ESNTL_ID 				AS UNIQ_ID
+			  FROM LETTNENTRPRSMBER
+			 WHERE ENTRPRS_MBER_ID = #{id}
+			   AND ENTRPRS_MBER_PASSWORD = #{password}
+			   AND ENTRPRS_MBER_STTUS	 = 'P'
+			
+		</if>
+		<!-- 업무사용자 -->
+		<if test="userSe == &quot;USR&quot;">
+			
+            SELECT a.EMPLYR_ID 			AS ID
+                 , a.USER_NM 			AS NAME
+                 , a.PASSWORD 			AS PASSWORD
+                 , a.IHIDNUM 			AS IHID_NUM
+                 , a.EMAIL_ADRES 		AS EMAIL
+                 , 'USR' 				AS USER_SE
+                 , a.ORGNZT_ID 			AS ORGNZT_ID
+                 , a.ESNTL_ID 			AS UNIQ_ID
+                 , a.GROUP_ID 			AS GROUP_ID
+                 , b.GROUP_NM 			AS GROUP_NM
+              FROM LETTNEMPLYRINFO a
+              LEFT OUTER JOIN 
+				LETTNAUTHORGROUPINFO b
+			  ON a.GROUP_ID = b.GROUP_ID
+             WHERE EMPLYR_ID = #{id}
+               AND PASSWORD = #{password}
+               AND EMPLYR_STTUS_CODE = 'P'
+			
+		</if>
+	</select>
+	
+	<!-- 인증서 로그인 -->
+	<select id="actionCrtfctLogin" resultMap="login">
+		
+		SELECT EMPLYR_ID 			AS ID
+		     , USER_NM 				AS NAME
+		     , PASSWORD 			AS PASSWORD
+		     , IHIDNUM 				AS IHID_NUM
+		     , EMAIL_ADRES 			AS EMAIL
+		     , 'USR' 				AS USER_SE
+		     , ORGNZT_ID 			AS ORGNZT_ID
+		     , ESNTL_ID 			AS UNIQ_ID
+		  FROM LETTNEMPLYRINFO
+		 WHERE CRTFC_DN_VALUE = #{dn}
+		
+	</select>
+	 
+	<!-- 아이디 찾기 -->
+	<select id="searchId" resultMap="id">
+		<!-- 일반회원 -->
+		<if test="userSe == &quot;GNR&quot;">
+			
+			SELECT MBER_ID 				AS ID
+			  FROM LETTNGNRLMBER
+			 WHERE MBER_NM = #{name}
+			   AND MBER_EMAIL_ADRES = #{email}
+			   AND MBER_STTUS = 'P'
+			
+		</if>
+		<!-- 기업회원 -->
+		<if test="userSe == &quot;ENT&quot;">
+			
+			SELECT ENTRPRS_MBER_ID 			AS ID
+			  FROM LETTNENTRPRSMBER
+			 WHERE CMPNY_NM = #{name}
+			   AND APPLCNT_EMAIL_ADRES = #{email}
+			   AND ENTRPRS_MBER_STTUS = 'P'
+			
+		</if>
+		<!-- 업무사용자 -->
+		<if test="userSe == &quot;USR&quot;">
+			
+			SELECT EMPLYR_ID 			AS ID
+			  FROM LETTNEMPLYRINFO
+			 WHERE USER_NM = #{name}
+			   AND EMAIL_ADRES = #{email}
+			   AND EMPLYR_STTUS_CODE = 'P'
+			
+		</if>
+	</select>
+	 
+	<!-- 비밀번호 찾기 -->
+	<select id="searchPassword" resultMap="password">
+		<!-- 일반회원 -->
+		<if test="userSe == &quot;GNR&quot;">
+			
+			SELECT PASSWORD 			AS PASSWORD
+			  FROM LETTNGNRLMBER
+			 WHERE MBER_ID = #{id}
+			   AND MBER_NM = #{name}
+			   AND MBER_EMAIL_ADRES = #{email}
+			   AND PASSWORD_HINT = #{passwordHint}
+			   AND PASSWORD_CNSR = #{passwordCnsr}
+			   AND MBER_STTUS = 'P'
+			
+		</if>
+		<!-- 기업회원 -->
+		<if test="userSe == &quot;ENT&quot;">
+			
+			SELECT ENTRPRS_MBER_PASSWORD 	AS PASSWORD
+			  FROM LETTNENTRPRSMBER
+			 WHERE ENTRPRS_MBER_ID = #{id}
+			   AND CMPNY_NM = #{name}
+			   AND APPLCNT_EMAIL_ADRES = #{email}
+			   AND ENTRPRS_MBER_PASSWORD_HINT = #{passwordHint}
+			   AND ENTRPRS_MBER_PASSWORD_CNSR = #{passwordCnsr}
+			   AND ENTRPRS_MBER_STTUS = 'P'
+			
+		</if>
+		<!-- 업무사용자 -->
+		<if test="userSe == &quot;USR&quot;">
+			
+			SELECT PASSWORD 			AS PASSWORD
+			  FROM LETTNEMPLYRINFO
+			 WHERE EMPLYR_ID = #{id}
+			   AND USER_NM = #{name}
+			   AND EMAIL_ADRES = #{email}
+			   AND PASSWORD_HINT = #{passwordHint}
+			   AND PASSWORD_CNSR = #{passwordCnsr}
+			   AND EMPLYR_STTUS_CODE = 'P'
+			
+		</if>
+	</select>
+	
+	<!-- 변경된 비밀번호를 저장 -->
+	<update id="updatePassword">
+		<!-- 일반회원 -->
+		<if test="userSe == &quot;GNR&quot;">
+			
+			UPDATE LETTNGNRLMBER
+			   SET PASSWORD = #{password}
+			 WHERE MBER_ID = #{id}
+			
+		</if>
+		<!-- 기업회원 -->
+		<if test="userSe == &quot;ENT&quot;">
+			
+			UPDATE LETTNENTRPRSMBER
+			   SET ENTRPRS_MBER_PASSWORD = #{password}
+			 WHERE ENTRPRS_MBER_ID = #{id}
+			
+		</if>
+		<!-- 업무사용자 -->
+		<if test="userSe == &quot;USR&quot;">
+			
+			UPDATE LETTNEMPLYRINFO
+			   SET PASSWORD = #{password}
+			 WHERE EMPLYR_ID = #{id}
+			
+		</if>
+	</update>
+	
+</mapper>
