@@ -145,16 +145,27 @@ public class EgovBBSManageApiController {
 			@ApiResponse(responseCode = "200", description = "조회 성공")
 	})
 	@GetMapping(value = "/board")
-	public IntermediateResultVO<BbsManageListResponseDTO> selectBoardArticles(@ModelAttribute BbsSearchRequestDTO bbsSearchRequestDTO,
-																				 @Parameter(hidden = true) @AuthenticationPrincipal LoginVO user)
+	public IntermediateResultVO<BbsManageListResponseDTO> selectBoardArticles(
+			@ModelAttribute BbsSearchRequestDTO bbsSearchRequestDTO,
+			BindingResult bindingResult,
+			@Parameter(hidden = true) @AuthenticationPrincipal LoginVO user)
 		throws Exception {
+		if (bindingResult.hasErrors() || bbsSearchRequestDTO.getPageIndex() < 1) {
+			return IntermediateResultVO.inputCheckError(null);
+		}
+		int recordCountPerPage = propertyService.getInt("Globals.pageUnit");
+		// PaginationInfo의 시작·끝 인덱스가 int 범위를 넘지 않도록 조회 전에 검사한다.
+		if (recordCountPerPage < 1
+				|| (long) bbsSearchRequestDTO.getPageIndex() * recordCountPerPage > Integer.MAX_VALUE) {
+			return IntermediateResultVO.inputCheckError(null);
+		}
 		// permitAll 경로 — 익명 접근 가능, user 가 null 일 수 있음
 		String uniqId = (user != null) ? user.getUniqId() : null;
 		BbsFileAtchResponseDTO attributeDetailResponse = bbsAttrbService.selectBBSMasterInf(bbsSearchRequestDTO.getBbsId(), uniqId, BbsDetailRequestType.DETAIL);
 
 		PaginationInfo paginationInfo = new PaginationInfo();
 		paginationInfo.setCurrentPageNo(bbsSearchRequestDTO.getPageIndex());
-		paginationInfo.setRecordCountPerPage(propertyService.getInt("Globals.pageUnit"));
+		paginationInfo.setRecordCountPerPage(recordCountPerPage);
 		paginationInfo.setPageSize(propertyService.getInt("Globals.pageSize"));
 
 		BbsManageListResponseDTO response = bbsMngService.selectBoardArticles(bbsSearchRequestDTO, paginationInfo, "");
