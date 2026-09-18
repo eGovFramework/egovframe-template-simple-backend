@@ -16,6 +16,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.PropertySources;
 import org.springframework.core.env.Environment;
+import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.support.lob.DefaultLobHandler;
 
@@ -76,15 +77,32 @@ public class EgovConfigAppMapper {
 			pathMatchingResourcePatternResolver
 				.getResource("classpath:/egovframework/mapper/config/mapper-config.xml"));
 
+		// "classpath*:"는 추가 JAR 등 모든 클래스패스 위치를 파악하고, "**"는 하위 디렉터리 전체를 검색한다.
+		String mapperPattern = String.format("classpath*:/egovframework/mapper/let/**/*_%s.xml", dbType);
+
 		try {
-			sqlSessionFactoryBean.setMapperLocations(
-				pathMatchingResourcePatternResolver
-					.getResources("classpath:/egovframework/mapper/let/**/*_" + dbType + ".xml"));
+			Resource[] mapperLocations = pathMatchingResourcePatternResolver.getResources(mapperPattern);
+
+			// Globals.DbType에 해당하는 Mapper 검색 결과가 없을 경우의 예외처리
+			if (mapperLocations.length == 0) {
+				String message = String.format(
+						"DB 설정 오류: Globals.DbType=%s에 해당하는 Mapper 파일이 없습니다. 검색 경로: %s",
+						dbType, mapperPattern
+				);
+				throw new IllegalStateException(message);
+			}
+
+			sqlSessionFactoryBean.setMapperLocations(mapperLocations);
 		} catch (IOException e) {
 			// 26.03.04 KISA 보안취약점 조치
 			// 구체적인 Exception 명시
-			EgovBasicLogger.debug("Mapper 파일 로딩 중 오류가 발생했습니다.", e);
-			throw new IllegalStateException("Mapper 파일 로딩 중 오류가 발생했습니다.", e);
+			String errMsg = String.format(
+					"Mapper 파일 로딩 오류: Globals.DbType=%s, 검색 경로: %s",
+					dbType, mapperPattern
+			);
+
+			EgovBasicLogger.debug(errMsg, e);
+			throw new IllegalStateException(errMsg, e);
 		}
 
 		return sqlSessionFactoryBean;
