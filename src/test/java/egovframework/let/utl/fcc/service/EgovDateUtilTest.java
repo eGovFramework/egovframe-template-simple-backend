@@ -201,6 +201,12 @@ class EgovDateUtilTest {
 		assertFalse(EgovDateUtil.validDate("20230230"));
 	}
 
+	@DisplayName("validDate(sDate) 호출 시, validChkDate가 지원하는 하이픈 포맷(yyyy-MM-dd)의 유효한 날짜도 true를 반환한다.")
+	@Test
+	void validDate_하이픈포맷_유효한날짜도_참() {
+		assertTrue(EgovDateUtil.validDate("2026-01-15"));
+	}
+
 	@DisplayName("validTime 호출 시, 유효한 시간인지 확인한다.")
 	@Test
 	void testValidTime() {
