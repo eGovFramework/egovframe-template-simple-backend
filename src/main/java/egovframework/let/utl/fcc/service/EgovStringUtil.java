@@ -523,15 +523,15 @@ public class EgovStringUtil {
 		int index0 = 0;
 		while (index >= 0) {
 			cnt++;
-			index = source.indexOf(separator, index + 1);
+			index = source.indexOf(separator, index + separator.length());
 		}
 		returnVal = new String[cnt];
 		cnt = 0;
 		index = source.indexOf(separator);
 		while (index >= 0) {
 			returnVal[cnt] = source.substring(index0, index);
-			index0 = index + 1;
-			index = source.indexOf(separator, index + 1);
+			index0 = index + separator.length();
+			index = source.indexOf(separator, index + separator.length());
 			cnt++;
 		}
 		returnVal[cnt] = source.substring(index0);
@@ -699,8 +699,8 @@ public class EgovStringUtil {
 		int index = source.indexOf(separator);
 		while (index >= 0 && cnt < (arraylength - 1)) {
 			returnVal[cnt] = source.substring(index0, index);
-			index0 = index + 1;
-			index = source.indexOf(separator, index + 1);
+			index0 = index + separator.length();
+			index = source.indexOf(separator, index + separator.length());
 			cnt++;
 		}
 		returnVal[cnt] = source.substring(index0);

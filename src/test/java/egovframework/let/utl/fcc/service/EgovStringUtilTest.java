@@ -185,6 +185,12 @@ class EgovStringUtilTest {
 		assertArrayEquals(new String[] {"a"}, EgovStringUtil.split("a", ","));
 	}
 
+	@DisplayName("split(source, separator) 호출 시, 구분자가 2글자 이상이어도 필드에 잔여문자가 남지 않는다.")
+	@Test
+	void testSplitWithMultiCharSeparator() {
+		assertArrayEquals(new String[] {"a", "b", "c"}, EgovStringUtil.split("a::b::c", "::"));
+	}
+
 	@DisplayName("lowerCase / upperCase 호출 시, 대소문자를 변환하며 null은 그대로 반환한다.")
 	@Test
 	void testLowerUpperCase() {
@@ -240,6 +246,12 @@ class EgovStringUtilTest {
 	void testSplitWithArrayLength() {
 		assertArrayEquals(new String[] {"a", "b,c"}, EgovStringUtil.split("a,b,c", ",", 2));
 		assertArrayEquals(new String[] {"a", "b", ""}, EgovStringUtil.split("a,b", ",", 3));
+	}
+
+	@DisplayName("split(source, separator, length) 호출 시, 구분자가 2글자 이상이어도 필드에 잔여문자가 남지 않는다.")
+	@Test
+	void testSplitWithArrayLengthMultiCharSeparator() {
+		assertArrayEquals(new String[] {"a", "b", "c"}, EgovStringUtil.split("a::b::c", "::", 3));
 	}
 
 	@DisplayName("getRandomStr 호출 시, 시작문자와 종료문자 사이의 문자를 반환하며, 시작문자가 종료문자보다 크면 예외가 발생한다.")
