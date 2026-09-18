@@ -12,7 +12,7 @@ class EgovStringUtilTest {
 
 	@DisplayName("replaceChar 호출 시, subject가 여러 문자여도 결과가 누적되지 않는다.")
 	@Test
-	void replaceChar_subject가여러문자여도결과가누적되지않는다() {
+	void testReplaceCharWithMultiCharSubject() {
 		assertEquals("heXlX world", EgovStringUtil.replaceChar("hello world", "lo", "X"));
 	}
 

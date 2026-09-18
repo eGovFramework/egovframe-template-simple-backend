@@ -14,20 +14,20 @@ class EgovDateUtilTest {
 
 	@DisplayName("isLeapYear 호출 시, 윤년이면 true를 반환한다.")
 	@Test
-	void isLeapYear_윤년이면true를반환한다() {
+	void testIsLeapYear() {
 		assertTrue(EgovDateUtil.isLeapYear(2004));
 		assertTrue(EgovDateUtil.isLeapYear(2000));
 	}
 
 	@DisplayName("formatTime 호출 시, 유효한 4자리 시간 문자열을 구분자로 쪼갠다.")
 	@Test
-	void formatTime_유효한4자리시간문자열을구분자로쪼갠다() {
+	void testFormatTime() {
 		assertEquals("15:12", EgovDateUtil.formatTime("1512", ":"));
 	}
 
 	@DisplayName("getCurrentDate 호출 시, 포맷 지정해도 예외 없이 변환된 날짜를 반환한다.")
 	@Test
-	void getCurrentDate_포맷지정시예외없이변환된날짜를반환한다() {
+	void testGetCurrentDate() {
 		String result = EgovDateUtil.getCurrentDate("yyyy-MM-dd");
 		assertTrue(result.matches("\\d{4}-\\d{2}-\\d{2}"));
 	}
@@ -203,7 +203,7 @@ class EgovDateUtilTest {
 
 	@DisplayName("validDate(sDate) 호출 시, validChkDate가 지원하는 하이픈 포맷(yyyy-MM-dd)의 유효한 날짜도 true를 반환한다.")
 	@Test
-	void validDate_하이픈포맷_유효한날짜도_참() {
+	void testValidDateWithHyphenFormat() {
 		assertTrue(EgovDateUtil.validDate("2026-01-15"));
 	}
 
