@@ -29,8 +29,8 @@ class IndvdlSchdulManageDaoUpdateTest {
 		vo.setSchdulSe("1");
 		vo.setSchdulDeptId("ORGNZT_0000000000000");
 		vo.setSchdulKindCode("01");
-		vo.setSchdulBgnde("202609010900");
-		vo.setSchdulEndde("202609011000");
+		vo.setSchdulBgnde("20260901090000");
+		vo.setSchdulEndde("20260901100000");
 		vo.setSchdulNm("일정장소 저장 확인");
 		vo.setSchdulCn("내용");
 		vo.setSchdulPlace(schdulPlace);
