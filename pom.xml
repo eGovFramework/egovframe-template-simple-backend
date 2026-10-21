@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>egovframework</groupId>
 	<artifactId>egovframe-boot-simple-backend</artifactId>
-	<version>5.0.2</version>
+	<version>5.1.0</version>
 	<packaging>jar</packaging>
 	<name>egovframe-boot-simple-backend</name>
 	<url>http://www.egovframe.go.kr</url>
@@ -21,7 +21,7 @@
 	<parent>
 		<groupId>org.egovframe.boot</groupId>
 		<artifactId>egovframe-boot-starter-parent</artifactId>
-		<version>5.0.1</version>
+		<version>5.1.0</version>
 	</parent>
 
 	<properties>
@@ -103,11 +103,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
 			<optional>true</optional>
-		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>test</scope>
 		</dependency>
 		<!-- war 배포 시 해당 주석 제거
 		<dependency>

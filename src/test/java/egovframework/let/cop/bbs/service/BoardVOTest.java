@@ -1,6 +1,6 @@
 package egovframework.let.cop.bbs.service;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import egovframework.let.cop.bbs.domain.model.BoardVO;
 
@@ -26,9 +26,9 @@ public class BoardVOTest{
         boardVO.setNttNo(3L);
 
 
-        org.junit.Assert.assertEquals( boardVO.getBbsId() , "TestId" );
-        org.junit.Assert.assertEquals( boardVO.getFrstRegisterId() , "FrstId" );
-        org.junit.Assert.assertEquals( boardVO.getNttNo() , 3L );
-        org.junit.Assert.assertEquals( boardVO.getBbsNm() , "게시판nm" );
+        org.junit.jupiter.api.Assertions.assertEquals( boardVO.getBbsId() , "TestId" );
+        org.junit.jupiter.api.Assertions.assertEquals( boardVO.getFrstRegisterId() , "FrstId" );
+        org.junit.jupiter.api.Assertions.assertEquals( boardVO.getNttNo() , 3L );
+        org.junit.jupiter.api.Assertions.assertEquals( boardVO.getBbsNm() , "게시판nm" );
     }
 }

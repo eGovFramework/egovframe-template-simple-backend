@@ -10,6 +10,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.*;
+// JUnit 6부터 org.junit.jupiter.api.MediaType 이 생겨 와일드카드 import 끼리 충돌하므로 명시한다.
+import org.springframework.http.MediaType;
 
 import java.util.HashMap;
 import java.util.List;
