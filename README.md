@@ -146,6 +146,7 @@ mvn spring-boot:run
   - 관리(`/admin/**`, `/members/**`) 및 회원(`/mypage/**`)·게시판 관리(`/inform/**`) 경로는 GET 포함 전체 메서드에 대해 JWT 토큰 인증이 필요합니다.
   - 그 외 POST/PUT/DELETE 변경계 요청도 기본적으로 JWT 토큰 인증이 필요합니다.
   - 상세 규칙은 `SecurityConfig.java` 의 `filterChain()` 정의를 참고합니다.
+  - `HTMLTagFilter`가 래핑한 요청의 `getParameter()`와 `getParameterValues()`는 모두 `<`, `>`, `&`, `"`, `'`를 각각 `&lt;`, `&gt;`, `&amp;`, `&quot;`, `&apos;`로 변환합니다. 반복 파라미터의 순서를 유지하며, 여러 번 읽거나 반환 배열을 수정해도 원본 요청 값은 바뀌지 않습니다. 이미 엔티티 형태인 입력도 동일하게 처리됩니다(예: `&lt;` → `&amp;lt;`).
   - 인증 미통과는 401, 인증은 되었으나 권한이 부족한 경우(예: `ROLE_USER` 가 `/admin/**` 접근)에는 403 응답이 반환됩니다.
 
 #### JWT 토큰 인증 방법
