@@ -1,6 +1,7 @@
 package egovframework.let.cop.bbs.service;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import egovframework.let.cop.bbs.domain.model.Board;
 
@@ -24,9 +25,9 @@ public class BoardTest{
         board.setFrstRegisterId("FrstId");
         board.setNttNo(3L);
 
-        org.junit.Assert.assertEquals( board.getBbsId() , "TestId" );
-        org.junit.Assert.assertEquals( board.getFrstRegisterId() , "FrstId" );
-        org.junit.Assert.assertEquals( board.getNttNo() , 3L );
+        Assertions.assertEquals( board.getBbsId() , "TestId" );
+        Assertions.assertEquals( board.getFrstRegisterId() , "FrstId" );
+        Assertions.assertEquals( board.getNttNo() , 3L );
     }
 
 }

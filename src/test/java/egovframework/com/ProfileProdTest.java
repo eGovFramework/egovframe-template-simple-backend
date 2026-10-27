@@ -7,7 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 /**
- * fileName       : ProfileTestProd
+ * fileName       : ProfileProdTest
  * author         : crlee
  * date           : 2023/04/28
  * description    :
@@ -18,7 +18,7 @@ import org.springframework.test.context.ActiveProfiles;
  */
 @SpringBootTest
 @ActiveProfiles("prod")
-public class ProfileTestProd {
+public class ProfileProdTest {
 
     @Value("${Globals.DbType}")
     String dbType;

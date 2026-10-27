@@ -104,11 +104,6 @@
 			<artifactId>spring-boot-devtools</artifactId>
 			<optional>true</optional>
 		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>test</scope>
-		</dependency>
 		<!-- war 배포 시 해당 주석 제거
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
