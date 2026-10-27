@@ -60,6 +60,7 @@ import lombok.RequiredArgsConstructor;
  *  2009.04.10  장동한          최초 생성
  *  2011.05.31  JJY           경량환경 커스터마이징버전 생성
  *  2026.08.27  content_j     /schedule/wee (EgovIndvdlSchdulManageWeekList) 파라미터 없이 호출 시 NPE 발생하던 버그 수정
+ *  2026.10.27               일정 조회 숫자 형식 검증 및 ResultVO 400 응답 추가
  * </pre>
  * @author 조재영
  * @version 1.0
@@ -94,6 +95,7 @@ public class EgovIndvdlSchdulManageApiController {
 	)
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "조회 성공"),
+			@ApiResponse(responseCode = "400", description = "year/month/date 숫자 형식 오류"),
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
 	})
     @GetMapping(value = "/schedule/month")
@@ -114,18 +116,19 @@ public class EgovIndvdlSchdulManageApiController {
 		String sYear = searchVO.getYear();
 		String sMonth = searchVO.getMonth();
 
-		int iYear = cal.get(Calendar.YEAR);
-		int iMonth = cal.get(Calendar.MONTH);
+		int iYear = parseDateParameter(sYear, cal.get(Calendar.YEAR));
+		int iMonth = parseDateParameter(sMonth, cal.get(Calendar.MONTH));
+		parseDateParameter(searchVO.getDate(), cal.get(Calendar.DATE));
 
 		//검색 설정
 		String sSearchDate = "";
 		if (sYear == null || sMonth == null) {
+			iYear = cal.get(Calendar.YEAR);
+			iMonth = cal.get(Calendar.MONTH);
 			sSearchDate += Integer.toString(iYear);
 			sSearchDate += Integer.toString(iMonth + 1).length() == 1 ? "0" + Integer.toString(iMonth + 1)
 				: Integer.toString(iMonth + 1);
 		} else {
-			iYear = Integer.parseInt(sYear);
-			iMonth = Integer.parseInt(sMonth);
 			sSearchDate += sYear;
 			sSearchDate += Integer.toString(iMonth + 1).length() == 1 ? "0" + Integer.toString(iMonth + 1)
 				: Integer.toString(iMonth + 1);
@@ -408,11 +411,25 @@ public class EgovIndvdlSchdulManageApiController {
 	)
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "조회 성공"),
+			@ApiResponse(responseCode = "400", description = "year/month/date 숫자 형식 오류"),
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
 	})
     @GetMapping(value = "/schedule/daily")
     public ResultVO EgovIndvdlSchdulManageDailyList(
     		@ModelAttribute ScheduleSearchVO searchVO) throws Exception {
+		Calendar calNow = Calendar.getInstance();
+		String strYear = searchVO.getYear();
+		String strMonth = searchVO.getMonth();
+		String strDay = searchVO.getDate();
+		int iNowYear = parseDateParameter(strYear, calNow.get(Calendar.YEAR));
+		int iNowMonth = parseDateParameter(strMonth, calNow.get(Calendar.MONTH));
+		int iNowDay = parseDateParameter(strDay, calNow.get(Calendar.DATE));
+
+		if (strYear == null || strMonth == null || strDay == null) {
+			iNowYear = calNow.get(Calendar.YEAR);
+			iNowMonth = calNow.get(Calendar.MONTH);
+			iNowDay = calNow.get(Calendar.DATE);
+		}
     	
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 
@@ -426,25 +443,8 @@ public class EgovIndvdlSchdulManageApiController {
 		ComDefaultCodeVO voComCode = new ComDefaultCodeVO();
 		voComCode.setCodeId("COM030");
 		resultMap.put("schdulSe", cmmUseService.selectCmmCodeDetail(voComCode));
-
-		/* *****************************************************************
-		// 캘런더 설정 로직
-		****************************************************************** */
-		Calendar calNow = Calendar.getInstance();
-
-		String strYear = searchVO.getYear();
-		String strMonth = searchVO.getMonth();
-		String strDay = searchVO.getDate();
 		String strSearchDay = "";
-		int iNowYear = calNow.get(Calendar.YEAR);
-		int iNowMonth = calNow.get(Calendar.MONTH);
-		int iNowDay = calNow.get(Calendar.DATE);
 
-		if (strYear != null && strMonth != null && strDay != null) {
-			iNowYear = Integer.parseInt(strYear);
-			iNowMonth = Integer.parseInt(strMonth);
-			iNowDay = Integer.parseInt(strDay);
-		}
 
 		strSearchDay = Integer.toString(iNowYear);
 		strSearchDay += DateTypeIntForString(iNowMonth + 1);
@@ -481,12 +481,26 @@ public class EgovIndvdlSchdulManageApiController {
 	)
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "조회 성공"),
+			@ApiResponse(responseCode = "400", description = "year/month/date 숫자 형식 오류"),
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
 	})
     @GetMapping(value = "/schedule/week")
 	public ResultVO EgovIndvdlSchdulManageWeekList(
 			@ModelAttribute ScheduleSearchVO searchVO)
 		throws Exception {
+		Calendar calNow = Calendar.getInstance();
+		String strYear = searchVO.getYear();
+		String strMonth = searchVO.getMonth();
+		String strDate = searchVO.getDate();
+		int iNowYear = parseDateParameter(strYear, calNow.get(Calendar.YEAR));
+		int iNowMonth = parseDateParameter(strMonth, calNow.get(Calendar.MONTH));
+		int iNowDate = parseDateParameter(strDate, calNow.get(Calendar.DATE));
+
+		if (strYear == null || strMonth == null || strDate == null) {
+			iNowYear = calNow.get(Calendar.YEAR);
+			iNowMonth = calNow.get(Calendar.MONTH);
+			iNowDate = calNow.get(Calendar.DATE);
+		}
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 
 		//일정구분 검색 유지
@@ -500,24 +514,6 @@ public class EgovIndvdlSchdulManageApiController {
 		voComCode.setCodeId("COM030");
 		resultMap.put("schdulSe", cmmUseService.selectCmmCodeDetail(voComCode));
 
-		/* *****************************************************************
-		// 캘런더 설정 로직
-		****************************************************************** */
-		Calendar calNow = Calendar.getInstance();
-
-		String strYear = searchVO.getYear();
-		String strMonth = searchVO.getMonth();
-		String strDate = searchVO.getDate();
-
-		int iNowYear = calNow.get(Calendar.YEAR);
-		int iNowMonth = calNow.get(Calendar.MONTH);
-		int iNowDate = calNow.get(Calendar.DATE);
-
-		if (strYear != null && strMonth != null && strDate != null) {
-			iNowYear = Integer.parseInt(strYear);
-			iNowMonth = Integer.parseInt(strMonth);
-			iNowDate = Integer.parseInt(strDate);
-		}
 
 		//프론트에서 넘어온 값은 1월을 0으로 간주하므로 1달 더해 줌
 		int realMonth = iNowMonth + 1;
@@ -557,6 +553,27 @@ public class EgovIndvdlSchdulManageApiController {
 
 		return resultVoHelper.buildFromMap(resultMap, ResponseCode.SUCCESS);
 	}
+	/**
+	 * 생략한 날짜는 기존 기본값을 유지하고, 제공한 값은 ASCII 숫자와 int 범위만 허용한다.
+	 * 형식 오류는 전역 예외 처리기가 상세 정보 없는 ResultVO HTTP 400으로 변환한다.
+	 * month의 0-base 계약과 기존 부분 날짜 생략 동작은 변경하지 않는다.
+	 */
+	private int parseDateParameter(String value, int defaultValue) {
+		if (value == null) {
+			return defaultValue;
+		}
+		if (value.isEmpty()) {
+			throw new NumberFormatException("Invalid schedule date parameter");
+		}
+		for (int i = 0; i < value.length(); i++) {
+			char digit = value.charAt(i);
+			if (digit < '0' || digit > '9') {
+				throw new NumberFormatException("Invalid schedule date parameter");
+			}
+		}
+		return Integer.parseInt(value);
+	}
+
 
 	/**
 	 * 시간을 LIST를 반환한다.
