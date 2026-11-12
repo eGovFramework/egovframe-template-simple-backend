@@ -26,10 +26,7 @@
 
 	<properties>
 		<java.version>17</java.version>
-		<protobuf.java.version>3.25.5</protobuf.java.version>
 		<jjwt.version>0.12.6</jjwt.version>
-		<icu4j.version>77.1</icu4j.version>
-		<tomcat.version>10.1.59</tomcat.version>
 	</properties>
 
 	<repositories>
@@ -165,12 +162,10 @@
 		<dependency>
 			<groupId>org.egovframe.rte</groupId>
 			<artifactId>egovframe-rte-fdl-crypto</artifactId>
-			<version>${egovframe.rte.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.egovframe.rte</groupId>
 			<artifactId>egovframe-rte-fdl-security</artifactId>
-			<version>${egovframe.rte.version}</version>
 		</dependency>
 
 		<dependency>
@@ -196,14 +191,6 @@
 		<dependency>
 			<groupId>com.mysql</groupId>
 			<artifactId>mysql-connector-j</artifactId>
-		</dependency>
-
-		<!-- CVE-2024-7254: mysql-connector-j에서 주입되는 protobuf-java 3.25.1 취약점
-		보완용 직접 주입 -->
-		<dependency>
-			<groupId>com.google.protobuf</groupId>
-			<artifactId>protobuf-java</artifactId>
-			<version>${protobuf.java.version}</version>
 		</dependency>
 
 		<!-- validator -->
@@ -253,7 +240,6 @@
 		<dependency>
 			<groupId>com.ibm.icu</groupId>
 			<artifactId>icu4j</artifactId>
-			<version>${icu4j.version}</version>
 		</dependency>
 
 		<!-- CVE-2025-48924/CVE-2025-66614/CVE-2026-24734/CVE-2026-24733: 보안취약점 보완용 직접 주입 -->
