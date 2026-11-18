@@ -1,6 +1,10 @@
 package egovframework.let.cop.smt.sim.web;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.time.format.ResolverStyle;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Calendar;
@@ -8,27 +12,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.egovframe.rte.fdl.cryptography.EgovCryptoService;
-import org.egovframe.rte.fdl.property.EgovPropertyService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springmodules.validation.commons.DefaultBeanValidator;
 
 import egovframework.com.cmm.ComDefaultCodeVO;
-import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.LoginVO;
 import egovframework.com.cmm.ResponseCode;
 import egovframework.com.cmm.service.EgovCmmUseService;
@@ -36,19 +35,19 @@ import egovframework.com.cmm.service.EgovFileMngService;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.com.cmm.service.FileVO;
 import egovframework.com.cmm.service.ResultVO;
+import egovframework.com.cmm.util.ResultVoHelper;
 import egovframework.com.cmm.web.EgovFileDownloadController;
 import egovframework.let.cop.smt.sim.service.EgovIndvdlSchdulManageService;
 import egovframework.let.cop.smt.sim.service.IndvdlSchdulManageVO;
+import egovframework.let.cop.smt.sim.service.ScheduleSearchVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.Explode;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
-import io.swagger.v3.oas.annotations.enums.ParameterStyle;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 일정관리를 처리하는 Controller Class 구현
@@ -60,42 +59,26 @@ import io.swagger.v3.oas.annotations.tags.Tag;
  *  -------    --------    ---------------------------
  *  2009.04.10  장동한          최초 생성
  *  2011.05.31  JJY           경량환경 커스터마이징버전 생성
+ *  2026.08.27  content_j     /schedule/wee (EgovIndvdlSchdulManageWeekList) 파라미터 없이 호출 시 NPE 발생하던 버그 수정
  * </pre>
  * @author 조재영
  * @version 1.0
  * @created 09-6-2011 오전 10:08:04
  */
 @RestController
+@RequiredArgsConstructor
 @Tag(name="EgovIndvdlSchdulManageApiController",description = "일정관리")
 public class EgovIndvdlSchdulManageApiController {
 
-	@Autowired
-	private DefaultBeanValidator beanValidator;
+	private static final DateTimeFormatter SCHEDULE_DATE_FORMAT = DateTimeFormatter
+			.ofPattern("uuuuMMddHHmmss").withResolverStyle(ResolverStyle.STRICT);
 
-	/** EgovMessageSource */
-	@Resource(name = "egovMessageSource")
-	EgovMessageSource egovMessageSource;
-
-	@Resource(name = "egovIndvdlSchdulManageService")
-	private EgovIndvdlSchdulManageService egovIndvdlSchdulManageService;
-
-	@Resource(name = "EgovCmmUseService")
-	private EgovCmmUseService cmmUseService;
-
-	/** EgovPropertyService */
-	@Resource(name = "propertiesService")
-	protected EgovPropertyService propertiesService;
-
-	// 첨부파일 관련
-	@Resource(name = "EgovFileMngService")
-	private EgovFileMngService fileMngService;
-
-	@Resource(name = "EgovFileMngUtil")
-	private EgovFileMngUtil fileUtil;
-	
-	/** 암호화서비스 */
-    @Resource(name="egovARIACryptoService")
-    EgovCryptoService cryptoService;
+	private final EgovIndvdlSchdulManageService egovIndvdlSchdulManageService;
+	private final EgovCmmUseService cmmUseService;
+	private final EgovFileMngService fileMngService;
+	private final EgovFileMngUtil fileUtil;
+	private final EgovCryptoService cryptoService;
+	private final ResultVoHelper resultVoHelper;
 
 	/**
 	 * 일정(월별) 목록을 조회한다.
@@ -115,34 +98,24 @@ public class EgovIndvdlSchdulManageApiController {
 	})
     @GetMapping(value = "/schedule/month")
 	public ResultVO EgovIndvdlSchdulManageMonthList(
-			HttpServletRequest request,
-			@Parameter(
-					in = ParameterIn.QUERY,
-					schema = @Schema(type = "object",
-					additionalProperties = Schema.AdditionalPropertiesValue.TRUE, 
-					ref = "#/components/schemas/searchSchdulMap"),
-					style = ParameterStyle.FORM,
-					explode = Explode.TRUE
-					) @RequestParam Map<String, Object> commandMap,
+			@ModelAttribute ScheduleSearchVO searchVO,
 			@Parameter(hidden = true) @AuthenticationPrincipal LoginVO loginVO) throws Exception {
 		
-		ResultVO resultVO = new ResultVO();
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 
 		//일정구분 검색 유지
 		resultMap.put("searchKeyword",
-			commandMap.get("searchKeyword") == null ? "" : (String)commandMap.get("searchKeyword"));
+			searchVO.getSearchKeyword() != null ? searchVO.getSearchKeyword() : "");
 		resultMap.put("searchCondition",
-			commandMap.get("searchCondition") == null ? "" : (String)commandMap.get("searchCondition"));
+			searchVO.getSearchCondition() != null ? searchVO.getSearchCondition() : "");
 
 		Calendar cal = Calendar.getInstance();
 
-		String sYear = String.valueOf(commandMap.get("year"));
-		String sMonth = String.valueOf(commandMap.get("month"));
+		String sYear = searchVO.getYear();
+		String sMonth = searchVO.getMonth();
 
 		int iYear = cal.get(Calendar.YEAR);
 		int iMonth = cal.get(Calendar.MONTH);
-		//int iDate = cal.get(java.util.Calendar.DATE);
 
 		//검색 설정
 		String sSearchDate = "";
@@ -160,26 +133,27 @@ public class EgovIndvdlSchdulManageApiController {
 
 		//공통코드 일정종류
 		ComDefaultCodeVO voComCode = new ComDefaultCodeVO();
-		voComCode = new ComDefaultCodeVO();
 		voComCode.setCodeId("COM030");
 		resultMap.put("schdulSe", cmmUseService.selectCmmCodeDetail(voComCode));
 
-		commandMap.put("searchMonth", sSearchDate);
-		commandMap.put("searchMode", "MONTH");
-		resultMap.put("resultList", egovIndvdlSchdulManageService.selectIndvdlSchdulManageRetrieve(commandMap));
+		Map<String, Object> paramMap = new HashMap<>();
+		paramMap.put("searchMonth", sSearchDate);
+		paramMap.put("searchMode", "MONTH");
 
-		resultMap.put("prevRequest", commandMap);
+		// 일정 구분 필터링 추가
+		if (searchVO.getSchdulSe() != null && !searchVO.getSchdulSe().isEmpty()) {
+			paramMap.put("schdulSe", searchVO.getSchdulSe());
+		}
+
+		resultMap.put("resultList", egovIndvdlSchdulManageService.selectIndvdlSchdulManageRetrieve(paramMap));
+		resultMap.put("prevRequest", paramMap);
 		
 
-		resultVO.setResult(resultMap);
-		resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
-		resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());
-
-		return resultVO;
+		return resultVoHelper.buildFromMap(resultMap, ResponseCode.SUCCESS);
 	}
 
 	/**
-	 * 일정를 등록 처리 한다.
+	 * 일정을 등록 처리 한다.
 	 * @param request
 	 * @param multiRequest
 	 * @param indvdlSchdulManageVO
@@ -207,15 +181,8 @@ public class EgovIndvdlSchdulManageApiController {
 		@Parameter(hidden = true) @AuthenticationPrincipal LoginVO loginVO
 	) throws Exception {
 
-		ResultVO resultVO = new ResultVO();
-
-		//서버  validate 체크
-		beanValidator.validate(indvdlSchdulManageVO, bindingResult);
-		if (bindingResult.hasErrors()) {
-
-			resultVO.setResultCode(ResponseCode.INPUT_CHECK_ERROR.getCode());
-			resultVO.setResultMessage(ResponseCode.INPUT_CHECK_ERROR.getMessage());
-			return resultVO;
+		if (bindingResult.hasErrors() || !isValidSchedulePeriod(indvdlSchdulManageVO)) {
+			return resultVoHelper.buildFromResultVO(new ResultVO(), ResponseCode.INPUT_CHECK_ERROR);
 		}
 
 		// 첨부파일 관련 첨부파일ID 생성
@@ -229,7 +196,7 @@ public class EgovIndvdlSchdulManageApiController {
 			_atchFileId = fileMngService.insertFileInfs(_result); //파일이 생성되고나면 생성된 첨부파일 ID를 리턴한다.
 		}
 
-		// 리턴받은 첨부파일ID를 셋팅한다..
+		// 리턴받은 첨부파일ID를 세팅한다..
 		indvdlSchdulManageVO.setAtchFileId(_atchFileId); // 첨부파일 ID
 
 		//아이디 설정
@@ -242,10 +209,7 @@ public class EgovIndvdlSchdulManageApiController {
 		indvdlSchdulManageVO.setSchdulChargerId("USRCNFRM_00000000000");
 		egovIndvdlSchdulManageService.insertIndvdlSchdulManage(indvdlSchdulManageVO);
 
-		resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
-		resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());
-
-		return resultVO;
+		return resultVoHelper.buildFromMap(new HashMap<String, Object>(), ResponseCode.SUCCESS);
 
 	}
 
@@ -257,7 +221,7 @@ public class EgovIndvdlSchdulManageApiController {
 	 */
     @Operation(
 			summary = "일정 상세조회",
-			description = "일정 목록을 상세조회",
+			description = "일정 목록을 상세조회. 대상이 없으면 ResultVO의 resultCode 404를 반환",
 			tags = {"EgovIndvdlSchdulManageApiController"}
 	)
 	@ApiResponses(value = {
@@ -269,12 +233,17 @@ public class EgovIndvdlSchdulManageApiController {
 		@PathVariable("schdulId") String schdulId,
 		@Parameter(hidden = true) @AuthenticationPrincipal LoginVO user)
 		throws Exception {
-
-		ResultVO resultVO = new ResultVO();
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 
 		IndvdlSchdulManageVO indvdlSchdulManageVO = new IndvdlSchdulManageVO();
 		indvdlSchdulManageVO.setSchdulId(schdulId);
+
+		IndvdlSchdulManageVO scheduleDetail = egovIndvdlSchdulManageService
+			.selectIndvdlSchdulManageDetail(indvdlSchdulManageVO);
+		if (scheduleDetail == null) {
+			return resultVoHelper.buildFromMap(resultMap, ResponseCode.NOT_FOUND);
+		}
+		resultMap.put("scheduleDetail", scheduleDetail);
 
 		//일정시작일자(시)
 		resultMap.put("schdulBgndeHH", getTimeHH());
@@ -298,10 +267,6 @@ public class EgovIndvdlSchdulManageApiController {
 		voComCode.setCodeId("COM031");
 		resultMap.put("reptitSeCode", cmmUseService.selectCmmCodeDetail(voComCode));
 
-		IndvdlSchdulManageVO scheduleDetail = egovIndvdlSchdulManageService
-			.selectIndvdlSchdulManageDetail(indvdlSchdulManageVO);
-		resultMap.put("scheduleDetail", scheduleDetail);
-		
 		// 첨부파일 확인
 		if (scheduleDetail.getAtchFileId() != null && !scheduleDetail.getAtchFileId().isEmpty()) {
 			FileVO fileVO = new FileVO();
@@ -318,11 +283,7 @@ public class EgovIndvdlSchdulManageApiController {
 		}
 		resultMap.put("user", user);
 
-		resultVO.setResult(resultMap);
-		resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
-		resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());
-
-		return resultVO;
+		return resultVoHelper.buildFromMap(resultMap, ResponseCode.SUCCESS);
 	}
 
 	/**
@@ -347,24 +308,16 @@ public class EgovIndvdlSchdulManageApiController {
     		@Parameter(name = "schdulId", description = "일정 Id", in = ParameterIn.PATH, example="SCHDUL_0000000000001")	
     		@PathVariable("schdulId") String schdulId
     		) throws Exception {
-
-		ResultVO resultVO = new ResultVO();
-
 		IndvdlSchdulManageVO indvdlSchdulManageVO = new IndvdlSchdulManageVO();
 		indvdlSchdulManageVO.setSchdulId(schdulId);
 		
-
 		egovIndvdlSchdulManageService.deleteIndvdlSchdulManage(indvdlSchdulManageVO);//schdulId
 
-		resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
-		resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());
-
-
-		return resultVO;
+		return resultVoHelper.buildFromMap(new HashMap<String, Object>(), ResponseCode.SUCCESS);
 	}
 
 	/**
-	 * 일정를 수정 처리 한다.
+	 * 일정을 수정 처리 한다.
 	 * @param multiRequest
 	 * @param indvdlSchdulManageVO
 	 * @param bindingResult
@@ -391,21 +344,12 @@ public class EgovIndvdlSchdulManageApiController {
 		@PathVariable("schdulId") String schdulId,
 		@Parameter(hidden = true) @AuthenticationPrincipal LoginVO user)
 		throws Exception {
-
-		ResultVO resultVO = new ResultVO();
+    	
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 
-
-		//서버  validate 체크
 		indvdlSchdulManageVO.setSchdulId(schdulId);
-		beanValidator.validate(indvdlSchdulManageVO, bindingResult);
-		if (bindingResult.hasErrors()) {
-
-			resultVO.setResult(resultMap);
-			resultVO.setResultCode(ResponseCode.INPUT_CHECK_ERROR.getCode());
-			resultVO.setResultMessage(ResponseCode.INPUT_CHECK_ERROR.getMessage());
-
-			return resultVO;
+		if (bindingResult.hasErrors() || !isValidSchedulePeriod(indvdlSchdulManageVO)) {
+			return resultVoHelper.buildFromMap(resultMap, ResponseCode.INPUT_CHECK_ERROR);
 		}
 
 		/* *****************************************************************
@@ -416,7 +360,10 @@ public class EgovIndvdlSchdulManageApiController {
 		/* *****************************************************************
 		// 첨부파일 관련 ID 생성 start....
 		****************************************************************** */
-		String _atchFileId = indvdlSchdulManageVO.getAtchFileId();
+		// 26.03.04 KISA 보안취약점 조치
+		// null check 추가
+		String rawAtchFileId = indvdlSchdulManageVO.getAtchFileId();
+		String _atchFileId = rawAtchFileId != null ? rawAtchFileId : "";
 
 		final Map<String, MultipartFile> files = multiRequest.getFileMap();
 
@@ -427,7 +374,7 @@ public class EgovIndvdlSchdulManageApiController {
 				List<FileVO> _result = fileUtil.parseFileInf(files, "DSCH_", 0, _atchFileId, "");
 				_atchFileId = fileMngService.insertFileInfs(_result);
 
-				// 첨부파일 ID 셋팅
+				// 첨부파일 ID 세팅
 				indvdlSchdulManageVO.setAtchFileId(_atchFileId); // 첨부파일 ID
 
 			} else {
@@ -445,11 +392,7 @@ public class EgovIndvdlSchdulManageApiController {
 		****************************************************************** */
 		egovIndvdlSchdulManageService.updateIndvdlSchdulManage(indvdlSchdulManageVO);
 
-		resultVO.setResult(resultMap);
-		resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
-		resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());
-
-		return resultVO;
+		return resultVoHelper.buildFromMap(resultMap, ResponseCode.SUCCESS);
 	}
 
 	/**
@@ -469,27 +412,18 @@ public class EgovIndvdlSchdulManageApiController {
 	})
     @GetMapping(value = "/schedule/daily")
     public ResultVO EgovIndvdlSchdulManageDailyList(
-    		@Parameter(
-					in = ParameterIn.QUERY,
-					schema = @Schema(type = "object",
-					additionalProperties = Schema.AdditionalPropertiesValue.TRUE, 
-					ref = "#/components/schemas/searchSchdulMap"),
-					style = ParameterStyle.FORM,
-					explode = Explode.TRUE
-					) @RequestParam Map<String, Object> commandMap) throws Exception {
-
-		ResultVO resultVO = new ResultVO();
+    		@ModelAttribute ScheduleSearchVO searchVO) throws Exception {
+    	
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 
 		//일정구분 검색 유지
 		resultMap.put("searchKeyword",
-			commandMap.get("searchKeyword") == null ? "" : (String)commandMap.get("searchKeyword"));
+			searchVO.getSearchKeyword() != null ? searchVO.getSearchKeyword() : "");
 		resultMap.put("searchCondition",
-			commandMap.get("searchCondition") == null ? "" : (String)commandMap.get("searchCondition"));
+			searchVO.getSearchCondition() != null ? searchVO.getSearchCondition() : "");
 
 		//공통코드 일정종류
 		ComDefaultCodeVO voComCode = new ComDefaultCodeVO();
-		voComCode = new ComDefaultCodeVO();
 		voComCode.setCodeId("COM030");
 		resultMap.put("schdulSe", cmmUseService.selectCmmCodeDetail(voComCode));
 
@@ -498,15 +432,15 @@ public class EgovIndvdlSchdulManageApiController {
 		****************************************************************** */
 		Calendar calNow = Calendar.getInstance();
 
-		String strYear = String.valueOf(commandMap.get("year"));
-		String strMonth = String.valueOf(commandMap.get("month"));
-		String strDay = String.valueOf(commandMap.get("date"));
+		String strYear = searchVO.getYear();
+		String strMonth = searchVO.getMonth();
+		String strDay = searchVO.getDate();
 		String strSearchDay = "";
 		int iNowYear = calNow.get(Calendar.YEAR);
 		int iNowMonth = calNow.get(Calendar.MONTH);
 		int iNowDay = calNow.get(Calendar.DATE);
 
-		if (strYear != null) {
+		if (strYear != null && strMonth != null && strDay != null) {
 			iNowYear = Integer.parseInt(strYear);
 			iNowMonth = Integer.parseInt(strMonth);
 			iNowDay = Integer.parseInt(strDay);
@@ -516,20 +450,22 @@ public class EgovIndvdlSchdulManageApiController {
 		strSearchDay += DateTypeIntForString(iNowMonth + 1);
 		strSearchDay += DateTypeIntForString(iNowDay);
 
-		commandMap.put("searchMode", "DAILY");
-		commandMap.put("searchDay", strSearchDay);
+		Map<String, Object> paramMap = new HashMap<>();
+		paramMap.put("searchMode", "DAILY");
+		paramMap.put("searchDay", strSearchDay);
+
+		// 일정 구분 필터링 추가
+		if (searchVO.getSchdulSe() != null && !searchVO.getSchdulSe().isEmpty()) {
+			paramMap.put("schdulSe", searchVO.getSchdulSe());
+		}
 
 		resultMap.put("year", iNowYear);
 		resultMap.put("month", iNowMonth);
 		resultMap.put("day", iNowDay);
 
-		resultMap.put("resultList", egovIndvdlSchdulManageService.selectIndvdlSchdulManageRetrieve(commandMap));
+		resultMap.put("resultList", egovIndvdlSchdulManageService.selectIndvdlSchdulManageRetrieve(paramMap));
 
-		resultVO.setResult(resultMap);
-		resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
-		resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());
-
-		return resultVO;
+		return resultVoHelper.buildFromMap(resultMap, ResponseCode.SUCCESS);
 	}
 
 	/**
@@ -549,28 +485,18 @@ public class EgovIndvdlSchdulManageApiController {
 	})
     @GetMapping(value = "/schedule/week")
 	public ResultVO EgovIndvdlSchdulManageWeekList(
-			@Parameter(
-					in = ParameterIn.QUERY,
-					schema = @Schema(type = "object",
-					additionalProperties = Schema.AdditionalPropertiesValue.TRUE, 
-					ref = "#/components/schemas/searchSchdulWeekMap"),
-					style = ParameterStyle.FORM,
-					explode = Explode.TRUE
-					) @RequestParam Map<String, Object> commandMap)
+			@ModelAttribute ScheduleSearchVO searchVO)
 		throws Exception {
-
-		ResultVO resultVO = new ResultVO();
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 
 		//일정구분 검색 유지
 		resultMap.put("searchKeyword",
-			commandMap.get("searchKeyword") == null ? "" : (String)commandMap.get("searchKeyword"));
+			searchVO.getSearchKeyword() != null ? searchVO.getSearchKeyword() : "");
 		resultMap.put("searchCondition",
-			commandMap.get("searchCondition") == null ? "" : (String)commandMap.get("searchCondition"));
+			searchVO.getSearchCondition() != null ? searchVO.getSearchCondition() : "");
 
 		//공통코드 일정종류
 		ComDefaultCodeVO voComCode = new ComDefaultCodeVO();
-		voComCode = new ComDefaultCodeVO();
 		voComCode.setCodeId("COM030");
 		resultMap.put("schdulSe", cmmUseService.selectCmmCodeDetail(voComCode));
 
@@ -579,49 +505,57 @@ public class EgovIndvdlSchdulManageApiController {
 		****************************************************************** */
 		Calendar calNow = Calendar.getInstance();
 
-		String strYear = String.valueOf(commandMap.get("year"));
-		String strMonth = String.valueOf(commandMap.get("month"));
-		String strDate = String.valueOf(commandMap.get("date"));
-		
-		int iNowMonth = calNow.get(Calendar.MONTH);
+		String strYear = searchVO.getYear();
+		String strMonth = searchVO.getMonth();
+		String strDate = searchVO.getDate();
 
-		if (strYear != null) {
+		int iNowYear = calNow.get(Calendar.YEAR);
+		int iNowMonth = calNow.get(Calendar.MONTH);
+		int iNowDate = calNow.get(Calendar.DATE);
+
+		if (strYear != null && strMonth != null && strDate != null) {
+			iNowYear = Integer.parseInt(strYear);
 			iNowMonth = Integer.parseInt(strMonth);
+			iNowDate = Integer.parseInt(strDate);
 		}
-		
+
 		//프론트에서 넘어온 값은 1월을 0으로 간주하므로 1달 더해 줌
 		int realMonth = iNowMonth + 1;
-		strMonth =  String.valueOf(realMonth);
+		strYear = String.valueOf(iNowYear);
+		strMonth = String.valueOf(realMonth);
+		strDate = String.valueOf(iNowDate);
 
 		//자릿수 보정
 		strMonth = (strMonth.length() == 1) ? "0" + strMonth : strMonth;
 		strDate = (strDate.length() == 1) ? "0" + strDate : strDate;
-		
+
 		//시작일자
 		String schdulBgnde = strYear + strMonth + strDate;
 
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
 		Calendar calNext = Calendar.getInstance();
-		
-		calNext.set(Integer.parseInt(strYear), Integer.parseInt(strMonth)-1, Integer.parseInt(strDate));
-		
+
+		calNext.set(iNowYear, iNowMonth, iNowDate);
+
 		calNext.add(Calendar.DATE, 6);
 		
 		//종료일자
 		String schdulEndde = dateFormat.format(calNext.getTime());
 		
-		commandMap.put("searchMode", "WEEK");
-		
-		commandMap.put("schdulBgnde", schdulBgnde);
-		commandMap.put("schdulEndde", schdulEndde);
+		Map<String, Object> paramMap = new HashMap<>();
 
-		resultMap.put("resultList", egovIndvdlSchdulManageService.selectIndvdlSchdulManageRetrieve(commandMap));
+		paramMap.put("searchMode", "WEEK");
+		paramMap.put("schdulBgnde", schdulBgnde);
+		paramMap.put("schdulEndde", schdulEndde);
 
-		resultVO.setResult(resultMap);
-		resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
-		resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());
+		// 일정 구분 필터링 추가
+		if (searchVO.getSchdulSe() != null && !searchVO.getSchdulSe().isEmpty()) {
+			paramMap.put("schdulSe", searchVO.getSchdulSe());
+		}
 
-		return resultVO;
+		resultMap.put("resultList", egovIndvdlSchdulManageService.selectIndvdlSchdulManageRetrieve(paramMap));
+
+		return resultVoHelper.buildFromMap(resultMap, ResponseCode.SUCCESS);
 	}
 
 	/**
@@ -684,14 +618,28 @@ public class EgovIndvdlSchdulManageApiController {
 	 * @throws
 	 */
 	public String DateTypeIntForString(int iInput) {
-		String sOutput = "";
-		if (Integer.toString(iInput).length() == 1) {
-			sOutput = "0" + Integer.toString(iInput);
-		} else {
-			sOutput = Integer.toString(iInput);
-		}
-
-		return sOutput;
+		return (iInput < 10) ? "0" + iInput : String.valueOf(iInput);
 	}
 
+	/**
+	 * 정확한 14자리 날짜/시간인지 검증
+	 * @return  boolean
+	 */
+	private boolean isValidSchedulePeriod(IndvdlSchdulManageVO schedule) {
+		String begin = schedule.getSchdulBgnde();
+		String end = schedule.getSchdulEndde();
+
+		if (begin == null || end == null || !begin.matches("[0-9]{14}") || !end.matches("[0-9]{14}")) {
+			return false;
+		}
+
+		try {
+			LocalDateTime beginDate = LocalDateTime.parse(begin, SCHEDULE_DATE_FORMAT);
+			LocalDateTime endDate = LocalDateTime.parse(end, SCHEDULE_DATE_FORMAT);
+
+			return beginDate.getYear() > 0 && endDate.getYear() > 0 && !beginDate.isAfter(endDate);
+		} catch (DateTimeParseException e) {
+			return false;
+		}
+	}
 }

@@ -25,7 +25,9 @@ public class HtmlCharacterEscapes extends CharacterEscapes {
 
     @Override
     public int[] getEscapeCodesForAscii() {
-        return asciiEscapes;
+    	// 26.03.04 KISA 보안취약점 조치
+    	// private 배열의 복제본 반환 처리
+        return asciiEscapes.clone();
     }
 
     @Override

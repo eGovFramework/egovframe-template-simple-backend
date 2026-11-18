@@ -242,6 +242,7 @@
 			SCHDUL_ENDDE=#{schdulEndde},
 			SCHDUL_NM=#{schdulNm},
 			SCHDUL_CN=#{schdulCn},
+			SCHDUL_PLACE=#{schdulPlace},
 			SCHDUL_IPCR_CODE=#{schdulIpcrCode},
 			SCHDUL_CHARGER_ID=#{schdulChargerId},
 			ATCH_FILE_ID=#{atchFileId},

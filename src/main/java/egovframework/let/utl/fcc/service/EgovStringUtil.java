@@ -73,7 +73,7 @@ public class EgovStringUtil {
 	 * @param source 원본 문자열 배열
 	 * @param output 더할문자열
 	 * @param slength 지정길이
-	 * @return 지정길이로 잘라서 더할분자열 합친 문자열
+	 * @return 지정길이로 잘라서 더할문자열 합친 문자열
 	 */
 	public static String cutString(String source, String output, int slength) {
 		String returnVal = null;
@@ -91,7 +91,7 @@ public class EgovStringUtil {
 	 * 문자열이 지정한 길이를 초과했을때 해당 문자열을 삭제하는 메서드
 	 * @param source 원본 문자열 배열
 	 * @param slength 지정길이
-	 * @return 지정길이로 잘라서 더할분자열 합친 문자열
+	 * @return 지정길이로 잘라서 더할문자열 합친 문자열
 	 */
 	public static String cutString(String source, int slength) {
 		String result = null;
@@ -253,6 +253,7 @@ public class EgovStringUtil {
 			if (srcStr.indexOf(chA) >= 0) {
 				preStr = srcStr.substring(0, srcStr.indexOf(chA));
 				nextStr = srcStr.substring(srcStr.indexOf(chA) + 1, srcStr.length());
+				rtnStr.setLength(0);
 				srcStr = rtnStr.append(preStr).append(object).append(nextStr).toString();
 			}
 		}
@@ -522,15 +523,15 @@ public class EgovStringUtil {
 		int index0 = 0;
 		while (index >= 0) {
 			cnt++;
-			index = source.indexOf(separator, index + 1);
+			index = source.indexOf(separator, index + separator.length());
 		}
 		returnVal = new String[cnt];
 		cnt = 0;
 		index = source.indexOf(separator);
 		while (index >= 0) {
 			returnVal[cnt] = source.substring(index0, index);
-			index0 = index + 1;
-			index = source.indexOf(separator, index + 1);
+			index0 = index + separator.length();
+			index = source.indexOf(separator, index + separator.length());
 			cnt++;
 		}
 		returnVal[cnt] = source.substring(index0);
@@ -698,8 +699,8 @@ public class EgovStringUtil {
 		int index = source.indexOf(separator);
 		while (index >= 0 && cnt < (arraylength - 1)) {
 			returnVal[cnt] = source.substring(index0, index);
-			index0 = index + 1;
-			index = source.indexOf(separator, index + 1);
+			index0 = index + separator.length();
+			index = source.indexOf(separator, index + separator.length());
 			cnt++;
 		}
 		returnVal[cnt] = source.substring(index0);
@@ -834,7 +835,7 @@ public class EgovStringUtil {
 		String rtnStr = null;
 
 		// 문자열로 변환하기 위한 패턴 설정(년도-월-일 시:분:초:초(자정이후 초))
-		String pattern = "yyyyMMddhhmmssSSS";
+		String pattern = "yyyyMMddHHmmssSSS";
 
 		SimpleDateFormat sdfCurrent = new SimpleDateFormat(pattern, Locale.KOREA);
 		Timestamp ts = new Timestamp(System.currentTimeMillis());

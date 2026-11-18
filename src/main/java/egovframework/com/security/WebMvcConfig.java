@@ -23,6 +23,7 @@ import java.util.List;
  * DATE              AUTHOR             NOTE
  * -----------------------------------------------------------
  * 2023/07/13        crlee       최초 생성
+ * 2026/06/26        이백행       [2026년 컨트리뷰션] @Bean 메서드의 불필요한 public 접근제어자 제거
  */
 @Configuration
 @RequiredArgsConstructor
@@ -36,7 +37,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     }
     
     @Bean
-    public HttpMessageConverter<?> htmlEscapingConverter() {
+    HttpMessageConverter<?> htmlEscapingConverter() {
         ObjectMapper copy = objectMapper.copy();
         copy.getFactory().setCharacterEscapes(new HtmlCharacterEscapes());
         return new MappingJackson2HttpMessageConverter(copy);

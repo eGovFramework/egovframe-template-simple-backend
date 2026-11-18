@@ -3,7 +3,6 @@ package egovframework.com.cmm.web;
 import java.util.Base64;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 
 import org.egovframe.rte.fdl.cryptography.EgovCryptoService;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,7 +15,8 @@ import egovframework.com.cmm.service.FileDeleteRequest;
 import egovframework.com.cmm.service.FileVO;
 import egovframework.com.cmm.service.ResultVO;
 import egovframework.com.cmm.util.EgovUserDetailsHelper;
-import egovframework.let.cop.bbs.service.BoardVO;
+import egovframework.let.cop.bbs.dto.request.BbsManageDetailBoardRequestDTO;
+import egovframework.let.cop.bbs.dto.response.BbsManageDetailResponseDTO;
 import egovframework.let.cop.bbs.service.EgovBBSManageService;
 import egovframework.let.cop.smt.sim.service.EgovIndvdlSchdulManageService;
 import egovframework.let.cop.smt.sim.service.IndvdlSchdulManageVO;
@@ -38,9 +38,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
  *
  *   수정일      수정자           수정내용
  *  -------    --------    ---------------------------
- *   2009.03.25  이삼섭           최초 생성
+ *   2009.03.25  이삼섭          최초 생성
  *   2011.08.31  JJY            경량환경 템플릿 커스터마이징버전 생성
- *   2026.07     보안취약점대응     POST /file 삭제에 소유권 검증 추가
+ *   2026.07     보안취약점대응   F-01 Layer2 — POST /file 삭제에 소유권 검증 추가
  *
  * </pre>
  */
@@ -55,7 +55,7 @@ public class EgovFileMngApiController {
     @Resource(name="egovARIACryptoService")
     private EgovCryptoService cryptoService;
 
-    // 2026 보안취약점 대응 — 파일 소유권 검증을 위해 소유 엔티티(게시글/일정)를 조회한다.
+    // 2026 보안취약점 대응(F-01 Layer2) — 파일 소유권 검증을 위해 소유 엔티티(게시글/일정)를 조회한다.
     @Resource(name = "EgovBBSManageService")
     private EgovBBSManageService bbsMngService;
 
@@ -85,7 +85,7 @@ public class EgovFileMngApiController {
 			@ApiResponse(responseCode = "403", description = "권한 없음")
 	})
     @PostMapping(value ="/file")
-    public ResultVO deleteFileInf(HttpServletRequest request, @RequestBody FileDeleteRequest req) throws Exception {
+    public ResultVO deleteFileInf(@RequestBody FileDeleteRequest req) throws Exception {
     	ResultVO resultVO = new ResultVO();
 
     	// 암호화된 atchFileId 를 복호화 (2022.12.06) - 파일아이디가 유추 불가능하도록 조치
@@ -93,7 +93,7 @@ public class EgovFileMngApiController {
     	byte[] decodedBytes = Base64.getDecoder().decode(atchFileId);
     	String decodedFileId = new String(cryptoService.decrypt(decodedBytes, EgovFileDownloadController.ALGORITM_KEY));
 
-    	// 2026 보안취약점 대응 — 소유권 검증
+    	// 2026 보안취약점 대응(F-01 Layer2) — 소유권 검증
     	// 규칙: ROLE_ADMIN 은 전체 / 일반 사용자는 본인 소유 엔티티의 파일만 삭제 가능
     	boolean isAdmin = EgovUserDetailsHelper.getAuthorities().contains("ROLE_ADMIN");
     	String ownerId = resolveFileOwner(req, decodedFileId);
@@ -134,13 +134,15 @@ public class EgovFileMngApiController {
     	String bbsId = req.getBbsId();
     	String nttId = req.getNttId();
     	if (bbsId != null && !bbsId.trim().isEmpty() && nttId != null && nttId.matches("\\d+")) {
-    		BoardVO boardVO = new BoardVO();
-    		boardVO.setBbsId(bbsId);
-    		boardVO.setNttId(Long.parseLong(nttId));
-    		boardVO.setPlusCount(false);
-    		BoardVO article = bbsMngService.selectBoardArticle(boardVO);
-    		if (article != null && decodedFileId.equals(article.getAtchFileId())) {
-    			return article.getFrstRegisterId();
+    		BbsManageDetailBoardRequestDTO boardReq = BbsManageDetailBoardRequestDTO.builder()
+    				.bbsId(bbsId)
+    				.nttId(Long.parseLong(nttId))
+    				.plusCount(false)
+    				.build();
+    		BbsManageDetailResponseDTO res = bbsMngService.selectBoardArticle(boardReq);
+    		if (res != null && res.getBoardVO() != null
+    				&& decodedFileId.equals(res.getBoardVO().getAtchFileId())) {
+    			return res.getBoardVO().getFrstRegisterId();
     		}
     		return null;
     	}

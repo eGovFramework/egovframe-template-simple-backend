@@ -17,7 +17,7 @@ import lombok.Setter;
  * @Modification Information
  *    수정일         수정자      수정내용
  *    -------       ------     -------------------
- *    2026.07       보안대응     최초 생성 (소유권 검증)
+ *    2026.07       보안대응     최초 생성 (F-01 Layer2 소유권 검증)
  */
 @Schema(description = "파일 삭제 요청 (소유권 검증용 컨텍스트 포함)")
 @Getter

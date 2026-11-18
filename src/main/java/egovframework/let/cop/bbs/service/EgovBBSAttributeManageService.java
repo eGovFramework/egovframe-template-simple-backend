@@ -3,6 +3,17 @@ package egovframework.let.cop.bbs.service;
 import java.util.List;
 import java.util.Map;
 
+import org.egovframe.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
+
+import egovframework.let.cop.bbs.domain.model.BoardMasterVO;
+import egovframework.let.cop.bbs.dto.request.BbsAttributeInsertRequestDTO;
+import egovframework.let.cop.bbs.dto.request.BbsSearchRequestDTO;
+import egovframework.let.cop.bbs.dto.request.BbsAttributeUpdateRequestDTO;
+import egovframework.let.cop.bbs.dto.response.BbsAttributeDetailResponseDTO;
+import egovframework.let.cop.bbs.dto.response.BbsAttributeListResponseDTO;
+import egovframework.let.cop.bbs.dto.response.BbsFileAtchResponseDTO;
+import egovframework.let.cop.bbs.enums.BbsDetailRequestType;
+
 /**
  * 게시판 속성관리를 위한 서비스 인터페이스 클래스
  * @author 공통 서비스 개발팀 이삼섭
@@ -29,7 +40,7 @@ public interface EgovBBSAttributeManageService {
 	 * @param boardMaster
 	 * @exception Exception Exception
 	 */
-	public void deleteBBSMasterInf(BoardMaster boardMaster)
+	public void deleteBBSMasterInf(String UniqId, String bbsId)
 	  throws Exception;
 
 	/**
@@ -39,7 +50,7 @@ public interface EgovBBSAttributeManageService {
 	 * @param boardMaster
 	 * @exception Exception Exception
 	 */
-	public String insertBBSMastetInf(BoardMaster boardMaster)
+	public String insertBBSMastetInf(BbsAttributeInsertRequestDTO bbsAttributeInsertRequestDTO)
 	  throws Exception;
 
 	/**
@@ -65,12 +76,16 @@ public interface EgovBBSAttributeManageService {
 
 	/**
 	 * 게시판 속성정보 한 건을 상세조회한다.
-	 * @param BoardMasterVO
 	 * 
-	 * @param searchVO
+	 * 요청 유형에 따라 서로 다른 응답 DTO를 반환합니다.
+	 * 예: "detail"은 {@link BbsAttributeDetailResponseDTO}, "fileAtch"는 {@link BbsFileAtchResponseDTO} 반환
+	 *
+	 * @param String bbsId
+	 * @param String uniqId
+	 * @param requestType 요청 유형 ("detail" 또는 "fileAtch")
 	 * @exception Exception Exception
 	 */
-	public BoardMasterVO selectBBSMasterInf(BoardMaster searchVO)
+	public BbsFileAtchResponseDTO selectBBSMasterInf(String bbsId, String uniqId, BbsDetailRequestType requestType)
 	  throws Exception;
 
 	/**
@@ -80,7 +95,7 @@ public interface EgovBBSAttributeManageService {
 	 * @param searchVO
 	 * @exception Exception Exception
 	 */
-	public Map<String, Object> selectBBSMasterInfs(BoardMasterVO searchVO)
+	public BbsAttributeListResponseDTO selectBBSMasterInfs(BbsSearchRequestDTO bbsAttributeSearchRequestDTO, PaginationInfo paginationInfo)
 	  throws Exception;
 
 	/**
@@ -110,7 +125,7 @@ public interface EgovBBSAttributeManageService {
 	 * @param boardMaster
 	 * @exception Exception Exception
 	 */
-	public void updateBBSMasterInf(BoardMaster boardMaster)
+	public void updateBBSMasterInf(BbsAttributeUpdateRequestDTO bbsAttributeUpdateRequestDTO)
 	  throws Exception;
 
 	/**

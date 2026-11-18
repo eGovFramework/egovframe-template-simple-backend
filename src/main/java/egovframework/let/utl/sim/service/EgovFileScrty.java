@@ -29,7 +29,7 @@ import lombok.extern.slf4j.Slf4j;
  *  -------    --------    ---------------------------
  *   2009.01.19  박지욱          최초 생성
  *   2011.08.31  JJY            경량환경 템플릿 커스터마이징버전 생성
- *   2026.05.14                  보안취약점 대응 (4.3.x)
+ *   2026.05.13  PHJ            보안취약점 대응
  *
  * </pre>
  */
@@ -199,7 +199,7 @@ public class EgovFileScrty {
 	public static String decode(String data) throws Exception {
 		return new String(decodeBinary(data));
 	}
-
+	
     /**
      * 비밀번호를 암호화하는 기능(복호화가 되면 안되므로 SHA-256 인코딩 방식 적용).
      *
@@ -209,6 +209,9 @@ public class EgovFileScrty {
      * @return String result 암호화된 비밀번호
      * @exception Exception
      */
+	// 26.03.04 KISA 보안취약점 조치
+	// deprecated 메서드 전체 주석 처리
+	/*
     @Deprecated
     public static String encryptPassword(String data) throws Exception {
 
@@ -221,7 +224,7 @@ public class EgovFileScrty {
 		plainText = data.getBytes();
 
 		MessageDigest md = MessageDigest.getInstance("SHA-256");
-
+		*/
 		// 변경 시 기존 hash 값에 검증 불가.. => deprecated 시키고 유지
 		/*
 	    // Random 방식의 salt 추가
@@ -233,14 +236,16 @@ public class EgovFileScrty {
 	    md.update(randomBytes);
 
 		*/
-		hashValue = md.digest(plainText);
+		// hashValue = md.digest(plainText);
 
 		/*
 		BASE64Encoder encoder = new BASE64Encoder();
 		return encoder.encode(hashValue);
 		*/
+		/*
 		return new String(Base64.encodeBase64(hashValue));
     }
+    */
 
     /**
      * 비밀번호를 암호화하는 기능(복호화가 되면 안되므로 SHA-256 인코딩 방식 적용)

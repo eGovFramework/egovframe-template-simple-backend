@@ -3,12 +3,6 @@ package egovframework.com.jwt;
 import java.io.IOException;
 import java.util.Arrays;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -17,6 +11,11 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import egovframework.com.cmm.LoginVO;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * fileName       : JwtAuthenticationFilter
@@ -27,7 +26,7 @@ import egovframework.com.cmm.LoginVO;
  * DATE              AUTHOR             NOTE
  * -----------------------------------------------------------
  * 2023/06/11        crlee       최초 생성
- * 2026/05/14        보안취약점 대응 (4.3.x)
+ * 2026/05/13        PHJ         보안취약점 대응
  */
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
@@ -52,14 +51,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
         }
         // 2순위: Authorization 헤더 (Swagger 등 직접 호출 호환)
-        if (jwtToken == null || jwtToken.isEmpty()) {
+        if (jwtToken == null || jwtToken.trim().isEmpty()) {
             String header = req.getHeader(HEADER_STRING);
-            if (header != null && !header.isEmpty()) {
+            if (header != null && !header.trim().isEmpty()) {
                 jwtToken = header.startsWith("Bearer ") ? header.substring(7) : header;
             }
         }
 
-        if (jwtToken == null || jwtToken.isEmpty()) {
+        if (jwtToken == null || jwtToken.trim().isEmpty()) {
             chain.doFilter(req, res);
             return;
         }

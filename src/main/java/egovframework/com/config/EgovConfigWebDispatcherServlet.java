@@ -10,7 +10,6 @@ import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import egovframework.com.cmm.interceptor.AuthenticInterceptor;
-import egovframework.com.cmm.interceptor.CustomAuthenticInterceptor;
 
 /**
  * @ClassName : EgovConfigWebDispatcherServlet.java
@@ -26,7 +25,7 @@ import egovframework.com.cmm.interceptor.CustomAuthenticInterceptor;
  *   수정일              수정자               수정내용
  *  -------------  ------------   ---------------------
  *   2021. 7. 20    윤주호               최초 생성
- *   2026. 5. 14                       보안취약점 대응 (4.3.x) — /auth/me 익명 허용 추가, /auth/login 제거
+ *   2026. 5. 13  	PHJ                보안취약점 대응
  * </pre>
  *
  */
@@ -55,11 +54,6 @@ public class EgovConfigWebDispatcherServlet implements WebMvcConfigurer {
 				"/auth/me",   // 익명 호출 가능 — 컨트롤러가 직접 401 응답을 만든다
 				"/auth/oauth-state"   // 익명(로그인 전) 호출 — OAuth state 발급 엔드포인트
 				);
-		registry.addInterceptor(new CustomAuthenticInterceptor())
-			.addPathPatterns(
-				"/**/*.do")
-			.excludePathPatterns(
-				"/auth/**");
 	}
 
 	// -------------------------------------------------------------
@@ -67,8 +61,6 @@ public class EgovConfigWebDispatcherServlet implements WebMvcConfigurer {
 	// -------------------------------------------------------------
 	@Override
 	public void addViewControllers(ViewControllerRegistry registry) {
-		registry.addViewController("/cmmn/validator.do")
-			.setViewName("cmmn/validator");
 		registry.addViewController("/").setViewName("forward:/index.html");
 	}
 }

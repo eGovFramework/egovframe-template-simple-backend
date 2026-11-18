@@ -86,14 +86,18 @@
  	<select id="selectFileInf" parameterType="FileVO" resultMap="fileDetail">
  		
 			SELECT 
-				ATCH_FILE_ID, FILE_CN, FILE_SN, FILE_STRE_COURS, STRE_FILE_NM,
-				FILE_EXTSN, ORIGNL_FILE_NM, FILE_SIZE
+				b.ATCH_FILE_ID, b.FILE_CN, b.FILE_SN, b.FILE_STRE_COURS, b.STRE_FILE_NM,
+				b.FILE_EXTSN, b.ORIGNL_FILE_NM, b.FILE_SIZE
 			FROM
-				LETTNFILEDETAIL
+				LETTNFILE a, LETTNFILEDETAIL b
 			WHERE
-				ATCH_FILE_ID = #{atchFileId}
+				b.ATCH_FILE_ID = #{atchFileId}
 			AND 
-				FILE_SN = #{fileSn}	
+				b.FILE_SN = #{fileSn}	
+			AND 
+				a.ATCH_FILE_ID = b.ATCH_FILE_ID
+			AND 
+				a.USE_AT = 'Y'
  		
  	</select>
 

@@ -15,17 +15,17 @@
 <bean id="otherHandler" class="egovframework.com.cmm.EgovComOthersExcepHndlr" /> 
 ```
 
-<ContextAppAspect.class>
+<EgovConfigAppAspect.class>
 
 ```java
 @Bean
-public EgovComExcepHndlr egovHandler() {
+EgovComExcepHndlr egovHandler() {
 	EgovComExcepHndlr egovComExcepHndlr = new EgovComExcepHndlr();
 	return egovComExcepHndlr;
 }
 
 @Bean
-public EgovComOthersExcepHndlr otherHandler() {
+EgovComOthersExcepHndlr otherHandler() {
 	EgovComOthersExcepHndlr egovComOthersExcepHndlr = new EgovComOthersExcepHndlr();
 	return egovComOthersExcepHndlr;
 }
@@ -55,11 +55,11 @@ public EgovComOthersExcepHndlr otherHandler() {
 </bean>
 ```
 
-<ContextAppAspect.class>
+<EgovConfigAppAspect.class>
 
 ```java
 @Bean
-public DefaultExceptionHandleManager defaultExceptionHandleManager(ExceptionHandler egovHandler) {
+DefaultExceptionHandleManager defaultExceptionHandleManager(ExceptionHandler egovHandler, AntPathMatcher antPathMatcher) {
     DefaultExceptionHandleManager defaultExceptionHandleManager = new DefaultExceptionHandleManager();
     defaultExceptionHandleManager.setReqExpMatcher(antPathMatcher);
     defaultExceptionHandleManager.setPatterns(new String[] {"**service.impl.*"});
@@ -72,7 +72,7 @@ public DefaultExceptionHandleManager defaultExceptionHandleManager(ExceptionHand
 
 템플릿 내에서 Exception 발생시 실제 처리를 위한 클래스 설정
 
-<conext-aspect.xml>
+<context-aspect.xml>
 
 ```xml
 <bean id="exceptionTransfer" class="egovframework.rte.fdl.cmmn.aspect.ExceptionTransfer">
@@ -87,11 +87,11 @@ public DefaultExceptionHandleManager defaultExceptionHandleManager(ExceptionHand
 
 
 
-<ContextAppAspect.class>
+<EgovConfigAppAspect.class>
 
 ```java
 @Bean
-public ExceptionTransfer exceptionTransfer(
+ExceptionTransfer exceptionTransfer(
     @Qualifier("defaultExceptionHandleManager") DefaultExceptionHandleManager defaultExceptionHandleManager,
     @Qualifier("otherExceptionHandleManager") DefaultExceptionHandleManager otherExceptionHandleManager) {
     

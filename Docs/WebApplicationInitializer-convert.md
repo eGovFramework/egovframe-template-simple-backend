@@ -1,8 +1,12 @@
 # WebApplicationInitializer 변환
 
-## Root WebApplication 등록
+> 이 문서는 `web.xml` 기반 설정을 JavaConfig 로 옮기는 방법을 다룬다.
+> `WebApplicationInitializer`을 이용하는 방식과 Spring Boot 기반에서의 방식으로 나누어 정리한다.
 
-### 리스너 등록
+## 1. `web.xml` → `WebApplicationInitializer`
+### Root WebApplication 등록
+
+#### 리스너 등록
 
 > **리스너의 역할**
 > Listener는 Servlet Context가 생성하는 이벤트를 전달받는 역할을 한다.
@@ -34,7 +38,7 @@ servletContext.addListener(listener);
 
 
 
-### 설정파일 위치 변경
+#### 설정파일 위치 변경
 
 <web.xml>
 
@@ -57,7 +61,7 @@ servletContext.setInitParameter("contextConfigLoaction", "classpath*:egovframewo
 
 
 
-### `@Configuration` 사용
+#### `@Configuration` 사용
 
 `AnnotationConfigWebApplicationContext` 를 이용하면 Java Config 를 이용한 설정으로 사용할 수 있다.
 
@@ -91,7 +95,7 @@ public class ContextApp {
 
 
 
-## Servlet Application 등록
+### Servlet Application 등록
 
 Servlet Web Application Context는 Servlet 안에서 초기화 되고 Servlet 이 종료될 때 같이 종료 된다.
 
@@ -99,7 +103,7 @@ Servlet Web Application Context는 Servlet 안에서 초기화 되고 Servlet �
 
 기본의 DispatcherServlet 등록은 아래와 같이 작성한다.
 
-### 설정파일 위치 변경
+#### 설정파일 위치 변경
 
 <web.xml>
 
@@ -132,7 +136,7 @@ dispatcher.addMapping("*.do");
 
 
 
-### `@Configuration` 사용
+#### `@Configuration` 사용
 
 `AnnotationConfigWebApplicationContext` 를 이용하면 Java Config 를 이용한 설정으로 사용할 수 있다.
 
@@ -162,6 +166,47 @@ public class ContextWebDispatcherServlet {
 
 
 
+
+## 2. Spring Boot 자동 구성
+
+해당 프로젝트는 위 `WebApplicationInitializer` / `web.xml` 을 직접 작성하지 않는다.
+Spring Boot 가 내장 톰캣과 `DispatcherServlet` 을 자동 구성하므로, 다음 클래스들만 둔다.
+
+애플리케이션 진입점 — `egovframework.EgovBootApplication`
+
+`@SpringBootApplication` 의 `main()` 에서 `SpringApplication.run(...)` 으로 기동한다(내장 톰캣·DispatcherServlet 자동 구성). `web.xml` 도, `WebApplicationInitializer` 구현도 없다.
+
+```java
+@ServletComponentScan
+@SpringBootApplication
+public class EgovBootApplication {
+    public static void main(String[] args) {
+        SpringApplication springApplication = new SpringApplication(EgovBootApplication.class);
+        springApplication.setBannerMode(Banner.Mode.OFF);
+        springApplication.run(args);
+    }
+}
+```
+
+루트 설정 — `egovframework.com.config.EgovConfigApp`
+`@Import` 로 `EgovConfigApp*` 설정 클래스들을 모으고 `@PropertySource` 로 프로퍼티를 로딩한다. 
+(`ContextApp` + `@ImportResource` 역할을 대체)
+
+```java
+@Configuration
+@Import({ EgovConfigAppAspect.class, EgovConfigAppCommon.class, EgovConfigAppDatasource.class,
+          EgovConfigAppIdGen.class, EgovConfigAppProperties.class, EgovConfigAppMapper.class,
+          EgovConfigAppTransaction.class, EgovConfigAppWhitelist.class })
+@PropertySources({ @PropertySource("classpath:/application.properties") })
+public class EgovConfigApp {
+}
+```
+
+MVC 설정 — `egovframework.com.config.EgovConfigWebDispatcherServlet`
+`WebMvcConfigurer` 를 구현해 Boot 가 제공하는 DispatcherServlet 을 커스터마이즈한다(인터셉터·뷰컨트롤러 등록). DispatcherServlet 을 직접 등록하지 않는다. (`ContextWebDispatcherServlet` 역할을 대체)
+
+실행환경 리스너 — `egovframework.com.config.EgovWebServletContextListener`
+`ServletContextListener` 로 `@ServletComponentScan` 을 통해 등록되며, `Globals.DbType` · `Globals.Auth` 값으로 `spring.profiles.active` 를 설정한다. (`ContextLoaderListener` 와는 목적이 다른, 프로파일 설정용 리스너)
 
 출처
 

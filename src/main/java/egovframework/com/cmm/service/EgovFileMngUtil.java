@@ -12,9 +12,10 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.egovframe.rte.fdl.cmmn.exception.EgovBizException;
+
 import javax.annotation.Resource;
 
-import org.egovframe.rte.fdl.cmmn.exception.EgovBizException;
 import org.egovframe.rte.fdl.idgnr.EgovIdGnrService;
 import org.egovframe.rte.fdl.property.EgovPropertyService;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,7 +35,7 @@ import lombok.extern.slf4j.Slf4j;
  *     -------          --------        ---------------------------
  *   2009.02.13       이삼섭                  최초 생성
  *   2011.08.31  JJY            경량환경 템플릿 커스터마이징버전 생성
- *   2026.05.14                  보안취약점 대응 (4.3.x) — 업로드 확장자 화이트리스트·크기·파일명 정규화
+ *   2026.05.13  PHJ            보안취약점 대응
  *
  * @author 공통 서비스 개발팀 이삼섭
  * @since 2009. 02. 13
@@ -47,8 +48,6 @@ import lombok.extern.slf4j.Slf4j;
 public class EgovFileMngUtil {
 
     public static final int BUFF_SIZE = 2048;
-
-    private static final long MAX_FILE_SIZE = 10L * 1024 * 1024; // 10MB
 
     @Value("${Globals.fileUpload.Extensions:.gif.jpg.jpeg.png.xls.xlsx}")
     private String allowedExtensionsRaw;
@@ -104,6 +103,10 @@ public class EgovFileMngUtil {
 	String filePath = "";
 	List<FileVO> result  = new ArrayList<FileVO>();
 	FileVO fvo;
+	long maxFileSize = propertyService.getLong("Globals.posblAtchFileSize");
+
+	// 뒤의 파일이 검증에 실패해도 앞의 파일이 저장되지 않도록 먼저 모두 검증한다.
+	validateFiles(files, maxFileSize);
 
 	while (itr.hasNext()) {
 	    Entry<String, MultipartFile> entry = itr.next();
@@ -128,22 +131,9 @@ public class EgovFileMngUtil {
 	    }
 	    ////------------------------------------
 	    
-		int index = orginFileName.lastIndexOf(".");
-	    if (index < 0) {
-	        throw new EgovBizException("확장자가 없는 파일은 업로드할 수 없습니다.");
-	    }
+	    int index = orginFileName.lastIndexOf(".");
 	    String fileExt = orginFileName.substring(index + 1).toLowerCase();
-
-	    // 확장자 화이트리스트 검증
-	    if (!allowedExtensions().contains(fileExt)) {
-	        throw new EgovBizException("허용되지 않는 파일 확장자입니다: " + fileExt);
-	    }
-
-	    // 파일 크기 검증
 	    long _size = file.getSize();
-	    if (_size > MAX_FILE_SIZE) {
-	        throw new EgovBizException("파일 크기가 허용 한도(10MB)를 초과했습니다.");
-	    }
 
 	    // 파일명 정규화 (경로 탈출·제어문자 제거)
 	    String safeOriginFileName = orginFileName.replaceAll("[\\p{Cntrl}\\\\/:*?\"<>|]", "_");
@@ -179,6 +169,27 @@ public class EgovFileMngUtil {
 	}
 
 	return result;
+    }
+
+    private void validateFiles(Map<String, MultipartFile> files, long maxFileSize) throws EgovBizException {
+        for (MultipartFile file : files.values()) {
+            String originalFileName = file.getOriginalFilename();
+            if (originalFileName == null || originalFileName.isEmpty()) {
+                continue;
+            }
+
+            int index = originalFileName.lastIndexOf(".");
+            if (index < 0) {
+                throw new EgovBizException("확장자가 없는 파일은 업로드할 수 없습니다.");
+            }
+            String fileExt = originalFileName.substring(index + 1).toLowerCase();
+            if (!allowedExtensions().contains(fileExt)) {
+                throw new EgovBizException("허용되지 않는 파일 확장자입니다: " + fileExt);
+            }
+            if (file.getSize() > maxFileSize) {
+                throw new EgovBizException("파일 크기가 허용 한도(" + maxFileSize + "바이트)를 초과했습니다.");
+            }
+        }
     }
 
 }

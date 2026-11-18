@@ -2,12 +2,7 @@ package egovframework.let.uat.uia.web;
 
 import java.time.Duration;
 import java.util.HashMap;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.util.LinkedHashMap;
 
 import org.egovframe.rte.fdl.cmmn.trace.LeaveaTrace;
 import org.egovframe.rte.fdl.property.EgovPropertyService;
@@ -15,9 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,11 +22,20 @@ import egovframework.com.cmm.ResponseCode;
 import egovframework.com.cmm.service.ResultVO;
 import egovframework.com.jwt.EgovJwtTokenUtil;
 import egovframework.let.uat.uia.service.EgovLoginService;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -51,7 +52,8 @@ import lombok.extern.slf4j.Slf4j;
  *  -------            --------        ---------------------------
  *  2009.03.06  박지욱     최초 생성
  *  2011.08.31  JJY            경량환경 템플릿 커스터마이징버전 생성
- *  2026.05.14             보안취약점 대응 (4.3.x) — JWT 기반 단일화, 세션·body 토큰 제거, 쿠키 발급, /auth/me 추가
+ *  2025.11.10             JWT 기반 로그인으로 전환, 세션 기반 로그인 제거
+ *  2026.05.13             보안취약점 대응
  *
  *  </pre>
  */
@@ -75,7 +77,7 @@ public class EgovLoginApiController {
 	/** TRACE */
 	@Resource(name = "leaveaTrace")
 	LeaveaTrace leaveaTrace;
-
+	
 	/** JWT */
 	@Autowired
     private EgovJwtTokenUtil jwtTokenUtil;
@@ -89,7 +91,7 @@ public class EgovLoginApiController {
 	 * JWT 기반 로그인을 처리한다
 	 * @param loginVO - 아이디, 비밀번호가 담긴 LoginVO
 	 * @param request - HttpServletRequest
-	 * @return HashMap - 로그인 결과(쿠키 발급 + 사용자 정보. 응답 body 에 토큰 미포함)
+	 * @return HashMap - 로그인 결과(JWT 토큰, 사용자 정보)
 	 * @exception Exception
 	 */
 	@Operation(
@@ -185,7 +187,7 @@ public class EgovLoginApiController {
 	/**
 	 * 현재 인증된 사용자 정보 + 권한 목록을 반환한다.
 	 * 프론트엔드 AuthContext가 앱 시작 시 호출하여 라우트 가드·메뉴 분기에 사용.
-	 * 인증되지 않은 호출은 컨트롤러에서 401 응답을 직접 반환한다.
+	 * 인증되지 않은 호출은 SecurityConfig에 의해 401 응답된다.
 	 */
 	@Operation(
 			summary = "현재 사용자 정보",
@@ -204,30 +206,26 @@ public class EgovLoginApiController {
 		// permitAll 로 익명 호출도 도달함 — anonymous 인 경우 principal 은 "anonymousUser" String.
 		// LoginVO 가 아닌 케이스를 401 로 분기.
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		if (auth == null || !(auth.getPrincipal() instanceof LoginVO)) {
+		if (auth == null || !(auth.getPrincipal() instanceof LoginVO)
+				|| ((LoginVO) auth.getPrincipal()).getId() == null
+				|| ((LoginVO) auth.getPrincipal()).getId().isEmpty()) {
 			resultMap.put("resultCode", "401");
 			resultMap.put("resultMessage", "not authenticated");
 			return resultMap;
 		}
 		LoginVO user = (LoginVO) auth.getPrincipal();
-		if (user.getId() == null || user.getId().isEmpty()) {
-			resultMap.put("resultCode", "401");
-			resultMap.put("resultMessage", "not authenticated");
-			return resultMap;
-		}
 
 		List<String> roles = auth.getAuthorities().stream()
 				.map(GrantedAuthority::getAuthority)
 				.collect(Collectors.toList());
 
-		HashMap<String, Object> userInfo = new HashMap<>();
-		userInfo.put("id",     user.getId());
-		userInfo.put("name",   user.getName() == null ? "" : user.getName());
-		userInfo.put("userSe", user.getUserSe() == null ? "" : user.getUserSe());
-		userInfo.put("uniqId", user.getUniqId() == null ? "" : user.getUniqId());
-		userInfo.put("roles",  roles);
-
-		resultMap.put("resultVO", userInfo);
+		Map<String, Object> resultVO = new LinkedHashMap<>();
+		resultVO.put("id",     user.getId());
+		resultVO.put("name",   user.getName() == null ? "" : user.getName());
+		resultVO.put("userSe", user.getUserSe() == null ? "" : user.getUserSe());
+		resultVO.put("uniqId", user.getUniqId() == null ? "" : user.getUniqId());
+		resultVO.put("roles",  roles);
+		resultMap.put("resultVO", resultVO);
 		resultMap.put("resultCode", "200");
 		resultMap.put("resultMessage", "성공");
 		return resultMap;

@@ -16,7 +16,7 @@
 
 ### 1. 환경설정 역할을 하는 클래스에 `@Configuration`을 붙여준다.
 
-`@Configuration` (org.springframework.context.annotation)을 붙이면 Spring은 일반 비지니스 Bean과는 달리 설정과 관련된 Bean이라 인식한다. XML 설정에서 `<Bean>` 과 같다.
+`@Configuration` (org.springframework.context.annotation)을 붙이면 Spring은 일반 비즈니스 Bean과는 달리 설정과 관련된 Bean이라 인식한다. XML 설정에서 `<Bean>` 과 같다.
 
 <Java Code>
 

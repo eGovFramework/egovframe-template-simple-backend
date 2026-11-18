@@ -3,16 +3,21 @@ package egovframework.let.uat.uia.web;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@Tag("browser")
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 class TestEgovLoginApiControllerSelenium {
 
 	WebDriver driver;
@@ -20,6 +25,13 @@ class TestEgovLoginApiControllerSelenium {
 	@BeforeEach
 	public void setup() {
 		driver = new ChromeDriver();
+	}
+
+	@AfterEach
+	public void tearDown() {
+		if (driver != null) {
+			driver.quit();
+		}
 	}
 
 	@Test
@@ -44,7 +56,8 @@ class TestEgovLoginApiControllerSelenium {
 		sleep();
 		WebElement passwordWebElement = driver.findElement(By.cssSelector(
 				"#contents > div > div.login_box > form > fieldset > span > input[type=password]:nth-child(2)"));
-		passwordWebElement.sendKeys("1");
+		// README/시드 SQL 에 공개된 샘플 관리자 자격증명 (운영 비밀 아님)
+		passwordWebElement.sendKeys("Admin@1234");
 
 		// when
 		// 로그인 버튼 클릭

@@ -1,11 +1,11 @@
 package egovframework.com.cmm.web;
 
 import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Base64;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.egovframe.rte.fdl.cryptography.EgovCryptoService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -64,7 +65,7 @@ public class EgovImageProcessController extends HttpServlet {
 	
 	/** 암호화서비스 */
     @Resource(name="egovARIACryptoService")
-    EgovCryptoService cryptoService;
+    private EgovCryptoService cryptoService;
 
 	/**
 	 * 첨부된 이미지에 대한 미리보기 기능을 제공한다.
@@ -112,47 +113,55 @@ public class EgovImageProcessController extends HttpServlet {
 
 		FileVO fvo = fileService.selectFileInf(vo);
 
+		// 삭제 처리된(USE_AT='N') 첨부는 조회되지 않으므로 파일 없음과 동일하게 처리한다
+		if (fvo == null) {
+			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+			return;
+		}
+
 		//String fileLoaction = fvo.getFileStreCours() + fvo.getStreFileNm();
 		String fileStreCours = EgovWebUtil.filePathBlackList(fvo.getFileStreCours());
 		String streFileNm = EgovWebUtil.filePathBlackList(fvo.getStreFileNm());
 
 		File file = new File(fileStreCours, streFileNm);
+		if (!file.isFile()) {
+			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+			return;
+		}
 		
 		// Try-with-resources를 이용한 자원 해제 처리 (try 구문에 선언한 리소스를 자동 반납)
 		// try에 전달할 수 있는 자원은 java.lang.AutoCloseable 인터페이스의 구현 객체로 한정
-		try (FileInputStream fis = new FileInputStream(file);
-		     BufferedInputStream in = new BufferedInputStream(fis);
-		     ByteArrayOutputStream bStream = new ByteArrayOutputStream();) {
-			
-			int imgByte;
-			while ((imgByte = in.read()) != -1) {
-				bStream.write(imgByte);
-			}
-
-			String type = "";
-
-			if (fvo.getFileExtsn() != null && !"".equals(fvo.getFileExtsn())) {
-				if ("jpg".equals(fvo.getFileExtsn().toLowerCase())) {
-					type = "image/jpeg";
-				} else {
-					type = "image/" + fvo.getFileExtsn().toLowerCase();
-				}
-				type = "image/" + fvo.getFileExtsn().toLowerCase();
-
-			} else {
-				log.debug("Image fileType is null.");
-			}
-
-			response.setHeader("Content-Type", type);
-			response.setContentLength(bStream.size());
-
-			bStream.writeTo(response.getOutputStream());
-
-			response.getOutputStream().flush();
-			response.getOutputStream().close();
+		try (BufferedInputStream in = new BufferedInputStream(new FileInputStream(file))) {
+			response.setContentType(getImageContentType(fvo.getFileExtsn()));
+			response.setContentLengthLong(file.length());
+			StreamUtils.copy(in, response.getOutputStream());
+			response.flushBuffer();
 
 		} catch (IOException e) {
 			log.debug("{}", e);
+		}
+	}
+
+	private String getImageContentType(String fileExtsn) {
+		if (fileExtsn == null || fileExtsn.trim().isEmpty()) {
+			log.debug("Image fileType is null.");
+			return "application/octet-stream";
+		}
+
+		switch (fileExtsn.toLowerCase(Locale.ROOT)) {
+			case "jpg":
+			case "jpeg":
+				return "image/jpeg";
+			case "png":
+				return "image/png";
+			case "gif":
+				return "image/gif";
+			case "bmp":
+				return "image/bmp";
+			case "webp":
+				return "image/webp";
+			default:
+				return "application/octet-stream";
 		}
 	}
 }

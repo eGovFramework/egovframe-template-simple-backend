@@ -1,0 +1,13 @@
+target/
+*.log
+.idea/
+.vscode/
+.git/
+.gitignore
+.dockerignore
+Dockerfile
+docker-compose.yml
+k8s/
+README*.md
+*.iml
+HELP.md

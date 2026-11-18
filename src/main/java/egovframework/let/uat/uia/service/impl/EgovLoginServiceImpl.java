@@ -26,7 +26,7 @@ import org.springframework.stereotype.Service;
  *  -------    --------    ---------------------------
  *  2009.03.06  박지욱          최초 생성
  *  2011.08.31  JJY            경량환경 템플릿 커스터마이징버전 생성
- *  2026.05.14                  보안취약점 대응 (4.3.x)
+ *  2026.05.13  PHJ            보안취약점 대응
  *
  *  </pre>
  */
@@ -45,7 +45,7 @@ public class EgovLoginServiceImpl extends EgovAbstractServiceImpl implements Ego
 	@Override
 	public LoginVO actionLogin(LoginVO vo) throws Exception {
 
-		// 1. 클라이언트가 보낸 값은 이미 1차 해시 (SHA-256(id||password) Base64).
+		// 1. R-07: 클라이언트가 보낸 값은 이미 1차 해시 (SHA-256(id||password) Base64).
 		//    여기서 한 번 더 해싱하면 SHA-256(id || 1차해시) = 저장 형식(이중해시) 과 동일.
 		String enpassword = EgovFileScrty.encryptPassword(vo.getPassword(), vo.getId());
 		vo.setPassword(enpassword);

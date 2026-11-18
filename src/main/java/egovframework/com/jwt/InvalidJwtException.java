@@ -11,3 +11,4 @@ public class InvalidJwtException extends RuntimeException {
         super(message);
     }
 }
+

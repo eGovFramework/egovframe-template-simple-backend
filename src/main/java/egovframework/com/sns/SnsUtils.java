@@ -48,7 +48,12 @@ public class SnsUtils {
 	private static HttpURLConnection connect(String apiUrl){
         try {
             URL url = new URL(apiUrl);
-            return (HttpURLConnection)url.openConnection();
+            HttpURLConnection con = (HttpURLConnection)url.openConnection();
+            // 안정성: 외부 SNS OpenAPI 무응답 시 로그인 스레드가 무한 대기하지 않도록
+            // connect/read 타임아웃을 설정한다(CWE-400 자원 고갈 방지).
+            con.setConnectTimeout(5000);
+            con.setReadTimeout(30000);
+            return con;
         } catch (MalformedURLException e) {
             throw new RuntimeException("API URL이 잘못되었습니다. : " + apiUrl, e);
         } catch (IOException e) {

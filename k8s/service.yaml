@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: egovframe-template-simple-backend
+  labels:
+    app.kubernetes.io/name: egovframe-template-simple-backend
+    app.kubernetes.io/part-of: egovframe-template
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: egovframe-template-simple-backend
+  ports:
+    - name: http
+      port: 8080
+      targetPort: http

@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: egovframe-template-simple-backend-files
+  labels:
+    app.kubernetes.io/name: egovframe-template-simple-backend
+    app.kubernetes.io/part-of: egovframe-template
+spec:
+  # 게시판 첨부파일 영속 저장소. Docker Desktop 등 단일 노드 클러스터의 기본
+  # StorageClass(ReadWriteOnce)에서 동작한다. 다중 레플리카로 확장하려면
+  # ReadWriteMany를 지원하는 스토리지(NFS 등)로 accessModes를 변경해야 한다.
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  # storageClassName: ""   # 클러스터 기본 StorageClass를 사용한다. 필요 시 지정한다.

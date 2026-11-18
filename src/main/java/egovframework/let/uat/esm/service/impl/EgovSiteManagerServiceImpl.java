@@ -31,7 +31,7 @@ public class EgovSiteManagerServiceImpl extends EgovAbstractServiceImpl implemen
 	private SiteManagerDAO siteManagerDAO;
 	/**
 	 * 기존 비번과 비교하여 변경된 비밀번호를 저장한다.
-	 * @param map데이터 String: login_id, old_password, new_password
+	 * @param map login_id, old_password, new_password를 담은 데이터
 	 * @return 성공시 1
 	 * @throws Exception
 	 */

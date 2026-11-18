@@ -5,13 +5,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 import org.egovframe.rte.fdl.property.EgovPropertyService;
 import org.egovframe.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
@@ -20,44 +19,41 @@ import org.springframework.security.web.authentication.logout.SecurityContextLog
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springmodules.validation.commons.DefaultBeanValidator;
 
 import egovframework.com.cmm.ComDefaultCodeVO;
-import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.LoginVO;
 import egovframework.com.cmm.ResponseCode;
 import egovframework.com.cmm.service.EgovCmmUseService;
 import egovframework.com.cmm.service.ResultVO;
-import egovframework.com.cmm.util.EgovUserDetailsHelper;
-import egovframework.com.jwt.EgovJwtTokenUtil;
+import egovframework.com.cmm.util.ResultVoHelper;
+import egovframework.let.cop.bbs.dto.request.BbsSearchRequestDTO;
 import egovframework.let.uss.umt.service.EgovMberManageService;
 import egovframework.let.uss.umt.service.MberManageVO;
 import egovframework.let.uss.umt.service.UserDefaultVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.Explode;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
-import io.swagger.v3.oas.annotations.enums.ParameterStyle;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 
 /**
- * 회원관련 요청을  비지니스 클래스로 전달하고 처리된결과를  해당   웹 화면으로 전달하는  Controller를 정의한다
+ * 회원관련 요청을 비즈니스 클래스로 전달하고 처리된 결과를 해당 웹 화면으로 전달하는 Controller를 정의한다
+ * 
  * @author 공통서비스 개발팀 조재영
  * @since 2009.04.10
  * @version 1.0
  * @see
  *
- * <pre>
+ *      <pre>
  * << 개정이력(Modification Information) >>
  *
  *   수정일      수정자           수정내용
@@ -65,78 +61,53 @@ import io.swagger.v3.oas.annotations.tags.Tag;
  *   2009.04.10  조재영          최초 생성
  *   2024.07.22  김일국          Boot 템플릿 커스터마이징버전 생성
  *
- * </pre>
+ *      </pre>
  */
 @RestController
-@Tag(name="EgovMberManageApiController",description = "회원 관리")
+@RequiredArgsConstructor
+@Tag(name = "EgovMberManageApiController", description = "회원 관리")
 public class EgovMberManageApiController {
 
-	@Autowired
-    private EgovJwtTokenUtil jwtTokenUtil;
-    public static final String HEADER_STRING = "Authorization";
-    private static final String ACCESS_TOKEN_COOKIE = "ACCESS_TOKEN";
+	private static final String ACCESS_TOKEN_COOKIE = "ACCESS_TOKEN";
 
-    @Value("${Globals.jwt.cookieSecure:false}")
-    private boolean cookieSecure;
-    
-	/** mberManageService */
-	@Resource(name = "mberManageService")
-	private EgovMberManageService mberManageService;
+	@Value("${Globals.jwt.cookieSecure:false}")
+	private boolean cookieSecure;
 
-	/** cmmUseService */
-	@Resource(name = "EgovCmmUseService")
-	private EgovCmmUseService cmmUseService;
-
-	/** EgovMessageSource */
-    @Resource(name="egovMessageSource")
-    EgovMessageSource egovMessageSource;
-
-	/** EgovPropertyService */
-	@Resource(name = "propertiesService")
-	protected EgovPropertyService propertiesService;
-
-	/** DefaultBeanValidator beanValidator */
-	@Autowired
-	private DefaultBeanValidator beanValidator;
+	private final EgovMberManageService mberManageService;
+	private final EgovCmmUseService cmmUseService;
+	private final EgovPropertyService propertiesService;
+	private final ResultVoHelper resultVoHelper;
 
 	/**
-	 * 관리자단에서 회원목록을 조회한다. (pageing)
+	 * 관리자단에서 회원목록을 조회한다. (paging)
+	 * 
 	 * @param request
 	 * @return resultVO
 	 * @throws Exception
 	 */
-	@Operation(
-			summary = "관리자단에서 회원 목록조회화면",
-			description = "관리자단에서 회원에 대한 목록을 조회",
-			security = {@SecurityRequirement(name = "Authorization")},
-			tags = {"EgovMberManageApiController"}
-	)
+	@Operation(summary = "관리자단에서 회원 목록조회화면", description = "관리자단에서 회원에 대한 목록을 조회", security = {
+			@SecurityRequirement(name = "Authorization") }, tags = { "EgovMberManageApiController" })
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "조회 성공"),
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
 	})
 	@GetMapping(value = "/members")
 	public ResultVO selectMberList(
-			@Parameter(
-					in = ParameterIn.QUERY,
-					schema = @Schema(type = "object",
-							additionalProperties = Schema.AdditionalPropertiesValue.TRUE, 
-							ref = "#/components/schemas/searchMap"),
-					style = ParameterStyle.FORM,
-					explode = Explode.TRUE
-			) @RequestParam Map<String, Object> commandMap, 
+			@ModelAttribute BbsSearchRequestDTO boardMasterSearchVO,
 			@Parameter(hidden = true) @AuthenticationPrincipal LoginVO user)
-		throws Exception {
-		ResultVO resultVO = new ResultVO();
+			throws Exception {
+
 		MberManageVO userSearchVO = new MberManageVO();
-		userSearchVO.setSearchCondition((String)commandMap.get("searchCnd"));
-		userSearchVO.setSearchKeyword((String)commandMap.get("searchWrd"));
-		
+
+		userSearchVO.setPageIndex(boardMasterSearchVO.getPageIndex());
+		userSearchVO.setSearchCondition(boardMasterSearchVO.getSearchCnd());
+		userSearchVO.setSearchKeyword(boardMasterSearchVO.getSearchWrd());
+
 		/** EgovPropertyService */
 		userSearchVO.setPageUnit(propertiesService.getInt("Globals.pageUnit"));
 		userSearchVO.setPageSize(propertiesService.getInt("Globals.pageSize"));
-		
-		/** pageing */
+
+		/** paging */
 		PaginationInfo paginationInfo = new PaginationInfo();
 		paginationInfo.setCurrentPageNo(userSearchVO.getPageIndex());
 		paginationInfo.setRecordCountPerPage(userSearchVO.getPageUnit());
@@ -145,53 +116,47 @@ public class EgovMberManageApiController {
 		userSearchVO.setFirstIndex(paginationInfo.getFirstRecordIndex());
 		userSearchVO.setLastIndex(paginationInfo.getLastRecordIndex());
 		userSearchVO.setRecordCountPerPage(paginationInfo.getRecordCountPerPage());
-		
+
 		List<MberManageVO> resultList = mberManageService.selectMberList(userSearchVO);
-		
+
 		int totCnt = mberManageService.selectMberListTotCnt(userSearchVO);
 		paginationInfo.setTotalRecordCount(totCnt);
-		
-		//회원 상태코드를 코드정보로부터 조회
+
+		// 회원 상태코드를 코드정보로부터 조회
 		ComDefaultCodeVO vo = new ComDefaultCodeVO();
 		vo.setCodeId("COM013");
-		
-		//그룹정보를 조회 - GROUP_ID정보(스프링부트에서는 실제로 이 값만 사용한다.)
+
+		// 그룹정보를 조회 - GROUP_ID정보(스프링부트에서는 실제로 이 값만 사용한다.)
 		vo.setTableNm("LETTNORGNZTINFO");
-				
+
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("paginationInfo", paginationInfo);
 		resultMap.put("user", user);
 		resultMap.put("entrprsMberSttus_result", cmmUseService.selectCmmCodeDetail(vo));
 		resultMap.put("groupId_result", cmmUseService.selectGroupIdDetail(vo));
-		/* 권한그룹이름 디버그
-		List<CmmnDetailCode> groupId_result = cmmUseService.selectGroupIdDetail(vo);
-		for(CmmnDetailCode result : groupId_result) {
-			log.debug("===>>> getCode = "+result.getCode());
-			log.debug("===>>> getCodeNm = "+result.getCodeNm());
-		}
-		*/
+		/*
+		 * 권한그룹이름 디버그
+		 * List<CmmnDetailCode> groupId_result = cmmUseService.selectGroupIdDetail(vo);
+		 * for(CmmnDetailCode result : groupId_result) {
+		 * log.debug("===>>> getCode = "+result.getCode());
+		 * log.debug("===>>> getCodeNm = "+result.getCodeNm());
+		 * }
+		 */
 		resultMap.put("resultList", resultList);
 
-		resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
-		resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());
-		resultVO.setResult(resultMap);
-
-		return resultVO;
+		return resultVoHelper.buildFromMap(resultMap, ResponseCode.SUCCESS);
 	}
 
 	/**
 	 * 관리자단에서 회원등록화면으로 이동한다.
+	 * 
 	 * @param userSearchVO 검색조건정보
 	 * @param mberManageVO 회원초기화정보
 	 * @return resultVO
 	 * @throws Exception
 	 */
-	@Operation(
-			summary = "관리자단에서 회원 등록화면",
-			description = "관리자단에서 회원등록화면에 필요한 값 생성",
-			security = {@SecurityRequirement(name = "Authorization")},
-			tags = {"EgovMberManageApiController"}
-	)
+	@Operation(summary = "관리자단에서 회원 등록화면", description = "관리자단에서 회원등록화면에 필요한 값 생성", security = {
+			@SecurityRequirement(name = "Authorization") }, tags = { "EgovMberManageApiController" })
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "조회 성공"),
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
@@ -202,96 +167,81 @@ public class EgovMberManageApiController {
 
 		ComDefaultCodeVO vo = new ComDefaultCodeVO();
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		//패스워드힌트목록을 코드정보로부터 조회
+		// 패스워드힌트목록을 코드정보로부터 조회
 		vo.setCodeId("COM022");
 		resultMap.put("passwordHint_result", cmmUseService.selectCmmCodeDetail(vo));
-		//성별구분코드를 코드정보로부터 조회
+		// 성별구분코드를 코드정보로부터 조회
 		vo.setCodeId("COM014");
 		resultMap.put("sexdstnCode_result", cmmUseService.selectCmmCodeDetail(vo));
-		//사용자상태코드를 코드정보로부터 조회
+		// 사용자상태코드를 코드정보로부터 조회
 		vo.setCodeId("COM013");
 		resultMap.put("mberSttus_result", cmmUseService.selectCmmCodeDetail(vo));
-		//그룹정보를 조회 - GROUP_ID정보(스프링부트에서는 실제로 이 값만 사용한다.)
+		// 그룹정보를 조회 - GROUP_ID정보(스프링부트에서는 실제로 이 값만 사용한다.)
 		vo.setTableNm("LETTNORGNZTINFO");
 		resultMap.put("groupId_result", cmmUseService.selectGroupIdDetail(vo));
-		
-		ResultVO resultVO = new ResultVO();
-		resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
-		resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());
-		resultVO.setResult(resultMap);
-		
-		return resultVO;
+
+		return resultVoHelper.buildFromMap(resultMap, ResponseCode.SUCCESS);
 	}
 
 	/**
 	 * 관리자단에서 회원등록처리
-	 * @param mberManageVO 회원등록정보
+	 * 
+	 * @param mberManageVO  회원등록정보
 	 * @param bindingResult 입력값검증용 bindingResult
 	 * @return resultVO
 	 * @throws Exception
 	 */
-	@Operation(
-			summary = "관리자단에서 회원 등록처리",
-			description = "관리자단에서 회원 등록처리",
-			security = {@SecurityRequirement(name = "Authorization")},
-			tags = {"EgovMberManageApiController"}
-	)
+	@Operation(summary = "관리자단에서 회원 등록처리", description = "관리자단에서 회원 등록처리", security = {
+			@SecurityRequirement(name = "Authorization") }, tags = { "EgovMberManageApiController" })
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "등록 성공"),
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님"),
 			@ApiResponse(responseCode = "900", description = "입력값 무결성 오류")
 	})
 	@PostMapping("/members/insert")
-	public ResultVO insertMber(MberManageVO mberManageVO, BindingResult bindingResult) throws Exception {
+	public ResultVO insertMber(@Valid MberManageVO mberManageVO, BindingResult bindingResult) throws Exception {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		ResultVO resultVO = new ResultVO();
-		beanValidator.validate(mberManageVO, bindingResult);
+
 		if (bindingResult.hasErrors()) {
 			ComDefaultCodeVO vo = new ComDefaultCodeVO();
 
-			//패스워드힌트목록을 코드정보로부터 조회
+			// 패스워드힌트목록을 코드정보로부터 조회
 			vo.setCodeId("COM022");
 			resultMap.put("passwordHint_result", cmmUseService.selectCmmCodeDetail(vo));
-			//성별구분코드를 코드정보로부터 조회
+			// 성별구분코드를 코드정보로부터 조회
 			vo.setCodeId("COM014");
 			resultMap.put("sexdstnCode_result", cmmUseService.selectCmmCodeDetail(vo));
 
-			//사용자상태코드를 코드정보로부터 조회
+			// 사용자상태코드를 코드정보로부터 조회
 			vo.setCodeId("COM013");
 			resultMap.put("mberSttus_result", cmmUseService.selectCmmCodeDetail(vo));
 
-			//그룹정보를 조회 - GROUP_ID정보
+			// 그룹정보를 조회 - GROUP_ID정보
 			vo.setTableNm("LETTNORGNZTINFO");
 			resultMap.put("groupId_result", cmmUseService.selectGroupIdDetail(vo));
-			
+
 			resultMap.put("resultMsg", "fail.common.insert");
-			resultVO.setResultCode(ResponseCode.SAVE_ERROR.getCode());
-			resultVO.setResultMessage(ResponseCode.SAVE_ERROR.getMessage());
-		} else {
-			mberManageService.insertMber(mberManageVO);
-			//Exception 없이 진행시 등록 성공메시지
-			resultMap.put("resultMsg", "success.common.insert");
-			resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
-			resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());
+			return resultVoHelper.buildFromMap(resultMap, ResponseCode.SAVE_ERROR);
 		}
-		resultVO.setResult(resultMap);
-		
-		return resultVO;
+
+		mberManageService.insertMber(mberManageVO);
+
+		// Exception 없이 진행시 등록 성공메시지
+		resultMap.put("resultMsg", "success.common.insert");
+
+		return resultVoHelper.buildFromMap(resultMap, ResponseCode.SUCCESS);
 	}
 
 	/**
 	 * 관리자단에서 회원정보 수정을 위해 회원정보를 상세조회한다.
-	 * @param uniqId 상세조회대상 회원아이디
+	 * 
+	 * @param uniqId       상세조회대상 회원아이디
 	 * @param userSearchVO 검색조건
 	 * @return resultVO
 	 * @throws Exception
 	 */
-	@Operation(
-			summary = "관리자단에서 회원정보 수정용 상세조회화면",
-			description = "관리자단에서 회원정보 수정을 위해 회원정보를 상세조회",
-			security = {@SecurityRequirement(name = "Authorization")},
-			tags = {"EgovMberManageApiController"}
-	)
+	@Operation(summary = "관리자단에서 회원정보 수정용 상세조회화면", description = "관리자단에서 회원정보 수정을 위해 회원정보를 상세조회", security = {
+			@SecurityRequirement(name = "Authorization") }, tags = { "EgovMberManageApiController" })
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "조회 성공"),
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
@@ -299,22 +249,21 @@ public class EgovMberManageApiController {
 	@GetMapping("/members/update/{uniqId}")
 	public ResultVO updateMberView(@PathVariable("uniqId") String uniqId, UserDefaultVO userSearchVO) throws Exception {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		ResultVO resultVO = new ResultVO();
 		ComDefaultCodeVO vo = new ComDefaultCodeVO();
 
-		//패스워드힌트목록을 코드정보로부터 조회
+		// 패스워드힌트목록을 코드정보로부터 조회
 		vo.setCodeId("COM022");
 		resultMap.put("passwordHint_result", cmmUseService.selectCmmCodeDetail(vo));
 
-		//성별구분코드를 코드정보로부터 조회
+		// 성별구분코드를 코드정보로부터 조회
 		vo.setCodeId("COM014");
 		resultMap.put("sexdstnCode_result", cmmUseService.selectCmmCodeDetail(vo));
 
-		//사용자상태코드를 코드정보로부터 조회
+		// 사용자상태코드를 코드정보로부터 조회
 		vo.setCodeId("COM013");
 		resultMap.put("mberSttus_result", cmmUseService.selectCmmCodeDetail(vo));
 
-		//그룹정보를 조회 - GROUP_ID정보
+		// 그룹정보를 조회 - GROUP_ID정보
 		vo.setTableNm("LETTNORGNZTINFO");
 		resultMap.put("groupId_result", cmmUseService.selectGroupIdDetail(vo));
 
@@ -322,84 +271,68 @@ public class EgovMberManageApiController {
 		resultMap.put("mberManageVO", mberManageVO);
 		resultMap.put("userSearchVO", userSearchVO);
 
-		resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
-		resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());
-		resultVO.setResult(resultMap);
-		
-		return resultVO;
+		return resultVoHelper.buildFromMap(resultMap, ResponseCode.SUCCESS);
 	}
 
 	/**
 	 * 관리자단에서 회원수정 처리
-	 * @param mberManageVO 회원수정정보
+	 * 
+	 * @param mberManageVO  회원수정정보
 	 * @param bindingResult 입력값검증용 bindingResult
 	 * @return resultVO
 	 * @throws Exception
 	 */
-	@Operation(
-			summary = "관리자단에서 회원 수정처리",
-			description = "관리자단에서 회원 수정처리",
-			security = {@SecurityRequirement(name = "Authorization")},
-			tags = {"EgovMberManageApiController"}
-	)
+	@Operation(summary = "관리자단에서 회원 수정처리", description = "관리자단에서 회원 수정처리", security = {
+			@SecurityRequirement(name = "Authorization") }, tags = { "EgovMberManageApiController" })
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "등록 성공"),
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님"),
 			@ApiResponse(responseCode = "900", description = "입력값 무결성 오류")
 	})
 	@PutMapping("/members/update")
-	public ResultVO updateMber(@RequestBody MberManageVO mberManageVO, BindingResult bindingResult) throws Exception {
+	public ResultVO updateMber(@Valid @RequestBody MberManageVO mberManageVO, BindingResult bindingResult) throws Exception {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		ResultVO resultVO = new ResultVO();
 
-		beanValidator.validate(mberManageVO, bindingResult);
 		if (bindingResult.hasErrors()) {
 			ComDefaultCodeVO vo = new ComDefaultCodeVO();
 
-			//패스워드힌트목록을 코드정보로부터 조회
+			// 패스워드힌트목록을 코드정보로부터 조회
 			vo.setCodeId("COM022");
 			resultMap.put("passwordHint_result", cmmUseService.selectCmmCodeDetail(vo));
 
-			//성별구분코드를 코드정보로부터 조회
+			// 성별구분코드를 코드정보로부터 조회
 			vo.setCodeId("COM014");
 			resultMap.put("sexdstnCode_result", cmmUseService.selectCmmCodeDetail(vo));
 
-			//사용자상태코드를 코드정보로부터 조회
+			// 사용자상태코드를 코드정보로부터 조회
 			vo.setCodeId("COM013");
 			resultMap.put("mberSttus_result", cmmUseService.selectCmmCodeDetail(vo));
 
-			//그룹정보를 조회 - GROUP_ID정보
+			// 그룹정보를 조회 - GROUP_ID정보
 			vo.setTableNm("LETTNORGNZTINFO");
 			resultMap.put("groupId_result", cmmUseService.selectGroupIdDetail(vo));
-			
+
 			resultMap.put("resultMsg", "fail.common.insert");
-			resultVO.setResultCode(ResponseCode.SAVE_ERROR.getCode());
-			resultVO.setResultMessage(ResponseCode.SAVE_ERROR.getMessage());
-		} else {
-			mberManageService.updateMber(mberManageVO);
-			//Exception 없이 진행시 수정성공메시지
-			resultMap.put("resultMsg", "success.common.update");
-			resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
-			resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());
+			return resultVoHelper.buildFromMap(resultMap, ResponseCode.SAVE_ERROR);
 		}
-		resultVO.setResult(resultMap);
-		
-		return resultVO;
+
+		mberManageService.updateMber(mberManageVO);
+
+		// Exception 없이 진행시 수정성공메시지
+		resultMap.put("resultMsg", "success.common.update");
+		return resultVoHelper.buildFromMap(resultMap, ResponseCode.SUCCESS);
 	}
 
 	/**
 	 * 관리자단에서 회원정보삭제.
+	 * 
 	 * @param checkedIdForDel 삭제대상 아이디 정보
-	 * @param userSearchVO 검색조건정보
+	 * @param userSearchVO    검색조건정보
 	 * @return resultVO
 	 * @throws Exception
 	 */
-	@Operation(
-			summary = "관리자단에서 회원 삭제처리",
-			description = "관리자단에서 회원 삭제처리",
-			security = {@SecurityRequirement(name = "Authorization")},
-			tags = {"EgovMberManageApiController"}
-	)
+	@Operation(summary = "관리자단에서 회원 삭제처리", description = "관리자단에서 회원 삭제처리", security = {
+			@SecurityRequirement(name = "Authorization") }, tags = { "EgovMberManageApiController" })
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "삭제 성공"),
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님"),
@@ -408,203 +341,194 @@ public class EgovMberManageApiController {
 	@DeleteMapping("/members/delete/{uniqId}")
 	public ResultVO deleteMber(@PathVariable("uniqId") String uniqId, UserDefaultVO userSearchVO) throws Exception {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		ResultVO resultVO = new ResultVO();
 		mberManageService.deleteMber(uniqId);
-		//Exception 없이 진행시 삭제성공메시지
+		// Exception 없이 진행시 삭제성공메시지
 		resultMap.put("resultMsg", "success.common.delete");
-		resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
-		resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());
-		resultVO.setResult(resultMap);
-	
-		return resultVO;
+		return resultVoHelper.buildFromMap(resultMap, ResponseCode.SUCCESS);
 	}
 
 	/**
 	 * 사용자단에서 회원정보 수정을 위해 회원정보를 상세조회한다.
-	 * @param uniqId 상세조회대상 회원아이디
+	 * 
+	 * @param user 인증된 사용자 정보
 	 * @return resultVO
 	 * @throws Exception
 	 */
-	@Operation(
-			summary = "사용자단에서 회원정보 수정용 상세조회화면",
-			description = "사용자단에서 회원정보 수정을 위해 회원정보를 상세조회",
-			security = {@SecurityRequirement(name = "Authorization")},
-			tags = {"EgovMberManageApiController"}
-	)
+	@Operation(summary = "사용자단에서 회원정보 수정용 상세조회화면", description = "사용자단에서 회원정보 수정을 위해 회원정보를 상세조회. 대상이 없으면 resultCode 404를 반환", security = {
+			@SecurityRequirement(name = "Authorization") }, tags = { "EgovMberManageApiController" })
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "조회 성공"),
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
 	})
-	@GetMapping("/mypage/update")
-	public ResultVO updateMypageView(HttpServletRequest req) throws Exception {
-		// 26.05.14 국정원 보안취약점 조치 : SecurityContext 에서 인증된 LoginVO 추출
-		// (JWT 가 httpOnly 쿠키로 옮겨가면서 헤더 직접 파싱이 빈 토큰을 jjwt 에 넘겨 IllegalArgumentException 발생)
-		LoginVO user = extractUserFromJwt(req);
-		String uniqId = user.getUniqId();
-
+	@GetMapping("/mypage")
+	public ResultVO selectMypageView(@Parameter(hidden = true) @AuthenticationPrincipal LoginVO user) throws Exception {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		ResultVO resultVO = new ResultVO();
 
-		MberManageVO mberManageVO = mberManageService.selectMber(uniqId);
-		resultMap.put("mberManageVO", mberManageVO);
+		if (user == null || user.getId() == null) {
+			resultMap.put("resultMsg", "회원 정보를 불러올 수 없습니다. 다시 로그인해주세요.");
+			return resultVoHelper.buildFromMap(resultMap, ResponseCode.AUTH_ERROR);
+		}
 
-		resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
-		resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());
-		resultVO.setResult(resultMap);
-		
-		return resultVO;
+		// 현재 로그인한 사용자의 정보를 조회
+		MberManageVO result = mberManageService.selectMber(user.getUniqId());
+
+		if (result == null) {
+			resultMap.put("resultMsg", "회원 정보를 찾을 수 없습니다.");
+			return resultVoHelper.buildFromMap(resultMap, ResponseCode.NOT_FOUND);
+		}
+
+		ComDefaultCodeVO vo = new ComDefaultCodeVO();
+
+		// 패스워드힌트목록을 코드정보로부터 조회
+		vo.setCodeId("COM022");
+		resultMap.put("passwordHint_result", cmmUseService.selectCmmCodeDetail(vo));
+
+		// 성별구분코드를 코드정보로부터 조회
+		vo.setCodeId("COM014");
+		resultMap.put("sexdstnCode_result", cmmUseService.selectCmmCodeDetail(vo));
+
+		// 회원 정보 추가
+		resultMap.put("mberManageVO", result);
+
+		return resultVoHelper.buildFromMap(resultMap, ResponseCode.SUCCESS);
 	}
+
 	/**
-	 * 사용자단에서 회원수정 처리
-	 * @param mberManageVO 회원수정정보
+	 * 사용자단에서 회원 수정처리
+	 * 
+	 * @param mberManageVO  회원수정정보
 	 * @param bindingResult 입력값검증용 bindingResult
 	 * @return resultVO
 	 * @throws Exception
 	 */
-	@Operation(
-			summary = "사용자단에서 회원 수정처리",
-			description = "사용자단에서 회원 수정처리",
-			security = {@SecurityRequirement(name = "Authorization")},
-			tags = {"EgovMberManageApiController"}
-	)
+	@Operation(summary = "사용자단에서 회원 수정처리", description = "사용자단에서 회원 수정처리", security = {
+			@SecurityRequirement(name = "Authorization") }, tags = { "EgovMberManageApiController" })
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "등록 성공"),
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님"),
 			@ApiResponse(responseCode = "900", description = "입력값 무결성 오류")
 	})
 	@PutMapping("/mypage/update")
-	public ResultVO updateMypage(@RequestBody MberManageVO mberManageVO, BindingResult bindingResult, HttpServletRequest request) throws Exception {
+	public ResultVO updateMypage(@Valid @RequestBody MberManageVO mberManageVO, BindingResult bindingResult,
+			@Parameter(hidden = true) @AuthenticationPrincipal LoginVO user) throws Exception {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		ResultVO resultVO = new ResultVO();
 
-		beanValidator.validate(mberManageVO, bindingResult);
+		if (user == null || user.getUniqId() == null) {
+			resultMap.put("resultMsg", "회원 정보를 불러올 수 없습니다. 다시 로그인해주세요.");
+			return resultVoHelper.buildFromMap(resultMap, ResponseCode.AUTH_ERROR);
+		}
+
 		if (bindingResult.hasErrors()) {
 			resultMap.put("resultMsg", "fail.common.insert");
-			resultVO.setResultCode(ResponseCode.SAVE_ERROR.getCode());
-			resultVO.setResultMessage(ResponseCode.SAVE_ERROR.getMessage());
-		} else {
-			// 보안취약점 대응 — 요청 본문의 uniqId를 신뢰하지 않고 인증 주체의 uniqId만 사용(수평 IDOR 차단),
-			// 탈퇴('D') 계정은 토큰 만료 전까지 유효하므로 상태 변경 전 서버측에서 현재 회원상태를 재확인해 재활성화를 차단한다.
-			LoginVO user = extractUserFromJwt(request);
-			String uniqId = user.getUniqId();
-			MberManageVO currentMber = (uniqId == null || uniqId.isEmpty()) ? null : mberManageService.selectMber(uniqId);
-			if (currentMber == null || "D".equals(currentMber.getMberSttus())) {
-				resultMap.put("resultMsg", "탈퇴 처리된 계정은 정보를 수정할 수 없습니다.");
-				resultVO.setResultCode(ResponseCode.AUTH_ERROR.getCode());
-				resultVO.setResultMessage(ResponseCode.AUTH_ERROR.getMessage());
-				resultVO.setResult(resultMap);
-				return resultVO;
-			}
-			mberManageVO.setUniqId(uniqId);//인증 주체 본인 계정만 수정 가능하도록 강제
-			mberManageVO.setMberSttus("P");//회원상태는 로그인가능상태로
-			mberManageVO.setGroupId("GROUP_00000000000001");//회원 권한그룹은 ROLE_USER상태로
-			mberManageService.updateMber(mberManageVO);
-			//Exception 없이 진행시 수정성공메시지
-			resultMap.put("resultMsg", "success.common.update");
-			resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
-			resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());
+			return resultVoHelper.buildFromMap(resultMap, ResponseCode.SAVE_ERROR);
 		}
-		resultVO.setResult(resultMap);
-		
-		return resultVO;
+
+		// 보안취약점 대응 — 탈퇴('D') 계정의 자가 재활성화 차단.
+		// 소프트 삭제된 계정은 JWT 만료 전까지 유효하므로, 상태 변경 전 서버측에서 현재 회원상태를 재확인한다.
+		MberManageVO currentMber = mberManageService.selectMber(user.getUniqId());
+		if (currentMber == null || "D".equals(currentMber.getMberSttus())) {
+			resultMap.put("resultMsg", "탈퇴 처리된 계정은 정보를 수정할 수 없습니다.");
+			return resultVoHelper.buildFromMap(resultMap, ResponseCode.AUTH_ERROR);
+		}
+
+		mberManageVO.setUniqId(user.getUniqId()); // 현재 로그인한 사용자의 정보만 수정 가능하도록 강제
+		mberManageVO.setMberSttus("P");// 회원상태는 로그인가능상태로
+		mberManageVO.setGroupId("GROUP_00000000000001");// 회원 권한그룹은 ROLE_USER상태로
+		mberManageService.updateMber(mberManageVO);
+
+		// Exception 없이 진행시 수정성공메시지
+		resultMap.put("resultMsg", "success.common.update");
+
+		return resultVoHelper.buildFromMap(resultMap, ResponseCode.SUCCESS);
 	}
+
 	/**
 	 * 사용자단에서 회원탈퇴 처리
-	 * @param mberManageVO 회원수정정보
+	 * 
+	 * @param mberManageVO  회원수정정보
 	 * @param bindingResult 입력값검증용 bindingResult
 	 * @return resultVO
 	 * @throws Exception
 	 */
-	@Operation(
-			summary = "사용자단에서 회원 탈퇴처리",
-			description = "사용자단에서 회원 탈퇴처리",
-			security = {@SecurityRequirement(name = "Authorization")},
-			tags = {"EgovMberManageApiController"}
-	)
+	@Operation(summary = "사용자단에서 회원 탈퇴처리", description = "사용자단에서 회원 탈퇴처리", security = {
+			@SecurityRequirement(name = "Authorization") }, tags = { "EgovMberManageApiController" })
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "등록 성공"),
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님"),
 			@ApiResponse(responseCode = "900", description = "입력값 무결성 오류")
 	})
 	@PutMapping("/mypage/delete")
-	public ResultVO deleteMypage(@RequestBody MberManageVO mberManageVO, BindingResult bindingResult,HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ResultVO deleteMypage(@Valid @RequestBody MberManageVO mberManageVO, BindingResult bindingResult,
+			@Parameter(hidden = true) @AuthenticationPrincipal LoginVO user,
+			HttpServletRequest request, HttpServletResponse response) throws Exception {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		ResultVO resultVO = new ResultVO();
 
-		beanValidator.validate(mberManageVO, bindingResult);
+		if (user == null || user.getUniqId() == null) {
+			resultMap.put("resultMsg", "회원 정보를 불러올 수 없습니다. 다시 로그인해주세요.");
+			return resultVoHelper.buildFromMap(resultMap, ResponseCode.AUTH_ERROR);
+		}
+
 		if (bindingResult.hasErrors()) {
 			resultMap.put("resultMsg", "fail.common.insert");
-			resultVO.setResultCode(ResponseCode.SAVE_ERROR.getCode());
-			resultVO.setResultMessage(ResponseCode.SAVE_ERROR.getMessage());
-		} else {
-			mberManageVO.setMberSttus("D");//회원상태 삭제상태로
-			mberManageService.updateMber(mberManageVO);//회원상태 탈퇴 처리
-			new SecurityContextLogoutHandler().logout(request, response, null);//SecurityContext 정리
-			// 보안취약점 대응 — 탈퇴 시 ACCESS_TOKEN 쿠키를 실제로 만료 (SecurityContextLogoutHandler만으로는 stateless JWT 쿠키가 브라우저에 잔존)
-			ResponseCookie expiredCookie = ResponseCookie.from(ACCESS_TOKEN_COOKIE, "")
-					.httpOnly(true).secure(cookieSecure).sameSite("Strict").path("/").maxAge(Duration.ZERO).build();
-			response.addHeader(HttpHeaders.SET_COOKIE, expiredCookie.toString());
-			//Exception 없이 진행시 수정성공메시지
-			resultMap.put("resultMsg", "success.common.update");
-			resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
-			resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());
+			return resultVoHelper.buildFromMap(resultMap, ResponseCode.SAVE_ERROR);
 		}
-		resultVO.setResult(resultMap);
-		
-		return resultVO;
+
+		mberManageVO.setUniqId(user.getUniqId()); // 현재 로그인한 사용자의 계정만 탈퇴 처리 가능하도록 강제
+		mberManageVO.setMberSttus("D");// 회원상태 삭제상태로
+		mberManageService.updateMber(mberManageVO);// 회원상태 탈퇴 처리
+		new SecurityContextLogoutHandler().logout(request, response, null);// SecurityContext 정리
+		// 보안취약점 대응 — 탈퇴 시 ACCESS_TOKEN 쿠키를 실제로 만료 (SecurityContextLogoutHandler만으로는 stateless JWT 쿠키가 브라우저에 잔존)
+		ResponseCookie expiredCookie = ResponseCookie.from(ACCESS_TOKEN_COOKIE, "")
+				.httpOnly(true).secure(cookieSecure).sameSite("Strict").path("/").maxAge(Duration.ZERO).build();
+		response.addHeader(HttpHeaders.SET_COOKIE, expiredCookie.toString());
+
+		// Exception 없이 진행시 수정성공메시지
+		resultMap.put("resultMsg", "success.common.update");
+		return resultVoHelper.buildFromMap(resultMap, ResponseCode.SUCCESS);
 	}
+
 	/**
 	 * 사용자단에서 회원가입신청등록처리.
+	 * 
 	 * @param mberManageVO 회원가입신청정보
 	 * @return resultVO
 	 * @throws Exception
 	 */
-	@Operation(
-			summary = "사용자단에서 회원 등록처리",
-			description = "사용자단에서 회원 등록처리",
-			tags = {"EgovMberManageApiController"}
-	)
+	@Operation(summary = "사용자단에서 회원 등록처리", description = "사용자단에서 회원 등록처리", tags = { "EgovMberManageApiController" })
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "등록 성공"),
 			@ApiResponse(responseCode = "900", description = "입력값 무결성 오류")
 	})
 	@PostMapping("/etc/member_insert")
-	public ResultVO sbscrbMber(MberManageVO mberManageVO, BindingResult bindingResult) throws Exception {
+	public ResultVO sbscrbMber(@Valid MberManageVO mberManageVO, BindingResult bindingResult) throws Exception {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		ResultVO resultVO = new ResultVO();
-		beanValidator.validate(mberManageVO, bindingResult);
+
 		if (bindingResult.hasErrors()) {
 			resultMap.put("resultMsg", "fail.common.insert");
-			resultVO.setResultCode(ResponseCode.SAVE_ERROR.getCode());
-			resultVO.setResultMessage(ResponseCode.SAVE_ERROR.getMessage());
-		} else {
-			mberManageVO.setMberSttus("P");//회원상태는 로그인가능상태로
-			mberManageVO.setGroupId("GROUP_00000000000001");//회원 권한그룹은 ROLE_USER상태로
-			//회원가입신청 등록시 회원등록기능을 사용하여 등록한다.
-			mberManageService.insertMber(mberManageVO);
-			//Exception 없이 진행시 수정성공메시지
-			resultMap.put("resultMsg", "success.common.insert");
-			resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
-			resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());
+			return resultVoHelper.buildFromMap(resultMap, ResponseCode.SAVE_ERROR);
 		}
-		resultVO.setResult(resultMap);
-		
-		return resultVO;
+
+		mberManageVO.setMberSttus("P");// 회원상태는 로그인가능상태로
+		mberManageVO.setGroupId("GROUP_00000000000001");// 회원 권한그룹은 ROLE_USER상태로
+		// 회원가입신청 등록시 회원등록기능을 사용하여 등록한다.
+		mberManageService.insertMber(mberManageVO);
+
+		// Exception 없이 진행시 수정성공메시지
+		resultMap.put("resultMsg", "success.common.insert");
+		return resultVoHelper.buildFromMap(resultMap, ResponseCode.SUCCESS);
 	}
-	
+
 	/**
 	 * 사용자단에서 회원가입신청(등록화면)으로 이동한다.
+	 * 
 	 * @param userSearchVO 검색조건
 	 * @param mberManageVO 회원가입신청정보
-	 * @param commandMap 파라메터전달용 commandMap
+	 * @param commandMap   파라메터전달용 commandMap
 	 * @return resultVO
 	 * @throws Exception
 	 */
-	@Operation(
-			summary = "사용자단에서 회원 가입화면",
-			description = "사용자단에서 회원가입화면에 필요한 값 생성",
-			tags = {"EgovMberManageApiController"}
-	)
+	@Operation(summary = "사용자단에서 회원 가입화면", description = "사용자단에서 회원가입화면에 필요한 값 생성", tags = {
+			"EgovMberManageApiController" })
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "조회 성공"),
 	})
@@ -614,78 +538,63 @@ public class EgovMberManageApiController {
 
 		ComDefaultCodeVO vo = new ComDefaultCodeVO();
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		
-		//패스워드힌트목록을 코드정보로부터 조회
+
+		// 패스워드힌트목록을 코드정보로부터 조회
 		vo.setCodeId("COM022");
 		resultMap.put("passwordHint_result", cmmUseService.selectCmmCodeDetail(vo));
 
-		//성별구분코드를 코드정보로부터 조회
+		// 성별구분코드를 코드정보로부터 조회
 		vo.setCodeId("COM014");
 		resultMap.put("sexdstnCode_result", cmmUseService.selectCmmCodeDetail(vo));
 
 		if (!"".equals(commandMap.get("realname"))) {
-			resultMap.put("mberNm", commandMap.get("realname")); //실명인증된 이름 - 주민번호 인증
-			resultMap.put("ihidnum", commandMap.get("ihidnum")); //실명인증된 주민등록번호 - 주민번호 인증
+			resultMap.put("mberNm", commandMap.get("realname")); // 실명인증된 이름 - 주민번호 인증
+			resultMap.put("ihidnum", commandMap.get("ihidnum")); // 실명인증된 주민등록번호 - 주민번호 인증
 		}
 		if (!"".equals(commandMap.get("realName"))) {
-			resultMap.put("mberNm", commandMap.get("realName")); //실명인증된 이름 - ipin인증
+			resultMap.put("mberNm", commandMap.get("realName")); // 실명인증된 이름 - ipin인증
 		}
 
 		mberManageVO.setGroupId("DEFAULT");
 		mberManageVO.setMberSttus("DEFAULT");
-		
-		ResultVO resultVO = new ResultVO();
-		resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
-		resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());
-		resultVO.setResult(resultMap);
-		
-		return resultVO;
+
+		return resultVoHelper.buildFromMap(resultMap, ResponseCode.SUCCESS);
 	}
-	
 
 	/**
 	 * 회원 약관확인
+	 * 
 	 * @return resultVO
 	 * @throws Exception
 	 */
-	@Operation(
-			summary = "사용자단에서 회원 약관확인",
-			description = "사용자단에서 회원 약관확인에 필요한 값 생성",
-			tags = {"EgovMberManageApiController"}
-	)
+	@Operation(summary = "사용자단에서 회원 약관확인", description = "사용자단에서 회원 약관확인에 필요한 값 생성", tags = {
+			"EgovMberManageApiController" })
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "조회 성공"),
 	})
 	@GetMapping("/etc/member_agreement")
 	public ResultVO sbscrbEntrprsMber() throws Exception {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		ResultVO resultVO = new ResultVO();
-		//회원용 약관 아이디 설정
+		// 회원용 약관 아이디 설정
 		String stplatId = "STPLAT_0000000000001";
-		//회원가입유형 설정-회원
+		// 회원가입유형 설정-회원
 		String sbscrbTy = "USR01";
-		//약관정보 조회
+		// 약관정보 조회
 		resultMap.put("stplatList", mberManageService.selectStplat(stplatId));
-		resultMap.put("sbscrbTy", sbscrbTy); //회원가입유형 포함
+		resultMap.put("sbscrbTy", sbscrbTy); // 회원가입유형 포함
 
-		resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
-		resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());
-		resultVO.setResult(resultMap);
-		
-		return resultVO;
+		return resultVoHelper.buildFromMap(resultMap, ResponseCode.SUCCESS);
 	}
 
 	/**
 	 * 사용자아이디의 중복여부를 체크하여 사용가능여부를 확인
+	 * 
 	 * @param commandMap 파라메터전달용 commandMap
 	 * @return resultVO
 	 * @throws Exception
 	 */
-	@Operation(
-			summary = "사용자아이디의 중복여부 체크처리",
-			description = "사용자아이디의 중복여부 체크처리",
-			tags = {"EgovMberManageApiController"}
-	)
+	@Operation(summary = "사용자아이디의 중복여부 체크처리", description = "사용자아이디의 중복여부 체크처리", tags = {
+			"EgovMberManageApiController" })
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "조회 성공"),
 			@ApiResponse(responseCode = "403", description = "인가된 사용자가 아님")
@@ -693,34 +602,17 @@ public class EgovMberManageApiController {
 	@GetMapping("/etc/member_checkid/{checkid}")
 	public ResultVO checkIdDplct(@PathVariable("checkid") String checkId) throws Exception {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		ResultVO resultVO = new ResultVO();
-		checkId = new String(checkId.getBytes("ISO-8859-1"), "UTF-8");
 
 		if (checkId == null || checkId.equals("")) {
-			resultVO.setResultCode(ResponseCode.INPUT_CHECK_ERROR.getCode());
-			resultVO.setResultMessage(ResponseCode.INPUT_CHECK_ERROR.getMessage());
-		}else {
-			int usedCnt = mberManageService.checkIdDplct(checkId);
-			resultMap.put("usedCnt", usedCnt);
-			resultMap.put("checkId", checkId);
-		
-			resultVO.setResultCode(ResponseCode.SUCCESS.getCode());
-			resultVO.setResultMessage(ResponseCode.SUCCESS.getMessage());
-			resultVO.setResult(resultMap);
+			return resultVoHelper.buildFromMap(resultMap, ResponseCode.INPUT_CHECK_ERROR);
 		}
-		return resultVO;
+
+		int usedCnt = mberManageService.checkIdDplct(checkId);
+		resultMap.put("usedCnt", usedCnt);
+		resultMap.put("checkId", checkId);
+
+		return resultVoHelper.buildFromMap(resultMap, ResponseCode.SUCCESS);
 	}
 
-	/**
-	 * 26.05.14 국정원 보안취약점 조치 : SecurityContext에서 인증된 사용자 정보를 LoginVO로 반환한다.
-	 * JwtAuthenticationFilter가 이미 SecurityContext에 LoginVO를 설정하므로
-	 * Authorization 헤더를 직접 파싱하지 않는다.
-	 */
-	private LoginVO extractUserFromJwt(HttpServletRequest request) {
-		Object principal = EgovUserDetailsHelper.getAuthenticatedUser();
-		if (principal instanceof LoginVO) {
-			return (LoginVO) principal;
-		}
-		return new LoginVO();
-	}
+
 }

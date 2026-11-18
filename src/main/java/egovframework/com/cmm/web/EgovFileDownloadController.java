@@ -50,7 +50,7 @@ import lombok.extern.slf4j.Slf4j;
  *   수정일      수정자           수정내용
  *  -------    --------    ---------------------------
  *   2009.3.25  이삼섭          최초 생성
- *   2026.5.14                  보안취약점 대응 (4.3.x) — crypto key 환경변수화
+ *   2026.5.13  PHJ           보안취약점 대응
  *
  * Copyright (C) 2009 by MOPAS  All right reserved.
  * </pre>
@@ -65,8 +65,8 @@ public class EgovFileDownloadController {
 	
 	/** 암호화서비스 */
     @Resource(name="egovARIACryptoService")
-    EgovCryptoService cryptoService;
-
+    private EgovCryptoService cryptoService;
+	
 	// 다른 클래스에서 static 참조하므로 final 제거, @PostConstruct에서 초기화
 	public static String ALGORITM_KEY;
 
@@ -75,7 +75,8 @@ public class EgovFileDownloadController {
 
 	@PostConstruct
 	private void initAlgoritmKey() {
-		// 26.05.14 국정원 보안취약점 조치 : 운영 배포 전 환경변수 EGOV_CRYPTO_KEY 로 16자 이상 무작위 값 주입 필수
+		// localhost 개발 편의를 위해 application.properties 의 ${EGOV_CRYPTO_KEY:egovframe} 에 디폴트 placeholder 가 들어 있다.
+		// 운영 배포 전 환경변수 EGOV_CRYPTO_KEY 로 16자 이상 무작위 값으로 교체 필요. 미교체 시 경고 로그 출력.
 		if (cryptoAlgoritmKey == null || cryptoAlgoritmKey.length() < 16) {
 			log.warn("[SECURITY] Globals.crypto.algoritm is null or shorter than 16 characters. Set EGOV_CRYPTO_KEY env var before production deployment.");
 		} else if ("egovframe".equals(cryptoAlgoritmKey)) {
@@ -92,6 +93,11 @@ public class EgovFileDownloadController {
 	 */
 	private String getBrowser(HttpServletRequest request) {
 		String header = request.getHeader("User-Agent");
+		// 26.03.04 KISA 보안취약점 조치
+		// null check 추가
+		if (header == null) {
+			return "Firefox";
+		}
 		if (header.indexOf("MSIE") > -1) {
 			return "MSIE";
 		} else if (header.indexOf("Trident") > -1) { // IE11 문자열 깨짐 방지
@@ -190,13 +196,17 @@ public class EgovFileDownloadController {
 			fileVO.setFileSn(fileSn);
 			FileVO fvo = fileService.selectFileInf(fileVO);
 
+			// 삭제 처리된(USE_AT='N') 첨부는 조회되지 않으므로 파일 없음과 동일하게 처리한다
+			if (fvo == null) {
+				throw new EgovBizException();
+			}
+
 			String fileStreCours = EgovWebUtil.filePathBlackList(fvo.getFileStreCours());
 			String streFileNm = EgovWebUtil.filePathBlackList(fvo.getStreFileNm());
 
 			File uFile = new File(fileStreCours, streFileNm);
-			long fSize = uFile.length();
 
-			if (fSize > 0) {
+			if (uFile.isFile()) {
 				//String mimetype = "application/x-msdownload";
 				String mimetype = "application/x-stuff";
 

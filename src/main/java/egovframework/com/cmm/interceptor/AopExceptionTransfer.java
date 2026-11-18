@@ -15,7 +15,7 @@ public class AopExceptionTransfer {
 		this.exceptionTransfer = exceptionTransfer;
 	}
 
-	@Pointcut("execution(* egovframework.let..impl.*Impl.*(..)) or execution(* egovframework.com..impl.*Impl.*(..))")
+	@Pointcut("execution(* egovframework.let..impl.*Impl.*(..)) || execution(* egovframework.com..impl.*Impl.*(..))")
 	private void exceptionTransferService() {}
 
 	@AfterThrowing(pointcut= "exceptionTransferService()", throwing="ex")

@@ -18,11 +18,16 @@ import java.util.regex.Pattern;
  *  2018.08.17   신용호       filePathBlackList 수정
  *  2018.10.10   신용호       . => \\.으로 수정
  *  2024.12.04   신용호       filePathBlackList() basePath 파라미터 추가
+ *  2026.07.19   EricSeokgon  성능: 상수 정규식 반복 컴파일 제거 / 정확성: clearXSSMaximum %00 replacement NULL 및 fileInjectPathReplaceAll 경로 제거 결함 수정
  * </pre>
  */
 
 public class EgovWebUtil {
 
+	// 성능: 매 호출마다 Pattern.compile이 반복되지 않도록 정규식은 클래스 로딩 시 1회만 컴파일한다.
+	// (정규식 의미가 없는 문자 그대로의 치환은 String.replace 로 대체 — 패턴 컴파일 자체가 불필요)
+	private static final Pattern SPACE_PATTERN = Pattern.compile("\\p{Space}");
+	private static final Pattern IP_PATTERN = Pattern.compile("\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}");
 
 	public static ResultVO handleAuthError(int code, String msg) {
 		ResultVO resultVO = new ResultVO();
@@ -37,14 +42,14 @@ public class EgovWebUtil {
 
 		String returnValue = value;
 
-		returnValue = returnValue.replaceAll("&", "&amp;");
-		returnValue = returnValue.replaceAll("<", "&lt;");
-		returnValue = returnValue.replaceAll(">", "&gt;");
-		returnValue = returnValue.replaceAll("\"", "&#34;");
-		returnValue = returnValue.replaceAll("\'", "&#39;");
-		returnValue = returnValue.replaceAll("\\.", "&#46;");
-		returnValue = returnValue.replaceAll("%2E", "&#46;");
-		returnValue = returnValue.replaceAll("%2F", "&#47;");
+		returnValue = returnValue.replace("&", "&amp;");
+		returnValue = returnValue.replace("<", "&lt;");
+		returnValue = returnValue.replace(">", "&gt;");
+		returnValue = returnValue.replace("\"", "&#34;");
+		returnValue = returnValue.replace("\'", "&#39;");
+		returnValue = returnValue.replace(".", "&#46;");
+		returnValue = returnValue.replace("%2E", "&#46;");
+		returnValue = returnValue.replace("%2F", "&#47;");
 		return returnValue;
 	}
 
@@ -52,16 +57,18 @@ public class EgovWebUtil {
 		String returnValue = value;
 		returnValue = clearXSSMinimum(returnValue);
 
-		returnValue = returnValue.replaceAll("%00", null);
+		// 정확성: 기존 코드는 replaceAll("%00", null) 로 replacement 에 null 을 넘겨
+		// 입력에 "%00" 이 포함되면 NullPointerException 이 발생했다("%00" 제거가 의도).
+		returnValue = returnValue.replace("%00", "");
 
-		returnValue = returnValue.replaceAll("%", "&#37;");
+		returnValue = returnValue.replace("%", "&#37;");
 
 		// \\. => .
 
-		returnValue = returnValue.replaceAll("\\.\\./", ""); // ../
-		returnValue = returnValue.replaceAll("\\.\\.\\\\", ""); // ..\
-		returnValue = returnValue.replaceAll("\\./", ""); // ./
-		returnValue = returnValue.replaceAll("%2F", "");
+		returnValue = returnValue.replace("../", ""); // ../
+		returnValue = returnValue.replace("..\\", ""); // ..\
+		returnValue = returnValue.replace("./", ""); // ./
+		returnValue = returnValue.replace("%2F", "");
 
 		return returnValue;
 	}
@@ -72,7 +79,7 @@ public class EgovWebUtil {
 			return "";
 		}
 
-		returnValue = returnValue.replaceAll("\\.\\.", "");
+		returnValue = returnValue.replace("..", "");
 
 		return returnValue;
 	}
@@ -108,10 +115,10 @@ public class EgovWebUtil {
 			return "";
 		}
 
-		returnValue = returnValue.replaceAll("/", "");
-		returnValue = returnValue.replaceAll("\\\\", ""); // \
-		returnValue = returnValue.replaceAll("\\.\\.", ""); // ..
-		returnValue = returnValue.replaceAll("&", "");
+		returnValue = returnValue.replace("/", "");
+		returnValue = returnValue.replace("\\", ""); // \
+		returnValue = returnValue.replace("..", ""); // ..
+		returnValue = returnValue.replace("&", "");
 
 		return returnValue;
 	}
@@ -122,11 +129,14 @@ public class EgovWebUtil {
 			return "";
 		}
 
-		
-		returnValue = returnValue.replaceAll("/", "");
-		returnValue = returnValue.replaceAll("\\..", ""); // ..
-		returnValue = returnValue.replaceAll("\\\\", "");// \
-		returnValue = returnValue.replaceAll("&", "");
+		// 정확성: 기존 정규식 "\\.." 은 주석("// ..")과 달리 '.' + 임의 1문자를 의미해
+		// report.txt -> reportxt 처럼 정상 파일명을 훼손했다. 또한 구분자를 나중에 제거하면
+		// ".\." 같은 입력이 ".." 로 되살아난다. filePathReplaceAll 과 동일하게
+		// 구분자(/,\)를 먼저 제거한 뒤 문자 그대로의 ".." 을 제거한다.
+		returnValue = returnValue.replace("/", "");
+		returnValue = returnValue.replace("\\", ""); // \
+		returnValue = returnValue.replace("..", ""); // ..
+		returnValue = returnValue.replace("&", "");
 
 		return returnValue;
 	}
@@ -136,21 +146,18 @@ public class EgovWebUtil {
 	}
 
 	public static boolean isIPAddress(String str) {
-		Pattern ipPattern = Pattern.compile("\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}");
-
-		return ipPattern.matcher(str).matches();
+		return IP_PATTERN.matcher(str).matches();
     }
 
 	public static String removeCRLF(String parameter) {
-		return parameter.replaceAll("\r", "").replaceAll("\n", "");
+		return parameter.replace("\r", "").replace("\n", "");
 	}
 
 	public static String removeSQLInjectionRisk(String parameter) {
-		return parameter.replaceAll("\\p{Space}", "").replaceAll("\\*", "").replaceAll("%", "").replaceAll(";", "").replaceAll("-", "").replaceAll("\\+", "").replaceAll(",", "");
+		return SPACE_PATTERN.matcher(parameter).replaceAll("").replace("*", "").replace("%", "").replace(";", "").replace("-", "").replace("+", "").replace(",", "");
 	}
 
 	public static String removeOSCmdRisk(String parameter) {
-		return parameter.replaceAll("\\p{Space}", "").replaceAll("\\*", "").replaceAll("\\|", "").replaceAll(";", "");
+		return SPACE_PATTERN.matcher(parameter).replaceAll("").replace("*", "").replace("|", "").replace(";", "");
 	}
-
 }

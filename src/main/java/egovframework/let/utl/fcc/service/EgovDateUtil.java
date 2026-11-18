@@ -243,6 +243,7 @@ public class EgovDateUtil {
 			else
 				return false;
 		} catch (ParseException e) {
+			log.warn("Invalid date provided: year={}, month={}, day={}", year, month, day);
 			return false;
 		}
 	}
@@ -259,33 +260,37 @@ public class EgovDateUtil {
 	public static String convertDate(String strSource, String fromDateFormat, String toDateFormat, String strTimeZone) {
 		SimpleDateFormat simpledateformat = null;
 		Date date = null;
-		String _fromDateFormat = "";
-		String _toDateFormat = "";
+		String actualFromDateFormat = "";
+		String actualToDateFormat = "";
 
 		if (EgovStringUtil.isNullToString(strSource).trim().equals("")) {
 			return "";
 		}
-		if (EgovStringUtil.isNullToString(fromDateFormat).trim().equals(""))
-			_fromDateFormat = "yyyyMMddHHmmss"; // default값
-		if (EgovStringUtil.isNullToString(toDateFormat).trim().equals(""))
-			_toDateFormat = "yyyy-MM-dd HH:mm:ss"; // default값
+		
+		if (EgovStringUtil.isNullToString(fromDateFormat).trim().equals("")) {
+			actualFromDateFormat = "yyyyMMddHHmmss"; // default값
+		} else {
+			actualFromDateFormat = fromDateFormat;
+		}
+
+		if (EgovStringUtil.isNullToString(toDateFormat).trim().equals("")) {
+			actualToDateFormat = "yyyy-MM-dd HH:mm:ss"; // default값
+		} else {
+			actualToDateFormat = toDateFormat;
+		}
 
 		try {
-			simpledateformat = new SimpleDateFormat(_fromDateFormat, Locale.getDefault());
+			simpledateformat = new SimpleDateFormat(actualFromDateFormat, Locale.getDefault());
 			date = simpledateformat.parse(strSource);
 			if (!EgovStringUtil.isNullToString(strTimeZone).trim().equals("")) {
 				simpledateformat.setTimeZone(TimeZone.getTimeZone(strTimeZone));
 			}
-			simpledateformat = new SimpleDateFormat(_toDateFormat, Locale.getDefault());
+			simpledateformat = new SimpleDateFormat(actualToDateFormat, Locale.getDefault());
 		} catch (ParseException exception) {
-			log.debug("{}", exception);
-		}
-		if (simpledateformat.format(date) != null) {
-			return simpledateformat.format(date);
-		} else {
+			log.error("Failed to parse date string: {}", strSource, exception);
 			return "";
 		}
-
+		return simpledateformat.format(date);
 	}
 
 	/**
@@ -303,43 +308,21 @@ public class EgovDateUtil {
 	public static String formatDate(String sDate, String ch) {
 		String dateStr = validChkDate(sDate);
 
+		// validChkDate가 8자리(혹은 하이픈 제거 후 8자리)만 반환하므로 str은 항상 8자리이다.
 		String str = dateStr.trim();
-		String yyyy = "";
-		String mm = "";
-		String dd = "";
-
-		if (str.length() == 8) {
-			yyyy = str.substring(0, 4);
-			if (yyyy.equals("0000"))
-				return "";
-
-			mm = str.substring(4, 6);
-			if (mm.equals("00"))
-				return yyyy;
-
-			dd = str.substring(6, 8);
-			if (dd.equals("00"))
-				return yyyy + ch + mm;
-
-			return yyyy + ch + mm + ch + dd;
-		} else if (str.length() == 6) {
-			yyyy = str.substring(0, 4);
-			if (yyyy.equals("0000"))
-				return "";
-
-			mm = str.substring(4, 6);
-			if (mm.equals("00"))
-				return yyyy;
-
-			return yyyy + ch + mm;
-		} else if (str.length() == 4) {
-			yyyy = str.substring(0, 4);
-			if (yyyy.equals("0000"))
-				return "";
-			else
-				return yyyy;
-		} else
+		String yyyy = str.substring(0, 4);
+		if (yyyy.equals("0000"))
 			return "";
+
+		String mm = str.substring(4, 6);
+		if (mm.equals("00"))
+			return yyyy;
+
+		String dd = str.substring(6, 8);
+		if (dd.equals("00"))
+			return yyyy + ch + mm;
+
+		return yyyy + ch + mm + ch + dd;
 	}
 
 	/**
@@ -354,7 +337,8 @@ public class EgovDateUtil {
 	 */
 	public static String formatTime(String sTime, String ch) {
 		String timeStr = validChkTime(sTime);
-		return timeStr.substring(0, 2) + ch + timeStr.substring(2, 4) + ch + timeStr.substring(4, 6);
+		// validChkTime이 4자리(HHmm)만 반환하므로 초 단위 분기는 도달할 수 없다.
+		return timeStr.substring(0, 2) + ch + timeStr.substring(2, 4);
 	}
 
 	/**
@@ -375,9 +359,9 @@ public class EgovDateUtil {
 	 * <p>입력받은 연도가 윤년인지 아닌지 검사한다.</p>
 	 *
 	 * <pre>
-	 * DateUtil.isLeapYear(2004) = false
-	 * DateUtil.isLeapYear(2005) = true
-	 * DateUtil.isLeapYear(2006) = true
+	 * DateUtil.isLeapYear(2004) = true
+	 * DateUtil.isLeapYear(2005) = false
+	 * DateUtil.isLeapYear(2006) = false
 	 * </pre>
 	 *
 	 * @param  year 연도
@@ -385,9 +369,9 @@ public class EgovDateUtil {
 	 */
 	public static boolean isLeapYear(int year) {
 		if (year % 4 == 0 && year % 100 != 0 || year % 400 == 0) {
-			return false;
+			return true;
 		}
-		return true;
+		return false;
 	}
 
 	/**
@@ -414,7 +398,7 @@ public class EgovDateUtil {
 				+ ((date < 10) ? "0" + Integer.toString(date) : Integer.toString(date));
 
 		if (!"".equals(dateType))
-			strDate = convertDate(strDate, "yyyyMMdd", dateType);
+			strDate = convertDate(strDate, "yyyyMMdd", dateType, "");
 
 		return strDate;
 	}
@@ -660,7 +644,7 @@ public class EgovDateUtil {
 
 		String retYMD = retYear + retMonth + retDay;
 
-		if (sDate.equals(retYMD)) {
+		if (dateStr.equals(retYMD)) {
 			ret = true;
 		}
 

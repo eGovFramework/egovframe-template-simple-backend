@@ -19,7 +19,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
  * DATE              AUTHOR             NOTE
  * -----------------------------------------------------------
  * 2023/07/13        crlee       최초 생성
- * 2026/05/14 					보안취약점 대응 (4.3.x)
+ * 2026/05/13 					보안취약점 대응
  */
 public class CustomAuthenticationPrincipalResolver implements HandlerMethodArgumentResolver {
 

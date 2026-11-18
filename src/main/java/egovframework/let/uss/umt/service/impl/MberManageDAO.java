@@ -40,9 +40,9 @@ public class MberManageDAO extends EgovAbstractMapper{
     }
 
     /**
-     * 일반회원 총 갯수를 조회한다.
+     * 일반회원 총 개수를 조회한다.
      * @param userSearchVO 검색조건
-     * @return int 일반회원총갯수
+     * @return int 일반회원총개수
      */
     public int selectMberListTotCnt(UserDefaultVO userSearchVO) {
         return selectOne("mberManageDAO.selectMberListTotCnt", userSearchVO);

@@ -6,7 +6,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
 import javax.crypto.SecretKey;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -17,6 +16,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import javax.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 
 //security 관련 제외한 jwt util 클래스
@@ -29,13 +29,14 @@ public class EgovJwtTokenUtil implements Serializable{
 	// JWT 토큰 유효시간 (초 단위)
 	// public static final long JWT_TOKEN_VALIDITY = 24 * 60 * 60; // 24시간 (86400초)
 	public static final long JWT_TOKEN_VALIDITY = 60 * 60; // 1시간 (3600초)
-
+	
 	@Value("${Globals.jwt.secret}")
 	private String secretKeyString;
 
 	@PostConstruct
 	private void validateSecret() {
-		// 26.05.14 국정원 보안취약점 조치 : JWT secret 환경변수화 (운영 배포 전 EGOV_JWT_SECRET 로 32자 이상 무작위 값 주입 필수)
+		// localhost 개발 편의를 위해 application.properties 의 ${EGOV_JWT_SECRET:...} 에 디폴트 placeholder 가 들어 있다.
+		// 운영 배포 전 환경변수 EGOV_JWT_SECRET 로 32자 이상 무작위 값으로 교체 필요. 미교체 시 경고 로그 출력.
 		if (secretKeyString == null || secretKeyString.length() < 32) {
 			log.warn("[SECURITY] JWT secret is null or shorter than 32 characters. Set EGOV_JWT_SECRET env var before production deployment.");
 		} else if (secretKeyString.contains("my-secret-jwt-key-for-egovframe")) {
@@ -49,7 +50,7 @@ public class EgovJwtTokenUtil implements Serializable{
 	private SecretKey getSecretKey() {
 		return Keys.hmacShaKeyFor(secretKeyString.getBytes(StandardCharsets.UTF_8));
 	}
-
+  
 	// retrieve username from jwt token
 	public String getUserIdFromToken(String token) {
 		return getInfoFromToken("id", token);
@@ -61,9 +62,12 @@ public class EgovJwtTokenUtil implements Serializable{
 
 	public String getInfoFromToken(String type, String token) {
 		Claims claims = getClaimFromToken(token);
-	    Object info = claims.get(type);
+		return getInfoFromClaims(type, claims);
+	}
 
-	    return info != null ? info.toString() : null;
+	private String getInfoFromClaims(String type, Claims claims) {
+		Object info = claims.get(type);
+		return info != null ? info.toString() : null;
 	}
 
 	public Claims getClaimFromToken(String token) {
@@ -88,11 +92,11 @@ public class EgovJwtTokenUtil implements Serializable{
 
 	//while creating the token -
 	//1. Define  claims of the token, like Issuer, Expiration, Subject, and the ID
-	//2. Sign the JWT using the HS256 algorithm and secret key.
+	//2. Sign the JWT using the HS512 algorithm and secret key.
 	//3. According to JWS Compact Serialization(https://tools.ietf.org/html/draft-ietf-jose-json-web-signature-41#section-3.1)
 	//   compaction of the JWT to a URL-safe string
 	private String doGenerateToken(LoginVO loginVO, String subject) {
-
+		
         Map<String, Object> claims = new HashMap<>();
         claims.put("id", loginVO.getId() );
         claims.put("name", loginVO.getName() );
@@ -115,20 +119,21 @@ public class EgovJwtTokenUtil implements Serializable{
 	public LoginVO getLoginVOFromToken(String token) throws InvalidJwtException{
 		LoginVO loginVO = new LoginVO();
 
-        try {
-		    loginVO.setId(getUserIdFromToken(token));
-			loginVO.setName(getInfoFromToken("name", token));
-			loginVO.setUserSe(getUserSeFromToken(token));
-			loginVO.setOrgnztId(getInfoFromToken("orgnztId", token));
-			loginVO.setUniqId(getInfoFromToken("uniqId", token));
-            loginVO.setGroupNm(getInfoFromToken("groupNm", token));
+		try {
+			Claims claims = getClaimFromToken(token);
+			loginVO.setId(getInfoFromClaims("id", claims));
+			loginVO.setName(getInfoFromClaims("name", claims));
+			loginVO.setUserSe(getInfoFromClaims("userSe", claims));
+			loginVO.setOrgnztId(getInfoFromClaims("orgnztId", claims));
+			loginVO.setUniqId(getInfoFromClaims("uniqId", claims));
+			loginVO.setGroupNm(getInfoFromClaims("groupNm", claims));
 
-            if(loginVO.getId() == null) throw new InvalidJwtException("Missing id in token");
-        } catch (IllegalArgumentException e) {
-            throw new InvalidJwtException("Unable to verify JWT Token: " + e.getMessage());
-        } catch (JwtException e) {
-            throw new InvalidJwtException("Unable to verify JWT Token: " + e.getMessage());
-        }
+			if(loginVO.getId() == null) throw new InvalidJwtException("Missing id in token");
+		} catch (IllegalArgumentException e) {
+			throw new InvalidJwtException("Unable to verify JWT Token: " + e.getMessage());
+		} catch (JwtException e) {
+			throw new InvalidJwtException("Unable to verify JWT Token: " + e.getMessage());
+		}
 
 		return loginVO;
 	}

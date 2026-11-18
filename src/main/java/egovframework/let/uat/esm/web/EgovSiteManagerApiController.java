@@ -3,9 +3,6 @@ package egovframework.let.uat.esm.web;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,6 +23,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -43,6 +42,7 @@ import lombok.extern.slf4j.Slf4j;
  *  2023.04.15  김일국     최초 생성
  *  2023.04.20  김일국     리액트에서 사용할 공통인증메서드 추가
  *	2024.07.17	김일국	 @RequestParam 에서 @RequestBody로 변경
+ *	2026.05.13	PHJ	 	 보안취약점 대응
  *  </pre>
  */
 @Slf4j
@@ -56,9 +56,8 @@ public class EgovSiteManagerApiController {
 	
 	/**
 	 * 리액트에서 사이트관리자에 접근하는 토큰값 위변조 방지용으로 서버에서 비교한다.
-	 * @param map데이터: String old_password, new_password
-	 * @param request - 토큰값으로 인증된 사용자를 확인하기 위한 HttpServletRequest
-	 * @return result - JWT 토큰값 비교결과 코드와 메세지
+	 * @param request 토큰값으로 인증된 사용자를 확인하기 위한 HttpServletRequest
+	 * @return result JWT 토큰값 비교결과 코드와 메시지
 	 * @exception Exception
 	 */
 	@Operation(
@@ -81,9 +80,10 @@ public class EgovSiteManagerApiController {
 	}
 	/**
 	 * 사이트관리자의 기존 비번과 비교하여 변경된 비밀번호를 저장한다.
-	 * @param map데이터: String old_password, new_password
-	 * @param request - 토큰값으로 인증된 사용자를 확인하기 위한 HttpServletRequest
-	 * @return result - 수정결과
+	 * @param param 기존 비밀번호와 신규 비밀번호(old_password, new_password)를 담은 요청 데이터
+	 * @param request 토큰값으로 인증된 사용자를 확인하기 위한 HttpServletRequest
+	 * @param user 인증된 사용자 정보
+	 * @return result 수정결과
 	 * @exception Exception
 	 */
 	@Operation(
@@ -111,9 +111,15 @@ public class EgovSiteManagerApiController {
 
 		String old_password = param.get("old_password");
 		String new_password = param.get("new_password");
+		if (new_password == null || new_password.length() < 6) {
+			resultVO.setResultCode(ResponseCode.INPUT_CHECK_ERROR.getCode());
+			resultVO.setResultMessage("신규 암호는 6자 이상이어야 합니다.");
+			return resultVO;
+		}
+
 		String login_id = user.getId();
 		Map<String,Object> resultMap = new HashMap<String,Object>();
-		// 26.05.14 국정원 보안취약점 조치 : 저장 형식 = 이중해시. old/new 모두 동일 형식으로 비교/저장.
+		// 저장 형식 = 이중해시. old/new 모두 동일 형식으로 비교/저장.
 		resultMap.put("old_password", EgovFileScrty.encryptPasswordTwice(old_password, login_id));
 		resultMap.put("new_password", EgovFileScrty.encryptPasswordTwice(new_password, login_id));
 		resultMap.put("login_id", login_id);

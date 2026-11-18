@@ -15,7 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.util.AntPathMatcher;
-import org.springframework.web.multipart.commons.CommonsMultipartResolver;
+import org.springframework.web.multipart.MultipartResolver;
 
 import egovframework.com.cmm.EgovComTraceHandler;
 import egovframework.com.cmm.ImagePaginationRenderer;
@@ -45,7 +45,8 @@ import org.egovframe.rte.ptl.mvc.tags.ui.pagination.PaginationRenderer;
  *  -------------  ------------   ---------------------
  *   2021. 7. 20    윤주호               최초 생성
  *   2023. 5. 05    crlee              remove EgovMessageSource config
- *   2026. 5. 14                       보안취약점 대응 (4.3.x) — hashedPassword 환경변수 기반 동적 계산
+ *   2026. 5. 13  	PHJ                보안취약점 대응
+ *   2026. 6. 26    이백행               [2026년 컨트리뷰션] @Bean 메서드의 불필요한 public 접근제어자 제거
  * </pre>
  *
  */
@@ -66,7 +67,7 @@ public class EgovConfigAppCommon {
 	 * @return AntPathMatcher 등록.  Ant 경로 패턴 경로와 일치하는지 여부를 확인
 	 */
 	@Bean
-	public AntPathMatcher antPathMatcher() {
+	AntPathMatcher antPathMatcher() {
 		return new AntPathMatcher();
 	}
 
@@ -75,7 +76,7 @@ public class EgovConfigAppCommon {
 	 * @return [LeaveaTrace 설정] defaultTraceHandler 등록
 	 */
 	@Bean
-	public EgovComTraceHandler defaultTraceHandler() {
+	EgovComTraceHandler defaultTraceHandler() {
 		return new EgovComTraceHandler();
 	}
 
@@ -83,7 +84,7 @@ public class EgovConfigAppCommon {
 	 * @return [LeaveaTrace 설정] traceHandlerService 등록. TraceHandler 설정
 	 */
 	@Bean
-	public DefaultTraceHandleManager traceHandlerService() {
+	DefaultTraceHandleManager traceHandlerService() {
 		DefaultTraceHandleManager defaultTraceHandleManager = new DefaultTraceHandleManager();
 		defaultTraceHandleManager.setReqExpMatcher(antPathMatcher());
 		defaultTraceHandleManager.setPatterns(new String[] {"*"});
@@ -95,7 +96,7 @@ public class EgovConfigAppCommon {
 	 * @return [LeaveaTrace 설정] LeaveaTrace 등록
 	 */
 	@Bean
-	public LeaveaTrace leaveaTrace() {
+	LeaveaTrace leaveaTrace() {
 		LeaveaTrace leaveaTrace = new LeaveaTrace();
 		leaveaTrace.setTraceHandlerServices(new TraceHandlerService[] {traceHandlerService()});
 		return leaveaTrace;
@@ -105,7 +106,7 @@ public class EgovConfigAppCommon {
 	 * @return [ImagePaginationRenderer 설정] ImagePaginationRenderer 등록
 	 */
 	@Bean
-	public ImagePaginationRenderer imageRenderer() {
+	ImagePaginationRenderer imageRenderer() {
 		return new ImagePaginationRenderer();
 	}
 
@@ -113,7 +114,7 @@ public class EgovConfigAppCommon {
 	 * @return [ImagePaginationRenderer 설정] defaultPaginationManager 설정.
 	 */
 	@Bean
-	public DefaultPaginationManager paginationManager() {
+	DefaultPaginationManager paginationManager() {
 		DefaultPaginationManager defaultPaginationManager = new DefaultPaginationManager();
 
 		Map<String, PaginationRenderer> rendererType = new HashMap<>();
@@ -124,33 +125,23 @@ public class EgovConfigAppCommon {
 	}
 
 	/**
-	 * @return [MultipartResolver 설정] CommonsMultipartResolver 등록
-	 */
-	@Bean
-	public CommonsMultipartResolver springRegularCommonsMultipartResolver() {
-		CommonsMultipartResolver commonsMultipartResolver = new CommonsMultipartResolver();
-		commonsMultipartResolver.setMaxUploadSize(100000000);
-		commonsMultipartResolver.setMaxInMemorySize(100000000);
-		commonsMultipartResolver.setSupportedMethods("POST","PUT");
-		return commonsMultipartResolver;
-	}
-
-	/**
 	 * 확장자 제한 : globals.properties > Globals.fileUpload.Extensions로 설정
-	 * @return [MultipartResolver 설정] EgovMultipartResolver 등록
+	 * @return [MultipartResolver 설정] EgovMultipartResolver 등록 (StandardServletMultipartResolver 기반)
+	 * 
+	 * 참고: 파일 크기 제한은 application.properties에서 설정 가능:
+	 * - spring.servlet.multipart.max-file-size=100MB
+	 * - spring.servlet.multipart.max-request-size=100MB
 	 */
 	@Bean
-	public EgovMultipartResolver localMultiCommonsMultipartResolver() {
-		EgovMultipartResolver egovMultipartResolver = new EgovMultipartResolver();
-		egovMultipartResolver.setMaxUploadSize(100000000);
-		egovMultipartResolver.setMaxInMemorySize(100000000);
-		egovMultipartResolver.setSupportedMethods("POST","PUT");
-		return egovMultipartResolver;
+	EgovMultipartResolver localMultiCommonsMultipartResolver(
+			@Value("${Globals.fileUpload.Extensions}") String whiteListFileUploadExtensions) {
+		return new EgovMultipartResolver(whiteListFileUploadExtensions);
 	}
 	
 	@Bean
-	public CommonsMultipartResolver multipartResolver() {
-		return localMultiCommonsMultipartResolver();
+	MultipartResolver multipartResolver(
+			@Value("${Globals.fileUpload.Extensions}") String whiteListFileUploadExtensions) {
+		return localMultiCommonsMultipartResolver(whiteListFileUploadExtensions);
 	}
 	
 	/**
@@ -158,7 +149,7 @@ public class EgovConfigAppCommon {
 	 * @return [EgovPasswordEncoder 설정] EgovPasswordEncoder 등록
 	 */
 	@Bean
-	public EgovPasswordEncoder egovPasswordEncoder() {
+	EgovPasswordEncoder egovPasswordEncoder() {
 		EgovPasswordEncoder egovPasswordEncoder = new EgovPasswordEncoder();
 		egovPasswordEncoder.setAlgorithm("SHA-256");
 		try {
@@ -170,13 +161,13 @@ public class EgovConfigAppCommon {
 		}
 		return egovPasswordEncoder;
 	}
-	
+
 	/**
 	 * 암복호화
 	 * @return [EgovARIACryptoServiceImpl 설정] EgovARIACryptoServiceImpl 등록
 	 */
 	@Bean
-	public EgovARIACryptoServiceImpl egovARIACryptoService() {
+	EgovARIACryptoServiceImpl egovARIACryptoService() {
 		EgovARIACryptoServiceImpl egovARIACryptoServiceImpl = new EgovARIACryptoServiceImpl();
 		egovARIACryptoServiceImpl.setPasswordEncoder(egovPasswordEncoder());
 		egovARIACryptoServiceImpl.setBlockSize(1024);

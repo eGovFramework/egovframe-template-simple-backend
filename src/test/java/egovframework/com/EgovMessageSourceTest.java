@@ -68,4 +68,12 @@ public class EgovMessageSourceTest {
         Assertions.assertThat( egovMessageSource.getMessage(msgType, Locale.UK) ).isEqualTo(expectedMessage);
         Assertions.assertThat( egovMessageSource.getMessage(msgType, Locale.ENGLISH) ).isEqualTo(expectedMessage);
     }
+    
+    @Test
+    void noDataEnglishMessageTest() {
+        String message = egovMessageSource.getMessage("common.nodata.msg", Locale.US);
+
+        Assertions.assertThat(message)
+                .isEqualTo("There is no data. Please choose another search keyword.");
+    }
 }

@@ -14,7 +14,7 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 /**
- * 일반회원관리에 관한비지니스클래스를 정의한다.
+ * 일반회원관리에 관한비즈니스클래스를 정의한다.
  * @author 공통서비스 개발팀 조재영
  * @since 2009.04.10
  * @version 1.0
@@ -27,7 +27,7 @@ import org.springframework.stereotype.Service;
  *  -------    --------    ---------------------------
  *   2009.04.10  JJY            최초 생성
  *   2011.08.31  JJY            경량환경 템플릿 커스터마이징버전 생성
- *   2026.05.14                  보안취약점 대응 (4.3.x) — 회원 비밀번호 저장 이중해시 적용
+ *   2026.05.13  PHJ            보안취약점 대응
  *
  * </pre>
  */
@@ -50,7 +50,7 @@ public class EgovMberManageServiceImpl extends EgovAbstractServiceImpl implement
 	 */
 	@Override
 	public int insertMber(MberManageVO mberManageVO) throws Exception  {
-		//고유아이디 셋팅
+		//고유아이디 세팅
 		String uniqId = idgenService.getNextStringId();
 		mberManageVO.setUniqId(uniqId);
 		// 저장 형식 = SHA-256(id || SHA-256(id || password))
@@ -85,9 +85,9 @@ public class EgovMberManageServiceImpl extends EgovAbstractServiceImpl implement
 	}
 
     /**
-     * 일반회원 총 갯수를 조회한다.
+     * 일반회원 총 개수를 조회한다.
      * @param userSearchVO 검색조건
-     * @return 일반회원총갯수(int)
+     * @return 일반회원총개수(int)
      */
     @Override
 	public int selectMberListTotCnt(UserDefaultVO userSearchVO) {
@@ -101,10 +101,8 @@ public class EgovMberManageServiceImpl extends EgovAbstractServiceImpl implement
 	 */
 	@Override
 	public void updateMber(MberManageVO mberManageVO) throws Exception {
-		//패스워드 암호화
-		if(mberManageVO.getPassword().isEmpty() || mberManageVO.getPassword().equals("")) {
-			//업데이트 시 암호가 공백이면 암호화 과정 건너띈다.
-		} else {
+		// 비밀번호를 입력한 경우에만 암호화한다.
+		if (mberManageVO.getPassword() != null && !mberManageVO.getPassword().isEmpty()) {
 			// 저장 형식 = 이중해시
 			String pass = EgovFileScrty.encryptPasswordTwice(mberManageVO.getPassword(), mberManageVO.getMberId());
 			mberManageVO.setPassword(pass);

@@ -229,6 +229,7 @@
 			SCHDUL_ENDDE=TO_TIMESTAMP(SUBSTRING(#{schdulEndde}, 1, 4) || '-' || SUBSTRING(#{schdulEndde}, 5, 2) || '-' ||  SUBSTRING(#{schdulEndde}, 7, 2) || ' ' ||  SUBSTRING(#{schdulEndde}, 9, 2) || ':' || SUBSTRING(#{schdulEndde}, 11, 2), 'YYYY-MM-DD HH:MI'),
 			SCHDUL_NM=#{schdulNm},
 			SCHDUL_CN=#{schdulCn},
+			SCHDUL_PLACE=#{schdulPlace},
 			SCHDUL_IPCR_CODE=#{schdulIpcrCode},
 			SCHDUL_CHARGER_ID=#{schdulChargerId},
 			ATCH_FILE_ID=#{atchFileId},

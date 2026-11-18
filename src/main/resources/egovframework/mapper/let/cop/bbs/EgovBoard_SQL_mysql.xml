@@ -4,7 +4,7 @@
 <mapper namespace="BBSManageDAO">
 
 
-	<resultMap id="boardList" type="egovframework.let.cop.bbs.service.BoardVO">
+	<resultMap id="boardList" type="egovframework.let.cop.bbs.domain.model.BoardVO">
 		<result property="bbsId" column="BBS_ID"/>
 		<result property="nttId" column="NTT_ID"/>
 		<result property="nttSj" column="NTT_SJ"/>
@@ -21,7 +21,7 @@
 		<result property="ntceEndde" column="NTCE_ENDDE"/>
 	</resultMap>
 
-	<resultMap id="boardDetail" type="egovframework.let.cop.bbs.service.BoardVO">
+	<resultMap id="boardDetail" type="egovframework.let.cop.bbs.domain.model.BoardVO">
 		<result property="bbsId" column="BBS_ID"/>
 		<result property="nttId" column="NTT_ID"/>
 		<result property="nttSj" column="NTT_SJ"/>	
@@ -50,7 +50,7 @@
 		<result property="bbsNm" column="BBS_NM"/>
 	</resultMap>
 
-	<resultMap id="sortList" type="egovframework.let.cop.bbs.service.BoardVO">
+	<resultMap id="sortList" type="egovframework.let.cop.bbs.domain.model.BoardVO">
 		<result property="bbsId" column="BBS_ID"/>
 		<result property="nttId" column="NTT_ID"/>
 		<result property="sortOrdr" column="SORT_ORDR"/>
@@ -59,7 +59,7 @@
 		<result property="replyLc" column="ANSWER_LC"/>
 	</resultMap>
 
-	<resultMap id="guestList" type="egovframework.let.cop.bbs.service.BoardVO">
+	<resultMap id="guestList" type="egovframework.let.cop.bbs.domain.model.BoardVO">
 		<result property="bbsId" column="BBS_ID"/>
 		<result property="nttId" column="NTT_ID"/>
 		<result property="nttSj" column="NTT_SJ"/>
@@ -72,13 +72,8 @@
 		<result property="frstRegisterId" column="FRST_REGISTER_ID"/>
 	</resultMap>
 
- 	<select id="selectMaxNttId" resultType="java.lang.Long">
- 		
-			SELECT IFNULL(MAX(NTT_ID),0)+1 AS NTT_ID  FROM LETTNBBS
- 		
- 	</select>
- 	
-	<insert id="insertBoardArticle" parameterType="egovframework.let.cop.bbs.service.Board">
+
+	<insert id="insertBoardArticle" parameterType="egovframework.let.cop.bbs.domain.model.Board">
 		<selectKey keyProperty="nttNo" resultType="java.lang.Long" order="BEFORE">
 			SELECT IFNULL(MAX(SORT_ORDR),0)+1 AS NTT_NO  FROM LETTNBBS
 			WHERE BBS_ID = #{bbsId}
@@ -96,12 +91,12 @@
 			  #{ntcrId}, #{ntcrNm}, #{password}, #{inqireCo}, 
 			  #{ntceBgnde}, #{ntceEndde}, #{replyAt}, 
 			  #{parnts}, 1, #{replyLc}, #{atchFileId},
-			  #{frstRegisterId}, SYSDATE(), 'Y'
+			  #{frstRegisterId}, NOW(), 'Y'
 			 )			
 		
 	</insert>
 	
-	<insert id="replyBoardArticle" parameterType="egovframework.let.cop.bbs.service.Board">
+	<insert id="replyBoardArticle" parameterType="egovframework.let.cop.bbs.domain.model.Board">
 		<selectKey keyProperty="nttNo" resultType="java.lang.Long" order="BEFORE">
 			SELECT IFNULL(MAX(NTT_NO),0)+1 AS NTT_NO  FROM LETTNBBS
 			WHERE BBS_ID = #{bbsId} AND SORT_ORDR = #{sortOrdr}
@@ -118,13 +113,13 @@
 			( #{nttId}, #{bbsId}, #{nttSj}, #{nttCn}, #{sortOrdr}, 
 			  #{ntcrId}, #{ntcrNm}, #{password}, #{inqireCo}, 
 			  #{ntceBgnde}, #{ntceEndde}, #{replyAt}, 
-			  #{parnts}, 1, #{replyLc}, #{atchFileId},
-			  #{frstRegisterId}, SYSDATE(), 'Y'
+			  #{parnts}, #{nttNo}, #{replyLc}, #{atchFileId},
+			  #{frstRegisterId}, NOW(), 'Y'
 			 )			
 		
 	</insert>	
 	
-	<select id="selectNoticeListForSort" parameterType="egovframework.let.cop.bbs.service.Board" resultMap="sortList">
+	<select id="selectNoticeListForSort" parameterType="egovframework.let.cop.bbs.domain.model.Board" resultMap="sortList">
 					
 			SELECT
 				a.BBS_ID, a.NTT_ID, a.SORT_ORDR, a.PARNTSCTT_NO, a.NTT_NO, a.ANSWER_LC
@@ -139,7 +134,7 @@
 	</select>
 
 			
-	<select id="selectBoardArticleList" parameterType="egovframework.let.cop.bbs.service.BoardVO" resultMap="boardList">
+	<select id="selectBoardArticleList" parameterType="egovframework.let.cop.bbs.domain.model.BoardVO" resultMap="boardList">
 		
 			SELECT
 				a.NTT_ID, a.NTT_SJ, a.FRST_REGISTER_ID, IFNULL(b.USER_NM, a.NTCR_NM) as FRST_REGISTER_NM,
@@ -163,7 +158,7 @@
 					a.NTT_CN LIKE CONCAT ('%', #{searchWrd},'%') 		
 			</if>	
 			<if test="searchCnd == 2">AND
-					b.USER_NM LIKE CONCAT ('%', #{searchWrd},'%') 		
+					IFNULL(b.USER_NM, a.NTCR_NM) LIKE CONCAT ('%', #{searchWrd},'%')
 			</if>				
 					
 			ORDER BY a.SORT_ORDR DESC, NTT_NO ASC
@@ -171,7 +166,7 @@
 						
 	</select>	
 	
-	<select id="selectBoardArticleListCnt" parameterType="egovframework.let.cop.bbs.service.BoardVO" resultType="java.lang.Integer">
+	<select id="selectBoardArticleListCnt" parameterType="egovframework.let.cop.bbs.domain.model.BoardVO" resultType="java.lang.Integer">
 		
 			SELECT
 				COUNT(a.NTT_ID)
@@ -192,11 +187,11 @@
 					a.NTT_CN LIKE CONCAT ('%', #{searchWrd},'%') 		
 			</if>	
 			<if test="searchCnd == 2">AND
-					b.USER_NM LIKE CONCAT ('%', #{searchWrd},'%') 		
+					IFNULL(b.USER_NM, a.NTCR_NM) LIKE CONCAT ('%', #{searchWrd},'%')
 			</if>			
 	</select>	
  
-	<select id="selectBoardArticle" parameterType="egovframework.let.cop.bbs.service.BoardVO" resultMap="boardDetail">
+	<select id="selectBoardArticle" parameterType="egovframework.let.cop.bbs.domain.model.BoardVO" resultMap="boardDetail">
 		
 			SELECT
 				a.NTT_SJ, a.NTCR_ID, a.NTCR_NM, a.NTT_NO, a.NTT_CN,
@@ -224,7 +219,7 @@
 						
 	</select> 
  
- 	<update id="updateBoardArticle" parameterType="egovframework.let.cop.bbs.service.Board">
+ 	<update id="updateBoardArticle" parameterType="egovframework.let.cop.bbs.domain.model.Board">
  		
 			UPDATE LETTNBBS SET 
 				NTT_SJ = #{nttSj},
@@ -236,25 +231,25 @@
 				NTCE_ENDDE = #{ntceEndde},
 				LAST_UPDUSR_ID = #{lastUpdusrId},
 				ATCH_FILE_ID = #{atchFileId},
-				LAST_UPDT_PNTTM = SYSDATE()
+				LAST_UPDT_PNTTM = NOW()
 			WHERE BBS_ID = #{bbsId}
 			AND NTT_ID = #{nttId}
  		
  	</update>
 
- 	<update id="deleteBoardArticle" parameterType="egovframework.let.cop.bbs.service.Board">
+ 	<update id="deleteBoardArticle" parameterType="egovframework.let.cop.bbs.domain.model.Board">
  		
 			UPDATE LETTNBBS SET 
 				NTT_SJ = #{nttSj},
 				USE_AT = 'N',
 				LAST_UPDUSR_ID = #{lastUpdusrId},
-				LAST_UPDT_PNTTM = SYSDATE()
+				LAST_UPDT_PNTTM = NOW()
 			WHERE BBS_ID = #{bbsId}
 			AND NTT_ID = #{nttId}
  		
  	</update>
 
- 	<select id="selectMaxInqireCo" parameterType="egovframework.let.cop.bbs.service.BoardVO" resultType="java.lang.Integer">
+ 	<select id="selectMaxInqireCo" parameterType="egovframework.let.cop.bbs.domain.model.BoardVO" resultType="java.lang.Integer">
  		
 			SELECT IFNULL(MAX(RDCNT),0)+1 AS RDCNT FROM LETTNBBS
 			WHERE BBS_ID = #{bbsId}
@@ -262,7 +257,7 @@
  		
  	</select>
  	
- 	<select id="selectNoticeItemForSort" parameterType="egovframework.let.cop.bbs.service.Board" resultType="java.lang.Long">
+ 	<select id="selectNoticeItemForSort" parameterType="egovframework.let.cop.bbs.domain.model.Board" resultType="java.lang.Long">
  		
 			SELECT
 				IFNULL(MAX(NTT_NO),0)+1 AS NTT_NO
@@ -277,18 +272,18 @@
  		
  	</select> 	
 
- 	<update id="updateInqireCo" parameterType="egovframework.let.cop.bbs.service.BoardVO">
+ 	<update id="updateInqireCo" parameterType="egovframework.let.cop.bbs.domain.model.BoardVO">
  		
 			UPDATE LETTNBBS SET 
 				RDCNT = #{inqireCo},
 				LAST_UPDUSR_ID = #{lastUpdusrId},
-				LAST_UPDT_PNTTM = SYSDATE()
+				LAST_UPDT_PNTTM = NOW()
 			WHERE BBS_ID = #{bbsId}
 			AND NTT_ID = #{nttId}
  		
  	</update>
 
-	<update id="updateSortOrder" parameterType="egovframework.let.cop.bbs.service.BoardVO">
+	<update id="updateSortOrder" parameterType="egovframework.let.cop.bbs.domain.model.BoardVO">
  		
 			UPDATE LETTNBBS SET 
 				NTT_NO = #{nttNo}
@@ -296,7 +291,7 @@
  			
 	</update>
 
-	<select id="selectGuestList" parameterType="egovframework.let.cop.bbs.service.BoardVO" resultMap="guestList">
+	<select id="selectGuestList" parameterType="egovframework.let.cop.bbs.domain.model.BoardVO" resultMap="guestList">
 		
 			SELECT
 				a.NTT_ID, a.NTT_SJ, a.NTCR_NM, a.PASSWORD, 
@@ -316,7 +311,7 @@
 						
 	</select>	
 	
-	<select id="selectGuestListCnt" parameterType="egovframework.let.cop.bbs.service.BoardVO" resultType="java.lang.Integer">
+	<select id="selectGuestListCnt" parameterType="egovframework.let.cop.bbs.domain.model.BoardVO" resultType="java.lang.Integer">
 		
 			SELECT
 				COUNT(NTT_ID)
@@ -329,7 +324,7 @@
 					
 	</select>	
 
-	<update id="deleteGuestList" parameterType="egovframework.let.cop.bbs.service.BoardVO">
+	<update id="deleteGuestList" parameterType="egovframework.let.cop.bbs.domain.model.BoardVO">
 		
 			UPDATE LETTNBBS
 			SET USE_AT = 'N'
@@ -338,7 +333,7 @@
 					
 	</update>	
 	
-	<select id="getPasswordInf" parameterType="egovframework.let.cop.bbs.service.Board" resultType="java.lang.String">
+	<select id="getPasswordInf" parameterType="egovframework.let.cop.bbs.domain.model.Board" resultType="java.lang.String">
 		
 			SELECT
 				PASSWORD
@@ -349,14 +344,14 @@
 		
 	</select>
 
-	<select id="getParentNttNo" parameterType="egovframework.let.cop.bbs.service.Board" resultType="java.lang.Long">
+	<select id="getParentNttNo" parameterType="egovframework.let.cop.bbs.domain.model.Board" resultType="java.lang.Long">
 		
 			SELECT NTT_NO FROM LETTNBBS
 			WHERE BBS_ID = #{bbsId} AND NTT_ID = #{parnts}			
 		
 	</select>
 	
- 	<update id="updateOtherNttNo" parameterType="egovframework.let.cop.bbs.service.Board">
+ 	<update id="updateOtherNttNo" parameterType="egovframework.let.cop.bbs.domain.model.Board">
  		
 			UPDATE LETTNBBS SET 
 				NTT_NO = NTT_NO + 1
@@ -365,7 +360,7 @@
  		
  	</update>
  	
- 	 	<update id="updateNttNo" parameterType="egovframework.let.cop.bbs.service.Board">
+ 	 	<update id="updateNttNo" parameterType="egovframework.let.cop.bbs.domain.model.Board">
  		
 			UPDATE LETTNBBS SET 
 				NTT_NO = #{nttNo}

@@ -52,7 +52,7 @@ import lombok.extern.slf4j.Slf4j;
  *  수정일      수정자      수정내용
  *  -------            --------        ---------------------------
  *  2024.08.15  김일국     최초 생성
- *  2026.05.14            보안취약점 대응 (4.3.x)
+ *  2026.05.13  PHJ		 보안취약점 대응
  *
  *  </pre>
  */
@@ -60,7 +60,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @Tag(name="SnsLoginApiController",description = "Sns 로그인 관련")
 public class SnsLoginApiController {
-
+	
 	/** EgovLoginService */
 	@Resource(name = "loginService")
 	private EgovLoginService loginService;
@@ -130,11 +130,11 @@ public class SnsLoginApiController {
 	public static final String NAVER_CALLBACK_URL = EgovProperties.getProperty("Sns.naver.callbackUrl");
 	public static final String KAKAO_CLIENT_ID = EgovProperties.getProperty("Sns.kakao.clientId");
 	public static final String KAKAO_CALLBACK_URL = EgovProperties.getProperty("Sns.kakao.callbackUrl");
-
+	
 	/**
 	 * 카카오API 로그인
 	 * @param HttpServletResponse
-	 * @return void
+	 * @return void 
 	 */
 	@Operation(
 			summary = "카카오API 로그인",
@@ -160,7 +160,7 @@ public class SnsLoginApiController {
 	/**
 	 * 카카오API 로그인 콜백
 	 * @param HttpServletResponse, HttpServletRequest
-	 * @return HashMap<String, Object>
+	 * @return HashMap<String, Object> 
 	 */
 	@Operation(
 			summary = "카카오API 로그인 콜백",
@@ -275,7 +275,7 @@ public class SnsLoginApiController {
 	/**
 	 * 네이버API 로그인 콜백
 	 * @param HttpServletResponse, HttpServletRequest
-	 * @return HashMap<String, Object>
+	 * @return HashMap<String, Object> 
 	 */
 	@Operation(
 			summary = "네이버API 로그인 콜백",
