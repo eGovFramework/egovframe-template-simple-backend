@@ -101,6 +101,7 @@ public class EgovConfigAppDatasource {
 	 */
 	private DataSource dataSourceHSQL() {
 		return new EmbeddedDatabaseBuilder()
+			.generateUniqueName(true)
 			.setType(EmbeddedDatabaseType.HSQL)
 			.setScriptEncoding("UTF8")
 			.addScript("classpath:/db/shtdb.sql")
