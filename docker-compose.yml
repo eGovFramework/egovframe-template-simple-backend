@@ -1,7 +1,7 @@
 services:
   app:
     build: .
-    image: egovframe-template-simple-backend:${APP_VERSION:-5.0.0}
+    image: egovframe-template-simple-backend:${APP_VERSION:-5.1.0}
     container_name: egov-simple-backend
     ports:
       - "8080:8080"

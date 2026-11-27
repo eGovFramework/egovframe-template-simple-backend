@@ -26,14 +26,14 @@
 
 ```bash
 # 프로젝트 루트에서 실행
-docker build -t <registry>/egovframe-template-simple-backend:5.0.0 .
-docker push <registry>/egovframe-template-simple-backend:5.0.0
+docker build -t <registry>/egovframe-template-simple-backend:5.1.0 .
+docker push <registry>/egovframe-template-simple-backend:5.1.0
 ```
 
 `deployment.yaml`의 `image` 필드를 실제 레지스트리 경로로 교체하세요.
 
 ```yaml
-image: <registry>/egovframe-template-simple-backend:5.0.0
+image: <registry>/egovframe-template-simple-backend:5.1.0
 ```
 
 ## DB 설정 (중요)

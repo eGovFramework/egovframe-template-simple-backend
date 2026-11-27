@@ -28,8 +28,8 @@ spec:
         fsGroup: 1000
       containers:
         - name: app
-          # Replace with your registry/tag, e.g. ghcr.io/<org>/egovframe-template-simple-backend:5.0.0
-          image: egovframe-template-simple-backend:5.0.0
+          # Replace with your registry/tag, e.g. ghcr.io/<org>/egovframe-template-simple-backend:5.1.0
+          image: egovframe-template-simple-backend:5.1.0
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
